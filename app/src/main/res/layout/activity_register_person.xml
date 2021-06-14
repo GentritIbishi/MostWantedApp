@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterPerson">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/imgOfPerson"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_image_add"/>
+
+            <EditText
+                android:id="@+id/et_fullName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/full_name"
+                android:inputType="text"
+                android:textSize="16sp"
+                android:layout_below="@+id/imgOfPerson"
+                style="@android:style/Widget.EditText"
+                android:imeOptions="actionNext"></EditText>
+
+            <EditText
+                android:id="@+id/et_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/address"
+                android:inputType="text"
+                android:textSize="16sp"
+                android:imeOptions="actionNext"
+                android:layout_below="@+id/et_fullName"></EditText>
+
+            <EditText
+                android:id="@+id/et_age"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/age"
+                android:inputType="number"
+                android:textSize="16sp"
+                android:imeOptions="actionNext"
+                android:layout_below="@+id/et_address"></EditText>
+
+            <EditText
+                android:id="@+id/et_height"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/height"
+                android:inputType="number"
+                android:textSize="16sp"
+                android:imeOptions="actionNext"
+                android:layout_below="@+id/et_age"></EditText>
+
+            <EditText
+                android:id="@+id/et_weight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/weight"
+                android:inputType="number"
+                android:textSize="16sp"
+                android:imeOptions="actionNext"
+                android:layout_below="@+id/et_height"></EditText>
+
+            <EditText
+                android:id="@+id/et_eyeColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/eye_color"
+                android:inputType="text"
+                android:textSize="16sp"
+                android:imeOptions="actionNext"
+                android:layout_below="@+id/et_weight"></EditText>
+
+            <EditText
+                android:id="@+id/et_hairColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hair_color"
+                android:inputType="text"
+                android:textSize="16sp"
+                android:imeOptions="actionNext"
+                android:layout_below="@+id/et_eyeColor"></EditText>
+
+            <EditText
+                android:id="@+id/et_phy_appearance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/physical_appearance"
+                android:inputType="text"
+                android:textSize="16sp"
+                android:imeOptions="actionNext"
+                android:layout_below="@+id/et_hairColor"></EditText>
+
+            <EditText
+                android:id="@+id/et_acts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/acts"
+                android:inputType="text"
+                android:textSize="16sp"
+                android:imeOptions="actionNext"
+                android:layout_below="@+id/et_phy_appearance"></EditText>
+
+            <Button
+                android:id="@+id/registerPerson"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:text="@string/register_person"
+                android:background="@drawable/bt_register_person"
+                android:layout_below="@+id/et_acts"></Button>
+
+
+            <TextView
+                android:id="@+id/labelInfoRegister"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textSize="19sp"
+                android:textColor="#FF0000"
+                android:textStyle="italic"
+                android:layout_below="@+id/registerPerson"></TextView>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_height="match_parent"
+                android:layout_width="75dp"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:layout_centerInParent="true"
+                android:visibility="visible" />
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+</RelativeLayout>

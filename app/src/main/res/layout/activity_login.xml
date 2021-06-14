@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity"
+    android:background="#062A61"
+    android:padding="16dp"
+    android:gravity="center_vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="4dp">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/icon"
+                android:id="@+id/imgIcon"
+                android:padding="20dp"
+                android:layout_centerHorizontal="true">
+            </ImageView>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:layout_below="@id/imgIcon"
+                android:background="@drawable/login_background">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvEmail"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:text="@string/tv_email"></TextView>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvEmail"
+                    android:id="@+id/etEmail"
+                    android:inputType="textEmailAddress"
+                    android:imeOptions="actionNext"
+                    android:background="@drawable/et_corners_rounded"></EditText>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/etEmail"
+                    android:id="@+id/tvPassword"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:text="@string/tv_password"></TextView>
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvPassword"
+                    android:id="@+id/etPassword"
+                    android:inputType="textPassword"
+                    android:imeOptions="actionDone"
+                    android:background="@drawable/et_corners_rounded"></EditText>
+
+                <TextView
+                    android:id="@+id/tvlabelInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="9dp"
+                    android:layout_below="@id/etPassword"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:textColor="#FF0000"
+                    android:layout_centerHorizontal="true"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="22sp"
+                    android:id="@+id/bt_Login"
+                    android:text="@string/btn_login"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:layout_below="@id/tvlabelInfo"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/bt_login"></Button>
+
+                    <TextView
+                        android:id="@+id/tvforgotPassword"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="15dp"
+                        android:text="@string/forgot_pass"
+                        android:layout_below="@id/bt_Login"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white"
+                        android:layout_alignParentLeft="true"></TextView>
+
+                    <TextView
+                        android:id="@+id/tvguest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/bt_Login"
+                        android:layout_alignParentRight="true"
+                        android:padding="15dp"
+                        android:text="@string/guest"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold"></TextView>
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="?android:attr/progressBarStyleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:visibility="gone"></ProgressBar>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

@@ -40,9 +40,9 @@
     <string name="user_registered_successfully">User has been registered successfully!</string>
     <string name="user_failed_to_register">Failed to register user! Try again!</string>
     <string name="role_not_finded">Role not finded!</string>
-    <string name="user_not_finded">User not finded!</string>
     <string name="logins_are_saved_successfully">Logins are saved successfully!</string>
     <string name="failed_logins_are_not_saved">Failed! Logins are not saved!</string>
+    <string name="user_not_finded">User not finded!</string>
 
     <string-array name="roles">
         <item>Admin</item>
