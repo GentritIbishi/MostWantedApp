@@ -14,7 +14,7 @@
     <string name="hair_color">Hair Color</string>
     <string name="physical_appearance">Physical Appearance</string>
     <string name="acts">Acts</string>
-    <string name="register_person">Register person</string>
+    <string name="register_person">Register Person</string>
     <string name="person">Person</string>
     <string name="error_fullname_required">Full name is required!</string>
     <string name="error_address_required">Address is required!</string>
@@ -40,9 +40,10 @@
     <string name="user_registered_successfully">User has been registered successfully!</string>
     <string name="user_failed_to_register">Failed to register user! Try again!</string>
     <string name="role_not_finded">Role not finded!</string>
-    <string name="logins_are_saved_successfully">Logins are saved successfully!</string>
-    <string name="failed_logins_are_not_saved">Failed! Logins are not saved!</string>
+    <string name="logins_successfully">Logins successfully!</string>
+    <string name="failed_to_login">Failed to login! Try again!</string>
     <string name="user_not_finded">User not finded!</string>
+    <string name="dashboard">Dashboard</string>
 
     <string-array name="roles">
         <item>Admin</item>

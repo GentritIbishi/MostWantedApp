@@ -35,9 +35,8 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
     private EditText et_user_fullname, et_user_email, et_user_password, et_user_confirm_password;
     private Button btn_register_user;
     private ProgressBar progressBar;
-    private Spinner sp;
     private SpinnerAdapter spAdapter;
-
+    private Spinner sp;
     private FirebaseAuth mAuth;
     private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
@@ -168,10 +167,17 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                             progressBar.setVisibility(View.GONE);
                         }
                     });
+                    String checkIntent = getCallingActivity().getClassName().toString();
 
-                    Intent intent = new Intent(RegisterUser.this, LoginActivity.class);
-                    startActivity(intent);
-                    finish();
+                    if(checkIntent.equals("RegisterUser")){
+                        Intent intent = new Intent(RegisterUser.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                    else if(checkIntent.equals("RegisterPerson"))
+                    {
+                        finish();
+                    }
                 }
                 else
                 {

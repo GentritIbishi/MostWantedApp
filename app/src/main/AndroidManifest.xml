@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fiek.unipr.mostwantedapp">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,11 +13,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MostWantedApp">
-        <activity android:name=".RegisterUser">
-        </activity>
+        <activity android:name=".UserDashboard"></activity>
+        <activity android:name=".AdminDashboard"></activity>
+        <activity android:name=".RegisterUser" />
         <activity android:name=".ListViewPerson" />
-        <activity android:name=".RegisterPerson">
-        </activity>
+        <activity android:name=".RegisterPerson" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

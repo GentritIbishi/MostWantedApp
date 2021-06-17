@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         tvguest.setOnClickListener(this);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
         bt_Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,7 +103,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }
 
-        progressBar.setVisibility(View.VISIBLE);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -133,14 +138,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Toast.makeText(LoginActivity.this, R.string.logins_are_saved_successfully, Toast.LENGTH_LONG).show();
-                                            progressBar.setVisibility(View.GONE);
+                                            Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_LONG).show();
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    progressBar.setVisibility(View.GONE);
+                                                }
+                                            });
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(LoginActivity.this, R.string.failed_logins_are_not_saved, Toast.LENGTH_LONG).show();
-                                            progressBar.setVisibility(View.GONE);
+                                            Toast.makeText(LoginActivity.this, R.string.failed_to_login, Toast.LENGTH_LONG).show();
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    progressBar.setVisibility(View.GONE);
+                                                }
+                                            });
                                         }
                                     });
 
@@ -148,8 +163,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                                     if(role.equals("Admin"))
                                     {
-                                        progressBar.setVisibility(View.GONE);
-                                        Intent intent = new Intent(LoginActivity.this, RegisterPerson.class);
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progressBar.setVisibility(View.GONE);
+                                            }
+                                        });
+
+                                        Intent intent = new Intent(LoginActivity.this, AdminDashboard.class);
                                         startActivity(intent);
                                         intent.putExtra("User ID",currentUserId);
                                         intent.putExtra("Role", role);
@@ -157,23 +178,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     }
                                     else if(role.equals("User"))
                                     {
-                                        //Mbetet mu permisu
-                                        Intent intent = new Intent(LoginActivity.this, ListViewPerson.class);
+                                        runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                progressBar.setVisibility(View.GONE);
+                                            }
+                                        });
+                                        Intent intent = new Intent(LoginActivity.this, UserDashboard.class);
                                         startActivity(intent);
-                                        progressBar.setVisibility(View.GONE);
                                         finish();
                                     }
                                 }
                                 else
                                 {
                                     Toast.makeText(LoginActivity.this, R.string.role_not_finded, Toast.LENGTH_LONG).show();
-                                    progressBar.setVisibility(View.GONE);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progressBar.setVisibility(View.GONE);
+                                        }
+                                    });
                                 }
                             }
                             else
                                 {
                                 Toast.makeText(LoginActivity.this, R.string.user_not_finded, Toast.LENGTH_LONG).show();
-                                    progressBar.setVisibility(View.GONE);
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            progressBar.setVisibility(View.GONE);
+                                        }
+                                    });
                             }
                         }
                     });
@@ -181,7 +216,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else
                 {
                     Toast.makeText(LoginActivity.this, R.string.user_not_finded, Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
                 }
             }
         });

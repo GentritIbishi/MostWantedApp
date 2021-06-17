@@ -28,7 +28,7 @@
             android:layout_below="@+id/imgUser"
             android:hint="@string/user_full_name"
             android:imeOptions="actionNext"
-            android:inputType="text"
+            android:inputType="textCapSentences"
             android:padding="16dp"
             android:textAlignment="center"
             android:textColor="@color/white"
@@ -43,7 +43,6 @@
             android:layout_below="@+id/et_user_fullname"
             android:hint="@string/user_email"
             android:imeOptions="actionNext"
-            android:inputType="text"
             android:padding="16dp"
             android:textAlignment="center"
             android:textColor="@color/white"
@@ -81,11 +80,11 @@
             android:textSize="16sp"
             android:textStyle="bold"></EditText>
 
-
         <Spinner
             android:id="@+id/spinner1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_below="@id/et_user_confirm_password" />
 
 
