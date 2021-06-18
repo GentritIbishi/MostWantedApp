@@ -150,34 +150,25 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
+                    //Pjea e dokumentit
                     String userID = mAuth.getCurrentUser().getUid();
                     DocumentReference documentReference = fStore.collection("users").document(userID);
                     User user = new User(userID, fullName, email, role);
-
                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(RegisterUser.this, R.string.user_registered_successfully, Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterUser.this, "Collection Successfully!", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(RegisterUser.this, R.string.user_failed_to_register, Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegisterUser.this, "Collection Failed!", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     });
-                    String checkIntent = getCallingActivity().getClassName().toString();
-
-                    if(checkIntent.equals("RegisterUser")){
-                        Intent intent = new Intent(RegisterUser.this, LoginActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                    else if(checkIntent.equals("RegisterPerson"))
-                    {
-                        finish();
-                    }
+                    //Pjesa e dokumentit
+                     Toast.makeText(RegisterUser.this, R.string.user_registered_successfully, Toast.LENGTH_LONG).show();
                 }
                 else
                 {

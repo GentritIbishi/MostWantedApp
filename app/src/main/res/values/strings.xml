@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MostWantedApp</string>
+    <string name="session_cannot_copy_the_role">User is logged in but no role was found!</string>
     <string name="tv_email">Email</string>
     <string name="tv_password">Password</string>
     <string name="btn_login">Login</string>
@@ -44,6 +45,7 @@
     <string name="logins_successfully">Logins successfully!</string>
     <string name="failed_to_login">Failed to login! Try again!</string>
     <string name="dashboard">Dashboard</string>
+    <string name="logout">Log out</string>
 
 
     <string-array name="roles">

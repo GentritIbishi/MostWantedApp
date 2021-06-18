@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MostWantedApp</string>
+    <string name="session_cannot_copy_the_role">User is logged in but no role was found!</string>
     <string name="tv_email">Email</string>
     <string name="tv_password">Password</string>
     <string name="btn_login">Login</string>
@@ -26,10 +27,10 @@
     <string name="error_email_required">Email is required!</string>
     <string name="error_phy_appearance_required">Physical Appearance is required!</string>
     <string name="error_acts_required">Acts is required!</string>
-    <string name="user_full_name">User Full Name</string>
-    <string name="user_email">User Email</string>
-    <string name="user_password">User Password</string>
-    <string name="user_confirm_password">User Confirm Password</string>
+    <string name="user_full_name">Full Name</string>
+    <string name="user_email">Email</string>
+    <string name="user_password">Password</string>
+    <string name="user_confirm_password">Confirm Password</string>
     <string name="button_register_user">Register User</string>
     <string name="error_please_provide_valid_email">Please provide valid email!</string>
     <string name="error_password_required">Password is required!</string>
@@ -40,10 +41,12 @@
     <string name="user_registered_successfully">User has been registered successfully!</string>
     <string name="user_failed_to_register">Failed to register user! Try again!</string>
     <string name="role_not_finded">Role not finded!</string>
+    <string name="user_not_finded">User not finded!</string>
     <string name="logins_successfully">Logins successfully!</string>
     <string name="failed_to_login">Failed to login! Try again!</string>
-    <string name="user_not_finded">User not finded!</string>
     <string name="dashboard">Dashboard</string>
+    <string name="logout">Log out</string>
+
 
     <string-array name="roles">
         <item>Admin</item>

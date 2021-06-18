@@ -32,11 +32,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView tvEmail, tvPassword, tvforgotPassword;
     private EditText etEmail, etPassword;
     private ProgressBar progressBar;
-    private FirebaseAuth mAuth;
+    private FirebaseAuth firebaseAuth;
     private Button bt_Login;
-    private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
-    private FirebaseUser currentUser;
-    private String currentUserId;
+    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private FirebaseUser firebaseUser;
+    private DocumentReference documentReference;
 
 
     @Override
@@ -50,6 +50,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+
+
         bt_Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,118 +116,53 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
-
-        if(currentUser!=null) {
-            currentUserId = currentUser.getUid();
-        }
 
 
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful())
+                if(task.isSuccessful() && task.getResult() !=null)
                 {
-                    DocumentReference docRef = fStore.collection("users").document(currentUserId);
-                    docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    String currentUserId = task.getResult().getUser().getUid();
+                    documentReference = firebaseFirestore.collection("users").document(currentUserId);
+                    documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                DocumentSnapshot documentSnapshot = task.getResult();
-                                if(documentSnapshot != null)
-                                {
-                                    String role = documentSnapshot.getString("role");
+                            if (task.isSuccessful() && task.getResult() != null)
+                            {
+                                    String role = task.getResult().getString("role");
                                     User user = new User(currentUserId, email, role);
-
-                                    DocumentReference documentReference = fStore.collection("logins").document(currentUserId);
+                                    documentReference = firebaseFirestore.collection("logins").document(currentUserId);
                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_LONG).show();
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    progressBar.setVisibility(View.GONE);
-                                                }
-                                            });
+                                            Toast.makeText(LoginActivity.this, "Logins collection successfully!", Toast.LENGTH_LONG).show();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(LoginActivity.this, R.string.failed_to_login, Toast.LENGTH_LONG).show();
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    progressBar.setVisibility(View.GONE);
-                                                }
-                                            });
+                                            Toast.makeText(LoginActivity.this, "Logins collection failed!", Toast.LENGTH_LONG).show();
                                         }
                                     });
-
-                                    //
-
-                                    if(role.equals("Admin"))
-                                    {
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                progressBar.setVisibility(View.GONE);
-                                            }
-                                        });
-
-                                        Intent intent = new Intent(LoginActivity.this, AdminDashboard.class);
+                                        progressBar.setVisibility(View.GONE);
+                                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                                         startActivity(intent);
                                         intent.putExtra("User ID",currentUserId);
                                         intent.putExtra("Role", role);
                                         finish();
-                                    }
-                                    else if(role.equals("User"))
-                                    {
-                                        runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                progressBar.setVisibility(View.GONE);
-                                            }
-                                        });
-                                        Intent intent = new Intent(LoginActivity.this, UserDashboard.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                }
-                                else
-                                {
-                                    Toast.makeText(LoginActivity.this, R.string.role_not_finded, Toast.LENGTH_LONG).show();
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            progressBar.setVisibility(View.GONE);
-                                        }
-                                    });
-                                }
                             }
                             else
                                 {
-                                Toast.makeText(LoginActivity.this, R.string.user_not_finded, Toast.LENGTH_LONG).show();
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            progressBar.setVisibility(View.GONE);
-                                        }
-                                    });
+                                Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                progressBar.setVisibility(View.GONE);
                             }
                         }
                     });
                 }
                 else
                 {
-                    Toast.makeText(LoginActivity.this, R.string.user_not_finded, Toast.LENGTH_LONG).show();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
+                    Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });
