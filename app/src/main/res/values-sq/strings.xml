@@ -46,6 +46,7 @@
     <string name="failed_to_login">Failed to login! Try again!</string>
     <string name="dashboard">Dashboard</string>
     <string name="logout">Log out</string>
+    <string name="profile">Profile</string>
 
 
     <string-array name="roles">

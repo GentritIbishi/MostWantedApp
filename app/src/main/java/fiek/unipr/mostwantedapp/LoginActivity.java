@@ -145,11 +145,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         }
                                     });
                                         progressBar.setVisibility(View.GONE);
-                                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                                        startActivity(intent);
-                                        intent.putExtra("User ID",currentUserId);
-                                        intent.putExtra("Role", role);
-                                        finish();
+                                        if(role !=null && role.matches("Admin")) {
+                                            Intent intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+                                            startActivity(intent);
+                                            intent.putExtra("User ID", currentUserId);
+                                            intent.putExtra("Role", role);
+                                            finish();
+                                        }else {
+                                            Intent intent = new Intent(LoginActivity.this, UserDashboardActivity.class);
+                                            startActivity(intent);
+                                            intent.putExtra("User ID", currentUserId);
+                                            intent.putExtra("Role", role);
+                                            finish();
+                                        }
                             }
                             else
                                 {
