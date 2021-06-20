@@ -2,7 +2,9 @@ package fiek.unipr.mostwantedapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.View;
@@ -16,6 +18,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class UserDashboardActivity extends AppCompatActivity implements View.OnClickListener{
 
+    SharedPreferences sharedpreferences;
+    public static final String PREFS_NAME = "userPreference";
+    public String role;
+    public String fullName;
     LinearLayout l_userProfile, l_registerPerson;
     TextView tv_dashboard;
     Button bt_logout;
@@ -38,6 +44,31 @@ public class UserDashboardActivity extends AppCompatActivity implements View.OnC
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
+        Bundle user = getIntent().getExtras();
+        if(user != null)
+        {
+            role = user.get("Role").toString();
+            fullName = user.get("fullName").toString();
+        }
+        else
+        {
+            role = null;
+        }
+
+        // kthej preferencat
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        role = settings.getString("Role", role);
+        fullName = settings.getString("fullName", fullName);
+
+        ((Activity) UserDashboardActivity.this).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(role != null) {
+                    ((TextView) tv_dashboard).setText(fullName+", Dashboard");
+                }
+            }
+        });
+
         bt_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -50,6 +81,20 @@ public class UserDashboardActivity extends AppCompatActivity implements View.OnC
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        //Editori eshte objekt si redaktor qe i kallxon qe jon ndrru preferencat
+        //Te gjitha objektet jan prej librarise android.context.Context
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("Role", role);
+        editor.putString("fullName", fullName);
+        editor.commit();
     }
 
     @Override

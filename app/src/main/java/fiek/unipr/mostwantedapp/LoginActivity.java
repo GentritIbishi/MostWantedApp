@@ -131,6 +131,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             if (task.isSuccessful() && task.getResult() != null)
                             {
                                     String role = task.getResult().getString("role");
+                                    String fullName = task.getResult().getString("fullName");
                                     User user = new User(currentUserId, email, role);
                                     documentReference = firebaseFirestore.collection("logins").document(currentUserId);
                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -146,17 +147,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     });
                                         progressBar.setVisibility(View.GONE);
                                         if(role !=null && role.matches("Admin")) {
-                                            Intent intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
-                                            startActivity(intent);
-                                            intent.putExtra("User ID", currentUserId);
-                                            intent.putExtra("Role", role);
-                                            finish();
+                                            Intent adminIntent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+                                            Bundle adminBundle = new Bundle();
+                                            adminBundle.putString("User ID", currentUserId);
+                                            adminBundle.putString("Role", role);
+                                            adminBundle.putString("fullName", fullName);
+                                            adminIntent.putExtras(adminBundle);
+                                            startActivity(adminIntent);
                                         }else {
-                                            Intent intent = new Intent(LoginActivity.this, UserDashboardActivity.class);
-                                            startActivity(intent);
-                                            intent.putExtra("User ID", currentUserId);
-                                            intent.putExtra("Role", role);
-                                            finish();
+                                            Intent userIntent = new Intent(LoginActivity.this, UserDashboardActivity.class);
+                                            Bundle userBundle = new Bundle();
+                                            userBundle.putString("User ID", currentUserId);
+                                            userBundle.putString("Role", role);
+                                            userBundle.putString("fullName", fullName);
+                                            userIntent.putExtras(userBundle);
+                                            startActivity(userIntent);
                                         }
                             }
                             else

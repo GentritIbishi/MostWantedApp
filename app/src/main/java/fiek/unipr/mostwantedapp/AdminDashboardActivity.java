@@ -1,21 +1,32 @@
 package fiek.unipr.mostwantedapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class AdminDashboardActivity extends AppCompatActivity implements View.OnClickListener{
 
+    SharedPreferences sharedpreferences;
+    public static final String PREFS_NAME = "adminPreferences";
+    public String role;
+    public String fullName;
     LinearLayout l_registerUser, l_registerPerson;
     TextView tv_dashboard;
     Button bt_logout;
@@ -38,6 +49,30 @@ public class AdminDashboardActivity extends AppCompatActivity implements View.On
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
+        Bundle admin = getIntent().getExtras();
+        if(admin != null)
+        {
+            role = admin.get("Role").toString();
+            fullName = admin.get("fullName").toString();
+        }
+        else
+        {
+            role = null;
+        }
+
+        // kthej preferencat
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        role = settings.getString("Role", role);
+        fullName = settings.getString("fullName", fullName);
+
+        ((Activity) AdminDashboardActivity.this).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(role != null) {
+                    ((TextView) tv_dashboard).setText(fullName+", Dashboard");
+                }
+            }
+        });
 
         bt_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +87,20 @@ public class AdminDashboardActivity extends AppCompatActivity implements View.On
             }
         });
 
+    }
+
+    @Override
+    protected void onStop()
+    {
+        super.onStop();
+
+        //Editori eshte objekt si redaktor qe i kallxon qe jon ndrru preferencat
+        //Te gjitha objektet jan prej librarise android.context.Context
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("Role", role);
+        editor.putString("fullName", fullName);
+        editor.commit();
     }
 
     @Override
