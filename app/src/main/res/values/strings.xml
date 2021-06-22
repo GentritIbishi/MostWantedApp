@@ -58,7 +58,9 @@
     <string name="role">Role</string>
     <string name="Data_success_updated">Data has been updated, redirect to login to see results!</string>
     <string name="edit_data">Edit Data</string>
-
+    <string name="this_person_with_this">The person with this </string>
+    <string name="was_registered_successfully"> was registered successfully</string>
+    <string name="person_failed_to_register">Person failed to register!</string>
 
     <string-array name="roles">
         <item>Admin</item>

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary_color"
     tools:context=".RegisterPerson">
 
     <ScrollView
@@ -27,6 +28,10 @@
                 android:id="@+id/et_fullName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/et_register_persons"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
                 android:hint="@string/full_name"
                 android:inputType="text"
                 android:textSize="16sp"
@@ -36,6 +41,11 @@
 
             <EditText
                 android:id="@+id/et_address"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/et_register_persons"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/address"
@@ -46,6 +56,11 @@
 
             <EditText
                 android:id="@+id/et_age"
+                android:background="@drawable/et_register_persons"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/age"
@@ -56,6 +71,11 @@
 
             <EditText
                 android:id="@+id/et_height"
+                android:background="@drawable/et_register_persons"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/height"
@@ -66,6 +86,11 @@
 
             <EditText
                 android:id="@+id/et_weight"
+                android:background="@drawable/et_register_persons"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/weight"
@@ -76,6 +101,11 @@
 
             <EditText
                 android:id="@+id/et_eyeColor"
+                android:background="@drawable/et_register_persons"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/eye_color"
@@ -86,6 +116,11 @@
 
             <EditText
                 android:id="@+id/et_hairColor"
+                android:background="@drawable/et_register_persons"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/hair_color"
@@ -96,6 +131,11 @@
 
             <EditText
                 android:id="@+id/et_phy_appearance"
+                android:background="@drawable/et_register_persons"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/physical_appearance"
@@ -106,6 +146,11 @@
 
             <EditText
                 android:id="@+id/et_acts"
+                android:background="@drawable/et_register_persons"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/acts"
@@ -116,6 +161,7 @@
 
             <Button
                 android:id="@+id/registerPerson"
+                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
@@ -124,17 +170,6 @@
                 android:text="@string/register_person"
                 android:background="@drawable/bt_register_person"
                 android:layout_below="@+id/et_acts"></Button>
-
-
-            <TextView
-                android:id="@+id/labelInfoRegister"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:textSize="19sp"
-                android:textColor="#FF0000"
-                android:textStyle="italic"
-                android:layout_below="@+id/registerPerson"></TextView>
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -145,7 +180,6 @@
                 android:indeterminate="true"
                 android:layout_centerInParent="true"
                 android:visibility="gone" />
-
 
         </RelativeLayout>
 
