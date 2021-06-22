@@ -28,7 +28,8 @@
     <string name="error_phy_appearance_required">Physical Appearance is required!</string>
     <string name="error_acts_required">Acts is required!</string>
     <string name="user_full_name">Full Name</string>
-    <string name="user_email">Email</string>
+    <string name="user_email">Email Address</string>
+    <string name="your_email_address">Your Email Address</string>
     <string name="user_password">Password</string>
     <string name="user_confirm_password">Confirm Password</string>
     <string name="button_register_user">Register User</string>
@@ -43,11 +44,16 @@
     <string name="role_not_finded">Role not finded!</string>
     <string name="user_not_finded">User not finded!</string>
     <string name="logins_successfully">Logins successfully!</string>
-    <string name="failed_to_login">Failed to login! Try again!</string>
+    <string name="logins_failed">Logins failed!</string>
     <string name="dashboard">Dashboard</string>
     <string name="logout">Log out</string>
     <string name="profile">Profile</string>
-
+    <string name="your_name">Your Name</string>
+    <string name="change_profile_image">Change Profile Image</string>
+    <string name="delete_user">Delete User</string>
+    <string name="image_uploaded">Image Uploaded!</string>
+    <string name="image_failed_to_uplaod">Image failed to upload!</string>
+    <string name="image_not_set">Image not set!</string>
 
     <string-array name="roles">
         <item>Admin</item>

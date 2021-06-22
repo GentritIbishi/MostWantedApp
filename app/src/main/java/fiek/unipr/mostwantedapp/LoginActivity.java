@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -27,16 +28,15 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView tvguest;
-    private ImageView imgIcon;
-    private TextView tvEmail, tvPassword, tvforgotPassword;
-    private EditText etEmail, etPassword;
-    private ProgressBar progressBar;
+    public static final String PREFS_NAME = "loginPreferences";
     private FirebaseAuth firebaseAuth;
-    private Button bt_Login;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseUser firebaseUser;
     private DocumentReference documentReference;
+    private TextView tvguest;
+    private EditText etEmail, etPassword;
+    private ProgressBar progressBar;
+    private Button bt_Login;
 
 
     @Override
@@ -44,17 +44,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
         bt_Login = findViewById(R.id.bt_Login);
         tvguest = (TextView)findViewById(R.id.tvguest);
         tvguest.setOnClickListener(this);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-
-
 
         bt_Login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,35 +130,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             {
                                     String role = task.getResult().getString("role");
                                     String fullName = task.getResult().getString("fullName");
+                                    String email = task.getResult().getString("email");
+
+                                    //Set on Preferences on PREFS_NAME: loginPreferences
+                                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                                    SharedPreferences.Editor editor = settings.edit();
+                                    editor.putString("Role", role);
+                                    editor.putString("fullName", fullName);
+                                    editor.putString("email", email);
+                                    editor.commit();
+                                    //Set on Preferences on PREFS_NAME: loginPreferences
+
                                     User user = new User(currentUserId, email, role);
                                     documentReference = firebaseFirestore.collection("logins").document(currentUserId);
                                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Toast.makeText(LoginActivity.this, "Logins collection successfully!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(LoginActivity.this, "Logins collection failed!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(LoginActivity.this, R.string.logins_failed, Toast.LENGTH_LONG).show();
                                         }
                                     });
                                         progressBar.setVisibility(View.GONE);
                                         if(role !=null && role.matches("Admin")) {
                                             Intent adminIntent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
-                                            Bundle adminBundle = new Bundle();
-                                            adminBundle.putString("User ID", currentUserId);
-                                            adminBundle.putString("Role", role);
-                                            adminBundle.putString("fullName", fullName);
-                                            adminIntent.putExtras(adminBundle);
                                             startActivity(adminIntent);
                                         }else {
                                             Intent userIntent = new Intent(LoginActivity.this, UserDashboardActivity.class);
-                                            Bundle userBundle = new Bundle();
-                                            userBundle.putString("User ID", currentUserId);
-                                            userBundle.putString("Role", role);
-                                            userBundle.putString("fullName", fullName);
-                                            userIntent.putExtras(userBundle);
                                             startActivity(userIntent);
                                         }
                             }
