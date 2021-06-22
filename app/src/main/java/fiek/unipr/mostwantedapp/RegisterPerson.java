@@ -1,5 +1,6 @@
 package fiek.unipr.mostwantedapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -11,17 +12,25 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class RegisterPerson extends AppCompatActivity implements View.OnClickListener {
 
-    private FirebaseAuth mAuth;
-
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+    private FirebaseFirestore firebaseFirestore;
+    private DocumentReference documentReference;
     ImageView imgOfPerson;
     private EditText et_fullName, et_address, et_age, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts;
     private Button registerPerson;
-    private TextView labelInfoRegister;
     private ProgressBar progressBar;
 
     @Override
@@ -29,23 +38,24 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_person);
 
-        mAuth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
-        registerPerson = (Button) findViewById(R.id.registerPerson);
+        registerPerson = findViewById(R.id.registerPerson);
         registerPerson.setOnClickListener(this);
 
-        et_fullName = (EditText) findViewById(R.id.et_fullName);
-        et_address = (EditText) findViewById(R.id.et_address);
-        et_age = (EditText) findViewById(R.id.et_age);
-        et_height = (EditText) findViewById(R.id.et_height);
-        et_weight = (EditText) findViewById(R.id.et_weight);
-        et_eyeColor = (EditText) findViewById(R.id.et_eyeColor);
-        et_hairColor = (EditText) findViewById(R.id.et_hairColor);
-        et_phy_appearance = (EditText) findViewById(R.id.et_phy_appearance);
-        et_acts = (EditText) findViewById(R.id.et_acts);
+        et_fullName = findViewById(R.id.et_fullName);
+        et_address = findViewById(R.id.et_address);
+        et_age = findViewById(R.id.et_age);
+        et_height = findViewById(R.id.et_height);
+        et_weight = findViewById(R.id.et_weight);
+        et_eyeColor = findViewById(R.id.et_eyeColor);
+        et_hairColor = findViewById(R.id.et_hairColor);
+        et_phy_appearance = findViewById(R.id.et_phy_appearance);
+        et_acts = findViewById(R.id.et_acts);
 
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
 
 
     }
@@ -61,12 +71,13 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
     }
 
     private void registerPerson() {
+        Integer checkNull = null;
 
         String fullName = et_fullName.getText().toString().trim();
         String address = et_address.getText().toString().trim();
-        String age = et_age.getText().toString().trim();
-        String height = et_height.getText().toString().trim();
-        String weight = et_weight.getText().toString().trim();
+        Integer age = Integer.parseInt(et_age.getText().toString().trim());
+        Integer height = Integer.parseInt(et_height.getText().toString().trim());
+        Integer weight = Integer.parseInt(et_weight.getText().toString().trim());
         String eyeColor = et_eyeColor.getText().toString().trim();
         String hairColor = et_hairColor.getText().toString().trim();
         String phy_appearance = et_phy_appearance.getText().toString().trim();
@@ -86,21 +97,21 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        if(age.isEmpty())
+        if(age.equals(checkNull))
         {
             et_age.setError(getText(R.string.error_age_required));
             et_age.requestFocus();
             return;
         }
 
-        if(height.isEmpty())
+        if(height.equals(checkNull))
         {
             et_height.setError(getText(R.string.error_height_required));
             et_height.requestFocus();
             return;
         }
 
-        if(weight.isEmpty())
+        if(weight.equals(checkNull))
         {
             et_weight.setError(getText(R.string.error_weight_required));
             et_weight.requestFocus();
@@ -135,7 +146,26 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
-        //progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+
+        Person person = new Person(fullName, address, eyeColor, hairColor, phy_appearance, acts, age, height, weight);
+
+        CollectionReference collectionReference = firebaseFirestore.collection("wanted_persons");
+        collectionReference.add(person).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Toast.makeText(RegisterPerson.this, RegisterPerson.this.getText(R.string.this_person_with_this)+documentReference.getId()+RegisterPerson.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(RegisterPerson.this, R.string.this_person_with_this+documentReference.getId()+R.string.was_registered_successfully, Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
+
 
 
 
