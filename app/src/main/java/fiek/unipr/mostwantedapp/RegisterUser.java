@@ -3,12 +3,9 @@ package fiek.unipr.mostwantedapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -22,23 +19,18 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class RegisterUser extends AppCompatActivity implements View.OnClickListener {
 
-    private TextView labelInfo;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
     private EditText et_user_fullname, et_user_email, et_user_password, et_user_confirm_password;
     private Button btn_register_user;
     private ProgressBar progressBar;
     private SpinnerAdapter spAdapter;
     private Spinner sp;
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore fStore = FirebaseFirestore.getInstance();
 
 
     @Override
@@ -46,7 +38,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
 
-        mAuth = FirebaseAuth.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         btn_register_user = (Button) findViewById(R.id.btn_register_user);
         btn_register_user.setOnClickListener(this);
@@ -145,13 +137,13 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         }
 
         progressBar.setVisibility(View.VISIBLE);
-        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful())
                 {
                     //Pjea e dokumentit
-                    String userID = mAuth.getCurrentUser().getUid();
+                    String userID = firebaseAuth.getCurrentUser().getUid();
                     DocumentReference documentReference = fStore.collection("users").document(userID);
                     User user = new User(userID, fullName, email, role);
                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {

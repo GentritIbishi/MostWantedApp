@@ -25,7 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-public class Profile extends AppCompatActivity {
+public class Profile extends AppCompatActivity implements View.OnClickListener {
 
     public static final String PREFS_NAME = "userProfilePreference";
     private String role;
@@ -35,8 +35,8 @@ public class Profile extends AppCompatActivity {
     FirebaseUser firebaseUser;
     StorageReference storageReference;
     TextView tv_real_fullName, tv_real_email, tv_real_role;
-    Button bt_logout, bt_changeProfileImage;
     ImageView img_profile;
+    Button bt_edit_data;
 
 
     @Override
@@ -47,9 +47,9 @@ public class Profile extends AppCompatActivity {
         tv_real_fullName = findViewById(R.id.tv_real_fullName);
         tv_real_email = findViewById(R.id.tv_real_email);
         tv_real_role = findViewById(R.id.tv_real_role);
-        bt_logout = findViewById(R.id.bt_logout);
-        bt_changeProfileImage = findViewById(R.id.bt_changeProfileImage);
         img_profile = findViewById(R.id.img_profile);
+        bt_edit_data = findViewById(R.id.bt_edit_data);
+        bt_edit_data.setOnClickListener(this);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
@@ -71,33 +71,33 @@ public class Profile extends AppCompatActivity {
         ((Activity) Profile.this).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                    ((TextView) tv_real_fullName).setText(fullName);
-                    ((TextView) tv_real_email).setText(email);
-                    ((TextView) tv_real_role).setText(role);
-            }
-        });
-
-        bt_changeProfileImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // qyty me bo upload profile image
-                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(openGalleryIntent, 1000);
-            }
-        });
-
-        bt_logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent profileSignout = new Intent(Profile.this, LoginActivity.class);
-                profileSignout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(profileSignout);
-                finish();
+                ((TextView) tv_real_fullName).setText(fullName);
+                ((TextView) tv_real_email).setText(email);
+                ((TextView) tv_real_role).setText(role);
             }
         });
 
     }
+
+//        bt_changeProfileImage.setOnClickListener(new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            // qyty me bo upload profile image
+//            Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//            startActivityForResult(openGalleryIntent, 1000);
+//        }
+//    });
+//
+//        bt_logout.setOnClickListener(new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            FirebaseAuth.getInstance().signOut();
+//            Intent profileSignout = new Intent(Profile.this, LoginActivity.class);
+//            profileSignout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(profileSignout);
+//            finish();
+//        }
+//    });
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -131,4 +131,13 @@ public class Profile extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId())
+        {
+            case R.id.bt_edit_data:
+                startActivity(new Intent(Profile.this, UpdateUser.class));
+                break;
+        }
+    }
 }

@@ -85,8 +85,8 @@ public class AdminDashboardActivity extends AppCompatActivity implements View.On
         ((Activity) AdminDashboardActivity.this).runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                    ((TextView) tv_dashboard).setText(fullName+", Dashboard");
-                }
+                ((TextView) tv_dashboard).setText(fullName+", Dashboard");
+            }
         });
 
         bt_logout.setOnClickListener(new View.OnClickListener() {

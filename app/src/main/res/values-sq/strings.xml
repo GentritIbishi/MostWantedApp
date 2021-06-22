@@ -33,6 +33,7 @@
     <string name="user_password">Password</string>
     <string name="user_confirm_password">Confirm Password</string>
     <string name="button_register_user">Register User</string>
+    <string name="button_update_user">Update User</string>
     <string name="error_please_provide_valid_email">Please provide valid email!</string>
     <string name="error_password_required">Password is required!</string>
     <string name="error_confirm_password_required">Confirm Password is required!</string>
@@ -54,6 +55,10 @@
     <string name="image_uploaded">Image Uploaded!</string>
     <string name="image_failed_to_uplaod">Image failed to upload!</string>
     <string name="image_not_set">Image not set!</string>
+    <string name="role">Role</string>
+    <string name="Data_success_updated">Data has been updated, redirect to login to see results!</string>
+    <string name="edit_data">Edit Data</string>
+
 
     <string-array name="roles">
         <item>Admin</item>

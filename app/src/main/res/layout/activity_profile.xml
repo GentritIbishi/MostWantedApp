@@ -116,20 +116,18 @@
             android:textColor="@color/white"
             android:layout_below="@id/tv_email" />
 
-        <Button
-            android:layout_marginTop="16dp"
-            android:id="@+id/bt_changeProfileImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/change_profile_image"
-            android:layout_below="@id/tv_real_email" />
 
         <Button
-            android:id="@+id/bt_logout"
+            android:id="@+id/bt_edit_data"
+            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/logout"
-            android:layout_below="@id/bt_changeProfileImage" />
+            android:layout_below="@id/tv_real_email"
+            android:text="@string/edit_data"
+            android:textSize="22sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:background="@drawable/bt_edit_data"/>
 
     </RelativeLayout>
 
