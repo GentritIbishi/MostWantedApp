@@ -1,91 +1,102 @@
 package fiek.unipr.mostwantedapp;
 
-public class Person {
-    String fullName, address, et_eyeColor, et_hairColor, et_phy_appearance, et_acts;
-    Integer age, et_height, et_weight;
+import android.net.Uri;
 
-    public Person(String fullName, String address, String et_eyeColor, String et_hairColor, String et_phy_appearance, String et_acts, Integer age, Integer et_height, Integer et_weight) {
+public class Person {
+    String fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile;
+    Integer age, height, weight;
+
+    public Person(String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, Integer age, Integer height, Integer weight) {
         this.fullName = fullName;
         this.address = address;
-        this.et_eyeColor = et_eyeColor;
-        this.et_hairColor = et_hairColor;
-        this.et_phy_appearance = et_phy_appearance;
-        this.et_acts = et_acts;
+        this.eyeColor = eyeColor;
+        this.hairColor = hairColor;
+        this.phy_appearance = phy_appearance;
+        this.acts = acts;
+        this.urlOfProfile = urlOfProfile;
         this.age = age;
-        this.et_height = et_height;
-        this.et_weight = et_weight;
+        this.height = height;
+        this.weight = weight;
     }
 
     public String getFullName() {
         return fullName;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public String getEt_eyeColor() {
-        return et_eyeColor;
-    }
-
-    public String getEt_hairColor() {
-        return et_hairColor;
-    }
-
-    public String getEt_phy_appearance() {
-        return et_phy_appearance;
-    }
-
-    public String getEt_acts() {
-        return et_acts;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public Integer getEt_height() {
-        return et_height;
-    }
-
-    public Integer getEt_weight() {
-        return et_weight;
-    }
-
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getAddress() {
+        return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
     }
 
-    public void setEt_eyeColor(String et_eyeColor) {
-        this.et_eyeColor = et_eyeColor;
+    public String getEyeColor() {
+        return eyeColor;
     }
 
-    public void setEt_hairColor(String et_hairColor) {
-        this.et_hairColor = et_hairColor;
+    public void setEyeColor(String eyeColor) {
+        this.eyeColor = eyeColor;
     }
 
-    public void setEt_phy_appearance(String et_phy_appearance) {
-        this.et_phy_appearance = et_phy_appearance;
+    public String getHairColor() {
+        return hairColor;
     }
 
-    public void setEt_acts(String et_acts) {
-        this.et_acts = et_acts;
+    public void setHairColor(String hairColor) {
+        this.hairColor = hairColor;
+    }
+
+    public String getPhy_appearance() {
+        return phy_appearance;
+    }
+
+    public void setPhy_appearance(String phy_appearance) {
+        this.phy_appearance = phy_appearance;
+    }
+
+    public String getActs() {
+        return acts;
+    }
+
+    public void setActs(String acts) {
+        this.acts = acts;
+    }
+
+    public String getUrlOfProfile() {
+        return urlOfProfile;
+    }
+
+    public void setUrlOfProfile(String urlOfProfile) {
+        this.urlOfProfile = urlOfProfile;
+    }
+
+    public Integer getAge() {
+        return age;
     }
 
     public void setAge(Integer age) {
         this.age = age;
     }
 
-    public void setEt_height(Integer et_height) {
-        this.et_height = et_height;
+    public Integer getHeight() {
+        return height;
     }
 
-    public void setEt_weight(Integer et_weight) {
-        this.et_weight = et_weight;
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
     }
 
 }

@@ -1,9 +1,15 @@
 package fiek.unipr.mostwantedapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
@@ -14,21 +20,35 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
+
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class RegisterPerson extends AppCompatActivity implements View.OnClickListener {
 
+    public static final String PREFS_NAME = "regPersonPreference";
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
-    private DocumentReference documentReference;
-    ImageView imgOfPerson;
+    DocumentReference documentReference;
+    private StorageReference storageReference;
     private EditText et_fullName, et_address, et_age, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts;
     private Button registerPerson;
     private ProgressBar progressBar;
@@ -53,10 +73,10 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
         et_hairColor = findViewById(R.id.et_hairColor);
         et_phy_appearance = findViewById(R.id.et_phy_appearance);
         et_acts = findViewById(R.id.et_acts);
-
-
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference();
         progressBar = findViewById(R.id.progressBar);
-
 
     }
 
@@ -148,28 +168,40 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
 
         progressBar.setVisibility(View.VISIBLE);
 
-        Person person = new Person(fullName, address, eyeColor, hairColor, phy_appearance, acts, age, height, weight);
+        Person person = new Person(fullName, address, eyeColor, hairColor, phy_appearance, acts, null, age, height, weight);
 
-        CollectionReference collectionReference = firebaseFirestore.collection("wanted_persons");
-        collectionReference.add(person).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        firebaseFirestore.collection("wanted_persons").document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentReference documentReference) {
-                Toast.makeText(RegisterPerson.this, RegisterPerson.this.getText(R.string.this_person_with_this)+documentReference.getId()+RegisterPerson.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.GONE);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(RegisterPerson.this, R.string.this_person_with_this+documentReference.getId()+R.string.was_registered_successfully, Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.GONE);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.getResult().exists())
+                {
+                    Toast.makeText(RegisterPerson.this, "This person with this name: "+fullName+" exists in database, please add ex: Filan Fisteku 1", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
+                }
+                else
+                {
+                    firebaseFirestore.collection("wanted_persons").document(fullName).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(RegisterPerson.this, RegisterPerson.this.getText(R.string.this_person_with_this)+" "+fullName+" "+RegisterPerson.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                            Intent registerPerson = new Intent(RegisterPerson.this, PersonImage.class);
+                            Bundle personBundle = new Bundle();
+                            personBundle.putString("personFullName", fullName);
+                            registerPerson.putExtras(personBundle);
+                            progressBar.setVisibility(View.GONE);
+                            startActivity(registerPerson);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(RegisterPerson.this, R.string.person_failed_to_register, Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    });
+                }
             }
         });
 
-
-
-
-
-
-
     }
+
 }

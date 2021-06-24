@@ -199,7 +199,7 @@ public class UpdateUser extends AppCompatActivity {
                 fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Picasso.get().load(uri).into(imgUser_update);
+                        Picasso.get().load(uri).transform(new CircleTransform()).into(imgUser_update);
                     }
                 });
             }
