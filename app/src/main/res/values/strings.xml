@@ -27,6 +27,7 @@
     <string name="error_email_required">Email is required!</string>
     <string name="error_phy_appearance_required">Physical Appearance is required!</string>
     <string name="error_acts_required">Acts is required!</string>
+    <string name="error_status_required">Status is required!</string>
     <string name="user_full_name">Full Name</string>
     <string name="user_email">Email Address</string>
     <string name="your_email_address">Your Email Address</string>
@@ -65,6 +66,7 @@
     <string name="successfully">Succesfully!</string>
     <string name="uri_failed_to_set">Uri failed to set!</string>
     <string name="profile_picture_added">Profile Picture added!</string>
+    <string name="status">Status</string>
 
     <string-array name="roles">
         <item>Admin</item>

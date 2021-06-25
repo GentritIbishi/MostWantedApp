@@ -65,6 +65,8 @@
     <string name="successfully">Succesfully!</string>
     <string name="uri_failed_to_set">Uri failed to set!</string>
     <string name="profile_picture_added">Profile Picture added!</string>
+    <string name="status">Status</string>
+    <string name="error_status_required">Status is required!</string>
 
 
     <string-array name="roles">

@@ -3,10 +3,10 @@ package fiek.unipr.mostwantedapp;
 import android.net.Uri;
 
 public class Person {
-    String fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile;
+    String fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status;
     Integer age, height, weight;
 
-    public Person(String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, Integer age, Integer height, Integer weight) {
+    public Person(String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, Integer age, Integer height, Integer weight) {
         this.fullName = fullName;
         this.address = address;
         this.eyeColor = eyeColor;
@@ -14,9 +14,14 @@ public class Person {
         this.phy_appearance = phy_appearance;
         this.acts = acts;
         this.urlOfProfile = urlOfProfile;
+        this.status = status;
         this.age = age;
         this.height = height;
         this.weight = weight;
+    }
+
+    public Person() {
+
     }
 
     public String getFullName() {
@@ -75,6 +80,14 @@ public class Person {
         this.urlOfProfile = urlOfProfile;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public Integer getAge() {
         return age;
     }
@@ -98,5 +111,4 @@ public class Person {
     public void setWeight(Integer weight) {
         this.weight = weight;
     }
-
 }

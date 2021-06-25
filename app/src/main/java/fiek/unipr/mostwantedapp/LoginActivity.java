@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tvguest:
-                startActivity(new Intent(this, ListViewPerson.class));
+                startActivity(new Intent(this, PersonActivity.class));
                 break;
         }
 

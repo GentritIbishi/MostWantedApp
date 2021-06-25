@@ -49,7 +49,7 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
     private FirebaseFirestore firebaseFirestore;
     DocumentReference documentReference;
     private StorageReference storageReference;
-    private EditText et_fullName, et_address, et_age, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts;
+    private EditText et_fullName, et_address, et_age, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts, et_status;
     private Button registerPerson;
     private ProgressBar progressBar;
 
@@ -66,6 +66,7 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
 
         et_fullName = findViewById(R.id.et_fullName);
         et_address = findViewById(R.id.et_address);
+        et_status = findViewById(R.id.et_status);
         et_age = findViewById(R.id.et_age);
         et_height = findViewById(R.id.et_height);
         et_weight = findViewById(R.id.et_weight);
@@ -102,6 +103,7 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
         String hairColor = et_hairColor.getText().toString().trim();
         String phy_appearance = et_phy_appearance.getText().toString().trim();
         String acts = et_acts.getText().toString().trim();
+        String status = et_status.getText().toString().trim();
 
         if(fullName.isEmpty())
         {
@@ -166,9 +168,16 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
             return;
         }
 
+        if(status.isEmpty())
+        {
+            et_status.setError(getText(R.string.error_status_required));
+            et_status.requestFocus();
+            return;
+        }
+
         progressBar.setVisibility(View.VISIBLE);
 
-        Person person = new Person(fullName, address, eyeColor, hairColor, phy_appearance, acts, null, age, height, weight);
+        Person person = new Person(fullName, address, eyeColor, hairColor, phy_appearance, acts, null, status, age, height, weight);
 
         firebaseFirestore.collection("wanted_persons").document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
