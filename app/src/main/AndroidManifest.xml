@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MostWantedApp">
-        <activity android:name=".LocationReports"></activity>
+        <activity android:name=".UpdatePerson"></activity>
+        <activity android:name=".LocationReports" />
         <activity android:name=".UserActivity" />
         <activity android:name=".PersonActivity" />
         <activity android:name=".PersonImage" />

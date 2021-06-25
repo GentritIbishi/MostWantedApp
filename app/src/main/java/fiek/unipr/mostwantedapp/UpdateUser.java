@@ -127,7 +127,7 @@ public class UpdateUser extends AppCompatActivity {
     }
 
     private boolean isFullNameChanged() {
-        if(!email.equals(et_user_fullname_update.getText().toString()))
+        if(!fullName.equals(et_user_fullname_update.getText().toString()))
         {
             DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
             docRef.update("fullName", et_user_fullname_update.getText().toString());

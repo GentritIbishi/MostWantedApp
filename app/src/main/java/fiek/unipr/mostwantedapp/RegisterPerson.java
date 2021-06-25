@@ -40,6 +40,7 @@ import com.squareup.picasso.Picasso;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 public class RegisterPerson extends AppCompatActivity implements View.OnClickListener {
 
@@ -93,7 +94,6 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
 
     private void registerPerson() {
         Integer checkNull = null;
-
         String fullName = et_fullName.getText().toString().trim();
         String address = et_address.getText().toString().trim();
         Integer age = Integer.parseInt(et_age.getText().toString().trim());

@@ -1,6 +1,8 @@
 package fiek.unipr.mostwantedapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -19,6 +23,10 @@ import java.util.List;
 
 public class PersonListAdapter extends ArrayAdapter<Person> {
     // constructor for our list view adapter.
+
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+
     public PersonListAdapter(@NonNull Context context, ArrayList<Person> personArrayList) {
         super(context, 0, personArrayList);
     }
@@ -55,12 +63,27 @@ public class PersonListAdapter extends ArrayAdapter<Person> {
 
         // below line is use to add item click listener
         // for our item of list view.
+        listitemView.setClickable(true);
         listitemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // on the item click on our list view.
                 // we are displaying a toast message.
-                Toast.makeText(getContext(), "Item clicked is : " + person.getFullName(), Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(v.getContext(),UpdatePerson.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Bundle viewBundle = new Bundle();
+                viewBundle.putString("fullName", person.getFullName());
+                viewBundle.putString("acts", person.getActs());
+                viewBundle.putString("address", person.getAddress());
+                viewBundle.putInt("age", person.getAge());
+                viewBundle.putString("eyeColor", person.getEyeColor());
+                viewBundle.putString("hairColor", person.getHairColor());
+                viewBundle.putInt("height", person.getHeight());
+                viewBundle.putString("phy_appearance", person.getPhy_appearance());
+                viewBundle.putString("status", person.getStatus());
+                viewBundle.putString("urlOfProfile", person.getUrlOfProfile());
+                viewBundle.putInt("weight", person.getWeight());
+                intent.putExtras(viewBundle);
+                v.getContext().startActivity(intent);
             }
         });
         return listitemView;

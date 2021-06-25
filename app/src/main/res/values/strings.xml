@@ -16,6 +16,7 @@
     <string name="physical_appearance">Physical Appearance</string>
     <string name="acts">Acts</string>
     <string name="register_person">Register Person</string>
+    <string name="update_person">Update Person</string>
     <string name="person">Person</string>
     <string name="error_fullname_required">Full name is required!</string>
     <string name="error_address_required">Address is required!</string>
@@ -27,6 +28,7 @@
     <string name="error_email_required">Email is required!</string>
     <string name="error_phy_appearance_required">Physical Appearance is required!</string>
     <string name="error_acts_required">Acts is required!</string>
+    <string name="error_not_allowed">Not allowed "numbers" in this field!</string>
     <string name="error_status_required">Status is required!</string>
     <string name="user_full_name">Full Name</string>
     <string name="user_email">Email Address</string>
@@ -57,7 +59,7 @@
     <string name="image_failed_to_uplaod">Image failed to upload!</string>
     <string name="image_not_set">Image not set!</string>
     <string name="role">Role</string>
-    <string name="Data_success_updated">Data has been updated, redirect to login to see results!</string>
+    <string name="Data_success_updated">Data has been updated, to see results u need to re-login again!</string>
     <string name="edit_data">Edit Data</string>
     <string name="this_person_with_this">The person with name: </string>
     <string name="was_registered_successfully"> was registered successfully</string>

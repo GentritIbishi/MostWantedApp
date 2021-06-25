@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary_color"
+    tools:context=".UpdatePerson">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/imgPerson_update"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_person"></ImageView>
+
+        <ImageView
+            android:id="@+id/img_setNewProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_plus_for_person"
+            android:layout_below="@id/imgPerson_update"
+            android:layout_centerHorizontal="true"/>
+
+        <EditText
+            android:id="@+id/et_person_fullName_update"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/et_register_persons"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:hint="@string/full_name"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:layout_below="@+id/img_setNewProfile"
+            style="@android:style/Widget.EditText"
+            android:imeOptions="actionNext"></EditText>
+
+        <EditText
+            android:id="@+id/et_person_address_update"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/et_register_persons"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/address"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:imeOptions="actionNext"
+            android:layout_below="@+id/et_person_fullName_update"></EditText>
+
+        <EditText
+            android:id="@+id/et_person_age_update"
+            android:background="@drawable/et_register_persons"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/age"
+            android:inputType="number"
+            android:textSize="16sp"
+            android:imeOptions="actionNext"
+            android:layout_below="@+id/et_person_address_update"></EditText>
+
+        <EditText
+            android:id="@+id/et_person_height_update"
+            android:background="@drawable/et_register_persons"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/height"
+            android:inputType="number"
+            android:textSize="16sp"
+            android:imeOptions="actionNext"
+            android:layout_below="@+id/et_person_age_update"></EditText>
+
+        <EditText
+            android:id="@+id/et_person_weight_update"
+            android:background="@drawable/et_register_persons"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/weight"
+            android:inputType="number"
+            android:textSize="16sp"
+            android:imeOptions="actionNext"
+            android:layout_below="@+id/et_person_height_update"></EditText>
+
+        <EditText
+            android:id="@+id/et_person_eyeColor_update"
+            android:background="@drawable/et_register_persons"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/eye_color"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:imeOptions="actionNext"
+            android:layout_below="@+id/et_person_weight_update"></EditText>
+
+        <EditText
+            android:id="@+id/et_person_hairColor_update"
+            android:background="@drawable/et_register_persons"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hair_color"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:imeOptions="actionNext"
+            android:layout_below="@+id/et_person_eyeColor_update"></EditText>
+
+        <EditText
+            android:id="@+id/et_person_phy_appearance_update"
+            android:background="@drawable/et_register_persons"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/physical_appearance"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:imeOptions="actionNext"
+            android:layout_below="@+id/et_person_hairColor_update"></EditText>
+
+        <EditText
+            android:id="@+id/et_person_acts_update"
+            android:background="@drawable/et_register_persons"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/acts"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:imeOptions="actionNext"
+            android:layout_below="@+id/et_person_phy_appearance_update"></EditText>
+
+        <EditText
+            android:id="@+id/et_person_status_update"
+            android:background="@drawable/et_register_persons"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/status"
+            android:inputType="text"
+            android:textSize="16sp"
+            android:imeOptions="actionNext"
+            android:layout_below="@+id/et_person_acts_update"></EditText>
+
+        <Button
+            android:id="@+id/bt_updatePerson"
+            android:layout_marginTop="7dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:text="@string/update_person"
+            android:background="@drawable/bt_update_person"
+            android:layout_below="@+id/et_person_status_update"></Button>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_height="match_parent"
+            android:layout_width="75dp"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>

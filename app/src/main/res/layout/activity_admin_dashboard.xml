@@ -249,6 +249,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
+                android:paddingBottom="16dp"
                 />
         </RelativeLayout>
         <ProgressBar
