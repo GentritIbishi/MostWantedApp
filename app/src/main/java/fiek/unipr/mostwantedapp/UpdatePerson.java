@@ -5,7 +5,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -34,17 +38,19 @@ import com.squareup.picasso.Picasso;
 
 public class UpdatePerson extends AppCompatActivity {
 
+    private static final int REQUEST_LOCATION = 1;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseUser firebaseUser;
     private DocumentReference documentReference;
+    LocationManager locationManager;
+    String latitude, longitude;
     private StorageReference storageReference;
     String fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status;
     Integer age, height, weight;
-    ImageView imgPerson_update, img_setNewProfile;
+    ImageView imgPerson_update, img_setNewProfile, img_delete, img_up, img_send_location;
     EditText et_person_fullName_update, et_person_address_update, et_person_age_update, et_person_height_update, et_person_weight_update, et_person_eyeColor_update,
             et_person_hairColor_update, et_person_phy_appearance_update, et_person_acts_update, et_person_status_update;
-    Button bt_updatePerson;
     ProgressBar progressBar;
 
     @Override
@@ -53,6 +59,9 @@ public class UpdatePerson extends AppCompatActivity {
         setContentView(R.layout.activity_update_person);
 
         imgPerson_update = findViewById(R.id.imgPerson_update);
+        img_delete = findViewById(R.id.img_delete);
+        img_up = findViewById(R.id.img_up);
+        img_send_location = findViewById(R.id.img_send_location);
         et_person_fullName_update = findViewById(R.id.et_person_fullName_update);
         et_person_address_update = findViewById(R.id.et_person_address_update);
         et_person_age_update = findViewById(R.id.et_person_age_update);
@@ -64,7 +73,6 @@ public class UpdatePerson extends AppCompatActivity {
         et_person_acts_update = findViewById(R.id.et_person_acts_update);
         et_person_status_update = findViewById(R.id.et_person_status_update);
         img_setNewProfile = findViewById(R.id.img_setNewProfile);
-        bt_updatePerson = findViewById(R.id.bt_updatePerson);
         progressBar = findViewById(R.id.progressBar);
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -74,10 +82,26 @@ public class UpdatePerson extends AppCompatActivity {
         if(user != null)
         {
             //User logged in dhe button visible
+            img_send_location.setVisibility(View.GONE);
         }
         else
         {
             //No User logged in dhe button gone
+            img_up.setVisibility(View.GONE);
+            img_delete.setVisibility(View.GONE);
+            img_setNewProfile.setVisibility(View.GONE);
+
+            disableEditText(et_person_fullName_update);
+            disableEditText(et_person_acts_update);
+            disableEditText(et_person_address_update);
+            disableEditText(et_person_age_update);
+            disableEditText(et_person_eyeColor_update);
+            disableEditText(et_person_hairColor_update);
+            disableEditText(et_person_height_update);
+            disableEditText(et_person_phy_appearance_update);
+            disableEditText(et_person_weight_update);
+            disableEditText(et_person_status_update);
+
         }
 
         Bundle personInfos = getIntent().getExtras();
@@ -120,7 +144,7 @@ public class UpdatePerson extends AppCompatActivity {
             }
         });
 
-        bt_updatePerson.setOnClickListener(new View.OnClickListener() {
+        img_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 runOnUiThread(new Runnable() {
@@ -142,6 +166,17 @@ public class UpdatePerson extends AppCompatActivity {
             }
         });
 
+        img_send_location.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
+                {
+                    Toast.makeText(UpdatePerson.this, "NoGPS", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
     }
 
     private void setProfile() {
@@ -158,6 +193,13 @@ public class UpdatePerson extends AppCompatActivity {
         et_person_weight_update.setText(String.valueOf(weight));
         Picasso.get().load(urlOfProfile).transform(new CircleTransform()).into(imgPerson_update);
 
+    }
+
+    private void disableEditText(EditText editText) {
+        editText.setFocusable(false);
+        editText.setEnabled(false);
+        editText.setCursorVisible(false);
+        editText.setKeyListener(null);
     }
 
     private void Updateprofile() {

@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary_color"
     tools:context=".UpdatePerson">
+
+    <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -179,17 +183,38 @@
             android:imeOptions="actionNext"
             android:layout_below="@+id/et_person_acts_update"></EditText>
 
-        <Button
-            android:id="@+id/bt_updatePerson"
-            android:layout_marginTop="7dp"
+        <RelativeLayout
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:text="@string/update_person"
-            android:background="@drawable/bt_update_person"
-            android:layout_below="@+id/et_person_status_update"></Button>
+            android:background="@drawable/et_corners_rounded"
+            android:padding="15dp"
+            android:layout_below="@id/et_person_status_update">
+
+            <ImageView
+                android:id="@+id/img_delete"
+                android:layout_toLeftOf="@+id/img_send_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40dp"
+                android:src="@drawable/ic_delete_person"/>
+
+            <ImageView
+                android:id="@+id/img_up"
+                android:layout_marginLeft="40dp"
+                android:layout_toRightOf="@+id/img_send_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_update_person"/>
+
+            <ImageView
+                android:id="@+id/img_send_location"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_send_location_person"/>
+
+        </RelativeLayout>
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -202,5 +227,7 @@
             android:visibility="gone" />
 
     </RelativeLayout>
+
+</androidx.core.widget.NestedScrollView>
 
 </androidx.core.widget.NestedScrollView>
