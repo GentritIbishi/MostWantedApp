@@ -37,7 +37,7 @@ public class UserDashboardActivity extends AppCompatActivity implements View.OnC
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     StorageReference storageReference;
-    LinearLayout l_userProfile, l_registerPerson;
+    LinearLayout l_userProfile, l_registerPerson, l_u_personsList, l_u_locationReports;
     ImageView user_img_profile;
     TextView tv_dashboard;
     Button bt_logout;
@@ -52,6 +52,10 @@ public class UserDashboardActivity extends AppCompatActivity implements View.OnC
         l_registerPerson.setOnClickListener(this);
         l_userProfile = findViewById(R.id.l_userProfile);
         l_userProfile.setOnClickListener(this);
+        l_u_personsList = findViewById(R.id.l_u_personsList);
+        l_u_personsList.setOnClickListener(this);
+        l_u_locationReports = findViewById(R.id.l_u_locationReports);
+        l_u_locationReports.setOnClickListener(this);
         tv_dashboard = findViewById(R.id.tv_dashboard);
         bt_logout = findViewById(R.id.bt_logout);
         user_img_profile = findViewById(R.id.user_img_profile);
@@ -112,6 +116,12 @@ public class UserDashboardActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.l_registerPerson:
                 startActivity(new Intent(UserDashboardActivity.this, RegisterPerson.class));
+                break;
+            case R.id.l_u_personsList:
+                startActivity(new Intent(UserDashboardActivity.this, PersonActivity.class));
+                break;
+            case R.id.l_u_locationReports:
+                startActivity(new Intent(UserDashboardActivity.this, LocationReports.class));
                 break;
         }
     }

@@ -67,6 +67,11 @@
     <string name="uri_failed_to_set">Uri failed to set!</string>
     <string name="profile_picture_added">Profile Picture added!</string>
     <string name="status">Status</string>
+    <string name="see_users">See Users</string>
+    <string name="see_persons">See Persons</string>
+    <string name="location_reports">Location Reports</string>
+    <string name="four_items">4 Items</string>
+    <string name="six_items">6 Items</string>
 
     <string-array name="roles">
         <item>Admin</item>

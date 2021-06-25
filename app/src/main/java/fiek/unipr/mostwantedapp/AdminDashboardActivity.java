@@ -38,7 +38,7 @@ public class AdminDashboardActivity extends AppCompatActivity implements View.On
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     StorageReference storageReference;
-    LinearLayout l_registerUser, l_registerPerson, l_adminProfile;
+    LinearLayout l_registerUser, l_registerPerson, l_adminProfile, l_userList, l_personsList, l_locationReports;
     ImageView admin_img_profile;
     TextView tv_dashboard;
     Button bt_logout;
@@ -53,6 +53,12 @@ public class AdminDashboardActivity extends AppCompatActivity implements View.On
         l_registerPerson.setOnClickListener(this);
         l_registerUser = findViewById(R.id.l_registerUser);
         l_registerUser.setOnClickListener(this);
+        l_locationReports = findViewById(R.id.l_locationReports);
+        l_locationReports.setOnClickListener(this);
+        l_userList = findViewById(R.id.l_userList);
+        l_userList.setOnClickListener(this);
+        l_personsList = findViewById(R.id.l_personsList);
+        l_personsList.setOnClickListener(this);
         l_adminProfile = findViewById(R.id.l_adminProfile);
         l_adminProfile.setOnClickListener(this);
         tv_dashboard = findViewById(R.id.tv_dashboard);
@@ -115,8 +121,16 @@ public class AdminDashboardActivity extends AppCompatActivity implements View.On
                 startActivity(new Intent(AdminDashboardActivity.this, RegisterPerson.class));
                 break;
             case R.id.l_adminProfile:
-                Intent adminProfileIntent = new Intent(AdminDashboardActivity.this, Profile.class);
-                startActivity(adminProfileIntent);
+                startActivity(new Intent(AdminDashboardActivity.this, Profile.class));
+                break;
+            case R.id.l_userList:
+                startActivity(new Intent(AdminDashboardActivity.this, UserActivity.class));
+                break;
+            case R.id.l_personsList:
+                startActivity(new Intent(AdminDashboardActivity.this, PersonActivity.class));
+                break;
+            case R.id.l_locationReports:
+                startActivity(new Intent(AdminDashboardActivity.this, LocationReports.class));
                 break;
         }
     }

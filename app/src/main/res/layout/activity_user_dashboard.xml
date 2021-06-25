@@ -21,7 +21,7 @@
 
             <TextView
                 android:id="@+id/tv_dashboard"
-                android:text="Dashboard"
+                android:text="@string/dashboard"
                 android:textSize="22sp"
                 android:textColor="#FFFFFF"
                 android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
             <TextView
                 android:layout_marginTop="6dp"
                 android:layout_below="@+id/tv_dashboard"
-                android:text="12 Items"
+                android:text="@string/four_items"
                 android:textSize="14sp"
                 android:textColor="#52BAFF"
                 android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <ImageView
-                        android:src="@drawable/ic_user_black"
+                        android:src="@drawable/ic_profile_color"
                         android:layout_width="80dp"
                         android:layout_height="80dp" />
                     <TextView
@@ -125,6 +125,7 @@
                 app:cardCornerRadius="12dp"
                 android:layout_margin="12dp">
                 <LinearLayout
+                    android:id="@+id/l_u_locationReports"
                     android:orientation="vertical"
                     android:padding="16dp"
                     android:gravity="center"
@@ -133,13 +134,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <ImageView
-                        android:src="@drawable/bookmark_dashboard"
+                        android:src="@drawable/ic_location"
                         android:layout_width="80dp"
                         android:layout_height="80dp" />
                     <TextView
                         android:layout_marginTop="12dp"
                         android:textColor="#6f6f6f"
-                        android:text="Bookmark"
+                        android:text="@string/location_reports"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -153,8 +154,8 @@
                 app:cardElevation="6dp"
                 app:cardCornerRadius="12dp"
                 android:layout_margin="12dp">
-
                 <LinearLayout
+                    android:id="@+id/l_u_personsList"
                     android:orientation="vertical"
                     android:padding="16dp"
                     android:gravity="center"
@@ -163,13 +164,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <ImageView
-                        android:src="@drawable/bookmark_dashboard"
+                        android:src="@drawable/ic_person_eye"
                         android:layout_width="80dp"
                         android:layout_height="80dp" />
                     <TextView
                         android:layout_marginTop="12dp"
                         android:textColor="#6f6f6f"
-                        android:text="Bookmark"
+                        android:text="@string/see_persons"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
