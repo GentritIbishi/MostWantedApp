@@ -3,16 +3,24 @@ package fiek.unipr.mostwantedapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,8 +51,8 @@ public class UpdatePerson extends AppCompatActivity {
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseUser firebaseUser;
     private DocumentReference documentReference;
-    LocationManager locationManager;
-    String latitude, longitude;
+    Location mlocation;
+    Double latitude, longitude;
     private StorageReference storageReference;
     String fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status;
     Integer age, height, weight;
@@ -79,13 +87,10 @@ public class UpdatePerson extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user != null)
-        {
+        if (user != null) {
             //User logged in dhe button visible
             img_send_location.setVisibility(View.GONE);
-        }
-        else
-        {
+        } else {
             //No User logged in dhe button gone
             img_up.setVisibility(View.GONE);
             img_delete.setVisibility(View.GONE);
@@ -105,8 +110,7 @@ public class UpdatePerson extends AppCompatActivity {
         }
 
         Bundle personInfos = getIntent().getExtras();
-        if(personInfos != null)
-        {
+        if (personInfos != null) {
             fullName = personInfos.get("fullName").toString();
             acts = personInfos.get("acts").toString();
             address = personInfos.get("address").toString();
@@ -119,9 +123,7 @@ public class UpdatePerson extends AppCompatActivity {
             urlOfProfile = personInfos.get("urlOfProfile").toString();
             weight = personInfos.getInt("weight");
             hairColor = personInfos.get("hairColor").toString();
-        }
-        else
-        {
+        } else {
             fullName = null;
             acts = null;
             address = null;
@@ -136,7 +138,7 @@ public class UpdatePerson extends AppCompatActivity {
             hairColor = null;
         }
 
-        StorageReference profileRef = storageReference.child("persons/"+fullName+"/profile.jpg");
+        StorageReference profileRef = storageReference.child("persons/" + fullName + "/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -166,18 +168,79 @@ public class UpdatePerson extends AppCompatActivity {
             }
         });
 
+        // Now first make a criteria with your requirements
+        // this is done to save the battery life of the device
+        // there are various other other criteria you can search for..
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setSpeedRequired(false);
+        criteria.setCostAllowed(true);
+        criteria.setHorizontalAccuracy(Criteria.ACCURACY_HIGH);
+        criteria.setVerticalAccuracy(Criteria.ACCURACY_HIGH);
+
+        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        final Looper looper = null;
+
         img_send_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                if(!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER))
-                {
-                    Toast.makeText(UpdatePerson.this, "NoGPS", Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.VISIBLE);
+                if (ActivityCompat.checkSelfPermission(UpdatePerson.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(UpdatePerson.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }else {
+                    locationManager.requestSingleUpdate(criteria, locationListener, looper);
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(UpdatePerson.this, R.string.thank_location, Toast.LENGTH_LONG).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }, 5000);
+
                 }
             }
         });
 
+
     }
+
+    final LocationListener locationListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+            mlocation = location;
+            Log.d("Location Changes", location.toString());
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
+            docRef.update("latitude", latitude);
+            docRef.update("longitude", longitude);
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+            Log.d("Status Changed", String.valueOf(status));
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+            Log.d("Provider Enabled", provider);
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+            Log.d("Provider Disabled", provider);
+        }
+    };
 
     private void setProfile() {
 
@@ -205,7 +268,7 @@ public class UpdatePerson extends AppCompatActivity {
     private void Updateprofile() {
 
         if(isFullNameChanged() || isActsChanged() || isAddressChanged() || isEyeColorChanged() || isHeightChanged() || isAgeChanged()
-        || isPhyAppearanceChanged() || isStatusChanged() || isHairColorChanged() || isWeightChanged())
+                || isPhyAppearanceChanged() || isStatusChanged() || isHairColorChanged() || isWeightChanged())
         {
             Toast.makeText(UpdatePerson.this, R.string.Data_success_updated, Toast.LENGTH_SHORT).show();
             new Handler().postDelayed(new Runnable() {

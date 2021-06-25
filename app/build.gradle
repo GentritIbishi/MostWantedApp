@@ -50,4 +50,7 @@ dependencies {
     // FirebaseUI for Cloud Firestore
     implementation 'com.firebaseui:firebase-ui-firestore:7.2.0'
 
+    // location play services
+    implementation 'com.google.android.gms:play-services-location:16.0.0'
+
 }

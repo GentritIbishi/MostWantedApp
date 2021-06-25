@@ -4,7 +4,7 @@ import android.net.Uri;
 
 public class Person {
     String fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status;
-    Integer age, height, weight;
+    Integer age, height, weight, longitude, latitude;
 
     public Person(String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, Integer age, Integer height, Integer weight) {
         this.fullName = fullName;
@@ -22,6 +22,13 @@ public class Person {
 
     public Person() {
 
+    }
+
+    public Person(String fullName, Integer longitude, Integer latitude)
+    {
+        this.fullName = fullName;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getFullName() {
