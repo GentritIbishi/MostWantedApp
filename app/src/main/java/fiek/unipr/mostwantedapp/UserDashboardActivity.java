@@ -121,7 +121,7 @@ public class UserDashboardActivity extends AppCompatActivity implements View.OnC
                 startActivity(new Intent(UserDashboardActivity.this, PersonActivity.class));
                 break;
             case R.id.l_u_locationReports:
-                startActivity(new Intent(UserDashboardActivity.this, LocationReports.class));
+                startActivity(new Intent(UserDashboardActivity.this, LocationActivity.class));
                 break;
         }
     }

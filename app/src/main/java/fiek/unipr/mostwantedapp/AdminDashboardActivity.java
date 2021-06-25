@@ -130,7 +130,7 @@ public class AdminDashboardActivity extends AppCompatActivity implements View.On
                 startActivity(new Intent(AdminDashboardActivity.this, PersonActivity.class));
                 break;
             case R.id.l_locationReports:
-                startActivity(new Intent(AdminDashboardActivity.this, LocationReports.class));
+                startActivity(new Intent(AdminDashboardActivity.this, LocationActivity.class));
                 break;
         }
     }

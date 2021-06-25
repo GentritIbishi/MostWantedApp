@@ -75,6 +75,7 @@
     <string name="four_items">4 Items</string>
     <string name="six_items">6 Items</string>
     <string name="thank_location">The location was taken thanks for the cooperation</string>
+    <string name="Location">Location: </string>
 
     <string-array name="roles">
         <item>Admin</item>

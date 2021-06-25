@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="@color/primary_color">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_person_list">
+
+        <ImageView
+            android:id="@+id/profile_location_person"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/ic_photo_person_list"/>
+
+        <TextView
+            android:id="@+id/tv_location_person_fullName"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/profile_location_person"
+            android:text="Full Name"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tv_label_Location"
+            android:layout_marginTop="46dp"
+            android:layout_marginLeft="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/profile_location_person"
+            android:text="Location: "
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_latitude"
+            android:layout_marginTop="46dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_label_Location"
+            android:text="Latitude"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/tv_longitude"
+            android:layout_marginTop="46dp"
+            android:layout_marginLeft="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_latitude"
+            android:text="Longitude"
+            android:textColor="@color/white"
+            android:textSize="15sp"/>
+
+
+
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
