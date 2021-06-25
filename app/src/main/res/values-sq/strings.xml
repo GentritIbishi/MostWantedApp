@@ -76,6 +76,8 @@
     <string name="six_items">6 Items</string>
     <string name="thank_location">The location was taken thanks for the cooperation</string>
     <string name="Location">Location: </string>
+    <string name="person_delete_successfully">is deleted successfully!</string>
+    <string name="person_delete_failed"> failed to delete!</string>
 
     <string-array name="roles">
         <item>Admin</item>

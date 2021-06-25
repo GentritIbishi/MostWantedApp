@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Insets;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -90,6 +91,8 @@ public class UpdatePerson extends AppCompatActivity {
         if (user != null) {
             //User logged in dhe button visible
             img_send_location.setVisibility(View.GONE);
+            img_delete.setPadding(250,0,0,0);
+            img_up.setPadding(450,0,0,0);
         } else {
             //No User logged in dhe button gone
             img_up.setVisibility(View.GONE);
@@ -208,6 +211,25 @@ public class UpdatePerson extends AppCompatActivity {
                     }, 5000);
 
                 }
+            }
+        });
+
+        img_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
+                docRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(UpdatePerson.this, fullName+UpdatePerson.this.getText(R.string.person_delete_successfully), Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(UpdatePerson.this, fullName+UpdatePerson.this.getText(R.string.person_delete_failed), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
