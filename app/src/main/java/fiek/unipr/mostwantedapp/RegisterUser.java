@@ -145,7 +145,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                     //Pjea e dokumentit
                     String userID = firebaseAuth.getCurrentUser().getUid();
                     DocumentReference documentReference = fStore.collection("users").document(userID);
-                    User user = new User(userID, fullName, email, role);
+                    User user = new User(userID, fullName, email, role, null);
                     documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {

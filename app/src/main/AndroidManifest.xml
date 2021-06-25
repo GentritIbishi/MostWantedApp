@@ -14,14 +14,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MostWantedApp">
-        <activity android:name=".PersonActivity"></activity>
+        <activity android:name=".UserActivity"></activity>
+        <activity android:name=".PersonActivity" />
         <activity android:name=".PersonImage" />
         <activity android:name=".UpdateUser" />
         <activity android:name=".Profile" />
         <activity android:name=".UserDashboardActivity" />
         <activity android:name=".AdminDashboardActivity" />
         <activity android:name=".RegisterUser" />
-        <activity android:windowSoftInputMode="stateVisible" android:name=".RegisterPerson" />
+        <activity android:name=".RegisterPerson" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary_color">#062A61</color>
     <color name="clicked">#E0E6EF</color>
+    <color name="blue_light">#001087</color>
 </resources>

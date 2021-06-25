@@ -15,18 +15,19 @@ import com.google.firebase.storage.StorageReference;
 
 public class User {
 
-    public String userID, fullName, email, role;
+    public String userID, fullName, email, role, urlOfProfile;
 
     public User() {
 
     }
 
-    public User(String userID, String fullName, String email, String role) {
+    public User(String userID, String fullName, String email, String role, String urlOfProfile) {
         this.userID = userID;
         this.fullName = fullName;
         this.email = email;
         this.userID = userID;
         this.role = role;
+        this.urlOfProfile = urlOfProfile;
     }
 
     public User(String userID, String email, String role)
@@ -68,4 +69,11 @@ public class User {
         this.role = role;
     }
 
+    public String getUrlOfProfile() {
+        return urlOfProfile;
+    }
+
+    public void setUrlOfProfile(String urlOfProfile) {
+        this.urlOfProfile = urlOfProfile;
+    }
 }

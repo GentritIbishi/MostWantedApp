@@ -120,6 +120,8 @@ public class UpdateUser extends AppCompatActivity {
                 }
             }, 5000);
 
+
+
         }
 
     }
@@ -200,6 +202,8 @@ public class UpdateUser extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(imgUser_update);
+                        DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                        docRef.update("urlOfProfile", uri.toString());
                     }
                 });
             }
