@@ -44,7 +44,7 @@
 
 # Screenshots
 
-<img scr="https://user-images.githubusercontent.com/44057937/123526841-cd450800-d6da-11eb-9939-3f9bfeecc1b7.png" width="383" height="786">
+<img scr="123526841-cd450800-d6da-11eb-9939-3f9bfeecc1b7.png" width="383" height="786">
 
 ![AdminDashboardActivity](https://user-images.githubusercontent.com/44057937/123526837-cc13db00-d6da-11eb-9653-ef4617f29df1.png)
 ![UserDashboard](https://user-images.githubusercontent.com/44057937/123526852-d209bc00-d6da-11eb-9281-fac2abd8db4b.png)
