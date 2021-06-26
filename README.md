@@ -44,20 +44,3 @@
 
 # Screenshots
 
-<img scr="123526841-cd450800-d6da-11eb-9939-3f9bfeecc1b7.png" width="383" height="786">
-
-![AdminDashboardActivity](https://user-images.githubusercontent.com/44057937/123526837-cc13db00-d6da-11eb-9653-ef4617f29df1.png)
-![UserDashboard](https://user-images.githubusercontent.com/44057937/123526852-d209bc00-d6da-11eb-9281-fac2abd8db4b.png)
-![Profile](https://user-images.githubusercontent.com/44057937/123526848-d03ff880-d6da-11eb-87e1-e64ac87c36e0.png)
-![UpdateUserProfile](https://user-images.githubusercontent.com/44057937/123526851-d1712580-d6da-11eb-8960-dc6844f747b8.png)
-![RegisterUserorAdmin](https://user-images.githubusercontent.com/44057937/123526850-d0d88f00-d6da-11eb-856d-57c968eeb3bd.png)
-![RegisterPerson](https://user-images.githubusercontent.com/44057937/123526849-d0d88f00-d6da-11eb-8c9a-7cabcd249d71.png)
-![PhotoPersonSet](https://user-images.githubusercontent.com/44057937/123526847-cfa76200-d6da-11eb-9d6f-59541eb7ab20.png)
-![UserList](https://user-images.githubusercontent.com/44057937/123526853-d209bc00-d6da-11eb-8478-6f6823c34518.png)
-![onClickUserListItem](https://user-images.githubusercontent.com/44057937/123526842-cd450800-d6da-11eb-8f8d-ff75b246a457.png)
-![OnPersonListItemClick](https://user-images.githubusercontent.com/44057937/123526844-ce763500-d6da-11eb-8d69-8d88fb5b12a0.png)
-![OnReportAsGuestClick](https://user-images.githubusercontent.com/44057937/123526845-cf0ecb80-d6da-11eb-8e88-9fabc646bd06.png)
-![PersonatNeKerkimList](https://user-images.githubusercontent.com/44057937/123526846-cfa76200-d6da-11eb-9b10-03e1586c992d.png)
-![Location taken from report as guest](https://user-images.githubusercontent.com/44057937/123526840-ccac7180-d6da-11eb-93c0-afd225dd9cc1.png)
-![OnLocationReportsClick e sheh Latitude dhe Longitude te personave](https://user-images.githubusercontent.com/44057937/123526843-ce763500-d6da-11eb-838c-f9aabbeaf46f.png)
-
