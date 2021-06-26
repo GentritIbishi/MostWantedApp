@@ -45,18 +45,4 @@
 # Screenshots
 
 <img src="srceenshots/LoginActivity.png" width="383" height="786" >
-<img src="srceenshots/AdminDashboardActivity.png" width="383" height="786" >
-<img src="srceenshots/UserDashboard.png" width="383" height="786" >
-<img src="srceenshots/Profile.png" width="383" height="786" >
-<img src="srceenshots/UpdateUserProfile.png" width="383" height="786" >
-<img src="srceenshots/RegisterUserorAdmin.png" width="383" height="786" >
-<img src="srceenshots/RegisterPerson.png" width="383" height="786" >
-<img src="srceenshots/PhotoPersonSet.png" width="383" height="786" >
-<img src="srceenshots/UserList.png" width="383" height="786" >
-<img src="srceenshots/onClickUserListItem.png" width="383" height="786" >
-<img src="srceenshots/PersonatNeKerkimList.png" width="383" height="786" >
-<img src="srceenshots/OnPersonListItemClick.png" width="383" height="786" >
-<img src="srceenshots/OnReportAsGuestClick.png" width="383" height="786" >
-<img src="srceenshots/Location taken from report as guest.png" width="383" height="786" >
-<img src="srceenshots/OnLocationReportsClick e sheh Latitude dhe Longitude te personave.png" width="383" height="786" >
 
