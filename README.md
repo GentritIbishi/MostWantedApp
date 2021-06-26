@@ -44,5 +44,5 @@
 
 # Screenshots
 
-<img src="srceenshots/LoginActivity.png" width="383" height="786" >
+<img src="/srceenshots/LoginActivity.png" width="383" height="786" >
 
