@@ -44,9 +44,8 @@
 
 # Screenshots
 
-<img scr="https://user-images.githubusercontent.com/44057937/123526841-cd450800-d6da-11eb-9939-3f9bfeecc1b7.png">
+<img scr="https://user-images.githubusercontent.com/44057937/123526841-cd450800-d6da-11eb-9939-3f9bfeecc1b7.png" width="383" height="786">
 
-![LoginActivity](https://user-images.githubusercontent.com/44057937/123526841-cd450800-d6da-11eb-9939-3f9bfeecc1b7.png)
 ![AdminDashboardActivity](https://user-images.githubusercontent.com/44057937/123526837-cc13db00-d6da-11eb-9653-ef4617f29df1.png)
 ![UserDashboard](https://user-images.githubusercontent.com/44057937/123526852-d209bc00-d6da-11eb-9281-fac2abd8db4b.png)
 ![Profile](https://user-images.githubusercontent.com/44057937/123526848-d03ff880-d6da-11eb-87e1-e64ac87c36e0.png)
