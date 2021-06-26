@@ -44,19 +44,20 @@
 
 # Screenshots
 
-<img src="srceenshots/LoginActivity.png" width="383" height="786"/>
-<img src="srceenshots/AdminDashboardActivity.png" width="383" height="786"/>
-<img src="srceenshots/UserDashboard.png" width="383" height="786"/>
-<img src="srceenshots/Profile.png" width="383" height="786"/>
-<img src="srceenshots/UpdateUserProfile.png" width="383" height="786"/>
-<img src="srceenshots/RegisterUserorAdmin.png" width="383" height="786"/>
-<img src="srceenshots/RegisterPerson.png" width="383" height="786"/>
-<img src="srceenshots/PhotoPersonSet.png" width="383" height="786"/>
-<img src="srceenshots/UserList.png" width="383" height="786"/>
-<img src="srceenshots/onClickUserListItem.png" width="383" height="786"/>
-<img src="srceenshots/PersonatNeKerkimList.png" width="383" height="786"/>
-<img src="srceenshots/OnPersonListItemClick.png" width="383" height="786"/>
-<img src="OnReportAsGuestClick.png" width="383" height="786"/>
-<img src="Location taken from report as guest.png" width="383" height="786"/>
-<img src="OnLocationReportsClick e sheh Latitude dhe Longitude te personave.png" width="383" height="786"/>
+<img src="srceenshotsLoginActivity.png" width="383" height="786">
+<img src="srceenshotsAdminDashboardActivity.png" width="383" height="786">
+<img src="srceenshotsUserDashboard.png" width="383" height="786">
+<img src="srceenshotsProfile.png" width="383" height="786">
+<img src="srceenshotsUpdateUserProfile.png" width="383" height="786">
+<img src="srceenshotsRegisterUserorAdmin.png" width="383" height="786">
+<img src="srceenshotsRegisterPerson.png" width="383" height="786">
+<img src="srceenshotsPhotoPersonSet.png" width="383" height="786">
+<img src="srceenshotsUserList.png" width="383" height="786">
+<img src="srceenshotsonClickUserListItem.png" width="383" height="786">
+<img src="srceenshotsPersonatNeKerkimList.png" width="383" height="786">
+<img src="srceenshotsOnPersonListItemClick.png" width="383" height="786">
+<img src="OnReportAsGuestClick.png" width="383" height="786">
+<img src="Location taken from report as guest.png" width="383" height="786">
+<img src="OnLocationReportsClick e sheh Latitude dhe Longitude te personave.png" width="383" height="786">
+
 
