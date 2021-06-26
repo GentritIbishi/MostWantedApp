@@ -47,7 +47,7 @@ public class LocationListAdapter extends ArrayAdapter<Person> {
         // setting data to our view.
         // below line is use to set data to our text view.
         tv_location_person_fullName.setText(person.getFullName());
-        tv_latitude.setText(Double.toString(person.getLatitude()));
+        tv_latitude.setText(Double.toString(person.getLatitude())+"");
         tv_longitude.setText(Double.toString(person.getLongitude()));
 
 

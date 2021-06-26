@@ -115,11 +115,11 @@ public class UpdateUser extends AppCompatActivity {
                 public void run() {
                     FirebaseAuth.getInstance().signOut();
                     Intent intent = new Intent(UpdateUser.this, LoginActivity.class);
-                    progressBarUpdate.setVisibility(View.GONE);
                     startActivity(intent);
                     finish();
                 }
             }, 5000);
+            progressBarUpdate.setVisibility(View.GONE);
 
 
 

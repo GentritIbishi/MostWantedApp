@@ -200,7 +200,8 @@ public class UpdatePerson extends AppCompatActivity {
                     //                                          int[] grantResults)
                     // to handle the case where the user grants the permission. See the documentation
                     // for ActivityCompat#requestPermissions for more details.
-                    return;
+                    ActivityCompat.requestPermissions(UpdatePerson.this,
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                 }else {
                     locationManager.requestSingleUpdate(criteria, locationListener, looper);
                     new Handler().postDelayed(new Runnable() {
