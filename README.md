@@ -46,3 +46,31 @@
 
 <img src="screenshots/LoginActivity.png" width="383" height="786"/>
 
+<img src="screenshots/AdminDashboardActivity.png" width="383" height="786"/>
+
+<img src="screenshots/UserDashboard.png" width="383" height="786"/>
+
+<img src="screenshots/Profile.png" width="383" height="786"/>
+
+<img src="screenshots/UpdateUserProfile.png" width="383" height="786"/>
+
+<img src="screenshots/RegisterUserorAdmin.png" width="383" height="786"/>
+
+<img src="screenshots/RegisterPerson.png" width="383" height="786"/>
+
+<img src="screenshots/PhotoPersonSet.png" width="383" height="786"/>
+
+<img src="screenshots/UserList.png" width="383" height="786"/>
+
+<img src="screenshots/onClickUserListItem.png" width="383" height="786"/>
+
+<img src="screenshots/PersonatNeKerkimList.png" width="383" height="786"/>
+
+<img src="screenshots/OnPersonListItemClick.png" width="383" height="786"/>
+
+<img src="screenshots/OnReportAsGuestClick.png" width="383" height="786"/>
+
+<img src="screenshots/OnLocationReportsClick e sheh Latitude dhe Longitude te personave.png" width="383" height="786"/>
+
+<img src="screenshots/Location taken from report as guest.png" width="383" height="786"/>
+
