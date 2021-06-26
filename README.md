@@ -44,3 +44,4 @@
 
 # Screenshots
 
+<img scr="screenshots/AdminDashboardActivity.png"/>
