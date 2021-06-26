@@ -79,26 +79,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener {
 
     }
 
-//        bt_changeProfileImage.setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            // qyty me bo upload profile image
-//            Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//            startActivityForResult(openGalleryIntent, 1000);
-//        }
-//    });
-//
-//        bt_logout.setOnClickListener(new View.OnClickListener() {
-//        @Override
-//        public void onClick(View v) {
-//            FirebaseAuth.getInstance().signOut();
-//            Intent profileSignout = new Intent(Profile.this, LoginActivity.class);
-//            profileSignout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(profileSignout);
-//            finish();
-//        }
-//    });
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

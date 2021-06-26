@@ -5,7 +5,7 @@
     <string name="tv_password">Password</string>
     <string name="btn_login">Login</string>
     <string name="forgot_pass">Forgot Password?</string>
-    <string name="guest">Login as Guest</string>
+    <string name="guest">Report as Guest</string>
     <string name="full_name">Full Name</string>
     <string name="address">Address</string>
     <string name="age">Age</string>

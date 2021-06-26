@@ -1,6 +1,8 @@
 package fiek.unipr.mostwantedapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +62,20 @@ public class UserListAdapter extends ArrayAdapter<User> {
             public void onClick(View v) {
                 // on the item click on our list view.
                 // we are displaying a toast message.
-                Toast.makeText(getContext(), "Item clicked is : " + user.getFullName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(v.getContext(),UpdateMultipleUsers.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Bundle viewBundle = new Bundle();
+                viewBundle.putString("fullName", user.getFullName());
+                viewBundle.putString("email", user.getEmail());
+                viewBundle.putString("Role", user.getRole());
+                if(user.getUrlOfProfile() != null) {
+                    viewBundle.putString("urlOfProfile", user.getUrlOfProfile());
+                }
+                else {
+                    viewBundle.putString("urlOfProfile", "noSetURL");
+                }
+                viewBundle.putString("userID", user.getUserID());
+                intent.putExtras(viewBundle);
+                v.getContext().startActivity(intent);
             }
         });
         return listitemView;

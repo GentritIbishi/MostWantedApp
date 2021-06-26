@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.common.net.InternetDomainName;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -51,10 +52,10 @@ public class UpdatePerson extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseUser firebaseUser;
+    private StorageReference storageReference;
     private DocumentReference documentReference;
     Location mlocation;
     Double latitude, longitude;
-    private StorageReference storageReference;
     String fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status;
     Integer age, height, weight;
     ImageView imgPerson_update, img_setNewProfile, img_delete, img_up, img_send_location;
@@ -418,6 +419,21 @@ public class UpdatePerson extends AppCompatActivity {
         {
             DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
             docRef.update("fullName", et_person_fullName_update.getText().toString());
+
+            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    String oldFullName = documentSnapshot.getString("fullName");
+                    Person person = new Person(fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status, age, height, weight);
+                        firebaseFirestore.collection("wanted_persons").document(fullName).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(UpdatePerson.this, R.string.successfully, Toast.LENGTH_SHORT).show();
+                                firebaseFirestore.collection("wanted_persons").document(oldFullName).delete();
+                            }
+                        });
+                }
+            });
             return true;
         }else
         {
@@ -452,7 +468,7 @@ public class UpdatePerson extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(imgPerson_update);
-                        DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                        DocumentReference docRef = firebaseFirestore.collection("persons").document(fullName);
                         docRef.update("urlOfProfile", uri.toString());
                     }
                 });

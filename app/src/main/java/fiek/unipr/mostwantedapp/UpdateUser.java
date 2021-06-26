@@ -91,6 +91,7 @@ public class UpdateUser extends AppCompatActivity {
                         progressBarUpdate.setProgress(100);
                     }
                 });
+                progressBarUpdate.setVisibility(View.GONE);
                 Updateprofile();
             }
         });
@@ -127,6 +128,7 @@ public class UpdateUser extends AppCompatActivity {
     }
 
     private boolean isFullNameChanged() {
+        progressBarUpdate.setVisibility(View.VISIBLE);
         if(!fullName.equals(et_user_fullname_update.getText().toString()))
         {
             DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());

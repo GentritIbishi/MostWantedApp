@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UpdateMultipleUsers"
+    android:background="#062A61">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/img_multipleUsers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:padding="16dp"
+            android:src="@drawable/ic_user"></ImageView>
+
+        <ImageView
+            android:id="@+id/img_plus_multipleUsers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/img_multipleUsers"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_plus" />
+
+        <EditText
+            android:id="@+id/et_user_fullname_multipleUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/img_multipleUsers"
+            android:layout_marginTop="50dp"
+            android:hint="@string/user_full_name"
+            android:imeOptions="actionNext"
+            android:inputType="textCapSentences"
+            android:padding="16dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"></EditText>
+
+        <EditText
+            android:id="@+id/et_user_email_multipleUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_user_fullname_multipleUsers"
+            android:hint="@string/user_email"
+            android:imeOptions="actionNext"
+            android:padding="16dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"></EditText>
+
+        <EditText
+            android:id="@+id/et_user_role_multipleUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_user_email_multipleUsers"
+            android:hint="@string/role"
+            android:imeOptions="actionNext"
+            android:padding="16dp"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"></EditText>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_user_role_multipleUsers"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/et_corners_rounded"
+            android:padding="15dp">
+
+            <ImageView
+                android:id="@+id/img_delete_multipleUsers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/ic_delete_person" />
+
+            <ImageView
+                android:id="@+id/img_update_multipleUsers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ic_update_person" />
+
+        </RelativeLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBarUpdate_multipleUsers"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:indeterminate="true"
+            android:progress="80"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+</RelativeLayout>
