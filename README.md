@@ -1,8 +1,8 @@
 # MostWanted App
 
-#### MostWanted App është një aplikacion android, i cili është krijuar për të ndihmuar në gjetjen e personave të kërkuar nga #### "Policia e Kosovës" për kryerjen e veprave penale.
+#### MostWanted App është një aplikacion android, i cili është krijuar për të ndihmuar në gjetjen e personave të kërkuar nga "Policia e Kosovës" për kryerjen e veprave penale.
 
-#### Pra aplikacioni është i thjesht në perdorim pasi që njerëzit po thuajse shumicen e kohës janë aktivë ne rrjetin social #### "Facebook" ku fanpage zyrtar i policisë kosoves qdo ditë publikon foto të përsonave të kërkuar dhe që qytetarët e kosovës #### të mund ndihmojnë në gjetjen e atyre personave pra me një button "Dergo Lokacionin" e merr lokacionin ku është qytetari e #### ruan në databasen firestore duke ja marr latitude dhe longitude të lokacionin të raportuar nga qytetari.
+#### Pra aplikacioni është i thjesht në perdorim pasi që njerëzit po thuajse shumicen e kohës janë aktivë ne rrjetin social "Facebook" ku fanpage zyrtar i policisë kosoves qdo ditë publikon foto të përsonave të kërkuar dhe që qytetarët e kosovës të mund ndihmojnë në gjetjen e atyre personave pra me një button "Dergo Lokacionin" e merr lokacionin ku është qytetari e ruan në databasen firestore duke ja marr latitude dhe longitude të lokacionin të raportuar nga qytetari.
 
 # Zhvilluar nga / Developed By
 
