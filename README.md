@@ -1,6 +1,6 @@
 # MostWanted App
 
-#### SHQIP
+#### Shqip
 
 #### MostWanted App është një aplikacion android, i cili është krijuar për të ndihmuar në gjetjen e personave të kërkuar nga "Policia e Kosovës" për kryerjen e veprave penale.
 
