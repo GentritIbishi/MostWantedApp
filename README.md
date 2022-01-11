@@ -1,8 +1,17 @@
 # MostWanted App
 
+#### SHQIP
+
 #### MostWanted App është një aplikacion android, i cili është krijuar për të ndihmuar në gjetjen e personave të kërkuar nga "Policia e Kosovës" për kryerjen e veprave penale.
 
 #### Pra aplikacioni është i thjesht në perdorim pasi që njerëzit po thuajse shumicen e kohës janë aktivë ne rrjetin social "Facebook" ku fanpage zyrtar i policisë kosoves qdo ditë publikon foto të përsonave të kërkuar dhe që qytetarët e kosovës të mund ndihmojnë në gjetjen e atyre personave pra me një button "Dergo Lokacionin" e merr lokacionin ku është qytetari e ruan në databasen firestore duke ja marr latitude dhe longitude të lokacionin të raportuar nga qytetari.
+
+
+#### English
+
+#### MostWanted App is an android application, which was created to help find persons wanted by the "Kosovo Police" for committing criminal offenses.
+
+#### So the application is simple to use as people almost most of the time are active in the social network "Facebook" where the official fanpage of the Kosovo police every day publishes photos of wanted persons and that the citizens of Kosovo can help find those people so with a button "Send Location" takes the location where the citizen is stored in the firestore database taking the latitude and longitude of the location reported by the citizen.
 
 # Zhvilluar nga / Developed By
 
