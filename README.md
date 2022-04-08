@@ -16,7 +16,6 @@
 # Zhvilluar nga / Developed By
 
 #### Gentrit Ibishi - gentritibishi@gmail.com
-#### Mirsad Dibrani - mirsad.dibrani@hotmail.com
 
 # Mentor
 
