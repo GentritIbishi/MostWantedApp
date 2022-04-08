@@ -17,11 +17,6 @@
 
 #### Gentrit Ibishi - gentritibishi@gmail.com
 
-# Mentor
-
-#### Msc. Arbnor Halili
-
-
 # E ndërtuar me / Built With
 
 #### OOP(Java), Models, Material Design, ListView, PageAdapter, CardView, Animations, Spinner, SessionManagement, SharedPreferences
