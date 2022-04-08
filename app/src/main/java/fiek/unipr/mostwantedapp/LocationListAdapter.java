@@ -1,6 +1,8 @@
 package fiek.unipr.mostwantedapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +49,7 @@ public class LocationListAdapter extends ArrayAdapter<Person> {
         // setting data to our view.
         // below line is use to set data to our text view.
         tv_location_person_fullName.setText(person.getFullName());
-        tv_latitude.setText(Double.toString(person.getLatitude())+"");
+        tv_latitude.setText(Double.toString(person.getLatitude()));
         tv_longitude.setText(Double.toString(person.getLongitude()));
 
 
@@ -63,7 +65,21 @@ public class LocationListAdapter extends ArrayAdapter<Person> {
             public void onClick(View v) {
                 // on the item click on our list view.
                 // we are displaying a toast message.
-                Toast.makeText(getContext(), "Item clicked is : " + person.getFullName(), Toast.LENGTH_SHORT).show();
+               try {
+                   Toast.makeText(getContext(), person.getFullName(), Toast.LENGTH_SHORT).show();
+                   Intent maps = new Intent(getContext(), MapsActivity.class);
+                   maps.putExtra("fullName", person.getFullName());
+                   maps.putExtra("status", person.getStatus());
+                   maps.putExtra("urlOfProfile", person.getUrlOfProfile());
+                   maps.putExtra("latitude", person.getLatitude().toString());
+                   maps.putExtra("longitude", person.getLongitude().toString());
+                   getContext().startActivity(maps);
+               }catch (Exception e)
+               {
+                   Log.e("GENI", e.getMessage(), e);
+                   // ...
+               }
+
             }
         });
         return listitemView;

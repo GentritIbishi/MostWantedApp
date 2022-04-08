@@ -1,6 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/background_person_list.xml" value="0.2703125" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/bt_register_person.xml" value="0.2703125" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/et_special.xml" value="0.2703125" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_photo_person_list.xml" value="0.2703125" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_send_location_person.xml" value="0.2171875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/item_dashboard_selected.xml" value="0.20833333333333334" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/login_background.xml" value="0.2703125" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_admin_dashboard.xml" value="0.2" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_location.xml" value="0.176" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_location_reports.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_login.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_maps.xml" value="0.21195652173913043" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_person.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_person_image.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_profile.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_register_person.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_register_user.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_update_multiple_users.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_update_person.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_update_user.xml" value="0.19635416666666666" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_user.xml" value="0.19635416666666666" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_user_dashboard.xml" value="0.19635416666666666" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/location_item_single.xml" value="0.4" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/person_item_single.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/spinner_row.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/user_item_single.xml" value="0.1921875" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

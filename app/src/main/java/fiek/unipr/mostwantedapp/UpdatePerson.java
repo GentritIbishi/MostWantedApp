@@ -191,19 +191,21 @@ public class UpdatePerson extends AppCompatActivity {
         img_send_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                if (ActivityCompat.checkSelfPermission(UpdatePerson.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(UpdatePerson.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
+                if (ActivityCompat.checkSelfPermission(UpdatePerson.this,
+                        Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(UpdatePerson.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+
                     ActivityCompat.requestPermissions(UpdatePerson.this,
                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                }else {
+                else {
+                    progressBar.setVisibility(View.VISIBLE);
                     locationManager.requestSingleUpdate(criteria, locationListener, looper);
+                    try {
+                        documentReference = firebaseFirestore.collection("wanted_persons").document(fullName);
+                        documentReference.update("latitude", mlocation.getLatitude());
+                        documentReference.update("longitude", mlocation.getLongitude());
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -426,13 +428,13 @@ public class UpdatePerson extends AppCompatActivity {
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     String oldFullName = documentSnapshot.getString("fullName");
                     Person person = new Person(fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status, age, height, weight);
-                        firebaseFirestore.collection("wanted_persons").document(fullName).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Toast.makeText(UpdatePerson.this, R.string.successfully, Toast.LENGTH_SHORT).show();
-                                firebaseFirestore.collection("wanted_persons").document(oldFullName).delete();
-                            }
-                        });
+                    firebaseFirestore.collection("wanted_persons").document(fullName).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(UpdatePerson.this, R.string.successfully, Toast.LENGTH_SHORT).show();
+                            firebaseFirestore.collection("wanted_persons").document(oldFullName).delete();
+                        }
+                    });
                 }
             });
             return true;

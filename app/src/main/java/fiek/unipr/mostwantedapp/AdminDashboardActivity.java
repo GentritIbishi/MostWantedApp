@@ -82,11 +82,11 @@ public class AdminDashboardActivity extends AppCompatActivity implements View.On
             }
         });
 
-        // kthej preferencat
-        SharedPreferences settings = getSharedPreferences("loginPreferences", 0);
-        role = settings.getString("Role", "");
-        fullName = settings.getString("fullName", "");
-        email = settings.getString("email", "");
+            // kthej preferencat
+            SharedPreferences settings = getSharedPreferences("loginPreferences", 0);
+            role = settings.getString("Role", "");
+            fullName = settings.getString("fullName", "");
+            email = settings.getString("email", "");
 
         ((Activity) AdminDashboardActivity.this).runOnUiThread(new Runnable() {
             @Override

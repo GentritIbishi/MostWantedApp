@@ -4,9 +4,16 @@ import android.net.Uri;
 
 public class Person {
     String fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status;
-    Integer age, height, weight, longitude, latitude;
+    Integer age, height, weight;
+    Double longitude, latitude;
 
-    public Person(String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, Integer age, Integer height, Integer weight) {
+
+
+    public Person() {
+
+    }
+
+    public Person(String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, Integer age, Integer height, Integer weight, Double longitude, Double latitude) {
         this.fullName = fullName;
         this.address = address;
         this.eyeColor = eyeColor;
@@ -18,33 +25,18 @@ public class Person {
         this.age = age;
         this.height = height;
         this.weight = weight;
+        this.longitude = longitude;
+        this.latitude = latitude;
     }
 
-    public Person() {
-
-    }
-
-    public Person(String fullName, Integer longitude, Integer latitude)
+    public Person(String fullName, Double longitude, Double latitude)
     {
         this.fullName = fullName;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
-    public Integer getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(Integer longitude) {
-        this.longitude = longitude;
-    }
-
-    public Integer getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(Integer latitude) {
-        this.latitude = latitude;
+    public Person(String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, Object o, String status, Integer age, Integer height, Integer weight) {
     }
 
     public String getFullName() {
@@ -133,5 +125,21 @@ public class Person {
 
     public void setWeight(Integer weight) {
         this.weight = weight;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
     }
 }
