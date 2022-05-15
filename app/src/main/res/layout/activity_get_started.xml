@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    tools:context=".GetStartedActivity">
+
+    <RelativeLayout
+        android:id="@+id/view_getStarted"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/et_corners_getstarted"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/kpLogo"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_kp_logo" />
+
+        <TextView
+            android:id="@+id/tvgetStarted1"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/kpLogo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:lineSpacingExtra="4sp"
+            android:text="@string/get_started_description"
+            android:textAlignment="center"
+            android:textSize="20sp" />
+
+        <RelativeLayout
+            android:id="@+id/dots"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvgetStarted1"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/dot1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvgetStarted1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_toLeftOf="@id/dot2"
+                android:background="@drawable/ic_dot_clicked"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/dot2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvgetStarted1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/ic_dot_unclicked"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
+
+        <Button
+            android:id="@+id/bt_getStarted"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/dots"
+            android:textColor="@color/white"
+            android:background="@drawable/et_corners_rounded_getstarted"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:text="@string/let_get_started" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

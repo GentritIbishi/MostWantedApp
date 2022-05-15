@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp;
+package fiek.unipr.mostwantedapp.lists;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +15,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.models.Person;
 
 public class PersonActivity extends AppCompatActivity {
 

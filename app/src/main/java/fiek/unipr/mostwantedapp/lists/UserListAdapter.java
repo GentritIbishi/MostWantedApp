@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp;
+package fiek.unipr.mostwantedapp.lists;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,7 +16,11 @@ import androidx.annotation.Nullable;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.models.User;
+import fiek.unipr.mostwantedapp.update.UpdateMultipleUsers;
 
 public class UserListAdapter extends ArrayAdapter<User> {
     // constructor for our list view adapter.
@@ -62,7 +65,7 @@ public class UserListAdapter extends ArrayAdapter<User> {
             public void onClick(View v) {
                 // on the item click on our list view.
                 // we are displaying a toast message.
-                Intent intent = new Intent(v.getContext(),UpdateMultipleUsers.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Intent intent = new Intent(v.getContext(), UpdateMultipleUsers.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Bundle viewBundle = new Bundle();
                 viewBundle.putString("fullName", user.getFullName());
                 viewBundle.putString("email", user.getEmail());

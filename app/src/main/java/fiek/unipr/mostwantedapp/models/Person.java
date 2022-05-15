@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp;
+package fiek.unipr.mostwantedapp.models;
 
 import android.net.Uri;
 

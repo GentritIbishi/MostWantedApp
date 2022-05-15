@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp;
+package fiek.unipr.mostwantedapp.helpers;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

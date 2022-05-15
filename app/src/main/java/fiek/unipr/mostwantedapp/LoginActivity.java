@@ -10,7 +10,6 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +24,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
+import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
+import fiek.unipr.mostwantedapp.lists.PersonActivity;
+import fiek.unipr.mostwantedapp.models.User;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 

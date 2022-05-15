@@ -4,16 +4,36 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/background_person_list.xml" value="0.2703125" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/bt_edit_data.xml" value="0.1695" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/bt_login.xml" value="0.26615384615384613" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/bt_logout.xml" value="0.26615384615384613" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/bt_register_person.xml" value="0.2703125" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/bt_register_user.xml" value="0.26615384615384613" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/bt_update_user.xml" value="0.26615384615384613" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/circle_profile.xml" value="0.26615384615384613" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/dott_unclicked.xml" value="0.1695" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/et_corners_getStarted.xml" value="0.1695" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/et_corners_getstarted.xml" value="0.1695" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/et_corners_rounded.xml" value="0.1695" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/et_corners_rounded_getstarted.xml" value="0.1695" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/et_special.xml" value="0.2703125" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/et_user_selected.xml" value="0.1695" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_add_photo.xml" value="0.1695" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_app_icon.xml" value="0.1615" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_bt_edit.xml" value="0.1615" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_dot_clicked.xml" value="0.1695" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_dot_unclicked.xml" value="0.1695" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_kp_logo.xml" value="0.1695" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_photo_person_list.xml" value="0.2703125" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_profile_color.xml" value="0.1615" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_send_location_person.xml" value="0.2171875" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/item_dashboard_selected.xml" value="0.20833333333333334" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/drawable/login_background.xml" value="0.2703125" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_admin_dashboard.xml" value="0.2" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_get_started.xml" value="0.264" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_location.xml" value="0.176" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_location_reports.xml" value="0.1921875" />
-        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_login.xml" value="0.1921875" />
+        <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_login.xml" value="0.264" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_main.xml" value="0.1793478260869565" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_maps.xml" value="0.21195652173913043" />
         <entry key="..\:/Users/gentr/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_person.xml" value="0.1921875" />

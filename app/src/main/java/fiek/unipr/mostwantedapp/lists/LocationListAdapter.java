@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp;
+package fiek.unipr.mostwantedapp.lists;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,11 @@ import androidx.annotation.Nullable;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
+import fiek.unipr.mostwantedapp.maps.MapsActivity;
+import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.models.Person;
 
 public class LocationListAdapter extends ArrayAdapter<Person> {
     // constructor for our list view adapter.

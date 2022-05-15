@@ -65,7 +65,7 @@
     <string name="was_registered_successfully"> was registered successfully</string>
     <string name="person_failed_to_register">Person failed to register!</string>
     <string name="add_profile_picture">Add Profile Picture</string>
-    <string name="successfully">Succesfully!</string>
+    <string name="successfully">Successfully!</string>
     <string name="uri_failed_to_set">Uri failed to set!</string>
     <string name="profile_picture_added">Profile Picture added!</string>
     <string name="status">Status</string>
@@ -78,7 +78,9 @@
     <string name="Location">Location: </string>
     <string name="person_delete_successfully">is deleted successfully!</string>
     <string name="person_delete_failed"> failed to delete!</string>
-
+    <string name="let_get_started">Let\'s get started</string>
+    <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
+    <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous.</string>
     <string-array name="roles">
         <item>Admin</item>
         <item>User</item>

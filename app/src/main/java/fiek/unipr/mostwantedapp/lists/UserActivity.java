@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp;
+package fiek.unipr.mostwantedapp.lists;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,21 +16,25 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocationActivity extends AppCompatActivity {
+import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.models.User;
+
+public class UserActivity extends AppCompatActivity {
 
     // creating a variable for our list view,
     // arraylist and firebase Firestore.
-    ListView lvLocationOfPersons;
-    ArrayList<Person> locationArrayList;
+    ListView lvUsers;
+    ArrayList<User> userArrayList;
     FirebaseFirestore firebaseFirestore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_location);
+        setContentView(R.layout.activity_user);
 
         // below line is use to initialize our variables
-        lvLocationOfPersons = findViewById(R.id.lvLocationOfPersons);
-        locationArrayList = new ArrayList<>();
+        lvUsers = findViewById(R.id.lvUsers);
+        userArrayList = new ArrayList<>();
 
         // initializing our variable for firebase
         // firestore and getting its instance.
@@ -44,7 +48,7 @@ public class LocationActivity extends AppCompatActivity {
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
-        firebaseFirestore.collection("wanted_persons").get()
+        firebaseFirestore.collection("users").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -58,21 +62,21 @@ public class LocationActivity extends AppCompatActivity {
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
                                 // that list to our object class.
-                                Person person = d.toObject(Person.class);
+                                User user = d.toObject(User.class);
 
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
-                                locationArrayList.add(person);
+                                userArrayList.add(user);
                             }
                             // after that we are passing our array list to our adapter class.
-                            LocationListAdapter adapter = new LocationListAdapter(LocationActivity.this, locationArrayList);
+                            UserListAdapter adapter = new UserListAdapter(UserActivity.this, userArrayList);
 
                             // after passing this array list to our adapter
                             // class we are setting our adapter to our list view.
-                            lvLocationOfPersons.setAdapter(adapter);
+                            lvUsers.setAdapter(adapter);
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(LocationActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UserActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -80,9 +84,8 @@ public class LocationActivity extends AppCompatActivity {
             public void onFailure(@NonNull Exception e) {
                 // we are displaying a toast message
                 // when we get any error from Firebase.
-                Toast.makeText(LocationActivity.this, "Fail to load data..", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserActivity.this, "Fail to load data..", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fiek.unipr.mostwantedapp">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -15,14 +14,22 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
-        android:name=".SessionManagement"
+        android:name=".helpers.SessionManagement"
         android:allowBackup="true"
-        android:icon="@drawable/ic_app_icon"
+        android:icon="@drawable/ic_kp_logo"
         android:label="@string/app_name"
-        android:roundIcon="@drawable/ic_app_icon"
+        android:roundIcon="@drawable/ic_kp_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.MostWantedApp">
+        <activity
+            android:name=".GetStartedActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -36,31 +43,24 @@
             android:value="AIzaSyBjrs7bTxymCa9op7ZsFyePGZpEKAA1pq8" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".maps.MapsActivity"
             android:exported="false"
             android:label="@string/title_activity_maps" />
-        <activity android:name=".UpdateMultipleUsers" />
-        <activity android:name=".LocationActivity" />
+        <activity android:name=".update.UpdateMultipleUsers" />
+        <activity android:name=".lists.LocationActivity" />
         <activity
-            android:name=".UpdatePerson"
+            android:name=".update.UpdatePerson"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".UserActivity" />
-        <activity android:name=".PersonActivity" />
-        <activity android:name=".PersonImage" />
-        <activity android:name=".UpdateUser" />
-        <activity android:name=".Profile" />
-        <activity android:name=".UserDashboardActivity" />
-        <activity android:name=".AdminDashboardActivity" />
-        <activity android:name=".RegisterUser" />
-        <activity android:name=".RegisterPerson" />
-        <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".lists.UserActivity" />
+        <activity android:name=".lists.PersonActivity" />
+        <activity android:name=".helpers.PersonImage" />
+        <activity android:name=".update.UpdateUser" />
+        <activity android:name=".models.Profile" />
+        <activity android:name=".dashboard.UserDashboardActivity" />
+        <activity android:name=".dashboard.AdminDashboardActivity" />
+        <activity android:name=".register.RegisterUser" />
+        <activity android:name=".register.RegisterPerson" />
+        <activity android:name=".LoginActivity"/>
     </application>
 
 </manifest>

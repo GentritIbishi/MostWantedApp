@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp;
+package fiek.unipr.mostwantedapp.helpers;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import fiek.unipr.mostwantedapp.R;
 
 public class SpinnerAdapter extends ArrayAdapter<Object> {
 
