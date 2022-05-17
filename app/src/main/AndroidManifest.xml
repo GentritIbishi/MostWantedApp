@@ -16,11 +16,15 @@
     <application
         android:name=".helpers.SessionManagement"
         android:allowBackup="true"
+        android:largeHeap="true"
         android:icon="@drawable/ic_kp_logo"
         android:label="@string/app_name"
         android:roundIcon="@drawable/ic_kp_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.MostWantedApp">
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
         <activity
             android:name=".GetStartedActivity"
             android:exported="true">
@@ -41,6 +45,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBjrs7bTxymCa9op7ZsFyePGZpEKAA1pq8" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <activity
             android:name=".maps.MapsActivity"

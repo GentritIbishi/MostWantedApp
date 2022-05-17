@@ -7,8 +7,10 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary_color">#062A61</color>
+    <color name="primary_color">#2911ba</color>
     <color name="clicked">#E0E6EF</color>
     <color name="blue_light">#001087</color>
     <color name="police_color">#0067b1</color>
+    <color name="text_color">#7e8187</color>
+    <color name="mint_green">#3EB489</color>
 </resources>

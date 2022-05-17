@@ -5,9 +5,17 @@
     <string name="tv_password">Password</string>
     <string name="btn_login">Login</string>
     <string name="forgot_pass">Forgot Password?</string>
+    <string name="create_new_account">Create new Account?</string>
+    <string name="already_have_account">Already have account?</string>
+    <string name="or">OR</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="phone">Phone</string>
+    <string name="address">Address</string>
+    <string name="personal_number">Personal Number</string>
     <string name="guest">Report as Guest</string>
     <string name="full_name">Full Name</string>
-    <string name="address">Address</string>
     <string name="age">Age</string>
     <string name="height">Height</string>
     <string name="weight">Weight</string>
@@ -80,7 +88,7 @@
     <string name="person_delete_failed"> failed to delete!</string>
     <string name="let_get_started">Let\'s get started</string>
     <string name="register">Register</string>
-
+    <string name="login">Login</string>
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
     <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous.</string>

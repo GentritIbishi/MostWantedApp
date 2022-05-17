@@ -9,9 +9,10 @@ import android.os.Bundle;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,26 +39,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseUser firebaseUser;
     private DocumentReference documentReference;
-    private TextView tvguest;
+    private TextView forgotPassword, tv_createNewAccount;
     private EditText etEmail, etPassword;
-    private ProgressBar progressBar;
     private Button bt_Login;
+    private ImageView btnGoogle, btnFacebook, btnPhone;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        //Remove pjesen lart full screen
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
         bt_Login = findViewById(R.id.bt_Login);
-        tvguest = (TextView)findViewById(R.id.tvguest);
-        tvguest.setOnClickListener(this);
+        tv_createNewAccount = findViewById(R.id.tv_createNewAccount);
+        tv_createNewAccount.setOnClickListener(this);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         bt_Login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,8 +73,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tvguest:
-                startActivity(new Intent(this, PersonActivity.class));
+            case R.id.tv_createNewAccount:
+                startActivity(new Intent(this, RegisterActivity.class));
                 break;
         }
 
@@ -111,14 +113,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             etPassword.requestFocus();
             return;
         }
-
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-        });
-
 
 
         firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -159,7 +153,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                             Toast.makeText(LoginActivity.this, R.string.logins_failed, Toast.LENGTH_LONG).show();
                                         }
                                     });
-                                        progressBar.setVisibility(View.GONE);
                                         if(role !=null && role.matches("Admin")) {
                                             Intent adminIntent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
                                             startActivity(adminIntent);
@@ -171,7 +164,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             else
                                 {
                                 Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                progressBar.setVisibility(View.GONE);
                             }
                         }
                     });
@@ -179,7 +171,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else
                 {
                     Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
                 }
             }
         });
