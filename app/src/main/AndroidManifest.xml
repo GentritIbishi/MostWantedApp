@@ -60,7 +60,7 @@
         <activity android:name=".dashboard.AdminDashboardActivity" />
         <activity android:name=".register.RegisterUser" />
         <activity android:name=".register.RegisterPerson" />
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".LoginActivity" />
     </application>
 
 </manifest>

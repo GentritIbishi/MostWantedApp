@@ -79,6 +79,9 @@
     <string name="person_delete_successfully">is deleted successfully!</string>
     <string name="person_delete_failed"> failed to delete!</string>
     <string name="let_get_started">Let\'s get started</string>
+    <string name="register">Register</string>
+
+
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
     <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous.</string>
     <string-array name="roles">

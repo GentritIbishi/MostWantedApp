@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".LoginActivity"
-    android:background="#062A61"
+    android:background="@color/white"
     android:padding="16dp"
     android:gravity="center_vertical">
 
@@ -19,13 +19,12 @@
             android:padding="4dp">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon"
                 android:id="@+id/imgIcon"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerHorizontal="true"
                 android:padding="20dp"
-                android:layout_centerHorizontal="true">
-            </ImageView>
+                android:src="@drawable/ic_kp_logo"></ImageView>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -44,15 +43,16 @@
                     android:text="@string/tv_email"></TextView>
 
                 <EditText
+                    android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvEmail"
-                    android:id="@+id/etEmail"
-                    android:textColor="@color/white"
-                    android:inputType="textEmailAddress"
+                    android:background="@drawable/et_corners_rounded"
                     android:imeOptions="actionNext"
-                    android:textStyle="bold"
-                    android:background="@drawable/et_corners_rounded"></EditText>
+                    android:inputType="textEmailAddress"
+                    android:focusable="auto"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"></EditText>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -71,6 +71,7 @@
                     android:id="@+id/etPassword"
                     android:textColor="@color/white"
                     android:inputType="textPassword"
+                    android:focusable="auto"
                     android:textStyle="bold"
                     android:imeOptions="actionDone"
                     android:background="@drawable/et_corners_rounded"></EditText>
@@ -98,29 +99,29 @@
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/bt_login"></Button>
 
-                    <TextView
-                        android:id="@+id/tvforgotPassword"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="15dp"
-                        android:text="@string/forgot_pass"
-                        android:layout_below="@id/bt_Login"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/white"
-                        android:layout_alignParentLeft="true"></TextView>
+                <TextView
+                    android:id="@+id/tvforgotPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="15dp"
+                    android:text="@string/forgot_pass"
+                    android:layout_below="@id/bt_Login"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/white"
+                    android:layout_alignParentLeft="true"></TextView>
 
-                    <TextView
-                        android:id="@+id/tvguest"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/bt_Login"
-                        android:layout_alignParentRight="true"
-                        android:padding="15dp"
-                        android:text="@string/guest"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold"></TextView>
+                <TextView
+                    android:id="@+id/tvguest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/bt_Login"
+                    android:layout_alignParentRight="true"
+                    android:padding="15dp"
+                    android:text="@string/guest"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"></TextView>
 
                 <ProgressBar
                     android:id="@+id/progressBar"
