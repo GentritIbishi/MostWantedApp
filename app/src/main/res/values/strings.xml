@@ -89,6 +89,13 @@
     <string name="let_get_started">Let\'s get started</string>
     <string name="register">Register</string>
     <string name="login">Login</string>
+    <string name="welcome_back">Welcome back  </string>
+    <string name="exist_in_database"> Exists in database!</string>
+
+    <string name="facebook_app_id">1234</string>
+    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="facebook_client_token">56789</string>
+
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
     <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous.</string>

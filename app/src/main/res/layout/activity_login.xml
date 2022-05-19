@@ -158,42 +158,26 @@
                 android:id="@+id/btnGoogle"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginEnd="8dp"
+                android:layout_marginStart="136dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="16dp"
                 app:layout_constraintBottom_toBottomOf="@+id/btnPhone"
                 app:layout_constraintEnd_toStartOf="@+id/btnPhone"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/btnPhone"
+                app:layout_constraintTop_toBottomOf="@+id/textView4"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_google" />
-
-            <ImageView
-                android:id="@+id/btnFacebook"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="8dp"
-                app:layout_constraintBottom_toBottomOf="@+id/btnPhone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/btnPhone"
-                app:layout_constraintTop_toTopOf="@+id/btnPhone"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/ic_fb" />
 
             <ImageView
                 android:id="@+id/btnPhone"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="36dp"
-                android:layout_marginEnd="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnFacebook"
-                app:layout_constraintHorizontal_bias="0.5"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="136dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/btnGoogle"
                 app:layout_constraintTop_toBottomOf="@+id/textView4"
-                app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_phone" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

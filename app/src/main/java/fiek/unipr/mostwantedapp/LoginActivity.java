@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.KeyEvent;
@@ -34,7 +33,6 @@ import fiek.unipr.mostwantedapp.auth.GoogleSignInActivity;
 import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
-import fiek.unipr.mostwantedapp.lists.PersonActivity;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -47,7 +45,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView forgotPassword, tv_createNewAccount;
     private EditText etEmail, etPassword;
     private Button bt_Login;
-    private ImageView btnGoogle, btnFacebook, btnPhone;
+    private ImageView btnGoogle, btnPhone;
 
 
     @Override
