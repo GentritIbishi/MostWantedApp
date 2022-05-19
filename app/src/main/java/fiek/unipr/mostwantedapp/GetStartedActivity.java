@@ -37,6 +37,7 @@ public class GetStartedActivity extends AppCompatActivity {
             //If application was opened for the first time
             Intent intent = new Intent(GetStartedActivity.this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }else {
             //Else...
             SharedPreferences.Editor editor = preferences.edit();
