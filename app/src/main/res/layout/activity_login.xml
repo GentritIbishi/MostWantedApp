@@ -28,7 +28,7 @@
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginTop="100dp"
-                android:src="@drawable/ic_kp_logo_svg"
+                android:src="@drawable/app_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
