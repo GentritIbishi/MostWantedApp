@@ -27,8 +27,10 @@
                 android:id="@+id/textView"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
-                android:layout_marginTop="100dp"
-                android:src="@drawable/app_icon"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:src="@drawable/ic_app"
+                app:layout_constraintBottom_toTopOf="@+id/etEmail"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +40,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="32dp"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/input_bg"
                 android:drawableLeft="@drawable/ic_baseline_email_24"
@@ -53,7 +55,6 @@
                 android:textColor="@color/white"
                 android:textColorHint="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView" />
 
@@ -165,7 +166,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/btnPhone"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/google_logo" />
+                app:srcCompat="@drawable/ic_google" />
 
             <ImageView
                 android:id="@+id/btnFacebook"
@@ -178,7 +179,7 @@
                 app:layout_constraintStart_toEndOf="@+id/btnPhone"
                 app:layout_constraintTop_toTopOf="@+id/btnPhone"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/facebook_logo" />
+                app:srcCompat="@drawable/ic_fb" />
 
             <ImageView
                 android:id="@+id/btnPhone"
@@ -193,7 +194,7 @@
                 app:layout_constraintStart_toEndOf="@+id/btnGoogle"
                 app:layout_constraintTop_toBottomOf="@+id/textView4"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/phone_logo" />
+                app:srcCompat="@drawable/ic_phone" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
