@@ -38,7 +38,7 @@
     <string name="error_acts_required">Acts is required!</string>
     <string name="error_not_allowed">Not allowed "numbers" in this field!</string>
     <string name="error_status_required">Status is required!</string>
-    <string name="user_full_name">Full Name</string>
+    <string name="user_full_name">User Full Name</string>
     <string name="user_email">Email Address</string>
     <string name="your_email_address">Your Email Address</string>
     <string name="user_password">Password</string>

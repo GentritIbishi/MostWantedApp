@@ -16,12 +16,18 @@
     <application
         android:name=".helpers.SessionManagement"
         android:allowBackup="true"
-        android:largeHeap="true"
         android:icon="@drawable/ic_kp_logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@drawable/ic_kp_logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.MostWantedApp">
+        <activity
+            android:name=".dashboard.InformerDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.GoogleSignInActivity"
+            android:exported="false" />
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />

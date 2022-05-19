@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.KeyEvent;
@@ -16,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -27,7 +30,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import fiek.unipr.mostwantedapp.auth.GoogleSignInActivity;
 import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
+import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.lists.PersonActivity;
 import fiek.unipr.mostwantedapp.models.User;
@@ -55,11 +60,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account != null){
+            navigateToInformer();
+        }
+
         bt_Login = findViewById(R.id.bt_Login);
         tv_createNewAccount = findViewById(R.id.tv_createNewAccount);
         tv_createNewAccount.setOnClickListener(this);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
+        btnGoogle = findViewById(R.id.btnGoogle);
+
+        btnGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, GoogleSignInActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         bt_Login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +88,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+    }
+
+    private void navigateToInformer() {
+        Intent intent = new Intent(this, InformerDashboardActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
