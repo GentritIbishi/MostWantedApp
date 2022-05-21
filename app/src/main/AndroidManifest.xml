@@ -23,6 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MostWantedApp">
         <activity
+            android:name=".auth.VerifyPhoneCodeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".auth.RegisterPhoneActivity"
+            android:exported="false" />
+        <activity
             android:name=".dashboard.InformerDashboardActivity"
             android:exported="false" />
         <activity

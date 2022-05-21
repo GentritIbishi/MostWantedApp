@@ -91,12 +91,24 @@
     <string name="login">Login</string>
     <string name="welcome_back">Welcome back  </string>
     <string name="exist_in_database"> Exists in database!</string>
-
-
-    <string name="facebook_app_id">1234</string>
-    <string name="fb_login_protocol_scheme">fb1234</string>
-    <string name="facebook_client_token">56789</string>
-
+    <string name="sign_in_google">Sign In Google</string>
+    <string name="sign_in_phone">Sign In Phone</string>
+    <string name="sign_in_anonymous">Sign In Anonymous</string>
+    <string name="registration">Registration</string>
+    <string name="verification">Verification</string>
+    <string name="verification_code">Verification code</string>
+    <string name="code">Code</string>
+    <string name="verify_otp">Verify OTP</string>
+    <string name="verify_code">Verify code</string>
+    <string name="please_enter_your_country_code_and_phone_number_for_verification">Please enter your country code and phone number for verification</string>
+    <string name="phone_number">Phone number</string>
+    <string name="generate_continue">Continue</string>
+    <string name="text_verification">Enter verification code that sent to your phone number</string>
+    <string name="error_please_fill_in_the_form_to_continue">Please fill in the form to continue.</string>
+    <string name="we_have_send_you_an_code_for">We have send you an OTP code for</string>
+    <string name="for_verification">for verification</string>
+    <string name="there_was_an_error_verifying_otp">There was an error verifying OTP</string>
+    <string name="error_verification_failed_please_try_again">Verification Failed, please try again!</string>
 
     <string name="get_started_description">Ndjehuni të lirë për të ndihmuar Policinë e Kosovës duke raportuar informacion të saktë të personave te kërkuar nga Policia e Kosovës.</string>
     <string name="get_started_description2">Policia e Kosovës garanton në ruajtjen e identitetit të informatorit, i cili do të jetë anonim.</string>

@@ -16,7 +16,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        tools:layout_editor_absoluteX="-25dp"
+        tools:layout_editor_absoluteY="-17dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -97,9 +99,9 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/input_bg"
                 android:text="@string/login"
+                android:textColor="@color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="@+id/forgotPassword"
                 app:layout_constraintStart_toStartOf="@+id/etPassword"
                 app:layout_constraintTop_toBottomOf="@+id/forgotPassword" />
@@ -154,31 +156,59 @@
                 app:layout_constraintStart_toStartOf="@+id/bt_Login"
                 app:layout_constraintTop_toTopOf="@+id/textView4" />
 
-            <ImageView
-                android:id="@+id/btnGoogle"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="136dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintBottom_toBottomOf="@+id/btnPhone"
-                app:layout_constraintEnd_toStartOf="@+id/btnPhone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/ic_google" />
+            <Button
+                android:id="@+id/btnAnonymous"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="64dp"
+                android:background="@drawable/button_sign_in_phone"
+                android:drawableLeft="@drawable/ic_baseline_person_dark"
+                android:drawablePadding="5dp"
+                android:padding="10dp"
+                android:text="@string/sign_in_anonymous"
+                android:textAllCaps="false"
+                android:textColor="@color/verydark"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/btnGoogle"
+                app:layout_constraintStart_toStartOf="@+id/btnGoogle" />
 
-            <ImageView
+            <Button
                 android:id="@+id/btnPhone"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="136dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button_sign_in_phone"
+                android:drawableLeft="@drawable/ic_baseline_smartphone_24"
+                android:drawablePadding="5dp"
+                android:padding="10dp"
+                android:text="@string/sign_in_phone"
+                android:textAllCaps="false"
+                android:textColor="@color/verydark"
+                app:layout_constraintBottom_toTopOf="@+id/btnAnonymous"
+                app:layout_constraintEnd_toEndOf="@+id/btnGoogle"
+                app:layout_constraintStart_toStartOf="@+id/btnGoogle"
+                app:layout_constraintTop_toBottomOf="@+id/btnGoogle" />
+
+            <Button
+                android:id="@+id/btnGoogle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button_sign_in_phone"
+                android:drawableLeft="@drawable/ic_baseline_google"
+                android:drawablePadding="5dp"
+                android:padding="10dp"
+                android:text="Sign In Google"
+                android:textAllCaps="false"
+                android:textColor="@color/verydark"
+                app:layout_constraintBottom_toTopOf="@+id/btnPhone"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/btnGoogle"
-                app:layout_constraintTop_toBottomOf="@+id/textView4"
-                app:srcCompat="@drawable/ic_phone" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

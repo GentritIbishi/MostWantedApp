@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +29,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import fiek.unipr.mostwantedapp.auth.GoogleSignInActivity;
+import fiek.unipr.mostwantedapp.auth.RegisterPhoneActivity;
 import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
@@ -44,8 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private DocumentReference documentReference;
     private TextView forgotPassword, tv_createNewAccount;
     private EditText etEmail, etPassword;
-    private Button bt_Login;
-    private ImageView btnGoogle, btnPhone;
+    private Button bt_Login, btnPhone, btnGoogle;
 
 
     @Override
@@ -58,26 +57,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account != null){
-            navigateToInformer();
-        }
-
+        findViewById(R.id.btnGoogle).setOnClickListener(this);
         bt_Login = findViewById(R.id.bt_Login);
         tv_createNewAccount = findViewById(R.id.tv_createNewAccount);
         tv_createNewAccount.setOnClickListener(this);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
+        btnPhone = findViewById(R.id.btnPhone);
+        btnPhone.setOnClickListener(this);
         btnGoogle = findViewById(R.id.btnGoogle);
-
-        btnGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, GoogleSignInActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+        btnGoogle.setOnClickListener(this);
 
         bt_Login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +75,51 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account != null){
+            navigateToInformer();
+        }
+
+        //check for others
+
+        if(firebaseUser != null)
+        {
+            DocumentReference documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful() && task.getResult() != null)
+                    {
+                        String role = task.getResult().getString("role");
+                        if(role !=null && role.matches("User"))
+                        {
+                            Intent user = new Intent(LoginActivity.this, UserDashboardActivity.class);
+                            user.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(user);
+                        }
+                        else if(role != null && role.matches("Admin"))
+                        {
+                            Intent admin = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+                            admin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(admin);
+                        }
+                    }
+                }
+            });
+            //Nese so as user as Admin, por nese firebaseUser eshte login po ska privilegje atehere qoje te informeri nese o login
+            sendInformerToDashboard();
+        }
+    }
+
+    public void sendInformerToDashboard() {
+        Intent informer = new Intent(LoginActivity.this, InformerDashboardActivity.class);
+        informer.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(informer);
     }
 
     private void navigateToInformer() {
@@ -99,6 +133,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.tv_createNewAccount:
                 startActivity(new Intent(this, RegisterActivity.class));
+                break;
+            case R.id.btnGoogle:
+                startActivity(new Intent(this, GoogleSignInActivity.class));
+                finish();
+                break;
+            case R.id.btnPhone:
+                startActivity(new Intent(this, RegisterPhoneActivity.class));
                 break;
         }
 
