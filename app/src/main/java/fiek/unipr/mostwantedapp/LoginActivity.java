@@ -1,5 +1,7 @@
 package fiek.unipr.mostwantedapp;
 
+import static android.util.Log.e;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -44,7 +46,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private DocumentReference documentReference;
     private TextView forgotPassword, tv_createNewAccount;
     private EditText etEmail, etPassword;
-    private Button bt_Login, btnPhone, btnGoogle;
+    private Button bt_Login, btnPhone, btnGoogle, btnAnonymous;
 
 
     @Override
@@ -67,6 +69,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnPhone.setOnClickListener(this);
         btnGoogle = findViewById(R.id.btnGoogle);
         btnGoogle.setOnClickListener(this);
+        btnAnonymous = findViewById(R.id.btnAnonymous);
+        btnAnonymous.setOnClickListener(this);
 
         bt_Login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +89,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             navigateToInformer();
         }
 
-        //check for others
+
+//        if (firebaseUser.getProviderData().size() > 0) {
+//            //Prints Out google.com for Google Sign In, prints facebook.com for Facebook
+//            e("TOM", "Provider: " + firebaseUser.getProviderData().get(firebaseUser.getProviderData().size() - 1).getProviderId());
+//
+//        }
+
 
         if(firebaseUser != null)
         {
@@ -112,6 +122,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
             });
             //Nese so as user as Admin, por nese firebaseUser eshte login po ska privilegje atehere qoje te informeri nese o login
+            if(firebaseUser.isAnonymous()){
+                anonymousAuth();
+            }
+
             sendInformerToDashboard();
         }
     }
@@ -141,8 +155,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.btnPhone:
                 startActivity(new Intent(this, RegisterPhoneActivity.class));
                 break;
+            case R.id.btnAnonymous:
+                anonymousAuth();
+                break;
         }
 
+    }
+
+    private void anonymousAuth() {
+        firebaseAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                Intent anonymous = new Intent(LoginActivity.this, InformerDashboardActivity.class);
+                String uid = firebaseAuth.getCurrentUser().getUid().toString();
+                anonymous.putExtra("uid_anonymous", uid);
+                startActivity(anonymous);
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(LoginActivity.this, R.string.error_failed_to_login_as_anonymous, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void Login() {
