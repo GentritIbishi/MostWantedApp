@@ -31,7 +31,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import fiek.unipr.mostwantedapp.auth.GoogleSignInActivity;
-import fiek.unipr.mostwantedapp.auth.RegisterPhoneActivity;
+import fiek.unipr.mostwantedapp.auth.PhoneSignInActivity;
 import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
@@ -153,7 +153,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.btnPhone:
-                startActivity(new Intent(this, RegisterPhoneActivity.class));
+                startActivity(new Intent(this, PhoneSignInActivity.class));
                 break;
             case R.id.btnAnonymous:
                 anonymousAuth();
