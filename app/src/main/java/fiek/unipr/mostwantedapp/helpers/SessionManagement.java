@@ -53,7 +53,7 @@ public class SessionManagement extends Application {
                             user.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(user);
                         }
-                        else
+                        else if(role != null && role.matches("Admin"))
                         {
                             Intent admin = new Intent(SessionManagement.this, AdminDashboardActivity.class);
                             admin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -62,7 +62,15 @@ public class SessionManagement extends Application {
                     }
                 }
             });
+            //Nese so as user as Admin, por nese firebaseUser eshte login po ska privilegje atehere qoje te informeri nese o login
+            sendInformerToDashboard();
         }
 
+    }
+
+    public void sendInformerToDashboard() {
+        Intent informer = new Intent(SessionManagement.this, InformerDashboardActivity.class);
+        informer.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(informer);
     }
 }

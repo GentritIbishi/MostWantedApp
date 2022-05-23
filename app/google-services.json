@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "725168963243",
+    "firebase_url": "https://mostwantedapp-79ad9-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "mostwantedapp-79ad9",
     "storage_bucket": "mostwantedapp-79ad9.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "725168963243-7a68ubbj3bfssgmpeh3eqh9qdbcpuchp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fiek.unipr.mostwantedapp",
+            "certificate_hash": "9f167f8939ebfffbcb46fda38c74cb70f4ceb6db"
+          }
+        },
         {
           "client_id": "725168963243-tl5qmt5tivif03or5q794dm5b0peid74.apps.googleusercontent.com",
           "client_type": 3
@@ -27,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "725168963243-tl5qmt5tivif03or5q794dm5b0peid74.apps.googleusercontent.com",
+              "client_id": "725168963243-2u8osofo7v3thh10bcqqojtou7mtpfva.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
