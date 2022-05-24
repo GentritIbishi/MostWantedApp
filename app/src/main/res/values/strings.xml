@@ -60,6 +60,7 @@
     <string name="user_failed_to_register">Failed to register user! Try again!</string>
     <string name="role_not_finded">Role not finded!</string>
     <string name="user_not_finded">User not finded!</string>
+    <string name="user_not_exist">User not exist!</string>
     <string name="logins_successfully">Logins successfully!</string>
     <string name="logins_failed">Logins failed!</string>
     <string name="dashboard">Dashboard</string>
@@ -119,6 +120,11 @@
     <string name="please_enter_verification_code">Please enter verification code....</string>
     <string name="logged_in_as">Logged in as</string>
     <string name="verification_code_sent">Verification code sent...</string>
+    <string name="parent_name">Parent Name</string>
+    <string name="your_last_name">Your Last Name</string>
+    <string name="verification_email_sent_to">Verification email sent to</string>
+    <string name="failed_to_send_verification_email">Failed to send verification email.</string>
+    <string name="please_verify_email_to_login_check_in_email_we_sent_link_for_verification">Please verify email to login, check in email we sent link for verification!</string>
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
     <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous.</string>

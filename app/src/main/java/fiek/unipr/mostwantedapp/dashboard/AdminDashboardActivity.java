@@ -30,7 +30,6 @@ import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.lists.PersonActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.register.RegisterPerson;
-import fiek.unipr.mostwantedapp.register.RegisterUser;
 import fiek.unipr.mostwantedapp.lists.UserActivity;
 import fiek.unipr.mostwantedapp.models.Profile;
 
@@ -120,7 +119,7 @@ public class AdminDashboardActivity extends AppCompatActivity implements View.On
         switch(v.getId())
         {
             case R.id.l_registerUser:
-                startActivity(new Intent(AdminDashboardActivity.this, RegisterUser.class));
+                //startActivity(new Intent(AdminDashboardActivity.this, RegisterUser.class));
                 break;
             case R.id.l_registerPerson:
                 startActivity(new Intent(AdminDashboardActivity.this, RegisterPerson.class));

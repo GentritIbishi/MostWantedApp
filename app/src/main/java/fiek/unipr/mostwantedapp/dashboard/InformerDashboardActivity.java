@@ -28,11 +28,12 @@ import com.google.firebase.storage.StorageReference;
 
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.models.Informer;
+import fiek.unipr.mostwantedapp.models.User;
 
 public class InformerDashboardActivity extends AppCompatActivity {
 
     public static final String PREFS_NAME = "LOG_PREF";
+    public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
@@ -48,6 +49,7 @@ public class InformerDashboardActivity extends AppCompatActivity {
 
     GoogleSignInOptions gso;
     GoogleSignInClient gsc;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,7 +143,7 @@ public class InformerDashboardActivity extends AppCompatActivity {
         finish();
     }
 
-    private void registerInformer(String collection, String googleID, Informer informer) {
+    private void registerInformer(String collection, String googleID, User user) {
         firebaseFirestore.collection(collection).document(googleID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -151,7 +153,7 @@ public class InformerDashboardActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    firebaseFirestore.collection(collection).document(googleID).set(informer).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    firebaseFirestore.collection(collection).document(googleID).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(InformerDashboardActivity.this, InformerDashboardActivity.this.getText(R.string.this_person_with_this)+" "+fullName+" "+InformerDashboardActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();

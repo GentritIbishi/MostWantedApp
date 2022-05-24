@@ -1,6 +1,5 @@
 package fiek.unipr.mostwantedapp;
 
-import static android.util.Log.e;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +39,8 @@ import fiek.unipr.mostwantedapp.models.User;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String PREFS_NAME = "loginPreferences";
+    public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
+    private String login_users = "logins_users";
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseUser firebaseUser;
@@ -47,99 +48,49 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView forgotPassword, tv_createNewAccount;
     private EditText etEmail, etPassword;
     private Button bt_Login, btnPhone, btnGoogle, btnAnonymous;
-    private String informers_by_default_sign_in = "informers_by_default_sign_in";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        //Remove pjesen lart full screen
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-        findViewById(R.id.btnGoogle).setOnClickListener(this);
-        bt_Login = findViewById(R.id.bt_Login);
-        tv_createNewAccount = findViewById(R.id.tv_createNewAccount);
-        tv_createNewAccount.setOnClickListener(this);
-        etEmail = findViewById(R.id.etEmail);
-        etPassword = findViewById(R.id.etPassword);
-        btnPhone = findViewById(R.id.btnPhone);
-        btnPhone.setOnClickListener(this);
         btnGoogle = findViewById(R.id.btnGoogle);
         btnGoogle.setOnClickListener(this);
+
+        tv_createNewAccount = findViewById(R.id.tv_createNewAccount);
+        tv_createNewAccount.setOnClickListener(this);
+
         btnAnonymous = findViewById(R.id.btnAnonymous);
         btnAnonymous.setOnClickListener(this);
 
-        bt_Login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Login();
-            }
-        });
+        bt_Login = findViewById(R.id.bt_Login);
+        bt_Login.setOnClickListener(this);
 
+        btnPhone = findViewById(R.id.btnPhone);
+        btnPhone.setOnClickListener(this);
+
+        etEmail = findViewById(R.id.etEmail);
+        etPassword = findViewById(R.id.etPassword);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account != null){
-            navigateToInformer();
-        }
-
-        if(firebaseUser != null)
-        {
-            DocumentReference documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
-            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful() && task.getResult() != null)
-                    {
-                        String role = task.getResult().getString("role");
-                        if(role !=null && role.matches("User"))
-                        {
-                            Intent user = new Intent(LoginActivity.this, UserDashboardActivity.class);
-                            user.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(user);
-                        }
-                        else if(role != null && role.matches("Admin"))
-                        {
-                            Intent admin = new Intent(LoginActivity.this, AdminDashboardActivity.class);
-                            admin.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(admin);
-                        }
-                    }
-                }
-            });
-            //Nese so as user as Admin, por nese firebaseUser eshte login po ska privilegje atehere qoje te informeri nese o login
-            if(firebaseUser.isAnonymous()){
-                anonymousAuth();
-            }
-
-            sendInformerToDashboard();
-        }
-    }
-
-    public void sendInformerToDashboard() {
-        Intent informer = new Intent(LoginActivity.this, InformerDashboardActivity.class);
-        informer.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(informer);
-    }
-
-    private void navigateToInformer() {
-        Intent intent = new Intent(this, InformerDashboardActivity.class);
-        startActivity(intent);
-        finish();
+        checkGoogleSignIn();
+        checkOtherSignIn();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_createNewAccount:
-                startActivity(new Intent(this, RegisterInformerActivity.class));
+                startActivity(new Intent(this, RegisterUserActivity.class));
                 break;
             case R.id.btnGoogle:
                 startActivity(new Intent(this, GoogleSignInActivity.class));
@@ -149,35 +100,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(new Intent(this, PhoneSignInActivity.class));
                 break;
             case R.id.btnAnonymous:
-                anonymousAuth();
+                signInAnonymouslyInformer();
                 break;
+            case R.id.bt_Login:
+                Login();
         }
 
-    }
-
-    private void anonymousAuth() {
-        firebaseAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                Intent anonymous = new Intent(LoginActivity.this, InformerDashboardActivity.class);
-                String uid = firebaseAuth.getCurrentUser().getUid().toString();
-                anonymous.putExtra("uid_anonymous", uid);
-                startActivity(anonymous);
-                finish();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(LoginActivity.this, R.string.error_failed_to_login_as_anonymous, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void Login() {
 
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
-
 
         if(email.isEmpty())
         {
@@ -201,109 +135,137 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }else
         {
-            //check per admin ose user
-            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task) {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        String currentUserId = task.getResult().getUser().getUid();
-                        documentReference = firebaseFirestore.collection("users").document(currentUserId);
-                        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                if (task.isSuccessful() && task.getResult() != null) {
-                                    String role = task.getResult().getString("role");
-                                    String fullName = task.getResult().getString("fullName");
-                                    String email = task.getResult().getString("email");
-
-                                    //Set on Preferences on PREFS_NAME: loginPreferences
-                                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                                    SharedPreferences.Editor editor = settings.edit();
-                                    editor.putString("Role", role);
-                                    editor.putString("fullName", fullName);
-                                    editor.putString("email", email);
-                                    editor.commit();
-                                    //Set on Preferences on PREFS_NAME: loginPreferences
-
-                                    User user = new User(currentUserId, email, role);
-                                    documentReference = firebaseFirestore.collection("logins").document(currentUserId);
-                                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(LoginActivity.this, R.string.logins_failed, Toast.LENGTH_LONG).show();
-                                        }
-                                    });
-                                    if (role != null && role.matches("Admin")) {
-                                        Intent adminIntent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
-                                        startActivity(adminIntent);
-                                    } else {
-                                        Intent userIntent = new Intent(LoginActivity.this, UserDashboardActivity.class);
-                                        startActivity(userIntent);
-                                    }
-                                } else {
-                                    Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                }
-                            }
-                        });
-
-                        //check for informer
-                        documentReference = firebaseFirestore.collection(informers_by_default_sign_in).document(currentUserId);
-                        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                String role = documentSnapshot.getString("role");
-                                if(role.equals("informer")){
-                                    //qo te intenti
-                                    Intent goToInformer = new Intent(LoginActivity.this, InformerDashboardActivity.class);
-                                    goToInformer.putExtra("userID", documentSnapshot.getString("userID"));
-                                    startActivity(goToInformer);
-                                    finish();
-                                }
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-
-                            }
-                        });
-
-
-                    } else {
-                        Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-
-            //check per informer
-            loginAsInformerDefault(etEmail.getText().toString(), etPassword.getText().toString());
+            checkLogin(email, password);
         }
     }
 
-    public void loginAsInformerDefault(String email, String password) {
-        firebaseFirestore.collection(informers_by_default_sign_in).document(email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+    public void checkLogin(String email, String password) {
+        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.getResult().exists()) {
-                    String passwordFromDB = task.getResult().getString("password");
-                    if(passwordFromDB.equals(password)){
-                        Intent loginAsInformerDefault = new Intent(LoginActivity.this, InformerDashboardActivity.class);
-                        loginAsInformerDefault.putExtra("email", email);
-                        startActivity(loginAsInformerDefault);
-                        finish();
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful() && task.getResult() != null) {
+
+                    if(firebaseAuth.getCurrentUser().isEmailVerified()) {
+                        String currentUserId = task.getResult().getUser().getUid();
+                        checkLoginUser(currentUserId);
+                    }else {
+                        firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(LoginActivity.this, R.string.please_verify_email_to_login_check_in_email_we_sent_link_for_verification, Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
 
                 } else {
-                    Toast.makeText(LoginActivity.this, "Failed to login as Informer!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });
     }
 
+    private void checkLoginUser(String currentUserId) {
+        documentReference = firebaseFirestore.collection("users").document(currentUserId);
+        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                String role = documentSnapshot.getString("role");
+                String fullName = documentSnapshot.getString("fullName");
+
+                User user = new User(currentUserId, etEmail.getText().toString(), role, etPassword.getText().toString());
+                setSharedPreference(currentUserId, role, fullName, etEmail.getText().toString());
+                setLoginsHistoryForUser(user, currentUserId);
+                if (role != null && role.matches("Admin")) {
+                    Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
+                    goToAdminDashboard();
+                } else if(role != null && role.matches("User")){
+                    Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
+                    goToUserDashboard();
+                }else if(role != null && role.matches("Informer")){
+                    Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
+                    goToInformerDashboard();
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void signInAnonymouslyInformer() {
+        firebaseAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+            @Override
+            public void onSuccess(AuthResult authResult) {
+                setSharedPreferenceInformer(firebaseAuth.getCurrentUser().getUid());
+                goToInformerDashboard();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(LoginActivity.this, R.string.error_failed_to_login_as_anonymous, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void setSharedPreference(String currentUserId, String role, String fullName, String email) {
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("userID", currentUserId);
+        editor.putString("Role", role);
+        editor.putString("fullName", fullName);
+        editor.putString("email", email);
+        editor.commit();
+    }
+
+    public void setSharedPreferenceInformer(String currentUserId) {
+        SharedPreferences settings = getSharedPreferences(LOGIN_INFORMER_PREFS, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("userID", currentUserId);
+        editor.commit();
+    }
+
+    public void setLoginsHistoryForUser(User user, String currentUserId) {
+        documentReference = firebaseFirestore.collection(login_users).document(currentUserId);
+        documentReference.set(user);
+    }
+
+    private void goToInformerDashboard() {
+        Intent intent = new Intent(LoginActivity.this, InformerDashboardActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void goToAdminDashboard() {
+        Intent intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void goToUserDashboard() {
+        Intent intent = new Intent(LoginActivity.this, UserDashboardActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void checkGoogleSignIn() {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account != null){
+            goToInformerDashboard();
+        }
+    }
+
+    private void checkOtherSignIn() {
+        if(firebaseUser != null)
+        {
+            if(firebaseUser.isAnonymous()){
+                signInAnonymouslyInformer();
+            }else if(firebaseUser.isEmailVerified()){
+                checkLoginUser(firebaseAuth.getCurrentUser().getUid());
+            }
+        }
+    }
 
     @Override
     public void onBackPressed() {

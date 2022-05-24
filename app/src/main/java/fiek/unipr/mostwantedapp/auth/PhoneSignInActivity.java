@@ -22,6 +22,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
+import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
 import fiek.unipr.mostwantedapp.databinding.ActivityMainBinding;
@@ -197,10 +198,8 @@ public class PhoneSignInActivity extends AppCompatActivity {
                         binding.btnRegistrationPhone.setEnabled(true);
                         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
                         Toast.makeText(PhoneSignInActivity.this, R.string.logged_in_as+" "+phone, Toast.LENGTH_SHORT).show();
-
                         //start informer activity
-                        startActivity(new Intent(PhoneSignInActivity.this, InformerDashboardActivity.class));
-
+                        goToInformerDashboard();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -212,6 +211,10 @@ public class PhoneSignInActivity extends AppCompatActivity {
             }
         });
     }
-
-
+    
+    private void goToInformerDashboard() {
+        Intent intent = new Intent(PhoneSignInActivity.this, InformerDashboardActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }
