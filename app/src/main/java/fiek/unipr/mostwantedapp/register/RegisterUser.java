@@ -83,96 +83,86 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         String confirm_password = et_user_confirm_password.getText().toString().trim();
         String role = sp.getSelectedItem().toString();
 
-        if(fullName.isEmpty())
-        {
+        if (fullName.isEmpty()) {
             et_user_fullname.setError(getText(R.string.error_fullname_required));
             et_user_fullname.requestFocus();
             return;
         }
 
-        if(email.isEmpty())
-        {
+        if (email.isEmpty()) {
             et_user_email.setError(getText(R.string.error_email_required));
             et_user_email.requestFocus();
             return;
         }
 
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
-        {
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             et_user_email.setError(getText(R.string.error_please_provide_valid_email));
             et_user_email.requestFocus();
             return;
         }
 
-        if(password.isEmpty())
-        {
+        if (password.isEmpty()) {
             et_user_password.setError(getText(R.string.error_password_required));
             et_user_password.requestFocus();
             return;
         }
 
-        if(password.length() < 6)
-        {
+        if (password.length() < 6) {
             et_user_password.setError(getText(R.string.error_min_password_length));
             et_user_password.requestFocus();
             return;
         }
 
-        if(confirm_password.isEmpty())
-        {
+        if (confirm_password.isEmpty()) {
             et_user_password.setError(getText(R.string.error_confirm_password_required));
             et_user_password.requestFocus();
             return;
         }
 
-        if(!password.equals(confirm_password))
-        {
+        if (!password.equals(confirm_password)) {
             et_user_password.setError(getText(R.string.error_password_not_same));
             et_user_password.requestFocus();
             return;
         }
 
-        if(!confirm_password.equals(password))
-        {
+        if (!confirm_password.equals(password)) {
             et_user_confirm_password.setError(getText(R.string.error_confirm_password_not_same));
             et_user_confirm_password.requestFocus();
             return;
+        }else
+        {
+            progressBar.setVisibility(View.VISIBLE);
+            firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        //Pjea e dokumentit
+                        String userID = firebaseAuth.getCurrentUser().getUid();
+                        DocumentReference documentReference = fStore.collection("users").document(userID);
+                        User user = new User(userID, fullName, email, role, null);
+                        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(RegisterUser.this, "Collection Successfully!", Toast.LENGTH_LONG).show();
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(RegisterUser.this, "Collection Failed!", Toast.LENGTH_LONG).show();
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
+                        //Pjesa e dokumentit
+                        Toast.makeText(RegisterUser.this, R.string.user_registered_successfully, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(RegisterUser.this, R.string.user_failed_to_register, Toast.LENGTH_LONG).show();
+                    }
+                    progressBar.setVisibility(View.GONE);
+                }
+            });
+
         }
-
-        progressBar.setVisibility(View.VISIBLE);
-        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful())
-                {
-                    //Pjea e dokumentit
-                    String userID = firebaseAuth.getCurrentUser().getUid();
-                    DocumentReference documentReference = fStore.collection("users").document(userID);
-                    User user = new User(userID, fullName, email, role, null);
-                    documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(RegisterUser.this, "Collection Successfully!", Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(RegisterUser.this, "Collection Failed!", Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-                    //Pjesa e dokumentit
-                     Toast.makeText(RegisterUser.this, R.string.user_registered_successfully, Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    Toast.makeText(RegisterUser.this, R.string.user_failed_to_register, Toast.LENGTH_LONG).show();
-                }
-                progressBar.setVisibility(View.GONE);
-            }
-        });
-
     }
 
 }

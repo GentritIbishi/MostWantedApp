@@ -1,38 +1,18 @@
 package fiek.unipr.mostwantedapp.models;
 
-import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import javax.annotation.Nullable;
-
-import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
-import fiek.unipr.mostwantedapp.helpers.PersonImage;
-import fiek.unipr.mostwantedapp.register.RegisterPerson;
 
 public class Informer {
     Integer balance;
-    String name, lastname, fullName, Address, Email, parentName, grade, googleID, phone, personal_number, password;
+    String userID, name, lastname, fullName, Address, Email, parentName, grade, googleID, phone, personal_number, role;
     Uri photoURL;
 
     public Informer() {
     }
 
-    public Informer(Integer balance, String name, String lastname, String fullName, String address, String email, String parentName, String grade, String googleID, String phone, String personal_number, String password, Uri photoURL) {
+    public Informer(Integer balance, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String grade, String googleID, String phone, String personal_number, String role, Uri photoURL) {
         this.balance = balance;
+        this.userID = userID;
         this.name = name;
         this.lastname = lastname;
         this.fullName = fullName;
@@ -43,22 +23,7 @@ public class Informer {
         this.googleID = googleID;
         this.phone = phone;
         this.personal_number = personal_number;
-        this.password = password;
-        this.photoURL = photoURL;
-    }
-
-    public Informer(String personal_number, Integer balance, String phone, String name, String lastname, String fullName, String address, String email, String parentName, String grade, String googleID, Uri photoURL) {
-        this.personal_number = personal_number;
-        this.balance = balance;
-        this.phone = phone;
-        this.name = name;
-        this.lastname = lastname;
-        this.fullName = fullName;
-        Address = address;
-        Email = email;
-        this.parentName = parentName;
-        this.grade = grade;
-        this.googleID = googleID;
+        this.role = role;
         this.photoURL = photoURL;
     }
 
@@ -68,6 +33,14 @@ public class Informer {
 
     public void setBalance(Integer balance) {
         this.balance = balance;
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
     public String getName() {
@@ -150,12 +123,12 @@ public class Informer {
         this.personal_number = personal_number;
     }
 
-    public String getPassword() {
-        return password;
+    public String getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Uri getPhotoURL() {

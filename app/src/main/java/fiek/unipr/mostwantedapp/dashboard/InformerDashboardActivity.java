@@ -84,14 +84,13 @@ public class InformerDashboardActivity extends AppCompatActivity {
             photoURL = account.getPhotoUrl();
             googleID = account.getId();
 
-            Informer informer = new Informer(personal_number, balance, null, name, lastname, fullName, address, email, parentName, grade, googleID, photoURL);
-            registerInformer(collection, googleID, informer);
+            tvName.setText(fullName);
+            tvEmail.setText(email);
         }
-
-        tvName.setText(fullName);
-        tvEmail.setText(email);
-        phone = firebaseUser.getPhoneNumber();
-        tvPhone.setText(phone);
+        if(firebaseUser != null){
+            phone = firebaseUser.getPhoneNumber();
+            tvPhone.setText(phone);
+        }
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override

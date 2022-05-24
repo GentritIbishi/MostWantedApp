@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView forgotPassword, tv_createNewAccount;
     private EditText etEmail, etPassword;
     private Button bt_Login, btnPhone, btnGoogle, btnAnonymous;
+    private String informers_by_default_sign_in = "informers_by_default_sign_in";
 
 
     @Override
@@ -183,42 +184,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             etEmail.setError(getText(R.string.error_email_required));
             etEmail.requestFocus();
             return;
-        }
-
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
+        }else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
         {
             etEmail.setError(getText(R.string.error_please_provide_valid_email));
             etEmail.requestFocus();
             return;
-        }
-
-        if(password.isEmpty())
+        }else if(password.isEmpty())
         {
             etPassword.setError(getText(R.string.error_password_required));
             etPassword.requestFocus();
             return;
-        }
-
-        if(password.length() < 6)
+        }else if(password.length() < 6)
         {
             etPassword.setError(getText(R.string.error_min_password_length));
             etPassword.requestFocus();
             return;
-        }
-
-
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful() && task.getResult() !=null)
-                {
-                    String currentUserId = task.getResult().getUser().getUid();
-                    documentReference = firebaseFirestore.collection("users").document(currentUserId);
-                    documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful() && task.getResult() != null)
-                            {
+        }else
+        {
+            //check per admin ose user
+            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        String currentUserId = task.getResult().getUser().getUid();
+                        documentReference = firebaseFirestore.collection("users").document(currentUserId);
+                        documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful() && task.getResult() != null) {
                                     String role = task.getResult().getString("role");
                                     String fullName = task.getResult().getString("fullName");
                                     String email = task.getResult().getString("email");
@@ -245,28 +238,70 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                             Toast.makeText(LoginActivity.this, R.string.logins_failed, Toast.LENGTH_LONG).show();
                                         }
                                     });
-                                        if(role !=null && role.matches("Admin")) {
-                                            Intent adminIntent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
-                                            startActivity(adminIntent);
-                                        }else {
-                                            Intent userIntent = new Intent(LoginActivity.this, UserDashboardActivity.class);
-                                            startActivity(userIntent);
-                                        }
+                                    if (role != null && role.matches("Admin")) {
+                                        Intent adminIntent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+                                        startActivity(adminIntent);
+                                    } else {
+                                        Intent userIntent = new Intent(LoginActivity.this, UserDashboardActivity.class);
+                                        startActivity(userIntent);
+                                    }
+                                } else {
+                                    Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                }
                             }
-                            else
-                                {
-                                Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        });
+
+                        //check for informer
+                        documentReference = firebaseFirestore.collection(informers_by_default_sign_in).document(currentUserId);
+                        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                String role = documentSnapshot.getString("role");
+                                if(role.equals("informer")){
+                                    //qo te intenti
+                                    Intent goToInformer = new Intent(LoginActivity.this, InformerDashboardActivity.class);
+                                    goToInformer.putExtra("userID", documentSnapshot.getString("userID"));
+                                    startActivity(goToInformer);
+                                    finish();
+                                }
                             }
-                        }
-                    });
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+
+                            }
+                        });
+
+
+                    } else {
+                        Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
-                else
-                {
-                    Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+            });
+
+            //check per informer
+            loginAsInformerDefault(etEmail.getText().toString(), etPassword.getText().toString());
+        }
+    }
+
+    public void loginAsInformerDefault(String email, String password) {
+        firebaseFirestore.collection(informers_by_default_sign_in).document(email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.getResult().exists()) {
+                    String passwordFromDB = task.getResult().getString("password");
+                    if(passwordFromDB.equals(password)){
+                        Intent loginAsInformerDefault = new Intent(LoginActivity.this, InformerDashboardActivity.class);
+                        loginAsInformerDefault.putExtra("email", email);
+                        startActivity(loginAsInformerDefault);
+                        finish();
+                    }
+
+                } else {
+                    Toast.makeText(LoginActivity.this, "Failed to login as Informer!", Toast.LENGTH_LONG).show();
                 }
             }
         });
-
     }
 
 

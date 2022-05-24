@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -30,6 +31,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import fiek.unipr.mostwantedapp.models.Informer;
+import fiek.unipr.mostwantedapp.models.User;
+import fiek.unipr.mostwantedapp.register.RegisterUser;
 
 public class RegisterInformerActivity extends AppCompatActivity {
 
@@ -43,6 +46,7 @@ public class RegisterInformerActivity extends AppCompatActivity {
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private String collection = "informers_by_default_sign_in";
+    private String role = "informer";
     private ProgressBar ri_progressBar;
 
     @Override
@@ -85,8 +89,6 @@ public class RegisterInformerActivity extends AppCompatActivity {
                 String googleID = null;
                 Uri photoURL = null;
 
-                Informer informer = new Informer(balance, null, null, fullName, address, email, parentName, grade, googleID, phone, numPersonal, password, photoURL);
-
                 if(TextUtils.isEmpty(fullName)){
                     etFullName.setError(getText(R.string.error_fullname_required));
                     etFullName.requestFocus();
@@ -125,15 +127,14 @@ public class RegisterInformerActivity extends AppCompatActivity {
                     ri_progressBar.setVisibility(View.VISIBLE);
                     bt_Register.setEnabled(false);
 
-                    firebaseFirestore.collection(collection).document(numPersonal).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    firebaseAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegisterInformerActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.getResult().exists()) {
-                                ri_progressBar.setVisibility(View.INVISIBLE);
-                                bt_Register.setEnabled(true);
-                                Toast.makeText(RegisterInformerActivity.this, fullName + " " + RegisterInformerActivity.this.getText(R.string.exist_in_database), Toast.LENGTH_LONG).show();
-                            } else {
-                                firebaseFirestore.collection(collection).document(numPersonal).set(informer).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                String userID = firebaseAuth.getCurrentUser().getUid();
+                                DocumentReference documentReference = firebaseFirestore.collection(collection).document(userID);
+                                Informer informer = new Informer(balance, userID, null, null, fullName, address, email, parentName, grade, googleID, phone, numPersonal, role,  photoURL);
+                                documentReference.set(informer).addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         ri_progressBar.setVisibility(View.INVISIBLE);
@@ -149,13 +150,15 @@ public class RegisterInformerActivity extends AppCompatActivity {
                                         Toast.makeText(RegisterInformerActivity.this, R.string.person_failed_to_register, Toast.LENGTH_LONG).show();
                                     }
                                 });
+                            } else {
+                                ri_progressBar.setVisibility(View.INVISIBLE);
+                                bt_Register.setEnabled(true);
+                                Toast.makeText(RegisterInformerActivity.this, R.string.user_failed_to_register, Toast.LENGTH_LONG).show();
                             }
                         }
                     });
 
                 }
-
-
             }
         });
 
