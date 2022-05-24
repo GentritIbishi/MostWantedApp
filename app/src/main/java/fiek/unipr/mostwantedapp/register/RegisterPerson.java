@@ -90,112 +90,100 @@ public class RegisterPerson extends AppCompatActivity implements View.OnClickLis
         String acts = et_acts.getText().toString().trim();
         String status = et_status.getText().toString().trim();
 
-        if(fullName.isEmpty())
-        {
+        if (fullName.isEmpty()) {
             et_fullName.setError(getText(R.string.error_fullname_required));
             et_fullName.requestFocus();
             return;
         }
 
-        if(address.isEmpty())
-        {
+        if (address.isEmpty()) {
             et_address.setError(getText(R.string.error_address_required));
             et_address.requestFocus();
             return;
         }
 
-        if(age.equals(checkNull))
-        {
+        if (age.equals(checkNull)) {
             et_age.setError(getText(R.string.error_age_required));
             et_age.requestFocus();
             return;
         }
 
-        if(height.equals(checkNull))
-        {
+        if (height.equals(checkNull)) {
             et_height.setError(getText(R.string.error_height_required));
             et_height.requestFocus();
             return;
         }
 
-        if(weight.equals(checkNull))
-        {
+        if (weight.equals(checkNull)) {
             et_weight.setError(getText(R.string.error_weight_required));
             et_weight.requestFocus();
             return;
         }
 
-        if(eyeColor.isEmpty())
-        {
+        if (eyeColor.isEmpty()) {
             et_eyeColor.setError(getText(R.string.error_eyeColor_required));
             et_eyeColor.requestFocus();
             return;
         }
 
-        if(hairColor.isEmpty())
-        {
+        if (hairColor.isEmpty()) {
             et_hairColor.setError(getText(R.string.error_hairColor_required));
             et_hairColor.requestFocus();
             return;
         }
 
-        if(phy_appearance.isEmpty())
-        {
+        if (phy_appearance.isEmpty()) {
             et_phy_appearance.setError(getText(R.string.error_phy_appearance_required));
             et_phy_appearance.requestFocus();
             return;
         }
 
-        if(acts.isEmpty())
-        {
+        if (acts.isEmpty()) {
             et_acts.setError(getText(R.string.error_acts_required));
             et_acts.requestFocus();
             return;
         }
 
-        if(status.isEmpty())
-        {
+        if (status.isEmpty()) {
             et_status.setError(getText(R.string.error_status_required));
             et_status.requestFocus();
             return;
+        } else {
+
+            progressBar.setVisibility(View.VISIBLE);
+
+            Person person = new Person(fullName, address, eyeColor, hairColor, phy_appearance, acts, null, status, age, height, weight);
+
+            firebaseFirestore.collection("wanted_persons").document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.getResult().exists()) {
+                        Toast.makeText(RegisterPerson.this, "This person with this name: " + fullName + " exists in database, please add ex: Filan Fisteku 1", Toast.LENGTH_LONG).show();
+                        progressBar.setVisibility(View.GONE);
+                    } else {
+                        firebaseFirestore.collection("wanted_persons").document(fullName).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(RegisterPerson.this, RegisterPerson.this.getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterPerson.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                                Intent registerPerson = new Intent(RegisterPerson.this, PersonImage.class);
+                                Bundle personBundle = new Bundle();
+                                personBundle.putString("personFullName", fullName);
+                                registerPerson.putExtras(personBundle);
+                                progressBar.setVisibility(View.GONE);
+                                startActivity(registerPerson);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(RegisterPerson.this, R.string.person_failed_to_register, Toast.LENGTH_LONG).show();
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        });
+                    }
+                }
+            });
+
         }
-
-        progressBar.setVisibility(View.VISIBLE);
-
-        Person person = new Person(fullName, address, eyeColor, hairColor, phy_appearance, acts, null, status, age, height, weight);
-
-        firebaseFirestore.collection("wanted_persons").document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.getResult().exists())
-                {
-                    Toast.makeText(RegisterPerson.this, "This person with this name: "+fullName+" exists in database, please add ex: Filan Fisteku 1", Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
-                }
-                else
-                {
-                    firebaseFirestore.collection("wanted_persons").document(fullName).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(RegisterPerson.this, RegisterPerson.this.getText(R.string.this_person_with_this)+" "+fullName+" "+RegisterPerson.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
-                            Intent registerPerson = new Intent(RegisterPerson.this, PersonImage.class);
-                            Bundle personBundle = new Bundle();
-                            personBundle.putString("personFullName", fullName);
-                            registerPerson.putExtras(personBundle);
-                            progressBar.setVisibility(View.GONE);
-                            startActivity(registerPerson);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(RegisterPerson.this, R.string.person_failed_to_register, Toast.LENGTH_LONG).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-                }
-            }
-        });
-
     }
 
 }

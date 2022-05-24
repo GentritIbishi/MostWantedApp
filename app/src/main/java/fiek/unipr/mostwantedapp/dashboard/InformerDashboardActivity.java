@@ -41,9 +41,9 @@ public class InformerDashboardActivity extends AppCompatActivity {
     private String user_anonymousID = null;
     Button btnLogout;
     TextView tvEmail, tvName, tvPhone;
-    Integer personal_number, balance;
-    String collection = "informers";
-    String fullName, name, lastname, email, googleID, grade, parentName, address, phone;
+    Integer balance;
+    String collection = "informers_by_google_sign_in";
+    String fullName, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
     Uri photoURL;
 
     GoogleSignInOptions gso;
@@ -84,14 +84,14 @@ public class InformerDashboardActivity extends AppCompatActivity {
             photoURL = account.getPhotoUrl();
             googleID = account.getId();
 
-            Informer informer = new Informer(personal_number, balance, name, lastname, fullName, address, email, parentName, grade, googleID, photoURL);
+            Informer informer = new Informer(personal_number, balance, null, name, lastname, fullName, address, email, parentName, grade, googleID, photoURL);
             registerInformer(collection, googleID, informer);
-
-            tvName.setText(fullName);
-            tvEmail.setText(email);
-            phone = firebaseUser.getPhoneNumber();
-            tvPhone.setText(phone);
         }
+
+        tvName.setText(fullName);
+        tvEmail.setText(email);
+        phone = firebaseUser.getPhoneNumber();
+        tvPhone.setText(phone);
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override

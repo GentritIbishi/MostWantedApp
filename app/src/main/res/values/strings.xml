@@ -50,7 +50,12 @@
     <string name="error_confirm_password_required">Confirm Password is required!</string>
     <string name="error_min_password_length">Min password length should be 6 characters!</string>
     <string name="error_confirm_password_not_same">Confirm Password is not same!</string>
-    <string name="error_password_not_same">Password is not same!</string>
+    <string name="error_password_not_same">Passwords is not same!</string>
+    <string name="error_phone_required">Phone number is required!</string>
+    <string name="error_number_personal_required">Personal number is required!</string>
+    <string name="error_number_personal_is_ten_digit">Error, more than 10 digits!</string>
+    <string name="error_number_personal_less_than_ten_digits">Error, personal number is fixed 10 digits!</string>
+    <string name="error_password_weak">Weak Password: Minimum eight characters, at least one letter and one number.</string>
     <string name="user_registered_successfully">User has been registered successfully!</string>
     <string name="user_failed_to_register">Failed to register user! Try again!</string>
     <string name="role_not_finded">Role not finded!</string>

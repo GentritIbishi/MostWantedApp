@@ -32,7 +32,7 @@
             android:name=".auth.GoogleSignInActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".RegisterInformerActivity"
             android:exported="false" />
         <activity
             android:name=".GetStartedActivity"

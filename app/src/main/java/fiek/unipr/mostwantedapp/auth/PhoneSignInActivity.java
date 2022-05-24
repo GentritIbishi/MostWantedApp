@@ -45,6 +45,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityPhoneSignInBinding.inflate(getLayoutInflater());
+        //Content view set in activity_phone_sign_in
         setContentView(binding.getRoot());
 
         register_progressBar = findViewById(R.id.register_progressBar);

@@ -89,14 +89,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             navigateToInformer();
         }
 
-
-//        if (firebaseUser.getProviderData().size() > 0) {
-//            //Prints Out google.com for Google Sign In, prints facebook.com for Facebook
-//            e("TOM", "Provider: " + firebaseUser.getProviderData().get(firebaseUser.getProviderData().size() - 1).getProviderId());
-//
-//        }
-
-
         if(firebaseUser != null)
         {
             DocumentReference documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
@@ -146,7 +138,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_createNewAccount:
-                startActivity(new Intent(this, RegisterActivity.class));
+                startActivity(new Intent(this, RegisterInformerActivity.class));
                 break;
             case R.id.btnGoogle:
                 startActivity(new Intent(this, GoogleSignInActivity.class));
