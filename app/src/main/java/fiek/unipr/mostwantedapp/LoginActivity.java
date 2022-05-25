@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,11 +30,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import fiek.unipr.mostwantedapp.auth.ForgotPasswordActivity;
 import fiek.unipr.mostwantedapp.auth.GoogleSignInActivity;
 import fiek.unipr.mostwantedapp.auth.PhoneSignInActivity;
 import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
+import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,6 +51,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView forgotPassword, tv_createNewAccount;
     private EditText etEmail, etPassword;
     private Button bt_Login, btnPhone, btnGoogle, btnAnonymous;
+    private ProgressBar login_progressBar;
 
 
     @Override
@@ -63,7 +67,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnGoogle = findViewById(R.id.btnGoogle);
         btnGoogle.setOnClickListener(this);
 
-        tv_createNewAccount = findViewById(R.id.tv_createNewAccount);
+        tv_createNewAccount = findViewById(R.id.tv_remember);
         tv_createNewAccount.setOnClickListener(this);
 
         btnAnonymous = findViewById(R.id.btnAnonymous);
@@ -75,8 +79,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnPhone = findViewById(R.id.btnPhone);
         btnPhone.setOnClickListener(this);
 
-        etEmail = findViewById(R.id.etEmail);
+        etEmail = findViewById(R.id.etEmailToRecovery);
         etPassword = findViewById(R.id.etPassword);
+
+        forgotPassword = findViewById(R.id.forgotPassword);
+        forgotPassword.setOnClickListener(this);
+
+        login_progressBar = findViewById(R.id.reset_progressBar);
     }
 
     @Override
@@ -89,7 +98,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tv_createNewAccount:
+            case R.id.tv_remember:
                 startActivity(new Intent(this, RegisterUserActivity.class));
                 break;
             case R.id.btnGoogle:
@@ -104,11 +113,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.bt_Login:
                 Login();
+                break;
+            case R.id.forgotPassword:
+                startActivity(new Intent(this, ForgotPasswordActivity.class));
+                break;
         }
 
     }
 
     private void Login() {
+
+        login_progressBar.setVisibility(View.VISIBLE);
+        bt_Login.setEnabled(false);
 
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
@@ -135,78 +151,95 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return;
         }else
         {
-            checkLogin(email, password);
+            signIn(email, password);
         }
     }
 
-    public void checkLogin(String email, String password) {
-        firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful() && task.getResult() != null) {
+    public void signIn(String email, String password) {
+        if(checkConnection()){
+            firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful() && task.getResult() != null) {
 
-                    if(firebaseAuth.getCurrentUser().isEmailVerified()) {
-                        String currentUserId = task.getResult().getUser().getUid();
-                        checkLoginUser(currentUserId);
-                    }else {
-                        firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(LoginActivity.this, R.string.please_verify_email_to_login_check_in_email_we_sent_link_for_verification, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        if(firebaseAuth.getCurrentUser().isEmailVerified()) {
+                            String currentUserId = task.getResult().getUser().getUid();
+                            checkUserRoleAndGoToDashboard(currentUserId);
+                        }else {
+                            sendEmailVerification();
+                        }
+
+                    } else {
+                        login_progressBar.setVisibility(View.INVISIBLE);
+                        bt_Login.setEnabled(true);
+                        Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
-
-                } else {
-                    Toast.makeText(LoginActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
                 }
-            }
-        });
+            });
+        }else {
+            Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void checkLoginUser(String currentUserId) {
-        documentReference = firebaseFirestore.collection("users").document(currentUserId);
-        documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                String role = documentSnapshot.getString("role");
-                String fullName = documentSnapshot.getString("fullName");
+    private void checkUserRoleAndGoToDashboard(String currentUserId) {
+        if(checkConnection()){
+            documentReference = firebaseFirestore.collection("users").document(currentUserId);
+            documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    String role = documentSnapshot.getString("role");
+                    String fullName = documentSnapshot.getString("fullName");
 
-                User user = new User(currentUserId, etEmail.getText().toString(), role, etPassword.getText().toString());
-                setSharedPreference(currentUserId, role, fullName, etEmail.getText().toString());
-                setLoginsHistoryForUser(user, currentUserId);
-                if (role != null && role.matches("Admin")) {
-                    Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
-                    goToAdminDashboard();
-                } else if(role != null && role.matches("User")){
-                    Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
-                    goToUserDashboard();
-                }else if(role != null && role.matches("Informer")){
-                    Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
-                    goToInformerDashboard();
+                    User user = new User(currentUserId, etEmail.getText().toString(), role, etPassword.getText().toString());
+                    setSharedPreference(currentUserId, role, fullName, etEmail.getText().toString());
+                    setLoginsHistoryForUser(user, currentUserId);
+                    if (role != null && role.matches("Admin")) {
+                        login_progressBar.setVisibility(View.INVISIBLE);
+                        bt_Login.setEnabled(true);
+                        Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
+                        goToAdminDashboard();
+                    } else if(role != null && role.matches("User")){
+                        login_progressBar.setVisibility(View.INVISIBLE);
+                        bt_Login.setEnabled(true);
+                        Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
+                        goToUserDashboard();
+                    }else if(role != null && role.matches("Informer")){
+                        login_progressBar.setVisibility(View.INVISIBLE);
+                        bt_Login.setEnabled(true);
+                        Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
+                        goToInformerDashboard();
+                    }
                 }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    login_progressBar.setVisibility(View.INVISIBLE);
+                    bt_Login.setEnabled(true);
+                    Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else {
+            Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void signInAnonymouslyInformer() {
-        firebaseAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-            @Override
-            public void onSuccess(AuthResult authResult) {
-                setSharedPreferenceInformer(firebaseAuth.getCurrentUser().getUid());
-                goToInformerDashboard();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(LoginActivity.this, R.string.error_failed_to_login_as_anonymous, Toast.LENGTH_SHORT).show();
-            }
-        });
+        if(checkConnection()){
+            firebaseAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                @Override
+                public void onSuccess(AuthResult authResult) {
+                    setSharedPreferenceInformer(firebaseAuth.getCurrentUser().getUid());
+                    goToInformerDashboard();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(LoginActivity.this, R.string.error_failed_to_login_as_anonymous, Toast.LENGTH_SHORT).show();
+                }
+            });
+        } else {
+            Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void setSharedPreference(String currentUserId, String role, String fullName, String email) {
@@ -250,20 +283,55 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void checkGoogleSignIn() {
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account != null){
-            goToInformerDashboard();
+        if(checkConnection()){
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+            if(account != null){
+                goToInformerDashboard();
+            }
+        }else {
+            Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void checkOtherSignIn() {
-        if(firebaseUser != null)
-        {
-            if(firebaseUser.isAnonymous()){
-                signInAnonymouslyInformer();
-            }else if(firebaseUser.isEmailVerified()){
-                checkLoginUser(firebaseAuth.getCurrentUser().getUid());
+        if(checkConnection()){
+            if(firebaseUser != null)
+            {
+                if(firebaseUser.isAnonymous()){
+                    signInAnonymouslyInformer();
+                }else if(firebaseUser.isEmailVerified()){
+                    checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid());
+                }
             }
+        }else {
+            Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void sendEmailVerification() {
+        if(checkConnection()){
+            firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    login_progressBar.setVisibility(View.INVISIBLE);
+                    bt_Login.setEnabled(true);
+                    Toast.makeText(LoginActivity.this, R.string.please_verify_email_to_login_check_in_email_we_sent_link_for_verification, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else {
+            Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    private boolean checkConnection() {
+        //Check Internet Connection
+        CheckInternet checkInternet = new CheckInternet();
+        if(!checkInternet.isConnected(this)){
+            return false;
+        }else {
+            return true;
         }
     }
 

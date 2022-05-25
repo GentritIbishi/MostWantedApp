@@ -6,7 +6,6 @@ public class User {
 
     Integer balance;
     String userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, urlOfProfile;
-    Uri photoURL;
 
     public User() {
     }
@@ -18,7 +17,7 @@ public class User {
         this.password = password;
     }
 
-    public User(Integer balance, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
+    public User(Integer balance, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password) {
         this.balance = balance;
         this.userID = userID;
         this.name = name;
@@ -33,7 +32,6 @@ public class User {
         this.register_date_time = register_date_time;
         this.grade = grade;
         this.password = password;
-        this.photoURL = photoURL;
     }
 
     public Integer getBalance() {
@@ -146,14 +144,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Uri getPhotoURL() {
-        return photoURL;
-    }
-
-    public void setPhotoURL(Uri photoURL) {
-        this.photoURL = photoURL;
     }
 
     public String getUrlOfProfile() {

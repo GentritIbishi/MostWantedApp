@@ -78,6 +78,7 @@ public class GoogleSignInActivity extends LoginActivity {
                 public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
                     progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.successfully));
                     if(task.isSuccessful()){
+                        progressDialog.dismiss();
                         InformerActivity();
                     }
                 }
@@ -92,7 +93,7 @@ public class GoogleSignInActivity extends LoginActivity {
     }
 
     private void InformerActivity() {
-        Intent intent = new Intent(getApplicationContext(), InformerDashboardActivity.class);
+        Intent intent = new Intent(GoogleSignInActivity.this, InformerDashboardActivity.class);
         startActivity(intent);
         finish();
     }

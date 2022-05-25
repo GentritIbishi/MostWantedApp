@@ -125,6 +125,11 @@
     <string name="verification_email_sent_to">Verification email sent to</string>
     <string name="failed_to_send_verification_email">Failed to send verification email.</string>
     <string name="please_verify_email_to_login_check_in_email_we_sent_link_for_verification">Please verify email to login, check in email we sent link for verification!</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="check_your_email_to_reset_password">Check your email to reset password!</string>
+    <string name="error_try_again_something_wrong_happened">Try again! Something wrong happened!</string>
+    <string name="error_no_internet_connection_check_wifi_or_mobile_data">No internet connection! Check wifi or mobile data!</string>
+
 
     <string name="get_started_description">Ndjehuni të lirë për të ndihmuar Policinë e Kosovës duke raportuar informacion të saktë të personave te kërkuar nga Policia e Kosovës.</string>
     <string name="get_started_description2">Policia e Kosovës garanton në ruajtjen e identitetit të informatorit, i cili do të jetë anonim.</string>

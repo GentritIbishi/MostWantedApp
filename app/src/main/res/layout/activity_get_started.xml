@@ -70,11 +70,11 @@
             android:layout_width="250dp"
             android:layout_height="50dp"
             android:layout_below="@+id/dots"
-            android:textColor="@color/white"
-            android:background="@drawable/et_corners_rounded_getstarted"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
-            android:text="@string/let_get_started" />
+            android:background="@drawable/button"
+            android:text="@string/let_get_started"
+            android:textColor="@color/white" />
 
     </RelativeLayout>
 

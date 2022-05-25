@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
+import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterUserActivity extends AppCompatActivity {
@@ -57,7 +58,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         etPhone = findViewById(R.id.etPhone);
         etAddress = findViewById(R.id.etAddress);
         etNumPersonal = findViewById(R.id.etNumPersonal);
-        etEmail = findViewById(R.id.etEmail);
+        etEmail = findViewById(R.id.etEmailToRecovery);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         ri_progressBar = findViewById(R.id.ri_progressBar);
@@ -126,15 +127,16 @@ public class RegisterUserActivity extends AppCompatActivity {
                     ri_progressBar.setVisibility(View.VISIBLE);
                     bt_Register.setEnabled(false);
 
-                    firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                        @Override
-                        public void onSuccess(AuthResult authResult) {
+                    if(checkConnection()){
+                        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                            @Override
+                            public void onSuccess(AuthResult authResult) {
 
-                            String userID = authResult.getUser().getUid();
-                            Date date = Calendar.getInstance().getTime();
-                            DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-                            String register_date_time = dateFormat.format(date);
-                            registerUser(balance, userID, name, lastName, fullName, address, email, parentName, role, phone, numPersonal, register_date_time, grade, password, photoURL);
+                                String userID = authResult.getUser().getUid();
+                                Date date = Calendar.getInstance().getTime();
+                                DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
+                                String register_date_time = dateFormat.format(date);
+                                registerUser(balance, userID, name, lastName, fullName, address, email, parentName, role, phone, numPersonal, register_date_time, grade, password, photoURL);
                                 firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
@@ -146,13 +148,16 @@ public class RegisterUserActivity extends AppCompatActivity {
                                         Toast.makeText(RegisterUserActivity.this, R.string.failed_to_send_verification_email, Toast.LENGTH_SHORT).show();
                                     }
                                 });
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(RegisterUserActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(RegisterUserActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }else {
+                        Toast.makeText(RegisterUserActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+                    }
 
                 }
             }
@@ -170,25 +175,30 @@ public class RegisterUserActivity extends AppCompatActivity {
     }
 
     private void registerUser(Integer balance, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
-        documentReference = firebaseFirestore.collection("users").document(userID);
-        User user = new User(balance, userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, photoURL);
-        documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                ri_progressBar.setVisibility(View.INVISIBLE);
-                bt_Register.setEnabled(true);
-                Toast.makeText(RegisterUserActivity.this, RegisterUserActivity.this.getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterUserActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
-                setEmptyFields();
-                goToInformerDashboard();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                ri_progressBar.setVisibility(View.INVISIBLE);
-                bt_Register.setEnabled(true);
-                Toast.makeText(RegisterUserActivity.this, ""+e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        if(checkConnection()){
+            documentReference = firebaseFirestore.collection("users").document(userID);
+            User user = new User(balance, userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password);
+            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    ri_progressBar.setVisibility(View.INVISIBLE);
+                    bt_Register.setEnabled(true);
+                    Toast.makeText(RegisterUserActivity.this, RegisterUserActivity.this.getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterUserActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                    setEmptyFields();
+                    goToInformerDashboard();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    ri_progressBar.setVisibility(View.INVISIBLE);
+                    bt_Register.setEnabled(false);
+                    Toast.makeText(RegisterUserActivity.this, ""+e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }else {
+            Toast.makeText(this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     public void setEmptyFields() {
@@ -205,6 +215,16 @@ public class RegisterUserActivity extends AppCompatActivity {
         Intent intent = new Intent(RegisterUserActivity.this, InformerDashboardActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private boolean checkConnection() {
+        //Check Internet Connection
+        CheckInternet checkInternet = new CheckInternet();
+        if(!checkInternet.isConnected(this)){
+            return false;
+        }else {
+            return true;
+        }
     }
 
 }
