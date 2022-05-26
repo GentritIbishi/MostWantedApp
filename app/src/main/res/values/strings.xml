@@ -129,6 +129,9 @@
     <string name="check_your_email_to_reset_password">Check your email to reset password!</string>
     <string name="error_try_again_something_wrong_happened">Try again! Something wrong happened!</string>
     <string name="error_no_internet_connection_check_wifi_or_mobile_data">No internet connection! Check wifi or mobile data!</string>
+    <string name="search">Search</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
     <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous.</string>
@@ -137,5 +140,7 @@
         <item>User</item>
     </string-array>
     <string name="title_activity_maps">MapsActivity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

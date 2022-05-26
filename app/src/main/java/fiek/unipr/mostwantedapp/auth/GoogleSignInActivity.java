@@ -48,9 +48,9 @@ public class GoogleSignInActivity extends LoginActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Sign In...");
-        progressDialog.show();
+//        progressDialog = new ProgressDialog(this);
+//        progressDialog.setMessage("Sign In...");
+//        progressDialog.show();
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -76,7 +76,7 @@ public class GoogleSignInActivity extends LoginActivity {
             task.addOnCompleteListener(new OnCompleteListener<GoogleSignInAccount>() {
                 @Override
                 public void onComplete(@NonNull Task<GoogleSignInAccount> task) {
-                    progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.successfully));
+                  //  progressDialog.setMessage(getApplicationContext().getResources().getString(R.string.successfully));
                     if(task.isSuccessful()){
                         progressDialog.dismiss();
                         InformerActivity();
@@ -86,7 +86,7 @@ public class GoogleSignInActivity extends LoginActivity {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     // Toast.makeText(GoogleSignInActivity.this, "Stopped"+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
+               //     progressDialog.dismiss();
                 }
             });
         }
