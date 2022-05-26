@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,7 @@ import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.SearchFragment;
+import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class InformerDashboardActivity extends AppCompatActivity {
@@ -48,10 +50,29 @@ public class InformerDashboardActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView nav_view;
 
+    public static final String PREFS_NAME = "LOG_PREF";
+    public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+    private FirebaseFirestore firebaseFirestore;
+    private DocumentReference documentReference;
+    private StorageReference storageReference;
+    private GoogleSignInOptions gso;
+    private GoogleSignInClient gsc;
+    private TextView nav_header_name;
+    private String user_anonymousID = null;
+    Integer balance;
+    String collection = "informers_by_google_sign_in";
+    String fullName, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
+    Uri photoURL;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informer_dashboard);
+
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         drawerLayout = findViewById(R.id.drawerLayout);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,6 +80,45 @@ public class InformerDashboardActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         nav_view = findViewById(R.id.nav_view);
+
+        //Get All Nav header to use elements like textview and any...
+        View headerView = nav_view.getHeaderView(0);
+        nav_header_name = headerView.findViewById(R.id.nav_header_name);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        user_anonymousID = getIntent().getStringExtra("uid_anonymous");
+
+        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+
+        gsc = GoogleSignIn.getClient(this, gso);
+
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if(account != null){
+            personal_number = null;
+            balance = 0;
+            name = account.getGivenName();
+            lastname = account.getFamilyName();
+            fullName = account.getDisplayName();
+            address = null;
+            email = account.getEmail();
+            parentName = null;
+            grade = "E";
+            photoURL = account.getPhotoUrl();
+            googleID = account.getId();
+
+            nav_header_name.setText(fullName);
+        }
+
+        if(firebaseAuth != null){
+            loadInformationFromFirebase(firebaseAuth);
+        }
+
+
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -75,8 +135,7 @@ public class InformerDashboardActivity extends AppCompatActivity {
                         loadFragment(fragment);
                         break;
                     case R.id.menu_group_logout:
-                        fragment = new SearchFragment();
-                        loadFragment(fragment);
+                        Logout(account);
                         break;
                     default:
                         return true;
@@ -87,12 +146,112 @@ public class InformerDashboardActivity extends AppCompatActivity {
 
     }
 
+    private void loadInformationFromFirebase(FirebaseAuth firebaseAuth) {
+        if(checkConnection()){
+            documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    String fullName = task.getResult().getString("fullName");
+                    nav_header_name.setText(fullName);
+                }
+            });
+        }
+    }
+
+    private boolean checkConnection() {
+        //Check Internet Connection
+        CheckInternet checkInternet = new CheckInternet();
+        if(!checkInternet.isConnected(this)){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.frame, fragment).commit();
         drawerLayout.closeDrawer(GravityCompat.START);
         fragmentTransaction.addToBackStack(null);
+    }
+
+    private void Logout(GoogleSignInAccount account) {
+        //check for google login
+        if(account != null){
+            SignOut();
+        }
+
+        //check for phone authentication
+        if(firebaseAuth != null){
+            firebaseAuth.signOut();
+            sendUserToLogin();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            String fullName = account.getDisplayName();
+            String email = account.getEmail();
+            nav_header_name.setText(fullName);
+        }
+
+        if(firebaseUser == null){
+            sendUserToLogin();
+        }else {
+            String phone = firebaseUser.getPhoneNumber();
+            nav_header_name.setText(phone);
+        }
+
+    }
+
+    public void sendUserToLogin() {
+        Intent loginIntent = new Intent(InformerDashboardActivity.this, LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(loginIntent);
+        finish();
+    }
+
+    private void registerInformer(String collection, String googleID, User user) {
+        firebaseFirestore.collection(collection).document(googleID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.getResult().exists())
+                {
+                    Toast.makeText(InformerDashboardActivity.this, InformerDashboardActivity.this.getText(R.string.welcome_back) + " " +fullName, Toast.LENGTH_LONG).show();
+                }
+                else
+                {
+                    firebaseFirestore.collection(collection).document(googleID).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(InformerDashboardActivity.this, InformerDashboardActivity.this.getText(R.string.this_person_with_this)+" "+fullName+" "+InformerDashboardActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(InformerDashboardActivity.this, R.string.person_failed_to_register, Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            }
+        });
+
+    }
+
+    private void SignOut() {
+        gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                finish();
+                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            }
+        });
     }
 
 }
