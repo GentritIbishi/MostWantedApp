@@ -2,33 +2,40 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="180dp"
-    android:background="@color/secondary_color"
-    android:paddingTop="16dp"
-    android:paddingRight="16dp"
-    android:paddingLeft="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     android:layout_marginBottom="-40dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/nav_header_image_view"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/ic_user_default" />
+        android:padding="10dp"
+        android:src="@drawable/ic_profile_picture_default"/>
 
     <TextView
         android:id="@+id/nav_header_name"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@id/nav_header_image_view"
         android:fontFamily="@font/open_sans_light"
         android:text="@string/your_name"
-        android:textColor="@color/white"
+        android:textColor="@color/verydark"
         android:textSize="18sp"
         android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/verifiedBadge"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/nav_header_name"
+        android:src="@drawable/ic_verified_badge"
+        android:visibility="visible" />
 
 </RelativeLayout>

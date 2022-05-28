@@ -8,22 +8,35 @@
     android:layout_height="match_parent">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="0dp"
         android:fitsSystemWindows="true"
         android:theme="@style/Theme.MostWantedApp.AppBarOverlay">
+
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:background="@color/white"
-            app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay"
+            android:layout_height="60dp"
+            android:background="@color/graylight"
             app:layout_scrollFlags="scroll|enterAlways"
-            android:layout_height="60dp">
+            app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+
+                <ImageView
+                    android:id="@+id/icLogoApp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/ic_app"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/addReport"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/addReport"

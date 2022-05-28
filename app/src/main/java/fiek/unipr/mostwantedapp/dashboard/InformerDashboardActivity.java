@@ -69,6 +69,7 @@ public class InformerDashboardActivity extends AppCompatActivity {
     private GoogleSignInOptions gso;
     private GoogleSignInClient gsc;
     private TextView nav_header_name;
+    private ImageView verifiedBadge;
     private CircleImageView nav_header_image_view;
     private String user_anonymousID = null;
     Integer balance;
@@ -90,11 +91,13 @@ public class InformerDashboardActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         nav_view = findViewById(R.id.nav_view);
+        nav_view.getMenu().getItem(0).setChecked(true);
         addReport = findViewById(R.id.addReport);
 
         //Get All Nav header to use elements like textview and any...
         View headerView = nav_view.getHeaderView(0);
         nav_header_name = headerView.findViewById(R.id.nav_header_name);
+        verifiedBadge = headerView.findViewById(R.id.verifiedBadge);
         nav_header_image_view = headerView.findViewById(R.id.nav_header_image_view);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -189,6 +192,8 @@ public class InformerDashboardActivity extends AppCompatActivity {
                     String email = task.getResult().getString("email");
                     String grade = task.getResult().getString("grade");
 
+                    setVerifiedBadge(firebaseAuth.getCurrentUser());
+
                     storageReference = firebaseStorage.getReference().child("users/"+firebaseAuth.getCurrentUser().getUid()+"/profile_picture.jpg");
                     if(storageReference != null) {
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -210,7 +215,6 @@ public class InformerDashboardActivity extends AppCompatActivity {
     }
 
     private boolean checkConnection() {
-        //Check Internet Connection
         CheckInternet checkInternet = new CheckInternet();
         if(!checkInternet.isConnected(this)){
             return false;
@@ -268,33 +272,6 @@ public class InformerDashboardActivity extends AppCompatActivity {
         finish();
     }
 
-    private void registerInformer(String collection, String googleID, User user) {
-        firebaseFirestore.collection(collection).document(googleID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.getResult().exists())
-                {
-                    Toast.makeText(InformerDashboardActivity.this, InformerDashboardActivity.this.getText(R.string.welcome_back) + " " +fullName, Toast.LENGTH_LONG).show();
-                }
-                else
-                {
-                    firebaseFirestore.collection(collection).document(googleID).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(InformerDashboardActivity.this, InformerDashboardActivity.this.getText(R.string.this_person_with_this)+" "+fullName+" "+InformerDashboardActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(InformerDashboardActivity.this, R.string.person_failed_to_register, Toast.LENGTH_LONG).show();
-                        }
-                    });
-                }
-            }
-        });
-
-    }
-
     private void SignOut() {
         gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -303,6 +280,12 @@ public class InformerDashboardActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             }
         });
+    }
+
+    private void setVerifiedBadge(FirebaseUser firebaseUser) {
+        if(firebaseUser.isEmailVerified()){
+            verifiedBadge.setVisibility(View.VISIBLE);
+        }
     }
 
 }
