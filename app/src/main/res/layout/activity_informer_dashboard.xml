@@ -21,13 +21,13 @@
         android:layout_height="match_parent"
         android:background="@color/secondary_color"
         android:layout_gravity="start"
-        app:drawerLayoutCornerSize="40dp"
+        app:drawerLayoutCornerSize="20dp"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/menu"
         app:itemBackground="@drawable/menu_item_padding"
         app:itemTextAppearance="@style/TextViewStyle"
         app:itemIconTint="@color/white"
-        app:itemHorizontalPadding="30dp"
+        app:itemHorizontalPadding="25dp"
         />
 
 

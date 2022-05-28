@@ -39,7 +39,7 @@
             <ImageView
                 android:id="@+id/user_img_profile"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/ic_user"
+                android:src="@drawable/ic_user_default"
                 android:layout_width="62dp"
                 android:layout_height="62dp" />
 

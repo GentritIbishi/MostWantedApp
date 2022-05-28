@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:padding="16dp"
-            android:src="@drawable/ic_user"></ImageView>
+            android:src="@drawable/ic_user_default"></ImageView>
 
         <ImageView
             android:id="@+id/img_plus"

@@ -20,4 +20,6 @@
     <color name="red">#eb4034</color>
     <color name="darkblack">#999999</color>
     <color name="verydark">#6f6f6f</color>
+    <color name="plus_color">#595b50</color>
+    <color name="plus_color_pressed">#cccaca</color>
 </resources>

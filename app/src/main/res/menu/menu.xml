@@ -2,13 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/menu_group_home"
+            android:title="@string/home"
+            android:icon="@drawable/ic_home" />
+        <item
             android:id="@+id/menu_group_search"
             android:title="@string/search"
-            android:icon="@drawable/ic_baseline_person_search_24" />
+            android:icon="@drawable/ic_search" />
         <item
             android:id="@+id/menu_group_profile"
             android:title="@string/profile"
-            android:icon="@drawable/ic_baseline_account_circle_24"/>
+            android:icon="@drawable/ic_profile"/>
     </group>
 
     <item android:title="">
@@ -17,7 +21,7 @@
                 <item
                     android:id="@+id/menu_group_logout"
                     android:title="@string/logout"
-                    android:icon="@drawable/ic_baseline_logout_24"/>
+                    android:icon="@drawable/ic_logout"/>
             </group>
         </menu>
     </item>

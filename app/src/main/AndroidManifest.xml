@@ -23,6 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MostWantedApp">
         <activity
+            android:name=".helpers.SetImageActivity"
+            android:exported="false" />
+        <activity
             android:name=".auth.ForgotPasswordActivity"
             android:exported="false" />
         <activity

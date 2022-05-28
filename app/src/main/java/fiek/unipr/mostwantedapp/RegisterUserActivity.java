@@ -31,6 +31,7 @@ import java.util.Date;
 
 import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
+import fiek.unipr.mostwantedapp.helpers.SetImageActivity;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterUserActivity extends AppCompatActivity {
@@ -152,6 +153,8 @@ public class RegisterUserActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                ri_progressBar.setVisibility(View.INVISIBLE);
+                                bt_Register.setEnabled(true);
                                 Toast.makeText(RegisterUserActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -185,13 +188,13 @@ public class RegisterUserActivity extends AppCompatActivity {
                     bt_Register.setEnabled(true);
                     Toast.makeText(RegisterUserActivity.this, RegisterUserActivity.this.getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterUserActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
                     setEmptyFields();
-                    goToInformerDashboard();
+                    goToSetProfilePicture();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     ri_progressBar.setVisibility(View.INVISIBLE);
-                    bt_Register.setEnabled(false);
+                    bt_Register.setEnabled(true);
                     Toast.makeText(RegisterUserActivity.this, ""+e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
@@ -211,8 +214,8 @@ public class RegisterUserActivity extends AppCompatActivity {
         etConfirmPassword.setText("");
     }
 
-    private void goToInformerDashboard() {
-        Intent intent = new Intent(RegisterUserActivity.this, InformerDashboardActivity.class);
+    private void goToSetProfilePicture() {
+        Intent intent = new Intent(RegisterUserActivity.this, SetImageActivity.class);
         startActivity(intent);
         finish();
     }

@@ -92,7 +92,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onStart() {
         super.onStart();
         checkGoogleSignIn();
-        checkOtherSignIn();
+        if(firebaseUser != null)
+        {
+            if(firebaseUser.isAnonymous()){
+                signInAnonymouslyInformer();
+            }else if(firebaseUser.isEmailVerified()){
+                checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid());
+            }
+        }
     }
 
     @Override
@@ -292,21 +299,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
         }
 
-    }
-
-    private void checkOtherSignIn() {
-        if(checkConnection()){
-            if(firebaseUser != null)
-            {
-                if(firebaseUser.isAnonymous()){
-                    signInAnonymouslyInformer();
-                }else if(firebaseUser.isEmailVerified()){
-                    checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid());
-                }
-            }
-        }else {
-            Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void sendEmailVerification() {
