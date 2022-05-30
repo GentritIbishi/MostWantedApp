@@ -27,9 +27,14 @@
         <item name="android:textColor">@color/verydark</item>
     </style>
     <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@color/white</item>
+        <item name="color">@color/secondary_color</item>
         <item name="android:width">80dp</item>
         <item name="android:height">80dp</item>
+    </style>
+
+    <style name="NavigationTheme" parent="Theme.MostWantedApp">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginBottom">05dp</item>
     </style>
 
 </resources>

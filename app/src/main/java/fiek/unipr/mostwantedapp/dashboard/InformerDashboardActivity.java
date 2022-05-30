@@ -44,6 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.HomeFragment;
+import fiek.unipr.mostwantedapp.fragment.PersonFragment;
 import fiek.unipr.mostwantedapp.fragment.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.SearchFragment;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
@@ -92,6 +93,7 @@ public class InformerDashboardActivity extends AppCompatActivity {
         toggle.syncState();
         nav_view = findViewById(R.id.nav_view);
         nav_view.getMenu().getItem(0).setChecked(true);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home, new HomeFragment()).commit();
         addReport = findViewById(R.id.addReport);
 
         //Get All Nav header to use elements like textview and any...

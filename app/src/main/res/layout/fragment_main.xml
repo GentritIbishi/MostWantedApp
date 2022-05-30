@@ -19,24 +19,13 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/graylight"
+            android:background="@color/white"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
-
-                <ImageView
-                    android:id="@+id/icLogoApp"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/ic_app"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/addReport"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/addReport"
@@ -55,6 +44,6 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <include
-        layout="@layout/fragment_home" />
+        layout="@layout/fragment_home"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
