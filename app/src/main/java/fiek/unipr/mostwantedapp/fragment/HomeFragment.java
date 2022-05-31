@@ -3,15 +3,15 @@ package fiek.unipr.mostwantedapp.fragment;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,13 +25,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.lists.PersonActivity;
 import fiek.unipr.mostwantedapp.lists.PersonListAdapter;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class HomeFragment extends Fragment {
 
-    private View group_fragment_view;
+    private View home_fragment_view;
     private ListView lvPersons;
     private PersonListAdapter personListAdapter;
     private ArrayList<Person> personArrayList;
@@ -44,42 +43,30 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        group_fragment_view = inflater.inflate(R.layout.fragment_home, container, false);
+        home_fragment_view = inflater.inflate(R.layout.fragment_home, container, false);
         firebaseFirestore = FirebaseFirestore.getInstance();
         InitializeFields();
         loadDatainListview();
-        return group_fragment_view;
+
+        final SwipeRefreshLayout pullToRefresh = home_fragment_view.findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Reload current fragment
+                personArrayList.clear();
+                loadDatainListview();
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+
+        return home_fragment_view;
     }
 
     private void InitializeFields() {
-        lvPersons = group_fragment_view.findViewById(R.id.lvPersons);
+        lvPersons = home_fragment_view.findViewById(R.id.lvPersons);
         personArrayList = new ArrayList<>();
         personListAdapter = new PersonListAdapter(getActivity().getApplicationContext(), personArrayList);
         lvPersons.setAdapter(personListAdapter);
-    }
-
-    @Override
-    public void onActivityCreated( Bundle savedInstanceState )
-    {
-        super.onActivityCreated( savedInstanceState );
-        setRetainInstance( true );
-
-        LayoutInflater.from( getActivity().getApplicationContext() );
-        lvPersons.setDividerHeight( 1 );
-        lvPersons.setOnCreateContextMenuListener( this );
-        lvPersons.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                return false;
-            }
-        });
-        lvPersons.setFocusable( true );
-        lvPersons.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                return false;
-            }
-        });
     }
 
     private void loadDatainListview() {

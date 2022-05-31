@@ -8,11 +8,16 @@
     android:layout_height="match_parent"
     tools:context=".fragment.HomeFragment">
 
-       <ListView
+       <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+           android:id="@+id/pullToRefresh"
            android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:clickable="true"
-           android:focusable="true"
-           android:id="@+id/lvPersons"/>
+           android:layout_height="wrap_content">
+              <ListView
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:clickable="true"
+                  android:focusable="true"
+                  android:id="@+id/lvPersons"/>
+       </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>
