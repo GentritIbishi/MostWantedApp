@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,7 @@ public class ProfileFragment extends Fragment {
     private Toolbar toolbar;
     private NavigationView nav_view;
     private ImageView addReport;
+    private Button menu_group_logout;
 
     public static final String PREFS_NAME = "LOG_PREF";
     public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
@@ -85,7 +87,7 @@ public class ProfileFragment extends Fragment {
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
         nav_view = profile_fragment_view.findViewById(R.id.nav_view);
-        nav_view.getMenu().getItem(0).setChecked(true);
+        menu_group_logout = profile_fragment_view.findViewById(R.id.menu_group_logout);
 
         //Get All Nav header to use elements like textview and any...
         View headerView = nav_view.getHeaderView(0);
@@ -127,6 +129,12 @@ public class ProfileFragment extends Fragment {
             loadInformationFromFirebase(firebaseAuth);
         }
 
+        menu_group_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Logout(account);
+            }
+        });
 
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -135,20 +143,20 @@ public class ProfileFragment extends Fragment {
                 Fragment fragment = null;
                 switch (id)
                 {
-                    case R.id.menu_group_home:
-                        fragment = new HomeFragment();
-                        loadFragment(fragment);
-                        break;
-                    case R.id.menu_group_search:
-                        fragment = new SearchFragment();
-                        loadFragment(fragment);
-                        break;
-                    case R.id.menu_group_profile:
-                        fragment = new ProfileFragment();
-                        loadFragment(fragment);
-                        break;
+//                    case R.id.menu_group_home:
+//                        fragment = new HomeFragment();
+//                        loadFragment(fragment);
+//                        break;
+//                    case R.id.menu_group_search:
+//                        fragment = new SearchFragment();
+//                        loadFragment(fragment);
+//                        break;
+//                    case R.id.menu_group_profile:
+//                        fragment = new ProfileFragment();
+//                        loadFragment(fragment);
+//                        break;
                     case R.id.menu_group_logout:
-                        Logout(account);
+//                        Logout(account);
                         break;
                     default:
                         return true;
@@ -213,7 +221,7 @@ public class ProfileFragment extends Fragment {
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_home, fragment).commit();
+        fragmentTransaction.replace(R.id.fragment_profile, fragment).commit();
         drawerLayout.closeDrawer(GravityCompat.START);
         fragmentTransaction.addToBackStack(null);
     }
