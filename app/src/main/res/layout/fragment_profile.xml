@@ -8,22 +8,33 @@
     tools:context=".fragment.ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
 
-        <TextView
-            android:layout_width="76dp"
-            android:layout_height="31dp"
-            android:text="@string/profile"
-            android:textAlignment="center"
-            android:textColor="@color/verydark"
-            android:textSize="25sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/fragment_main"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:theme="@style/NavigationTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_gravity="start"
+            app:drawerLayoutCornerSize="10dp"
+            app:headerLayout="@layout/nav_header"
+            app:menu="@menu/menu"
+            app:itemBackground="@drawable/menu_back_state"
+            app:itemTextAppearance="@style/TextViewStyle"
+            app:itemIconTint="@color/secondary_color" />
+
+    </androidx.drawerlayout.widget.DrawerLayout>
 
 </FrameLayout>
