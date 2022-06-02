@@ -24,4 +24,14 @@
     <color name="plus_color_pressed">#cccaca</color>
     <color name="green">#7CFC00</color>
     <color name="graylight">#c9ccd1</color>
+
+    <color name="home">#1194AA</color>
+    <color name="like">#C9379d</color>
+    <color name="notification">#AE7E0F</color>
+    <color name="profile">#5B37B7</color>
+
+    <color name="home_20">#2D1194AA</color>
+    <color name="like_20">#2DC9379D</color>
+    <color name="notification_20">#36AE7E0F</color>
+    <color name="profile_20">#395B37B7</color>
 </resources>

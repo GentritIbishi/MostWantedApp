@@ -17,10 +17,14 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -32,6 +36,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -43,247 +48,211 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.HomeFragment;
+import fiek.unipr.mostwantedapp.fragment.NotificationFragment;
 import fiek.unipr.mostwantedapp.fragment.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.SearchFragment;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.models.Person;
 
 public class InformerDashboardActivity extends AppCompatActivity {
 
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
-    private Toolbar toolbar;
-    private NavigationView nav_view;
-    private ImageView addReport;
-
-    public static final String PREFS_NAME = "LOG_PREF";
-    public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
-    private FirebaseAuth firebaseAuth;
-    private FirebaseUser firebaseUser;
-    private FirebaseFirestore firebaseFirestore;
-    private DocumentReference documentReference;
-    private StorageReference storageReference;
-    private FirebaseStorage firebaseStorage;
-    private GoogleSignInOptions gso;
-    private GoogleSignInClient gsc;
-    private TextView nav_header_name;
-    private ImageView verifiedBadge;
-    private CircleImageView nav_header_image_view;
-    private String user_anonymousID = null;
-    Integer balance;
-    String fullName, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
-    Uri photoURL;
+    //num of selected tab. We have 4 tabs so value must lie between 1-4. Default value is 1, cause first tab is selected by deafult
+    private int selectedTab = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_informer_dashboard);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        final LinearLayout homeLayout = findViewById(R.id.homeLayout);
+        final LinearLayout likeLayout = findViewById(R.id.likeLayout);
+        final LinearLayout notificationLayout = findViewById(R.id.notificationLayout);
+        final LinearLayout profileLayout = findViewById(R.id.profileLayout);
 
-        drawerLayout = findViewById(R.id.drawerLayout);
-        toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-        nav_view = findViewById(R.id.nav_view);
-        nav_view.getMenu().getItem(0).setChecked(true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_home, new HomeFragment()).commit();
-        addReport = findViewById(R.id.addReport);
+        final ImageView homeImage = findViewById(R.id.homeImage);
+        final ImageView likeImage = findViewById(R.id.likeImage);
+        final ImageView notificationImage = findViewById(R.id.notificationImage);
+        final ImageView profileImage = findViewById(R.id.profileImage);
 
-        //Get All Nav header to use elements like textview and any...
-        View headerView = nav_view.getHeaderView(0);
-        nav_header_name = headerView.findViewById(R.id.nav_header_name);
-        verifiedBadge = headerView.findViewById(R.id.verifiedBadge);
-        nav_header_image_view = headerView.findViewById(R.id.nav_header_image_view);
+        final TextView homeTxt = findViewById(R.id.homeTxt);
+        final TextView likeTxt = findViewById(R.id.likeTxt);
+        final TextView notificationTxt = findViewById(R.id.notificationTxt);
+        final TextView profileTxt = findViewById(R.id.profileTxt);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        firebaseStorage = FirebaseStorage.getInstance();
+        //set home fragment by default
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.fragmentContainer, HomeFragment.class, null)
+                .commit();
 
-        user_anonymousID = getIntent().getStringExtra("uid_anonymous");
-
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        gsc = GoogleSignIn.getClient(this, gso);
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if(account != null){
-            personal_number = null;
-            balance = 0;
-            name = account.getGivenName();
-            lastname = account.getFamilyName();
-            fullName = account.getDisplayName();
-            address = null;
-            email = account.getEmail();
-            parentName = null;
-            grade = "E";
-            photoURL = account.getPhotoUrl();
-            googleID = account.getId();
-
-            nav_header_name.setText(fullName);
-        }
-
-        if(firebaseAuth != null){
-            loadInformationFromFirebase(firebaseAuth);
-        }
-
-
-        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                int id = menuItem.getItemId();
-                Fragment fragment = null;
-                switch (id)
-                {
-                    case R.id.menu_group_home:
-                        fragment = new HomeFragment();
-                        loadFragment(fragment);
-                        break;
-                    case R.id.menu_group_search:
-                        fragment = new SearchFragment();
-                        loadFragment(fragment);
-                        break;
-                    case R.id.menu_group_profile:
-                        fragment = new ProfileFragment();
-                        loadFragment(fragment);
-                        break;
-                    case R.id.menu_group_logout:
-                        Logout(account);
-                        break;
-                    default:
-                        return true;
-                }
-                return true;
-            }
-        });
-
-        addReport.setOnClickListener(new View.OnClickListener() {
+        homeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(InformerDashboardActivity.this, "Test clicked!", Toast.LENGTH_SHORT).show();
-            }
-        });
+                //check if home is already selected or not.
+                if(selectedTab != 1) {
+                    //set home fragment
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragmentContainer, HomeFragment.class, null)
+                            .commit();
 
-    }
+                    //unselect other tabs except home tab
+                    likeTxt.setVisibility(View.GONE);
+                    notificationTxt.setVisibility(View.GONE);
+                    profileTxt.setVisibility(View.GONE);
 
-    private void loadInformationFromFirebase(FirebaseAuth firebaseAuth) {
-        if(checkConnection()){
-            documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
-            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    String fullName = task.getResult().getString("fullName");
-                    String name = task.getResult().getString("name");
-                    String lastname = task.getResult().getString("lastname");
-                    String parentName = task.getResult().getString("parentName");
-                    String personal_number = task.getResult().getString("personal_number");
-                    String phone = task.getResult().getString("phone");
-                    String urlOfProfile = task.getResult().getString("urlOfProfile");
-                    String register_date_time = task.getResult().getString("register_date_time");
-                    String address = task.getResult().getString("address");
-//                    Integer balance = task.getResult().get
-                    String email = task.getResult().getString("email");
-                    String grade = task.getResult().getString("grade");
+                    likeImage.setImageResource(R.drawable.ic_like);
+                    notificationImage.setImageResource(R.drawable.ic_notification);
+                    profileImage.setImageResource(R.drawable.ic_user);
 
-                    setVerifiedBadge(firebaseAuth.getCurrentUser());
+                    likeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 
-                    storageReference = firebaseStorage.getReference().child("users/"+firebaseAuth.getCurrentUser().getUid()+"/profile_picture.jpg");
-                    if(storageReference != null) {
-                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                Picasso.get().load(uri).transform(new CircleTransform()).into(nav_header_image_view);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(InformerDashboardActivity.this, R.string.image_not_set, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                    nav_header_name.setText(fullName);
+                    //select home tab
+                    homeTxt.setVisibility(View.VISIBLE);
+                    homeImage.setImageResource(R.drawable.ic_selected_home);
+                    homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
+
+                    //create animation
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f );
+                    scaleAnimation.setDuration(200);
+                    scaleAnimation.setFillAfter(true);
+                    homeLayout.startAnimation(scaleAnimation);
+
+                    // set selected tab 1 as selected tab
+                    selectedTab = 1;
                 }
-            });
-        }
-    }
-
-    private boolean checkConnection() {
-        CheckInternet checkInternet = new CheckInternet();
-        if(!checkInternet.isConnected(this)){
-            return false;
-        }else {
-            return true;
-        }
-    }
-
-    private void loadFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_home, fragment).commit();
-        drawerLayout.closeDrawer(GravityCompat.START);
-        fragmentTransaction.addToBackStack(null);
-    }
-
-    private void Logout(GoogleSignInAccount account) {
-        //check for google login
-        if(account != null){
-            SignOut();
-        }
-
-        //check for phone authentication
-        if(firebaseAuth != null){
-            firebaseAuth.signOut();
-            sendUserToLogin();
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-        if (account != null) {
-            String fullName = account.getDisplayName();
-            String email = account.getEmail();
-            nav_header_name.setText(fullName);
-        }
-
-        if(firebaseUser == null){
-            sendUserToLogin();
-        }else {
-            String phone = firebaseUser.getPhoneNumber();
-            nav_header_name.setText(phone);
-            loadInformationFromFirebase(firebaseAuth);
-        }
-
-    }
-
-    public void sendUserToLogin() {
-        Intent loginIntent = new Intent(InformerDashboardActivity.this, LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(loginIntent);
-        finish();
-    }
-
-    private void SignOut() {
-        gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                finish();
-                startActivity(new Intent(getApplicationContext(), LoginActivity.class));
             }
         });
-    }
 
-    private void setVerifiedBadge(FirebaseUser firebaseUser) {
-        if(firebaseUser.isEmailVerified()){
-            verifiedBadge.setVisibility(View.VISIBLE);
-        }
+        likeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //check if like is already selected or not.
+                if(selectedTab != 2) {
+                    //set like fragment by default
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragmentContainer, SearchFragment.class, null)
+                            .commit();
+
+                    //unselect other tabs except like tab
+                    homeTxt.setVisibility(View.GONE);
+                    notificationTxt.setVisibility(View.GONE);
+                    profileTxt.setVisibility(View.GONE);
+
+                    homeImage.setImageResource(R.drawable.ic_home_);
+                    notificationImage.setImageResource(R.drawable.ic_notification);
+                    profileImage.setImageResource(R.drawable.ic_user);
+
+                    homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+                    //select home tab
+                    likeTxt.setVisibility(View.VISIBLE);
+                    likeImage.setImageResource(R.drawable.ic_selected_like);
+                    likeLayout.setBackgroundResource(R.drawable.round_back_like_100);
+
+                    //create animation
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f );
+                    scaleAnimation.setDuration(200);
+                    scaleAnimation.setFillAfter(true);
+                    likeLayout.startAnimation(scaleAnimation);
+
+                    // set selected tab 1 as selected tab
+                    selectedTab = 2;
+                }
+            }
+        });
+
+        notificationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //check if notification is already selected or not.
+                if(selectedTab != 3) {
+                    //set notification fragment by default
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragmentContainer, NotificationFragment.class, null)
+                            .commit();
+
+                    //unselect other tabs except notification tab
+                    homeTxt.setVisibility(View.GONE);
+                    likeTxt.setVisibility(View.GONE);
+                    profileTxt.setVisibility(View.GONE);
+
+                    homeImage.setImageResource(R.drawable.ic_home_);
+                    likeImage.setImageResource(R.drawable.ic_like);
+                    profileImage.setImageResource(R.drawable.ic_user);
+
+                    homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    likeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+                    //select notification tab
+                    notificationTxt.setVisibility(View.VISIBLE);
+                    notificationImage.setImageResource(R.drawable.ic_selected_notification);
+                    notificationLayout.setBackgroundResource(R.drawable.round_back_notification_100);
+
+                    //create animation
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f );
+                    scaleAnimation.setDuration(200);
+                    scaleAnimation.setFillAfter(true);
+                    notificationLayout.startAnimation(scaleAnimation);
+
+                    // set selected tab 1 as selected tab
+                    selectedTab = 3;
+                }
+            }
+        });
+
+        profileLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //check if profile is already selected or not.
+                if(selectedTab != 4) {
+                    //set profile fragment by default
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragmentContainer, ProfileFragment.class, null)
+                            .commit();
+
+                    //unselect other tabs except profile tab
+                    homeTxt.setVisibility(View.GONE);
+                    likeTxt.setVisibility(View.GONE);
+                    notificationTxt.setVisibility(View.GONE);
+
+                    homeImage.setImageResource(R.drawable.ic_home_);
+                    likeImage.setImageResource(R.drawable.ic_like);
+                    notificationImage.setImageResource(R.drawable.ic_notification);
+
+                    homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    likeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+                    //select notification tab
+                    profileTxt.setVisibility(View.VISIBLE);
+                    profileImage.setImageResource(R.drawable.ic_selected_user);
+                    profileLayout.setBackgroundResource(R.drawable.round_back_profile_100);
+
+                    //create animation
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f );
+                    scaleAnimation.setDuration(200);
+                    scaleAnimation.setFillAfter(true);
+                    profileLayout.startAnimation(scaleAnimation);
+
+                    // set selected tab 1 as selected tab
+                    selectedTab = 4;
+                }
+            }
+        });
+
+
+
     }
 
 }
