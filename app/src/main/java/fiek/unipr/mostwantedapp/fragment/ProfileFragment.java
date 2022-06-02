@@ -5,14 +5,12 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -28,8 +26,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,7 +41,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 
 public class ProfileFragment extends Fragment {
 
@@ -60,6 +55,7 @@ public class ProfileFragment extends Fragment {
     public static final String PREFS_NAME = "LOG_PREF";
     public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
     private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     private DocumentReference documentReference;
@@ -72,8 +68,17 @@ public class ProfileFragment extends Fragment {
     private CircleImageView nav_header_image_view;
     private String user_anonymousID = null;
     Integer balance;
-    String fullName, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
+    String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
     Uri photoURL;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseStorage = FirebaseStorage.getInstance();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,8 +105,6 @@ public class ProfileFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
-        user_anonymousID = getActivity().getIntent().getStringExtra("uid_anonymous");
-
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -123,10 +126,6 @@ public class ProfileFragment extends Fragment {
             googleID = account.getId();
 
             nav_header_name.setText(fullName);
-        }
-
-        if(firebaseAuth != null){
-            loadInformationFromFirebase(firebaseAuth);
         }
 
         menu_group_logout.setOnClickListener(new View.OnClickListener() {
@@ -168,42 +167,26 @@ public class ProfileFragment extends Fragment {
         return profile_fragment_view;
     }
 
-    private void loadInformationFromFirebase(FirebaseAuth firebaseAuth) {
+    private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
             documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    String fullName = task.getResult().getString("fullName");
-                    String name = task.getResult().getString("name");
-                    String lastname = task.getResult().getString("lastname");
-                    String parentName = task.getResult().getString("parentName");
-                    String personal_number = task.getResult().getString("personal_number");
-                    String phone = task.getResult().getString("phone");
-                    String urlOfProfile = task.getResult().getString("urlOfProfile");
-                    String register_date_time = task.getResult().getString("register_date_time");
-                    String address = task.getResult().getString("address");
-//                    Integer balance = task.getResult().get
-                    String email = task.getResult().getString("email");
-                    String grade = task.getResult().getString("grade");
+                    if(task.isSuccessful() && task.getResult() != null)
+                    {
+                        fullName = task.getResult().getString("fullName");
+                        urlOfProfile = task.getResult().getString("urlOfProfile");
+                        //set Image, verified if is email verified, name
+                        setVerifiedBadge(firebaseAuth.getCurrentUser());
+                        if(urlOfProfile != null){
+                            Picasso.get().load(urlOfProfile).into(nav_header_image_view);
+                        }
 
-                    setVerifiedBadge(firebaseAuth.getCurrentUser());
-
-                    storageReference = firebaseStorage.getReference().child("users/"+firebaseAuth.getCurrentUser().getUid()+"/profile_picture.jpg");
-                    if(storageReference != null) {
-                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                Picasso.get().load(uri).transform(new CircleTransform()).into(nav_header_image_view);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getContext(), R.string.image_not_set, Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        if(fullName != null){
+                            nav_header_name.setText(fullName);
+                        }
                     }
-                    nav_header_name.setText(fullName);
                 }
             });
         }
@@ -216,14 +199,6 @@ public class ProfileFragment extends Fragment {
         }else {
             return true;
         }
-    }
-
-    private void loadFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_profile, fragment).commit();
-        drawerLayout.closeDrawer(GravityCompat.START);
-        fragmentTransaction.addToBackStack(null);
     }
 
     private void Logout(GoogleSignInAccount account) {
@@ -242,22 +217,36 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
-        if (account != null) {
-            String fullName = account.getDisplayName();
-            String email = account.getEmail();
-            nav_header_name.setText(fullName);
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
+            if (account != null) {
+                String fullName = account.getDisplayName();
+                nav_header_name.setText(fullName);
+                nav_header_image_view.setImageURI(account.getPhotoUrl());
+            }
+            if(firebaseAuth != null){
+                loadInfoFromFirebase(firebaseAuth);
+                loadInfoAnonymousFirebase();
+                loadInfoPhoneFirebase();
+            }
         }
 
-        if(firebaseUser == null){
-            sendUserToLogin();
-        }else {
-            String phone = firebaseUser.getPhoneNumber();
+    private void loadInfoPhoneFirebase() {
+        String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
+        if(!empty(phone))
+        {
+            //logged in with phone
             nav_header_name.setText(phone);
-            loadInformationFromFirebase(firebaseAuth);
+            nav_header_image_view.setImageResource(R.drawable.ic_phone_login);
         }
-
     }
+
+    private void loadInfoAnonymousFirebase() {
+        if(firebaseAuth.getCurrentUser().isAnonymous()){
+            nav_header_name.setText(firebaseAuth.getCurrentUser().getUid());
+            nav_header_image_view.setImageResource(R.drawable.ic_anonymous);
+        }
+    }
+
 
     public void sendUserToLogin() {
         Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
@@ -281,6 +270,11 @@ public class ProfileFragment extends Fragment {
         if(firebaseUser.isEmailVerified()){
             verifiedBadge.setVisibility(View.VISIBLE);
         }
+    }
+
+    public static boolean empty( final String s ) {
+        // Null-safe, short-circuit evaluation.
+        return s == null || s.trim().isEmpty();
     }
 
 }

@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
@@ -52,6 +54,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText etEmail, etPassword;
     private Button bt_Login, btnPhone, btnGoogle, btnAnonymous;
     private ProgressBar login_progressBar;
+    private ProgressBar google_progressBar;
+    private ProgressBar phone_progressBar;
+    private ProgressBar anonymous_progressBar;
 
 
     @Override
@@ -85,7 +90,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgotPassword = findViewById(R.id.forgotPassword);
         forgotPassword.setOnClickListener(this);
 
-        login_progressBar = findViewById(R.id.reset_progressBar);
+        login_progressBar = findViewById(R.id.login_progressBar);
+        google_progressBar = findViewById(R.id.google_progressBar);
+        phone_progressBar = findViewById(R.id.phone_progressBar);
+        anonymous_progressBar = findViewById(R.id.anonymous_progressBar);
     }
 
     @Override
@@ -98,6 +106,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 signInAnonymouslyInformer();
             }else if(firebaseUser.isEmailVerified()){
                 checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid());
+            }else if(firebaseUser.getPhoneNumber() != null){
+                goToInformerDashboard();
             }
         }
     }
@@ -109,14 +119,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(new Intent(this, RegisterUserActivity.class));
                 break;
             case R.id.btnGoogle:
-                startActivity(new Intent(this, GoogleSignInActivity.class));
-                finish();
+                enableProgressBar(google_progressBar, btnGoogle);
+                final Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 2000ms
+                        startActivity(new Intent(getApplicationContext(), GoogleSignInActivity.class));
+                        disableProgressBar(google_progressBar, btnGoogle);
+                    }
+                }, 2000);
                 break;
             case R.id.btnPhone:
-                startActivity(new Intent(this, PhoneSignInActivity.class));
+                enableProgressBar(phone_progressBar, btnPhone);
+                final Handler phone = new Handler(Looper.getMainLooper());
+                phone.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 2000ms
+                        startActivity(new Intent(getApplicationContext(), PhoneSignInActivity.class));
+                        disableProgressBar(phone_progressBar, btnPhone);
+                    }
+                }, 2000);
                 break;
             case R.id.btnAnonymous:
-                signInAnonymouslyInformer();
+                enableProgressBar(anonymous_progressBar, btnAnonymous);
+                final Handler anonymous = new Handler(Looper.getMainLooper());
+                anonymous.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        //Do something after 2000ms
+                        signInAnonymouslyInformer();
+                        disableProgressBar(anonymous_progressBar, btnAnonymous);
+                    }
+                }, 2000);
                 break;
             case R.id.bt_Login:
                 Login();
@@ -140,21 +176,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         {
             etEmail.setError(getText(R.string.error_email_required));
             etEmail.requestFocus();
+            login_progressBar.setVisibility(View.GONE);
+            bt_Login.setEnabled(true);
             return;
         }else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
         {
             etEmail.setError(getText(R.string.error_please_provide_valid_email));
             etEmail.requestFocus();
+            login_progressBar.setVisibility(View.GONE);
+            bt_Login.setEnabled(true);
             return;
         }else if(password.isEmpty())
         {
             etPassword.setError(getText(R.string.error_password_required));
             etPassword.requestFocus();
+            login_progressBar.setVisibility(View.GONE);
+            bt_Login.setEnabled(true);
             return;
         }else if(password.length() < 6)
         {
             etPassword.setError(getText(R.string.error_min_password_length));
             etPassword.requestFocus();
+            login_progressBar.setVisibility(View.GONE);
+            bt_Login.setEnabled(true);
             return;
         }else
         {
@@ -339,5 +383,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return true;
         }
         return false;
+    }
+
+    private void enableProgressBar(ProgressBar progressBar, Button button) {
+                progressBar.setVisibility(View.VISIBLE);
+                button.setEnabled(false);
+    }
+
+    private void disableProgressBar(ProgressBar progressBar, Button button) {
+        progressBar.setVisibility(View.INVISIBLE);
+        button.setEnabled(true);
     }
 }

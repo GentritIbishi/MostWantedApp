@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,6 +23,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private EditText etEmailToRecovery;
     private Button btnResetPassword;
     private ProgressBar reset_progressBar;
+    private TextView tv_remember;
 
     private FirebaseAuth firebaseAuth;
 
@@ -32,8 +34,9 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         etEmailToRecovery = findViewById(R.id.etEmailToRecovery);
         btnResetPassword = findViewById(R.id.bt_Login);
+        tv_remember = findViewById(R.id.tv_remember);
 
-        reset_progressBar = findViewById(R.id.reset_progressBar);
+        reset_progressBar = findViewById(R.id.login_progressBar);
 
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -41,6 +44,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 resetPassword();
+            }
+        });
+
+        tv_remember.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
 

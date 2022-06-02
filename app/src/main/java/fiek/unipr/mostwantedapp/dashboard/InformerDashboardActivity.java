@@ -251,8 +251,6 @@ public class InformerDashboardActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
 
 }

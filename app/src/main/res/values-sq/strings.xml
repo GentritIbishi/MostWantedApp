@@ -138,6 +138,7 @@
     <string name="notification">Notification</string>
     <string name="likes">Likes</string>
     <string name="please_type_name_like_hint">Please type name like hint with cap words!</string>
+    <string name="remember">Remember?</string>
 
     <string name="get_started_description">Ndjehuni të lirë për të ndihmuar Policinë e Kosovës duke raportuar informacion të saktë të personave te kërkuar nga Policia e Kosovës.</string>
     <string name="get_started_description2">Policia e Kosovës garanton në ruajtjen e identitetit të informatorit, i cili do të jetë anonim.</string>

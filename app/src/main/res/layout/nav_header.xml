@@ -13,7 +13,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:padding="10dp"
-        android:src="@drawable/ic_profile_picture_default"/>
+        android:src="@drawable/ic_profile_picture_default" />
 
     <TextView
         android:id="@+id/nav_header_name"
@@ -25,7 +25,7 @@
         android:fontFamily="@font/open_sans_light"
         android:text="@string/your_name"
         android:textColor="@color/verydark"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold" />
 
     <ImageView
