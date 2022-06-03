@@ -3,11 +3,17 @@ package fiek.unipr.mostwantedapp.auth;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -40,6 +46,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
     private static final String TAG = "MAIN_TAG";
     private FirebaseAuth firebaseAuth;
     private ProgressBar register_progressBar, verify_phone_progressBar;
+    private int selectedETPosition = 0;
 
 
     @Override
@@ -137,6 +144,8 @@ public class PhoneSignInActivity extends AppCompatActivity {
         binding.btnVerificationCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                verify_phone_progressBar.setVisibility(View.VISIBLE);
+                binding.btnVerificationCode.setEnabled(false);
                 String num1 = binding.etCode1.getText().toString().trim();
                 String num2 = binding.etCode2.getText().toString().trim();
                 String num3 = binding.etCode3.getText().toString().trim();
@@ -145,6 +154,8 @@ public class PhoneSignInActivity extends AppCompatActivity {
                 String num6 = binding.etCode6.getText().toString().trim();
                 String code = num1+""+num2+""+num3+""+num4+""+num5+""+num6;
                 if(TextUtils.isEmpty(code)){
+                    verify_phone_progressBar.setVisibility(View.INVISIBLE);
+                    binding.btnVerificationCode.setEnabled(true);
                     Toast.makeText(PhoneSignInActivity.this, R.string.please_enter_verification_code, Toast.LENGTH_SHORT).show();
                 }else {
                     verifyPhoneNumberWithCode(mVerificationId, code);
@@ -152,7 +163,67 @@ public class PhoneSignInActivity extends AppCompatActivity {
             }
         });
 
+        binding.etCode1.addTextChangedListener(textWatcher);
+        binding.etCode2.addTextChangedListener(textWatcher);
+        binding.etCode3.addTextChangedListener(textWatcher);
+        binding.etCode4.addTextChangedListener(textWatcher);
+        binding.etCode5.addTextChangedListener(textWatcher);
+        binding.etCode6.addTextChangedListener(textWatcher);
+
+//        //by default open keyboard at etCode1
+//        showKeyboard(binding.etCode1);
+
     }
+
+    private void showKeyboard(EditText etCode) {
+        etCode.requestFocus();
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(etCode, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    private final TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if(s.length()>0){
+                if(selectedETPosition == 0){
+
+                    selectedETPosition = 1;
+                    showKeyboard(binding.etCode2);
+
+                }else if(selectedETPosition == 1){
+
+                    selectedETPosition = 2;
+                    showKeyboard(binding.etCode3);
+
+                }else if(selectedETPosition == 2){
+
+                    selectedETPosition = 3;
+                    showKeyboard(binding.etCode4);
+
+                }else if(selectedETPosition == 3){
+
+                    selectedETPosition = 4;
+                    showKeyboard(binding.etCode5);
+
+                }else if(selectedETPosition == 4){
+
+                    selectedETPosition = 5;
+                    showKeyboard(binding.etCode6);
+
+                }
+            }
+        }
+    };
 
     private void startPhoneNumberVerification(String phone) {
         register_progressBar.setVisibility(View.VISIBLE);
@@ -182,20 +253,21 @@ public class PhoneSignInActivity extends AppCompatActivity {
 
     private void verifyPhoneNumberWithCode(String verificationId, String code) {
         verify_phone_progressBar.setVisibility(View.VISIBLE);
+        binding.btnVerificationCode.setEnabled(false);
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         signInWithPhoneAuthCredential(credential);
     }
 
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        register_progressBar.setVisibility(View.VISIBLE);
-        binding.btnRegistrationPhone.setEnabled(false);
+        verify_phone_progressBar.setVisibility(View.VISIBLE);
+        binding.btnVerificationCode.setEnabled(false);
         firebaseAuth.signInWithCredential(credential)
                 .addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         //successfully signed in
-                        register_progressBar.setVisibility(View.INVISIBLE);
-                        binding.btnRegistrationPhone.setEnabled(true);
+                        verify_phone_progressBar.setVisibility(View.INVISIBLE);
+                        binding.btnVerificationCode.setEnabled(true);
                         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
                         Toast.makeText(PhoneSignInActivity.this, R.string.logged_in_as+" "+phone, Toast.LENGTH_SHORT).show();
                         //start informer activity
@@ -205,8 +277,8 @@ public class PhoneSignInActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception e) {
                 //failed signing in
-                register_progressBar.setVisibility(View.INVISIBLE);
-                binding.btnRegistrationPhone.setEnabled(true);
+                verify_phone_progressBar.setVisibility(View.INVISIBLE);
+                binding.btnVerificationCode.setEnabled(true);
                 Toast.makeText(PhoneSignInActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -216,5 +288,35 @@ public class PhoneSignInActivity extends AppCompatActivity {
         Intent intent = new Intent(PhoneSignInActivity.this, InformerDashboardActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_DEL)
+        {
+            if(selectedETPosition == 6){
+                selectedETPosition = 5;
+                showKeyboard(binding.etCode6);
+            }else if(selectedETPosition == 5){
+                selectedETPosition = 4;
+                showKeyboard(binding.etCode5);
+            }else if(selectedETPosition == 4){
+                selectedETPosition = 3;
+                showKeyboard(binding.etCode4);
+            }else if(selectedETPosition == 3){
+                selectedETPosition = 2;
+                showKeyboard(binding.etCode3);
+            }else if(selectedETPosition == 2){
+                selectedETPosition = 1;
+                showKeyboard(binding.etCode2);
+            }else if(selectedETPosition == 1){
+                selectedETPosition = 0;
+                showKeyboard(binding.etCode1);
+            }
+
+            return true;
+        } else {
+            return super.onKeyUp(keyCode, event);
+        }
     }
 }

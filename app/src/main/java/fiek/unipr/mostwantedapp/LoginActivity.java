@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         startActivity(new Intent(getApplicationContext(), GoogleSignInActivity.class));
                         disableProgressBar(google_progressBar, btnGoogle);
                     }
-                }, 2000);
+                }, 1000);
                 break;
             case R.id.btnPhone:
                 enableProgressBar(phone_progressBar, btnPhone);
@@ -136,11 +136,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 phone.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //Do something after 2000ms
+                        //Do something after 1000ms
                         startActivity(new Intent(getApplicationContext(), PhoneSignInActivity.class));
                         disableProgressBar(phone_progressBar, btnPhone);
                     }
-                }, 2000);
+                }, 1000);
                 break;
             case R.id.btnAnonymous:
                 enableProgressBar(anonymous_progressBar, btnAnonymous);
