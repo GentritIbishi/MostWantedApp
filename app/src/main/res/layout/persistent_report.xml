@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_gravity="center"
+    android:padding="10dp"
+    android:background="@drawable/report_persistent_bg">
+
+    <EditText
+        android:id="@+id/et_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/description_report_bg"
+        android:fontFamily="@font/open_sans"
+        android:gravity="top|start"
+        android:hint="@string/add_any_additional_info_optional"
+        android:inputType="textMultiLine"
+        android:lines="8"
+        android:maxLines="10"
+        android:minLines="6"
+        android:scrollbars="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_reportImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/upload_any_phone_optional"
+        android:textSize="14sp"
+        android:textAlignment="center"
+        android:visibility="visible"
+        android:hint="@string/add_any_additional_info_optional"
+        android:fontFamily="@font/open_sans"
+        android:background="@drawable/image_upload_bg"
+        app:layout_constraintEnd_toEndOf="@+id/et_description"
+        app:layout_constraintStart_toStartOf="@+id/et_description"
+        app:layout_constraintTop_toBottomOf="@+id/et_description" />
+
+    <Button
+        android:id="@+id/bt_chooseImage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/button"
+        android:text="@string/choose_image"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/et_description"
+        app:layout_constraintStart_toStartOf="@+id/et_description"
+        app:layout_constraintTop_toBottomOf="@+id/tv_reportImage" />
+
+    <Button
+        android:id="@+id/bt_Report"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button"
+        android:text="@string/report"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/bt_chooseImage"
+        app:layout_constraintStart_toStartOf="@+id/bt_chooseImage"
+        app:layout_constraintTop_toBottomOf="@+id/bt_chooseImage" />
+
+    <Button
+        android:id="@+id/bt_skipDecsImg"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/button"
+        android:text="@string/skip"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/bt_Report"
+        app:layout_constraintStart_toStartOf="@+id/bt_Report"
+        app:layout_constraintTop_toBottomOf="@+id/bt_Report" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

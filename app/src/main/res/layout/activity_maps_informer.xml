@@ -1,0 +1,219 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:visibility="visible"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:fitsSystemWindows="true"
+    android:layoutDirection="ltr">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/LocationReport"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".maps.MapsInformerActivity"/>
+
+        <TextView
+            android:id="@+id/tvLongTap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:text="@string/tap_on_map_to_set_location"
+            android:textColor="@color/lighter_75"
+            android:textSize="20dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/btnLocationSkip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/map"
+            app:layout_constraintVertical_bias="0.837" />
+
+        <Button
+            android:id="@+id/btnContinue"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/button_sign_in_phone"
+            android:text="@string/generate_continue"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            android:textColor="@color/verydark"
+            android:elevation="6dp"
+            android:textStyle="bold"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/btnLocationSkip"
+            app:layout_constraintEnd_toEndOf="@+id/btnLocationSkip"
+            app:layout_constraintStart_toStartOf="@+id/btnLocationSkip" />
+
+        <Button
+            android:id="@+id/btnLocationSkip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="64dp"
+            android:layout_marginRight="64dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/button_sign_in_phone"
+            android:elevation="6dp"
+            android:text="@string/skip"
+            android:textAllCaps="false"
+            android:textColor="@color/verydark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/OtherReports"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        android:background="@drawable/report_persistent_bg"
+        android:padding="10dp"
+        android:elevation="6dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/et_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:background="@drawable/description_report_bg"
+            android:fontFamily="@font/open_sans"
+            android:gravity="top|start"
+            android:hint="@string/add_any_additional_info_optional"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:maxLines="10"
+            android:minLines="6"
+            android:scrollbars="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_reportImage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/image_upload_bg"
+            android:fontFamily="@font/open_sans"
+            android:hint="@string/add_any_additional_info_optional"
+            android:text="@string/upload_any_phone_optional"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toTopOf="@+id/bt_chooseImage"
+            app:layout_constraintEnd_toEndOf="@+id/et_description"
+            app:layout_constraintStart_toStartOf="@+id/et_description"
+            app:layout_constraintTop_toBottomOf="@+id/et_description" />
+
+        <Button
+            android:id="@+id/bt_chooseImage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/button_sign_in_phone"
+            android:text="@string/choose_image"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:textColor="@color/verydark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/bt_Report"
+            app:layout_constraintEnd_toEndOf="@+id/et_description"
+            app:layout_constraintStart_toStartOf="@+id/et_description"
+            app:layout_constraintTop_toBottomOf="@+id/tv_reportImage" />
+
+        <Button
+            android:id="@+id/bt_Report"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/button_sign_in_phone"
+            android:text="@string/report"
+            android:textAllCaps="false"
+            android:textColor="@color/verydark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:elevation="6dp"
+            app:layout_constraintEnd_toEndOf="@+id/bt_chooseImage"
+            app:layout_constraintStart_toStartOf="@+id/bt_chooseImage"
+            app:layout_constraintTop_toBottomOf="@+id/bt_chooseImage" />
+
+        <Button
+            android:id="@+id/bt_skipDecsImg"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="9dp"
+            android:background="@drawable/button_sign_in_phone"
+            android:elevation="6dp"
+            android:text="@string/skip"
+            android:textAllCaps="false"
+            android:textColor="@color/verydark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/bt_Report"
+            app:layout_constraintStart_toStartOf="@+id/bt_Report"
+            app:layout_constraintTop_toBottomOf="@+id/bt_Report" />
+
+        <ProgressBar
+            android:id="@+id/skipProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_skipDecsImg"
+            app:layout_constraintEnd_toEndOf="@+id/bt_skipDecsImg"
+            app:layout_constraintTop_toTopOf="@+id/bt_skipDecsImg" />
+
+        <ProgressBar
+            android:id="@+id/reportProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_Report"
+            app:layout_constraintEnd_toEndOf="@+id/bt_Report"
+            app:layout_constraintTop_toTopOf="@+id/bt_Report" />
+
+        <ProgressBar
+            android:id="@+id/chooseImageProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/bt_chooseImage"
+            app:layout_constraintEnd_toEndOf="@+id/bt_chooseImage"
+            app:layout_constraintTop_toTopOf="@+id/bt_chooseImage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

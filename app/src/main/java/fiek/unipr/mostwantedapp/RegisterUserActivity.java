@@ -111,6 +111,9 @@ public class RegisterUserActivity extends AppCompatActivity {
                 }else if(TextUtils.isEmpty(email)){
                     etEmail.setError(getText(R.string.error_email_required));
                     etEmail.requestFocus();
+                }else if(!email.matches("^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
+                    etEmail.setError(getText(R.string.error_validate_email));
+                    etEmail.requestFocus();
                 }else if(!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")){
                     etPassword.setError(getText(R.string.error_password_weak));
                     etPassword.requestFocus();
