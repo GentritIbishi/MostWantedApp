@@ -169,6 +169,7 @@
     <string name="save_changes">Save Changes</string>
     <string name="user_exist">User exist!</string>
     <string name="saved_successfully">Saved successfully</string>
+    <string name="empty">Empty</string>
 
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>

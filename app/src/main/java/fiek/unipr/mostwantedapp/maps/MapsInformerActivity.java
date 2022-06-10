@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -38,7 +37,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,10 +46,8 @@ import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsInformerBinding;
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.models.ReportStatus;
-import fiek.unipr.mostwantedapp.update.UpdateUser;
 
 public class MapsInformerActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
@@ -77,8 +73,29 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private String description= "No description!";
     private String informer_fullName = "Anonymous";
     private MarkerOptions markerOptionsDefault;
+    private Marker marker;
     private Map<String, Object> images = new HashMap<>();
     private Bundle mapsInformerBundle;
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setOnMapClickListener(this);
+
+        if (locationPermissionGranted) {
+            getDeviceLocation();
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mMap.setMyLocationEnabled(true);
+        }else {
+            Toast.makeText(this, "No permit!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +114,9 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
         mapsInformerBundle = new Bundle();
         getFromBundle(mapsInformerBundle);
+
+        getInformerFullName(firebaseAuth.getCurrentUser().getUid());
+        getUIDorPHONE();
 
         getLocationPermission();
 
@@ -120,9 +140,9 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 //limit 5 photo, edhe krejt uri me u ri si field niher tani te report me u bo set
                 Intent intent = new Intent();
                 intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                startActivityForResult(intent, IMAGE_CODE);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent,"Select Picture"), IMAGE_CODE);
             }
         });
 
@@ -139,10 +159,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                             .document(fullName)
                             .collection("locations_reports")
                             .document(dateNtime);
-
-                    //thirri metodat per me set emrin, cila bon e bon set
-                    getUser();
-                    getUIDorPHONE();
 
                     Report report = new Report(binding.etDescription.getText().toString(),
                             dateNtime,
@@ -178,7 +194,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                             .document(dateNtime);
 
                     //thirri metodat per me set emrin, cila bon e bon set
-                    getUser();
+                    getInformerFullName(firebaseAuth.getCurrentUser().getUid());
                     getUIDorPHONE();
 
                     Report report = new Report(binding.etDescription.getText().toString(),
@@ -215,6 +231,14 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             }
         });
 
+        binding.btnLocationSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.LocationReport.setVisibility(View.GONE);
+                binding.OtherReports.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
     private void getFromBundle(Bundle bundle) {
@@ -239,20 +263,24 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     }
 
-    private void getUser() {
-        firebaseFirestore
-                .collection("users")
-                .document(firebaseAuth.getCurrentUser().getUid())
+    private void getInformerFullName(String uID) {
+        firebaseFirestore.collection("users").document(uID)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                       if(task.isSuccessful() && task != null){
-                           //u gjet merrja emrin
-                           informer_fullName = task.getResult().getString("fullName");
-                       }
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot!=null) {
+                            informer_fullName = documentSnapshot.getString("fullName");
+                        } else {
+                            Toast.makeText(MapsInformerActivity.this, R.string.user_not_exist, Toast.LENGTH_SHORT).show();
+                        }
                     }
-                });
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void getUIDorPHONE() {
@@ -263,27 +291,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 informer_fullName = firebaseAuth.getCurrentUser().getUid();
             }
         }
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        if (locationPermissionGranted) {
-            getDeviceLocation();
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            mMap.setMyLocationEnabled(true);
-        }else {
-            Toast.makeText(this, "No permit!", Toast.LENGTH_SHORT).show();
-        }
-
-        mMap.setOnMapClickListener((GoogleMap.OnMapClickListener) this);
-
     }
 
     public static String getTimeDate() { // without parameter argument
@@ -377,6 +384,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         binding.tvLongTap.setVisibility(View.GONE);
         latitude = latLng.latitude;
         longitude = latLng.longitude;
+        mMap.clear();
         markerOptionsDefault = new MarkerOptions().position(latLng)
                 .title(fullName+" "+ R.string.position).icon(BitmapDescriptorFactory.defaultMarker());
         mMap.addMarker(markerOptionsDefault);
@@ -385,7 +393,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == IMAGE_CODE && requestCode == RESULT_OK) {
+        if(requestCode == IMAGE_CODE && resultCode == RESULT_OK) {
 
             if(data.getClipData() != null) {
 
@@ -393,8 +401,10 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 for(int i=0; i<totalitem;i++){
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
                     uploadImageToFirebase(imageUri, totalitem);
+                    binding.tvReportImage.setText(totalitem +" "+getText(R.string.image_uploaded_v2));
                 }
-                binding.tvReportImage.setText(totalitem+" "+R.string.image_uploaded_v2);
+            }else {
+                Toast.makeText(this, R.string.empty, Toast.LENGTH_SHORT).show();
             }
         }
     }
