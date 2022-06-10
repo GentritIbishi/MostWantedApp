@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,7 +23,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.lists.PersonListAdapter;
@@ -52,33 +50,16 @@ public class HomeFragment extends Fragment {
         InitializeFields();
         loadDatainListview();
 
-        final SwipeRefreshLayout pullToRefresh = home_fragment_view.findViewById(R.id.pullToRefresh);
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        final SwipeRefreshLayout pullToRefreshInHome = home_fragment_view.findViewById(R.id.pullToRefreshInHome);
+        pullToRefreshInHome.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Reload current fragment
                 personArrayList.clear();
                 loadDatainListview();
-                pullToRefresh.setRefreshing(false);
+                pullToRefreshInHome.setRefreshing(false);
             }
         });
-
-        search_filter.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                filter(charSequence.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-
         return home_fragment_view;
     }
 
@@ -116,12 +97,7 @@ public class HomeFragment extends Fragment {
                                 // storing that data in our array list
                                 personArrayList.add(person);
                             }
-//                            // after that we are passing our array list to our adapter class.
-//                            PersonListAdapter adapter = new PersonListAdapter(getContext(), personArrayList);
-//
-//                            // after passing this array list to our adapter
-//                            // class we are setting our adapter to our list view.
-//                            lvPersons.setAdapter(adapter);
+
                             personListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.

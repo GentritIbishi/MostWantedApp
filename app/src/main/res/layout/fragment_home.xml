@@ -6,6 +6,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:background="@color/home"
     tools:context=".fragment.HomeFragment">
 
@@ -13,26 +14,10 @@
            android:layout_width="match_parent"
            android:layout_height="match_parent">
 
-              <EditText
-                  android:id="@+id/search_filter"
-                  android:layout_width="match_parent"
-                  android:layout_height="50dp"
-                  android:layout_marginStart="16dp"
-                  android:layout_marginTop="16dp"
-                  android:layout_marginEnd="16dp"
-                  android:layout_marginBottom="16dp"
-                  android:background="@drawable/search_bg"
-                  android:hint="@string/search"
-                  android:inputType="textCapSentences"
-                  android:padding="16dp"
-                  android:textColor="@color/white"
-                  android:textColorHint="@color/white"/>
-
               <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                  android:id="@+id/pullToRefresh"
+                  android:id="@+id/pullToRefreshInHome"
                   android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_below="@+id/search_filter">
+                  android:layout_height="wrap_content">
 
                      <ListView
                          android:id="@+id/lvPersons"
@@ -40,6 +25,7 @@
                          android:layout_height="match_parent"
                          android:clickable="true"
                          android:focusable="true" />
+
               </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
        </RelativeLayout>

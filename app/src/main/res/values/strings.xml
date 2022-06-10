@@ -28,12 +28,15 @@
     <string name="person">Person</string>
     <string name="error_fullname_required">Full name is required!</string>
     <string name="error_address_required">Address is required!</string>
+    <string name="error_parent_name_required">Parent Name is required!</string>
+    <string name="error_last_name_required">Last Name is required!</string>
     <string name="error_age_required">Age is required!</string>
     <string name="error_height_required">Height is required!</string>
     <string name="error_weight_required">Weight is required!</string>
     <string name="error_eyeColor_required">Eye Color is required!</string>
     <string name="error_hairColor_required">Hair Color is required!</string>
     <string name="error_email_required">Email is required!</string>
+    <string name="error_validate_email">This email is not true!</string>
     <string name="error_phy_appearance_required">Physical Appearance is required!</string>
     <string name="error_acts_required">Acts is required!</string>
     <string name="error_not_allowed">Not allowed "numbers" in this field!</string>
@@ -139,6 +142,34 @@
     <string name="likes">Likes</string>
     <string name="please_type_name_like_hint">Please type name like hint with cap words!</string>
     <string name="remember">Remember?</string>
+    <string name="report">Report</string>
+    <string name="tap_on_map_to_set_location">Tap on map to set location</string>
+    <string name="set_current_location">Set current location</string>
+    <string name="location_set_tap_if_u_want_to_change">Location is set, tap long if you want to change!</string>
+    <string name="add_any_additional_info_optional">Add any additional info (optional)</string>
+    <string name="choose_image">Choose Image</string>
+    <string name="upload_any_phone_optional">Upload any photo (Optional)</string>
+    <string name="location_not_set_please_set_new_location">Location not set, please set new location!</string>
+    <string name="failed_to_register">Failed to register</string>
+    <string name="position">Position</string>
+    <string name="please_turn_on_location_on_your_phone">Please turn on location on your phone!</string>
+    <string name="image_uploaded_v2">Image Uploaded!</string>
+    <string name="account">Account</string>
+    <string name="my_account">My Account</string>
+    <string name="first_name">First Name*</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="upload_new">Upload New</string>
+    <string name="delete">Delete</string>
+    <string name="last_name">Last Name*</string>
+    <string name="parent_name_account">Parent Name*</string>
+    <string name="personal_number_account">Personal Number*</string>
+    <string name="phone_number_account">Phone number*</string>
+    <string name="email_account">Email*</string>
+    <string name="address_account">Address*</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="user_exist">User exist!</string>
+    <string name="saved_successfully">Saved successfully</string>
+
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
     <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous.</string>
@@ -149,5 +180,6 @@
     <string name="title_activity_maps">MapsActivity</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_maps_informer">MapsInformerActivity</string>
 
 </resources>

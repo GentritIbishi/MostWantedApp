@@ -2,6 +2,7 @@ package fiek.unipr.mostwantedapp.update;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -15,6 +16,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -26,8 +28,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -42,14 +46,19 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 import fiek.unipr.mostwantedapp.models.Person;
+import fiek.unipr.mostwantedapp.models.Report;
+import fiek.unipr.mostwantedapp.models.ReportStatus;
 
 public class UpdatePerson extends AppCompatActivity {
 
@@ -60,6 +69,7 @@ public class UpdatePerson extends AppCompatActivity {
     private StorageReference storageReference;
     private DocumentReference documentReference;
     Location mlocation;
+    private String informer_fullName;
     Double latitude, longitude;
     String fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status;
     Integer age, height, weight;
@@ -74,8 +84,6 @@ public class UpdatePerson extends AppCompatActivity {
         setContentView(R.layout.activity_update_person);
 
         imgPerson_update = findViewById(R.id.imgPerson_update);
-        img_delete = findViewById(R.id.img_delete);
-        img_up = findViewById(R.id.img_up);
         img_send_location = findViewById(R.id.img_send_location);
         et_person_fullName_update = findViewById(R.id.et_person_fullName_update);
         et_person_address_update = findViewById(R.id.et_person_address_update);
@@ -87,38 +95,22 @@ public class UpdatePerson extends AppCompatActivity {
         et_person_phy_appearance_update = findViewById(R.id.et_person_phy_appearance_update);
         et_person_acts_update = findViewById(R.id.et_person_acts_update);
         et_person_status_update = findViewById(R.id.et_person_status_update);
-        img_setNewProfile = findViewById(R.id.img_setNewProfile);
         progressBar = findViewById(R.id.progressBar);
         storageReference = FirebaseStorage.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
         Date date = Calendar.getInstance().getTime();
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            //User logged in dhe button visible
-            img_send_location.setVisibility(View.GONE);
-            img_delete.setPadding(250,0,0,0);
-            img_up.setPadding(450,0,0,0);
-        } else {
-            //No User logged in dhe button gone
-            img_up.setVisibility(View.GONE);
-            img_delete.setVisibility(View.GONE);
-            img_setNewProfile.setVisibility(View.GONE);
-
-            disableEditText(et_person_fullName_update);
-            disableEditText(et_person_acts_update);
-            disableEditText(et_person_address_update);
-            disableEditText(et_person_age_update);
-            disableEditText(et_person_eyeColor_update);
-            disableEditText(et_person_hairColor_update);
-            disableEditText(et_person_height_update);
-            disableEditText(et_person_phy_appearance_update);
-            disableEditText(et_person_weight_update);
-            disableEditText(et_person_status_update);
-
-        }
+        disableEditText(et_person_fullName_update);
+        disableEditText(et_person_acts_update);
+        disableEditText(et_person_address_update);
+        disableEditText(et_person_age_update);
+        disableEditText(et_person_eyeColor_update);
+        disableEditText(et_person_hairColor_update);
+        disableEditText(et_person_height_update);
+        disableEditText(et_person_phy_appearance_update);
+        disableEditText(et_person_weight_update);
+        disableEditText(et_person_status_update);
 
         Bundle personInfos = getIntent().getExtras();
         if (personInfos != null) {
@@ -157,28 +149,6 @@ public class UpdatePerson extends AppCompatActivity {
             }
         });
 
-        img_up.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        progressBar.setVisibility(View.VISIBLE);
-                        progressBar.setProgress(100);
-                    }
-                });
-                Updateprofile();
-            }
-        });
-
-        img_setNewProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(openGalleryIntent, 1000);
-            }
-        });
-
         // Now first make a criteria with your requirements
         // this is done to save the battery life of the device
         // there are various other other criteria you can search for..
@@ -207,9 +177,7 @@ public class UpdatePerson extends AppCompatActivity {
                     progressBar.setVisibility(View.VISIBLE);
                     locationManager.requestSingleUpdate(criteria, locationListener, looper);
                     try {
-                        DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-                        String dateTime = dateFormat.format(date);
-                        DocumentReference locationReports = firebaseFirestore.collection("wanted_persons").document(fullName).collection("location_reports").document(dateTime);
+                        DocumentReference locationReports = firebaseFirestore.collection("wanted_persons").document(fullName).collection("location_reports").document(getTimeDate());
                         Map<String, Object> location = new HashMap<>();
                         location.put("latitude", mlocation.getLatitude());
                         location.put("longitude", mlocation.getLongitude());
@@ -245,26 +213,6 @@ public class UpdatePerson extends AppCompatActivity {
                 }
             }
         });
-
-        img_delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
-                docRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(UpdatePerson.this, fullName+UpdatePerson.this.getText(R.string.person_delete_successfully), Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(UpdatePerson.this, fullName+UpdatePerson.this.getText(R.string.person_delete_failed), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-
 
     }
 
@@ -319,158 +267,7 @@ public class UpdatePerson extends AppCompatActivity {
         editText.setKeyListener(null);
     }
 
-    private void Updateprofile() {
 
-        if(isFullNameChanged() || isActsChanged() || isAddressChanged() || isEyeColorChanged() || isHeightChanged() || isAgeChanged()
-                || isPhyAppearanceChanged() || isStatusChanged() || isHairColorChanged() || isWeightChanged())
-        {
-            Toast.makeText(UpdatePerson.this, R.string.Data_success_updated, Toast.LENGTH_SHORT).show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    progressBar.setVisibility(View.GONE);
-                    finish();
-                }
-            }, 5000);
-
-        }
-
-    }
-
-    private boolean isWeightChanged() {
-        if(!weight.equals(et_person_weight_update.getText().toString()))
-        {
-            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
-            docRef.update("weight", Integer.parseInt(et_person_weight_update.getText().toString()));
-            return true;
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isHairColorChanged() {
-        if(!hairColor.equals(et_person_hairColor_update.getText().toString()))
-        {
-            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
-            docRef.update("hairColor", et_person_hairColor_update.getText().toString());
-            return true;
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isStatusChanged() {
-        if(!status.equals(et_person_status_update.getText().toString()))
-        {
-            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
-            docRef.update("status", et_person_status_update.getText().toString());
-            return true;
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isPhyAppearanceChanged() {
-        if(!phy_appearance.equals(et_person_phy_appearance_update.getText().toString()))
-        {
-            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
-            docRef.update("phy_appearance", et_person_phy_appearance_update.getText().toString());
-            return true;
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isAgeChanged() {
-        if(!age.equals(et_person_age_update.getText().toString()))
-        {
-            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
-            docRef.update("age", et_person_age_update.getText().toString());
-            return true;
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isHeightChanged() {
-        if(!height.equals(et_person_height_update.getText().toString()))
-        {
-            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
-            docRef.update("height", Integer.parseInt(et_person_height_update.getText().toString()));
-            return true;
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isEyeColorChanged() {
-        if(!eyeColor.equals(et_person_eyeColor_update.getText().toString()))
-        {
-            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
-            docRef.update("eyeColor", et_person_eyeColor_update.getText().toString());
-            return true;
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isAddressChanged() {
-        if(!address.equals(et_person_address_update.getText().toString()))
-        {
-            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
-            docRef.update("address", et_person_address_update.getText().toString());
-            return true;
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isActsChanged() {
-        if(!acts.equals(et_person_acts_update.getText().toString()))
-        {
-            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
-            docRef.update("acts", et_person_acts_update.getText().toString());
-            return true;
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isFullNameChanged() {
-        if(!fullName.equals(et_person_fullName_update.getText().toString()))
-        {
-            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
-            docRef.update("fullName", et_person_fullName_update.getText().toString());
-
-            docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    String oldFullName = documentSnapshot.getString("fullName");
-                    Person person = new Person(fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status, age, height, weight);
-                    firebaseFirestore.collection("wanted_persons").document(fullName).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(UpdatePerson.this, R.string.successfully, Toast.LENGTH_SHORT).show();
-                            firebaseFirestore.collection("wanted_persons").document(oldFullName).delete();
-                        }
-                    });
-                }
-            });
-            return true;
-        }else
-        {
-            return false;
-        }
-    }
 
     @Override
     protected void onStart() {
@@ -478,38 +275,55 @@ public class UpdatePerson extends AppCompatActivity {
         setProfile();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1000){
-            if(resultCode == Activity.RESULT_OK){
-                Uri imageUri = data.getData();
-                uploadImageToFirebase(imageUri);
-            }
+    private void test() {
+        if(firebaseAuth != null){
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            String uid = user.getUid();
+            checkIfUserExist(uid);
+
+            //kina me bo check nese useri eshte regular user me emer mbiemer bla bla
+            //ose useri eshte i logirat me phone
+            // ose useri eshte i logirat si anonymous
+
+            // ja shton lokacionit emrin qe e ke marr informer_fullName
+
+           // DocumentReference locationReport = firebaseFirestore.collection("wanted_persons").document(fullName).collection("location_reports").document(getTimeDate());
+//            Report report = new Report(null, getTimeDate(), user.getUid(), informer_fullName, ReportStatus.UNVERIFIED, mlocation.getLongitude(), mlocation.getLatitude());
+
         }
+
     }
 
-    private void uploadImageToFirebase(Uri imageUri) {
-        //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child("persons/"+fullName+"/profile.jpg");
-        fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+
+    private void checkIfUserExist(String uid) {
+        firebaseFirestore.collection("users").document(uid)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(Uri uri) {
-                        Picasso.get().load(uri).transform(new CircleTransform()).into(imgPerson_update);
-                        DocumentReference docRef = firebaseFirestore.collection("persons").document(fullName);
-                        docRef.update("urlOfProfile", uri.toString());
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.getResult() != null){
+                            Toast.makeText(UpdatePerson.this, "User exist!", Toast.LENGTH_SHORT).show();
+                            getFullNameOfUser(task.getResult().getString("fullName"));
+                        }else {
+                            Toast.makeText(UpdatePerson.this, R.string.user_not_exist, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(UpdatePerson.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
-            }
-        });
+    }
+
+    private String getFullNameOfUser(String full_name) {
+        informer_fullName = full_name;
+        return informer_fullName;
+    }
+
+    public static String getTimeDate() { // without parameter argument
+        try{
+            Date netDate = new Date(); // current time from here
+            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            return sfd.format(netDate);
+        } catch(Exception e) {
+            return "date";
+        }
     }
 
 }

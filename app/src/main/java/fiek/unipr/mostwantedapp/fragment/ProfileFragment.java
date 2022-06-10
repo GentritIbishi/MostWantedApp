@@ -1,6 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -9,8 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -18,8 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -36,6 +40,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
+
+import org.eazegraph.lib.charts.PieChart;
+import org.eazegraph.lib.models.PieModel;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.LoginActivity;
@@ -105,6 +112,10 @@ public class ProfileFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
+        //set deafult seleted
+        nav_view.getMenu().getItem(0).setChecked(true);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_to_change, new ProfileDashboardFragment()).commit();
+
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -142,20 +153,18 @@ public class ProfileFragment extends Fragment {
                 Fragment fragment = null;
                 switch (id)
                 {
-//                    case R.id.menu_group_home:
-//                        fragment = new HomeFragment();
-//                        loadFragment(fragment);
-//                        break;
-//                    case R.id.menu_group_search:
-//                        fragment = new SearchFragment();
-//                        loadFragment(fragment);
-//                        break;
-//                    case R.id.menu_group_profile:
-//                        fragment = new ProfileFragment();
-//                        loadFragment(fragment);
-//                        break;
+                    case R.id.menu_group_account:
+                        fragment = new AccountFragment();
+                        loadFragment(fragment);
+                        nav_view.setCheckedItem(id);
+                        break;
+                    case R.id.menu_group_home:
+                        fragment = new ProfileDashboardFragment();
+                        loadFragment(fragment);
+                        nav_view.setCheckedItem(id);
+                        break;
                     case R.id.menu_group_logout:
-//                        Logout(account);
+                         Logout(account);
                         break;
                     default:
                         return true;
@@ -229,6 +238,15 @@ public class ProfileFragment extends Fragment {
                 loadInfoPhoneFirebase();
             }
         }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_to_change, fragment);
+        drawerLayout.closeDrawer(GravityCompat.START);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
 
     private void loadInfoPhoneFirebase() {
         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();

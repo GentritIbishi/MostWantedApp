@@ -5,7 +5,7 @@ import android.net.Uri;
 public class User {
 
     Integer balance;
-    String userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, urlOfProfile;
+    String userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, urlOfProfile, isEmailVerified;
 
     public User() {
     }
@@ -152,5 +152,13 @@ public class User {
 
     public void setUrlOfProfile(String urlOfProfile) {
         this.urlOfProfile = urlOfProfile;
+    }
+
+    public String getIsEmailVerified() {
+        return isEmailVerified;
+    }
+
+    public void setIsEmailVerified(String isEmailVerified) {
+        this.isEmailVerified = isEmailVerified;
     }
 }

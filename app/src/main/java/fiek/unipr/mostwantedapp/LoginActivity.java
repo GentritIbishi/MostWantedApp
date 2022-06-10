@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
     private String login_users = "logins_users";
     private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
     private DocumentReference documentReference;
     private TextView forgotPassword, tv_createNewAccount;
@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseFirestore = FirebaseFirestore.getInstance();
 
         btnGoogle = findViewById(R.id.btnGoogle);
         btnGoogle.setOnClickListener(this);

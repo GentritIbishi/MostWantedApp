@@ -2,13 +2,13 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fragment_profile"
     android:background="@color/white"
+    android:fitsSystemWindows="true"
     tools:context=".fragment.ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
@@ -17,10 +17,32 @@
         android:fitsSystemWindows="true"
         tools:openDrawer="start">
 
-        <include
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            layout="@layout/fragment_main"/>
+            android:elevation="0dp"
+            android:fitsSystemWindows="true"
+            android:theme="@style/Theme.MostWantedApp.AppBarOverlay">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                app:title="@string/profile"
+                app:titleTextColor="@color/verydark"
+                android:background="@color/white"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay"/>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/fragment_to_change"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/nav_view"
@@ -32,6 +54,7 @@
             app:drawerLayoutCornerSize="10dp"
             app:headerLayout="@layout/nav_header"
             app:menu="@menu/menu"
+            app:itemTextColor="@color/color_text_state"
             app:itemBackground="@drawable/menu_back_state"
             app:itemTextAppearance="@style/TextViewStyle"
             app:itemIconTint="@color/secondary_color">

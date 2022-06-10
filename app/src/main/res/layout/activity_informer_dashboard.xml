@@ -12,7 +12,7 @@
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottomBar"/>
+        android:layout_above="@+id/bottomBar" />
 
     <LinearLayout
         android:id="@+id/bottomBar"
@@ -61,7 +61,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/likeLayout"
+            android:id="@+id/searchLayout"
             android:background="@android:color/transparent"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
@@ -72,20 +72,20 @@
             android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/likeImage"
-                android:layout_width="20dp"
+                android:id="@+id/searchImage"
+                android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_like"/>
+                android:src="@drawable/ic_search_navbottom"/>
 
             <TextView
-                android:id="@+id/likeTxt"
+                android:id="@+id/searchTxt"
                 android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/likes"
+                android:text="@string/search"
                 android:textStyle="bold"
-                android:textColor="@color/like"
+                android:textColor="@color/search"
                 android:layout_marginStart="10dp"
                 android:textSize="16sp"/>
 
