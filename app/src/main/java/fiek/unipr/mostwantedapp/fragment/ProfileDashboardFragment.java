@@ -78,94 +78,67 @@ public class ProfileDashboardFragment extends Fragment {
         pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Reload current fragment
                 loadInfoFromFirebase(firebaseAuth);
-                countVERIFIED = 0;
-                countUNVERIFIED = 0;
-                totalCasesReportedUNVERIFIED();
-                totalCasesReportedVERIFIED();
-                pieChart.startAnimation();
+
+                setPieChart();
 
                 pullToRefreshInSearch.setRefreshing(false);
             }
         });
 
-        //setting datas
-        totalCasesReportedUNVERIFIED();
-        totalCasesReportedVERIFIED();
-        pieChart.startAnimation();
+        setPieChart();
 
         return profile_dashboard_view;
     }
 
-    private void totalCasesReportedVERIFIED() {
+    private void setPieChart() {
         firebaseFirestore.collection("locations_reports")
-                .whereEqualTo("status", VERIFIED)
-                .whereEqualTo("informer_person", fullName)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(queryDocumentSnapshots.getDocuments().isEmpty()){
-                            Toast.makeText(getContext(), R.string.empty, Toast.LENGTH_SHORT).show();
-                        }else {
-                            countVERIFIED = 0;
-                            countVERIFIED = queryDocumentSnapshots.getDocuments().size();
-                            tv_totalCasesReportedVERIFIED.setText(Integer.toString(countVERIFIED));
-                            setVerified(countVERIFIED);
+                        int newCountVERIFIED = 0;
+                        int newCountUNVERIFIED = 0;
+
+                        for (int i = 0; i<queryDocumentSnapshots.size(); i++)
+                        {
+                            DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(i);
+                            String status = doc.getString("status");
+                            String informer_person = doc.getString("informer_person");
+                            if(status.equals(VERIFIED) && informer_person.equals(fullName))
+                            {
+                                newCountVERIFIED = newCountVERIFIED + 1;
+
+                            }else if(status.equals(UNVERIFIED) && informer_person.equals(fullName)){
+
+                                newCountUNVERIFIED = newCountUNVERIFIED + 1;
+
+                            }
                         }
+
+                        tv_totalCasesReportedVERIFIED.setText(Integer.toString(newCountVERIFIED));
+                        tv_totalCasesReportedUNVERIFIED.setText(Integer.toString(newCountUNVERIFIED));
+
+                        pieChart.addPieSlice(
+                                new PieModel(
+                                        "VERIFIED",
+                                        newCountVERIFIED,
+                                        Color.parseColor("#66BB6A")));
+
+                        pieChart.addPieSlice(
+                                new PieModel(
+                                        "UNVERIFIED",
+                                        newCountUNVERIFIED,
+                                        Color.parseColor("#EF5350")));
+                        pieChart.startAnimation();
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void totalCasesReportedUNVERIFIED() {
-        firebaseFirestore.collection("locations_reports")
-                .whereEqualTo("status", UNVERIFIED)
-                .whereEqualTo("informer_person", fullName)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(queryDocumentSnapshots.getDocuments().isEmpty()){
-                            Toast.makeText(getContext(), R.string.empty, Toast.LENGTH_SHORT).show();
-                        }else {
-                            countUNVERIFIED = 0;
-                            countUNVERIFIED = queryDocumentSnapshots.getDocuments().size();
-                            tv_totalCasesReportedUNVERIFIED.setText(Integer.toString(countUNVERIFIED));
-                            setUnverified(countUNVERIFIED);
-                        }
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    private void setVerified(Integer num) {
-
-        // Set the data and color to the pie chart
-        pieChart.addPieSlice(
-                new PieModel(
-                        "VERIFIED",
-                        num,
-                        Color.parseColor("#66BB6A")));
-    }
-
-    private void setUnverified(Integer num) {
-        pieChart.addPieSlice(
-                new PieModel(
-                        "UNVERIFIED",
-                        num,
-                        Color.parseColor("#EF5350")));
+                });
 
     }
 
