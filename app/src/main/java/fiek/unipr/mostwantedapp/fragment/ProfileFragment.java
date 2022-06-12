@@ -1,6 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 public class ProfileFragment extends Fragment {
 
     private View profile_fragment_view;
+    public static final String PROFILE_INFORMER_PREFS = "profileInformerPreferences";
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle toggle;
     private Toolbar toolbar;
@@ -254,6 +256,7 @@ public class ProfileFragment extends Fragment {
         {
             //logged in with phone
             nav_header_name.setText(phone);
+            setSharedPreference(phone);
             nav_header_image_view.setImageResource(R.drawable.ic_phone_login);
         }
     }
@@ -263,6 +266,13 @@ public class ProfileFragment extends Fragment {
             nav_header_name.setText(firebaseAuth.getCurrentUser().getUid());
             nav_header_image_view.setImageResource(R.drawable.ic_anonymous);
         }
+    }
+
+    public void setSharedPreference(String phone) {
+        SharedPreferences settings = getActivity().getSharedPreferences(PROFILE_INFORMER_PREFS, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("phone", phone);
+        editor.commit();
     }
 
 

@@ -8,10 +8,12 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -54,6 +56,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private ActivityMapsInformerBinding binding;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    public static final String PROFILE_INFORMER_PREFS = "profileInformerPreferences";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private static final int IMAGE_CODE = 15;
@@ -66,12 +69,12 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private FirebaseUser firebaseUser;
     private StorageReference storageReference;
 
-    private String fullName, acts, address, eyeColor, hairColor, phy_appearance, status, urlOfProfile;
+    private String wanted_person, acts, address, eyeColor, hairColor, phy_appearance, status, urlOfProfile;
     private String dateNtime;
     private Integer age, height, weight;
     private Double latitude, longitude;
     private String description= "No description!";
-    private String informer_fullName = "Anonymous";
+    private String informer_person = "ANONYMOUS";
     private MarkerOptions markerOptionsDefault;
     private Marker marker;
     private Map<String, Object> images = new HashMap<>();
@@ -115,8 +118,8 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         mapsInformerBundle = new Bundle();
         getFromBundle(mapsInformerBundle);
 
-        getInformerFullName(firebaseAuth.getCurrentUser().getUid());
         getUIDorPHONE();
+        getInformerFullName(firebaseAuth.getCurrentUser().getUid());
 
         getLocationPermission();
 
@@ -136,8 +139,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         binding.btChooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //ktu duhet me bo onclick me shku te ni intent qe i shtin me i upload 2 ose ma shum photo
-                //limit 5 photo, edhe krejt uri me u ri si field niher tani te report me u bo set
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
@@ -155,16 +156,18 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 if(dateNtime != null) {
                     //ktu merren komplet infot edhe bohet regjistrimi
                     DocumentReference docRef = firebaseFirestore
-                            .collection("wanted_persons")
-                            .document(fullName)
                             .collection("locations_reports")
                             .document(dateNtime);
 
                     Report report = new Report(binding.etDescription.getText().toString(),
                             dateNtime,
                             firebaseAuth.getCurrentUser().getUid(),
-                            informer_fullName,
-                            ReportStatus.UNVERIFIED, longitude, latitude, images);
+                            informer_person,
+                            wanted_person,
+                            ReportStatus.UNVERIFIED,
+                            longitude,
+                            latitude,
+                            images);
 
                     docRef.set(report).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -188,20 +191,22 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     dateNtime = getTimeDate();
                     //ktu merren komplet infot edhe bohet regjistrimi
                     DocumentReference docRef = firebaseFirestore
-                            .collection("wanted_persons")
-                            .document(fullName)
                             .collection("locations_reports")
                             .document(dateNtime);
 
                     //thirri metodat per me set emrin, cila bon e bon set
-                    getInformerFullName(firebaseAuth.getCurrentUser().getUid());
                     getUIDorPHONE();
+                    getInformerFullName(firebaseAuth.getCurrentUser().getUid());
 
                     Report report = new Report(binding.etDescription.getText().toString(),
                             dateNtime,
                             firebaseAuth.getCurrentUser().getUid(),
-                            informer_fullName,
-                            ReportStatus.UNVERIFIED, longitude, latitude, images);
+                            informer_person,
+                            wanted_person,
+                            ReportStatus.UNVERIFIED,
+                            longitude,
+                            latitude,
+                            images);
 
                     docRef.set(report).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -245,7 +250,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
         try {
             bundle = getIntent().getExtras();
-            fullName = bundle.getString("fullName");
+            wanted_person = bundle.getString("fullName");
             acts = bundle.getString("acts");
             address = bundle.getString("address");
             age = bundle.getInt("age");
@@ -269,10 +274,8 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot!=null) {
-                            informer_fullName = documentSnapshot.getString("fullName");
-                        } else {
-                            Toast.makeText(MapsInformerActivity.this, R.string.user_not_exist, Toast.LENGTH_SHORT).show();
+                        if (documentSnapshot!=null && documentSnapshot.exists()) {
+                            informer_person = documentSnapshot.getString("fullName");
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -285,10 +288,12 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     private void getUIDorPHONE() {
         if(firebaseAuth != null){
-            if(firebaseAuth.getCurrentUser().getPhoneNumber() !=null){
-                informer_fullName = firebaseAuth.getCurrentUser().getPhoneNumber();
-            }else{
-                informer_fullName = firebaseAuth.getCurrentUser().getUid();
+            if(firebaseAuth.getCurrentUser().getPhoneNumber() !=null && !TextUtils.isEmpty(firebaseAuth.getCurrentUser().getPhoneNumber())){
+                informer_person = firebaseAuth.getCurrentUser().getPhoneNumber();
+                SharedPreferences settings = getSharedPreferences(PROFILE_INFORMER_PREFS, 0);
+                informer_person = settings.getString("phone", null);
+            }else if(firebaseAuth.getCurrentUser().isAnonymous()){
+                    informer_person = "ANONYMOUS";
             }
         }
     }
@@ -321,7 +326,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                 moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
                                         DEFAULT_ZOOM);
                                 markerOptionsDefault = new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
-                                        .title(fullName+" "+ R.string.position).icon(BitmapDescriptorFactory.defaultMarker());
+                                        .title(wanted_person +" "+ R.string.position).icon(BitmapDescriptorFactory.defaultMarker());
                                 mMap.addMarker(markerOptionsDefault);
 
                             }else {
@@ -386,7 +391,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         longitude = latLng.longitude;
         mMap.clear();
         markerOptionsDefault = new MarkerOptions().position(latLng)
-                .title(fullName+" "+ R.string.position).icon(BitmapDescriptorFactory.defaultMarker());
+                .title(wanted_person +" "+ R.string.position).icon(BitmapDescriptorFactory.defaultMarker());
         mMap.addMarker(markerOptionsDefault);
     }
 

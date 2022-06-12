@@ -44,7 +44,6 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -65,6 +64,8 @@ public class SearchFragment extends Fragment {
                 pullToRefreshInSearch.setRefreshing(false);
             }
         });
+
+        search_filter.requestFocus();
 
         search_filter.addTextChangedListener(new TextWatcher() {
             @Override

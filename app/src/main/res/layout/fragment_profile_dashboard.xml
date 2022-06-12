@@ -8,145 +8,111 @@
     android:fitsSystemWindows="true"
     tools:context=".fragment.ProfileDashboardFragment">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardViewGraph"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefreshProfileDashboard"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="15dp"
-        android:elevation="10dp"
-        app:cardCornerRadius="10dp">
+        android:layout_height="wrap_content">
 
-        <!--Linear layout to display pie chart -->
-        <!-- and details of pie chart-->
+       <RelativeLayout
+           android:layout_width="match_parent"
+           android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="2">
+           <androidx.cardview.widget.CardView
+               android:id="@+id/cardViewGraph"
+               android:layout_width="match_parent"
+               android:layout_height="200dp"
+               android:elevation="10dp"
+               android:layout_marginLeft="20dp"
+               android:layout_marginRight="20dp"
+               android:layout_marginTop="15dp"
+               app:cardCornerRadius="10dp">
 
-            <!--Pie chart to display the data-->
+               <!--Linear layout to display pie chart -->
+               <!-- and details of pie chart-->
 
-            <org.eazegraph.lib.charts.PieChart
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/pieChart"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:padding="6dp"
-                android:layout_weight="1"
-                android:layout_marginTop="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginBottom="15dp"
+               <LinearLayout
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent"
+                   android:orientation="horizontal"
+                   android:weightSum="2">
 
-                />
+                   <!--Pie chart to display the data-->
 
-            <!--Creating another linear layout -->
-            <!-- to display pie chart details -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginLeft="20dp"
-                android:orientation="vertical"
-                android:gravity="center_vertical"
-                >
+                   <org.eazegraph.lib.charts.PieChart
+                       android:id="@+id/pieChart"
+                       android:layout_width="0dp"
+                       android:layout_height="match_parent"
+                       android:padding="6dp"
+                       android:layout_weight="1"
+                       android:layout_marginTop="15dp"
+                       android:layout_marginLeft="15dp"
+                       android:layout_marginBottom="15dp"
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="15dp"
-                    android:layout_gravity="center_vertical">
+                       />
 
-                    <!--View to display the yellow color icon-->
-                    <View
-                        android:layout_width="15dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/R"/>
+                   <LinearLayout
+                       android:layout_width="0dp"
+                       android:layout_height="match_parent"
+                       android:layout_weight="1"
+                       android:layout_marginLeft="20dp"
+                       android:orientation="vertical"
+                       android:gravity="center_vertical"
+                       >
 
-                    <!--Text view to display R -->
-                    <TextView
-                        android:id="@+id/tvR"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="R"
-                        android:paddingLeft="10dp"/>
+                       <LinearLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="15dp"
+                           android:layout_gravity="center_vertical">
 
-                </LinearLayout>
+                           <!--View to display the yellow color icon-->
+                           <View
+                               android:layout_width="15dp"
+                               android:layout_height="match_parent"
+                               android:background="@color/pie_green"/>
 
-                <!--Linear layout to display Python-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="5dp">
+                           <!--Text view to display R -->
+                           <TextView
+                               android:id="@+id/tv_totalCasesReportedVERIFIED"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:textSize="13dp"
+                               android:text="@string/reports_verified"
+                               android:paddingLeft="10dp"/>
 
-                    <!--View to display the green color icon-->
-                    <View
-                        android:layout_width="15dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/Python"/>
+                       </LinearLayout>
 
-                    <!--Text view to display python text -->
-                    <TextView
-                        android:id="@+id/tvPython"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Python"
-                        android:paddingLeft="10dp"/>
+                       <!--Linear layout to display Python-->
+                       <LinearLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="15dp"
+                           android:layout_gravity="center_vertical"
+                           android:layout_marginTop="5dp">
 
-                </LinearLayout>
+                           <!--View to display the green color icon-->
+                           <View
+                               android:layout_width="15dp"
+                               android:layout_height="match_parent"
+                               android:background="@color/pie_red"/>
 
-                <!--Linear layout to display C++-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="5dp">
+                           <!--Text view to display python text -->
+                           <TextView
+                               android:id="@+id/tv_totalCasesReportedUNVERIFIED"
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               android:textSize="13dp"
+                               android:text="@string/reports_unverified"
+                               android:paddingLeft="10dp"/>
 
-                    <!--View to display the red color icon-->
-                    <View
-                        android:layout_width="15dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/CPP"/>
+                       </LinearLayout>
 
-                    <!--Text view to display C++ text -->
-                    <TextView
-                        android:id="@+id/tvCPP"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="C++"
-                        android:paddingLeft="10dp"/>
+                   </LinearLayout>
 
-                </LinearLayout>
+               </LinearLayout>
 
-                <!--Linear layout to display Java-->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="15dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginTop="5dp">
+           </androidx.cardview.widget.CardView>
 
-                    <!--View to display the blue color icon-->
-                    <View
-                        android:layout_width="15dp"
-                        android:layout_height="match_parent"
-                        android:background="@color/Java"/>
+       </RelativeLayout>
 
-                    <!--Text view to display Java text -->
-                    <TextView
-                        android:id="@+id/tvJava"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Java"
-                        android:paddingLeft="10dp"/>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>

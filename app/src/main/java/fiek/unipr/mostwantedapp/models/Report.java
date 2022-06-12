@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Report {
-    private String Description, Date_time, uID, informer_fullName;
+    private String Description, Date_time, uID, informer_person, wanted_person;
     private ReportStatus status = ReportStatus.UNVERIFIED;
     private Double longitude, latitude;
     private Map<String, Object> images = new HashMap<>();
@@ -12,11 +12,12 @@ public class Report {
     public Report() {
     }
 
-    public Report(String description, String date_time, String uID, String informer_fullName, ReportStatus status, Double longitude, Double latitude, Map<String, Object> images) {
+    public Report(String description, String date_time, String uID, String informer_person, String wanted_person, ReportStatus status, Double longitude, Double latitude, Map<String, Object> images) {
         Description = description;
         Date_time = date_time;
         this.uID = uID;
-        this.informer_fullName = informer_fullName;
+        this.informer_person = informer_person;
+        this.wanted_person = wanted_person;
         this.status = status;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -47,12 +48,20 @@ public class Report {
         this.uID = uID;
     }
 
-    public String getInformer_fullName() {
-        return informer_fullName;
+    public String getInformer_person() {
+        return informer_person;
     }
 
-    public void setInformer_fullName(String informer_fullName) {
-        this.informer_fullName = informer_fullName;
+    public void setInformer_person(String informer_person) {
+        this.informer_person = informer_person;
+    }
+
+    public String getWanted_person() {
+        return wanted_person;
+    }
+
+    public void setWanted_person(String wanted_person) {
+        this.wanted_person = wanted_person;
     }
 
     public ReportStatus getStatus() {

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="180dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/bgtest"
+    android:elevation="6dp"
     android:layout_marginBottom="-40dp">
 
     <de.hdodenhof.circleimageview.CircleImageView

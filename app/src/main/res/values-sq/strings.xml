@@ -170,6 +170,11 @@
     <string name="user_exist">User exist!</string>
     <string name="saved_successfully">Saved successfully</string>
     <string name="empty">Empty</string>
+    <string name="not_exist">Not Exist</string>
+    <string name="total_cases_reported_verified">Total Cases Reported VERIFIED</string>
+    <string name="total_cases_reported_unverified">Total Cases Reported UNVERIFIED</string>
+    <string name="reports_verified">VERIFIED REPORTS</string>
+    <string name="reports_unverified">UNVERIFIED REPORTS</string>
 
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
