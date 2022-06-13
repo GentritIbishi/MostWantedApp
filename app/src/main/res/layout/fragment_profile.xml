@@ -59,7 +59,7 @@
             app:itemTextAppearance="@style/TextViewStyle"
             app:itemIconTint="@color/secondary_color">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -70,14 +70,30 @@
                     android:id="@+id/menu_group_logout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:background="@drawable/button"
                     android:fontFamily="@font/open_sans_light"
+                    android:gravity="center"
+                    android:text="@string/logout"
+                    android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="@color/white"
-                    android:background="@drawable/button"
-                    android:text="@string/logout" />
-            </LinearLayout>
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/logout_progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:visibility="gone"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/menu_group_logout"
+                    app:layout_constraintEnd_toEndOf="@+id/menu_group_logout"
+                    app:layout_constraintTop_toTopOf="@+id/menu_group_logout" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.navigation.NavigationView>
 

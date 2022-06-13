@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -58,6 +59,9 @@ public class PersonListAdapter extends ArrayAdapter<Person> {
         TextView tv_l_fullName = listitemView.findViewById(R.id.tv_l_fullName);
         TextView tv_l_status = listitemView.findViewById(R.id.tv_l_status);
         ImageView profile_person = listitemView.findViewById(R.id.profile_person);
+        ProgressBar lvPerson_progressBar = listitemView.findViewById(R.id.lvPerson_progressBar);
+
+        lvPerson_progressBar.setVisibility(View.VISIBLE);
 
         // after initializing our items we are
         // setting data to our view.
@@ -67,7 +71,12 @@ public class PersonListAdapter extends ArrayAdapter<Person> {
 
         // in below line we are using Picasso to
         // load image from URL in our Image VIew.
-        Picasso.get().load(person.getUrlOfProfile()).transform(new CircleTransform()).into(profile_person);
+        Picasso.get()
+                .load(person.getUrlOfProfile())
+                .transform(new CircleTransform())
+                .into(profile_person);
+
+        lvPerson_progressBar.setVisibility(View.INVISIBLE);
 
         // below line is use to add item click listener
         // for our item of list view.

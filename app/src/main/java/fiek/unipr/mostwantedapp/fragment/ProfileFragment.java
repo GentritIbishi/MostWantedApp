@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -60,6 +61,7 @@ public class ProfileFragment extends Fragment {
     private NavigationView nav_view;
     private ImageView addReport;
     private Button menu_group_logout;
+    private ProgressBar logout_progressBar;
 
     public static final String PREFS_NAME = "LOG_PREF";
     public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
@@ -95,6 +97,7 @@ public class ProfileFragment extends Fragment {
         profile_fragment_view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         drawerLayout = profile_fragment_view.findViewById(R.id.drawerLayout);
+        logout_progressBar = profile_fragment_view.findViewById(R.id.logout_progressBar);
         toolbar = profile_fragment_view.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.open, R.string.close);
@@ -166,6 +169,7 @@ public class ProfileFragment extends Fragment {
                         nav_view.setCheckedItem(id);
                         break;
                     case R.id.menu_group_logout:
+                         logout_progressBar.setVisibility(View.VISIBLE);
                          Logout(account);
                         break;
                     default:
@@ -223,6 +227,7 @@ public class ProfileFragment extends Fragment {
             firebaseAuth.signOut();
             sendUserToLogin();
         }
+        logout_progressBar.setVisibility(View.GONE);
     }
 
     @Override
