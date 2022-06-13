@@ -4,15 +4,24 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.PercentFormatter;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,9 +35,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import org.eazegraph.lib.charts.PieChart;
-import org.eazegraph.lib.models.PieModel;
-
 import java.util.ArrayList;
 
 import fiek.unipr.mostwantedapp.R;
@@ -38,107 +44,160 @@ import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 public class ProfileDashboardFragment extends Fragment {
 
     View profile_dashboard_view;
-    TextView tv_totalCasesReportedVERIFIED, tv_totalCasesReportedUNVERIFIED;
-    PieChart pieChart;
+    private PieChart pieChart;
 
     public static final String VERIFIED = "VERIFIED";
     public static final String UNVERIFIED = "UNVERIFIED";
+    public static final String FAKE = "FAKE";
+    public static final String ANONYMOUS = "ANONYMOUS";
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
     private DocumentReference documentReference;
     private StorageReference storageReference;
+    private FirebaseStorage firebaseStorage;
 
     private String uID;
     private String fullName;
-    private int countVERIFIED;
-    private int countUNVERIFIED;
 
     public ProfileDashboardFragment() {}
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+        uID = firebaseUser.getUid();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         profile_dashboard_view = inflater.inflate(R.layout.fragment_profile_dashboard, container, false);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
-        uID = firebaseAuth.getCurrentUser().getUid();
-
-        loadInfoFromFirebase(firebaseAuth);
-
         pieChart = profile_dashboard_view.findViewById(R.id.pieChart);
-        tv_totalCasesReportedVERIFIED = profile_dashboard_view.findViewById(R.id.tv_totalCasesReportedVERIFIED);
-        tv_totalCasesReportedUNVERIFIED = profile_dashboard_view.findViewById(R.id.tv_totalCasesReportedUNVERIFIED);
         final SwipeRefreshLayout pullToRefreshInSearch = profile_dashboard_view.findViewById(R.id.pullToRefreshProfileDashboard);
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseStorage = FirebaseStorage.getInstance();
+        uID = firebaseUser.getUid();
+
+        setupPieChart();
+        setPieChart();
 
         pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadInfoFromFirebase(firebaseAuth);
 
+                if(firebaseAuth != null){
+                    loadInfoFromFirebase(firebaseAuth);
+                    loadInfoAnonymousFirebase();
+                    loadInfoPhoneFirebase();
+                }
+
+                setupPieChart();
                 setPieChart();
-
                 pullToRefreshInSearch.setRefreshing(false);
             }
         });
-
-        setPieChart();
 
         return profile_dashboard_view;
     }
 
     private void setPieChart() {
-        firebaseFirestore.collection("locations_reports")
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        int newCountVERIFIED = 0;
-                        int newCountUNVERIFIED = 0;
+        if(checkConnection()) {
+                firebaseFirestore.collection("locations_reports")
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                int newCountVERIFIED = 0;
+                                int newCountUNVERIFIED = 0;
+                                int newCountFAKE = 0;
 
-                        for (int i = 0; i<queryDocumentSnapshots.size(); i++)
-                        {
-                            DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(i);
-                            String status = doc.getString("status");
-                            String informer_person = doc.getString("informer_person");
-                            if(status.equals(VERIFIED) && informer_person.equals(fullName))
-                            {
-                                newCountVERIFIED = newCountVERIFIED + 1;
+                                for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
+                                    DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(i);
+                                    String status = doc.getString("status");
+                                    String informer_person = doc.getString("informer_person");
 
-                            }else if(status.equals(UNVERIFIED) && informer_person.equals(fullName)){
+                                    if (status.equals(VERIFIED) && informer_person.equals(fullName)) {
+                                        newCountVERIFIED++;
+                                    }
 
-                                newCountUNVERIFIED = newCountUNVERIFIED + 1;
+                                    if (status.equals(UNVERIFIED) && informer_person.equals(fullName)) {
+                                        newCountUNVERIFIED++;
+                                    }
+
+                                    if (status.equals(FAKE) && informer_person.equals(fullName)) {
+                                        newCountFAKE++;
+                                    }
+                                }
+
+                                loadPieChartData(newCountVERIFIED, newCountUNVERIFIED, newCountFAKE);
 
                             }
-                        }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }else {
+                Toast.makeText(getContext(), R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+            }
+    }
 
-                        tv_totalCasesReportedVERIFIED.setText(Integer.toString(newCountVERIFIED));
-                        tv_totalCasesReportedUNVERIFIED.setText(Integer.toString(newCountUNVERIFIED));
+    private void setupPieChart() {
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setUsePercentValues(true);
+        pieChart.setEntryLabelTextSize(16f);
+        pieChart.setEntryLabelColor(Color.BLACK);
+        pieChart.setCenterText(getText(R.string.location_reports));
+        pieChart.setCenterTextSize(16f);
+        pieChart.getDescription().setEnabled(false);
 
-                        pieChart.addPieSlice(
-                                new PieModel(
-                                        "VERIFIED",
-                                        newCountVERIFIED,
-                                        Color.parseColor("#66BB6A")));
+        Legend l = pieChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+        l.setEnabled(true);
+    }
 
-                        pieChart.addPieSlice(
-                                new PieModel(
-                                        "UNVERIFIED",
-                                        newCountUNVERIFIED,
-                                        Color.parseColor("#EF5350")));
-                        pieChart.startAnimation();
+    private void loadPieChartData(int newCountVERIFIED, int newCountUNVERIFIED, int newCountFAKE) {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        entries.add(new PieEntry((float) newCountVERIFIED, String.valueOf(getActivity().getText(R.string.reports_verified))));
+        entries.add(new PieEntry((float) newCountUNVERIFIED, String.valueOf(getActivity().getText(R.string.reports_unverified))));
+        entries.add(new PieEntry((float) newCountFAKE, String.valueOf(getActivity().getText(R.string.reports_fake))));
 
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        ArrayList<Integer> colors = new ArrayList<>();
+
+        for(int color : ColorTemplate.MATERIAL_COLORS) {
+            colors.add(color);
+        }
+
+        for(int color : ColorTemplate.VORDIPLOM_COLORS) {
+            colors.add(color);
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, null);
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(dataSet);
+        data.setDrawValues(true);
+        data.setValueFormatter(new PercentFormatter(pieChart));
+        data.setValueTextSize(12f);
+        data.setValueTextColor(Color.BLACK);
+
+        pieChart.setData(data);
+        pieChart.invalidate();
+        pieChart.animateY(1400, Easing.EaseInOutQuad);
+
 
     }
 
@@ -152,12 +211,35 @@ public class ProfileDashboardFragment extends Fragment {
                             if(task.isSuccessful() && task.getResult() != null)
                             {
                                 fullName = task.getResult().getString("fullName");
-                            }else {
-                                Toast.makeText(getContext(), R.string.empty, Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-                   }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(firebaseAuth != null){
+            loadInfoFromFirebase(firebaseAuth);
+            loadInfoAnonymousFirebase();
+            loadInfoPhoneFirebase();
+        }
+    }
+
+    private void loadInfoPhoneFirebase() {
+        String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
+        if(!empty(phone))
+        {
+            //logged in with phone
+            fullName = phone;
+        }
+    }
+
+    private void loadInfoAnonymousFirebase() {
+        if(firebaseAuth.getCurrentUser().isAnonymous()){
+            fullName = ANONYMOUS;
+        }
     }
 
     private boolean checkConnection() {
@@ -168,5 +250,10 @@ public class ProfileDashboardFragment extends Fragment {
         }else {
             return true;
         }
+    }
+
+    public static boolean empty( final String s ) {
+        // Null-safe, short-circuit evaluation.
+        return s == null || s.trim().isEmpty();
     }
 }

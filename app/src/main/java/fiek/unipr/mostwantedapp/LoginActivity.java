@@ -45,7 +45,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public static final String PREFS_NAME = "loginPreferences";
     public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
-    private String login_users = "logins_users";
+    public static final String ANONYMOUS = "ANONYMOUS";
+    private static final String login_users = "logins_users";
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
@@ -281,6 +282,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onSuccess(AuthResult authResult) {
                     setSharedPreferenceInformer(firebaseAuth.getCurrentUser().getUid());
+                    setSharedPreferenceAnonymous(ANONYMOUS);
                     goToInformerDashboard();
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -308,6 +310,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         SharedPreferences settings = getSharedPreferences(LOGIN_INFORMER_PREFS, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("userID", currentUserId);
+        editor.commit();
+    }
+
+    public void setSharedPreferenceAnonymous(String name) {
+        SharedPreferences settings = getSharedPreferences(LOGIN_INFORMER_PREFS, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("anonymous", name);
         editor.commit();
     }
 

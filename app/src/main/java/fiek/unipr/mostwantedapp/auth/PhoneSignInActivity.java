@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -44,6 +45,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String mVerificationId; // will hold OTP/Verification code
     private static final String TAG = "MAIN_TAG";
+    private static final String PHONE_INFORMER_PREFS = "PHONE_INFORMER_PREFS";
     private FirebaseAuth firebaseAuth;
     private ProgressBar register_progressBar, verify_phone_progressBar;
     private int selectedETPosition = 0;
@@ -271,6 +273,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
                         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
                         Toast.makeText(PhoneSignInActivity.this, R.string.logged_in_as+" "+phone, Toast.LENGTH_SHORT).show();
                         //start informer activity
+                        setSharedPreference(phone);
                         goToInformerDashboard();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -288,6 +291,13 @@ public class PhoneSignInActivity extends AppCompatActivity {
         Intent intent = new Intent(PhoneSignInActivity.this, InformerDashboardActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void setSharedPreference(String phone) {
+        SharedPreferences settings = getSharedPreferences(PHONE_INFORMER_PREFS, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("phone", phone);
+        editor.commit();
     }
 
     @Override

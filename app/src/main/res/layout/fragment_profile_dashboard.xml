@@ -14,11 +14,23 @@
         android:layout_height="wrap_content">
 
        <RelativeLayout
+           android:padding="10dp"
            android:layout_width="match_parent"
            android:layout_height="match_parent">
 
+           <TextView
+               android:id="@+id/tvReports"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:textAlignment="center"
+               android:textStyle="bold"
+               android:fontFamily="@font/open_sans"
+               android:textSize="22sp"
+               android:text="@string/real_time_statistics"/>
+
            <androidx.cardview.widget.CardView
                android:id="@+id/cardViewGraph"
+               android:layout_below="@+id/tvReports"
                android:layout_width="match_parent"
                android:layout_height="200dp"
                android:elevation="10dp"
@@ -38,9 +50,9 @@
 
                    <!--Pie chart to display the data-->
 
-                   <org.eazegraph.lib.charts.PieChart
+                   <com.github.mikephil.charting.charts.PieChart
                        android:id="@+id/pieChart"
-                       android:layout_width="0dp"
+                       android:layout_width="match_parent"
                        android:layout_height="match_parent"
                        android:padding="6dp"
                        android:layout_weight="1"
@@ -50,64 +62,8 @@
 
                        />
 
-                   <LinearLayout
-                       android:layout_width="0dp"
-                       android:layout_height="match_parent"
-                       android:layout_weight="1"
-                       android:layout_marginLeft="20dp"
-                       android:orientation="vertical"
-                       android:gravity="center_vertical"
-                       >
-
-                       <LinearLayout
-                           android:layout_width="match_parent"
-                           android:layout_height="15dp"
-                           android:layout_gravity="center_vertical">
-
-                           <!--View to display the yellow color icon-->
-                           <View
-                               android:layout_width="15dp"
-                               android:layout_height="match_parent"
-                               android:background="@color/pie_green"/>
-
-                           <!--Text view to display R -->
-                           <TextView
-                               android:id="@+id/tv_totalCasesReportedVERIFIED"
-                               android:layout_width="wrap_content"
-                               android:layout_height="wrap_content"
-                               android:textSize="13dp"
-                               android:text="@string/reports_verified"
-                               android:paddingLeft="10dp"/>
-
-                       </LinearLayout>
-
-                       <!--Linear layout to display Python-->
-                       <LinearLayout
-                           android:layout_width="match_parent"
-                           android:layout_height="15dp"
-                           android:layout_gravity="center_vertical"
-                           android:layout_marginTop="5dp">
-
-                           <!--View to display the green color icon-->
-                           <View
-                               android:layout_width="15dp"
-                               android:layout_height="match_parent"
-                               android:background="@color/pie_red"/>
-
-                           <!--Text view to display python text -->
-                           <TextView
-                               android:id="@+id/tv_totalCasesReportedUNVERIFIED"
-                               android:layout_width="wrap_content"
-                               android:layout_height="wrap_content"
-                               android:textSize="13dp"
-                               android:text="@string/reports_unverified"
-                               android:paddingLeft="10dp"/>
-
-                       </LinearLayout>
-
-                   </LinearLayout>
-
                </LinearLayout>
+
 
            </androidx.cardview.widget.CardView>
 
