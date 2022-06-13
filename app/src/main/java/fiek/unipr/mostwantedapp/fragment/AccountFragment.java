@@ -1,5 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -8,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +31,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.update.UpdateUser;
 
 public class AccountFragment extends Fragment {
 
@@ -52,6 +57,7 @@ public class AccountFragment extends Fragment {
     private FirebaseUser firebaseUser;
     private DocumentReference documentReference;
     private StorageReference storageReference;
+    private ProgressBar acc_uploadProgressBar;
 
     public AccountFragment() {
 
@@ -65,7 +71,6 @@ public class AccountFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         uID = firebaseAuth.getCurrentUser().getUid();
-        loadImage(uID);
         getSetUserData(uID);
     }
 
@@ -80,9 +85,6 @@ public class AccountFragment extends Fragment {
         storageReference = FirebaseStorage.getInstance().getReference();
         uID = firebaseAuth.getCurrentUser().getUid();
 
-        loadImage(uID);
-        getSetUserData(uID);
-
         btnUploadNewPicture = account_fragment_view.findViewById(R.id.btnUploadNewPicture);
         btnDeletePhoto = account_fragment_view.findViewById(R.id.btnDeletePhoto);
         btnSaveChanges = account_fragment_view.findViewById(R.id.btnSaveChanges);
@@ -95,6 +97,10 @@ public class AccountFragment extends Fragment {
         et_phone_number_account = account_fragment_view.findViewById(R.id.et_phone_number_account);
         et_email_account = account_fragment_view.findViewById(R.id.et_email_account);
         saveChangesProgressBar = account_fragment_view.findViewById(R.id.saveChangesProgressBar);
+        acc_uploadProgressBar = account_fragment_view.findViewById(R.id.acc_uploadProgressBar);
+
+        loadImage(uID);
+        getSetUserData(uID);
 
         final SwipeRefreshLayout pullToRefreshInHome = account_fragment_view.findViewById(R.id.swipeToRefreshProfile);
         pullToRefreshInHome.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -113,7 +119,41 @@ public class AccountFragment extends Fragment {
             }
         });
 
+        btnUploadNewPicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(openGalleryIntent, 1000);
+            }
+        });
+
+        btnDeletePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                acc_uploadProgressBar.setVisibility(View.VISIBLE);
+                deletePhoto();
+            }
+        });
+
         return account_fragment_view;
+    }
+
+    private void deletePhoto() {
+        StorageReference fileRef = storageReference.child("users/"+firebaseAuth.getCurrentUser().getUid()+"/profile_picture.jpg");
+        fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                acc_uploadProgressBar.setVisibility(View.GONE);
+                imageOfProfile.setImageResource(R.drawable.ic_profile_picture_default);
+                Toast.makeText(getContext(), R.string.image_deleted_successfully, Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                acc_uploadProgressBar.setVisibility(View.GONE);
+                Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void checkIfUserExist(String uid) {
@@ -132,17 +172,57 @@ public class AccountFragment extends Fragment {
                 });
     }
 
+    private void uploadImageToFirebase(Uri imageUri) {
+        acc_uploadProgressBar.setVisibility(View.VISIBLE);
+        //upload image to storage in firebase
+        StorageReference fileRef = storageReference.child("users/"+firebaseAuth.getCurrentUser().getUid()+"/profile_picture.jpg");
+        fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Picasso.get().load(uri).transform(new CircleTransform()).into(imageOfProfile);
+                        DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                        docRef.update("urlOfProfile", uri.toString());
+                        acc_uploadProgressBar.setVisibility(View.GONE);
+                        Toast.makeText(getContext(), R.string.image_uploaded_successfully, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                acc_uploadProgressBar.setVisibility(View.GONE);
+                Toast.makeText(getContext(), R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1000){
+            if(resultCode == Activity.RESULT_OK){
+                Uri imageUri = data.getData();
+                uploadImageToFirebase(imageUri);
+            }
+        }
+    }
+
     private String getFullNameOfUser(String full_name) {
         informer_fullName = full_name;
         return informer_fullName;
     }
 
     private void loadImage(String uID) {
+        acc_uploadProgressBar.setVisibility(View.VISIBLE);
         StorageReference profileRef = storageReference.child("users/" + uID + "/profile_picture.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).transform(new CircleTransform()).into(imageOfProfile);
+                acc_uploadProgressBar.setVisibility(View.GONE);
             }
         });
     }
