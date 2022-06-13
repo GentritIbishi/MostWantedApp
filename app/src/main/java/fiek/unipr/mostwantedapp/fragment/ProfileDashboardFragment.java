@@ -1,5 +1,6 @@
 package fiek.unipr.mostwantedapp.fragment;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -220,6 +221,16 @@ public class ProfileDashboardFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        if(firebaseAuth != null){
+            loadInfoFromFirebase(firebaseAuth);
+            loadInfoAnonymousFirebase();
+            loadInfoPhoneFirebase();
+        }
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
         if(firebaseAuth != null){
             loadInfoFromFirebase(firebaseAuth);
             loadInfoAnonymousFirebase();
