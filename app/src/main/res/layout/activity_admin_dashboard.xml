@@ -1,265 +1,242 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/admin_drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_dashboard"
+    android:background="@color/home"
     tools:context=".dashboard.AdminDashboardActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/admin_drawerLayout_real"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        android:layout_above="@+id/admin_bottomBar"
+        tools:openDrawer="start">
 
-        <RelativeLayout
-            android:layout_marginTop="32dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/admin_appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:elevation="6dp"
+            android:fitsSystemWindows="true"
+            android:theme="@style/Theme.MostWantedApp.AppBarOverlay">
 
-            <TextView
-                android:id="@+id/tv_dashboard"
-                android:text="@string/dashboard"
-                android:textSize="22sp"
-                android:textColor="#FFFFFF"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/admin_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                app:titleTextColor="@color/verydark"
+                android:background="@color/white"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay"/>
 
-            <TextView
-                android:layout_marginTop="6dp"
-                android:layout_below="@+id/tv_dashboard"
-                android:text="@string/six_items"
-                android:textSize="14sp"
-                android:textColor="#52BAFF"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/admin_fragmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/admin_nav_view"
+            android:theme="@style/NavigationTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_gravity="start"
+            app:drawerLayoutCornerSize="10dp"
+            app:headerLayout="@layout/nav_header"
+            app:menu="@menu/admin_nav_menu"
+            app:itemTextColor="@color/color_text_state"
+            app:itemBackground="@drawable/menu_back_state"
+            app:itemTextAppearance="@style/TextViewStyle"
+            app:itemIconTint="@color/secondary_color">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <Button
+                    android:id="@+id/admin_menu_group_logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button"
+                    android:fontFamily="@font/open_sans_light"
+                    android:gravity="center"
+                    android:text="@string/logout"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/admin_logout_progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:visibility="gone"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/menu_group_logout"
+                    app:layout_constraintEnd_toEndOf="@+id/menu_group_logout"
+                    app:layout_constraintTop_toTopOf="@+id/menu_group_logout" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.navigation.NavigationView>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+    <LinearLayout
+        android:id="@+id/admin_bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="4"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:elevation="10dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:layout_alignParentBottom="true"
+        tools:targetApi="lollipop">
+
+        <LinearLayout
+            android:id="@+id/admin_homeLayout"
+            android:background="@drawable/round_back_home_100"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:gravity="center"
+            android:layout_weight="1">
 
             <ImageView
-                android:id="@+id/admin_img_profile"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/ic_user_default"
-                android:layout_width="62dp"
-                android:layout_height="62dp" />
+                android:id="@+id/admin_homeImage"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_selected_home"/>
 
-        </RelativeLayout>
-
-        <GridLayout
-            android:columnCount="2"
-            android:rowCount="3"
-            android:alignmentMode="alignMargins"
-            android:columnOrderPreserved="false"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.cardview.widget.CardView
+            <TextView
+                android:id="@+id/admin_homeTxt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_margin="12dp">
-                <LinearLayout
-                    android:id="@+id/l_adminProfile"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:clickable="true"
-                    android:background="@drawable/item_dashboard_selected"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:src="@drawable/ic_profile_color"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp" />
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textColor="#6f6f6f"
-                        android:text="@string/profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                android:text="@string/home"
+                android:textStyle="bold"
+                android:textColor="@color/home"
+                android:layout_marginStart="10dp"
+                android:textSize="16sp"/>
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardView"
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admin_searchLayout"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/admin_searchImage"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_search_navbottom"/>
+
+            <TextView
+                android:id="@+id/admin_searchTxt"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_margin="12dp">
-                <LinearLayout
-                    android:id="@+id/l_registerUser"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:clickable="true"
-                    android:background="@drawable/item_dashboard_selected"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:src="@drawable/ic_user_black"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp" />
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textColor="#6f6f6f"
-                        android:text="@string/button_register_user"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                android:text="@string/search"
+                android:textStyle="bold"
+                android:textColor="@color/search"
+                android:layout_marginStart="10dp"
+                android:textSize="16sp"/>
 
+        </LinearLayout>
 
-            <androidx.cardview.widget.CardView
+        <LinearLayout
+            android:id="@+id/admin_notificationLayout"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/admin_notificationImage"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_notification"/>
+
+            <TextView
+                android:id="@+id/admin_notificationTxt"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_margin="12dp">
-                <LinearLayout
-                    android:id="@+id/l_userList"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:clickable="true"
-                    android:background="@drawable/item_dashboard_selected"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:src="@drawable/ic_user_eye"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp" />
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textColor="#6f6f6f"
-                        android:text="@string/see_users"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                android:text="@string/notification"
+                android:textStyle="bold"
+                android:textColor="@color/notification"
+                android:layout_marginStart="10dp"
+                android:textSize="16sp"/>
 
-            <androidx.cardview.widget.CardView
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/admin_profileLayout"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:gravity="center"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/admin_profileImage"
+                android:layout_width="20dp"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_user"/>
+
+            <TextView
+                android:id="@+id/admin_profileTxt"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_margin="12dp">
+                android:text="@string/profile"
+                android:textStyle="bold"
+                android:textColor="@color/profile"
+                android:layout_marginStart="10dp"
+                android:textSize="16sp"/>
 
-                <LinearLayout
-                    android:id="@+id/l_registerPerson"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:clickable="true"
-                    android:background="@drawable/item_dashboard_selected"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:src="@drawable/ic_criminal_person"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp" />
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textColor="#6f6f6f"
-                        android:text="@string/register_person"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_margin="12dp">
-                <LinearLayout
-                    android:id="@+id/l_personsList"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:clickable="true"
-                    android:background="@drawable/item_dashboard_selected"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:src="@drawable/ic_person_eye"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp" />
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textColor="#6f6f6f"
-                        android:text="@string/see_persons"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_columnWeight="1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_margin="12dp">
-                <LinearLayout
-                    android:id="@+id/l_locationReports"
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:clickable="true"
-                    android:background="@drawable/item_dashboard_selected"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <ImageView
-                        android:src="@drawable/ic_location"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp" />
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textColor="#6f6f6f"
-                        android:text="@string/location_reports"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </GridLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/bt_logout"
-                android:text="@string/logout"
-                android:textSize="22sp"
-                android:background="@drawable/bt_logout"
-                android:layout_centerHorizontal="true"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:paddingBottom="16dp"
-                />
-        </RelativeLayout>
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:visibility="gone"></ProgressBar>
+        </LinearLayout>
 
     </LinearLayout>
 
-
-</ScrollView>
+</RelativeLayout>

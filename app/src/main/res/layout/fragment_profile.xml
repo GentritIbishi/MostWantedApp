@@ -7,7 +7,7 @@
     android:id="@+id/fragment_profile"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".fragment.ProfileFragment">
+    tools:context=".fragment.user.ProfileFragment">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawerLayout"

@@ -1,8 +1,9 @@
-package fiek.unipr.mostwantedapp.fragment;
+package fiek.unipr.mostwantedapp.fragment.user;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -28,44 +29,66 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.lists.PersonListAdapter;
 import fiek.unipr.mostwantedapp.models.Person;
 
-public class HomeFragment extends Fragment {
+public class SearchFragment extends Fragment {
 
-    private View home_fragment_view;
+    private View search_fragment_view;
     private ListView lvPersons;
     private PersonListAdapter personListAdapter;
     private ArrayList<Person> personArrayList;
     private FirebaseFirestore firebaseFirestore;
     private EditText search_filter;
     private String fullName;
+    
+    public SearchFragment() {}
 
-    public HomeFragment() {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        home_fragment_view = inflater.inflate(R.layout.fragment_home, container, false);
+        search_fragment_view = inflater.inflate(R.layout.fragment_search, container, false);
         firebaseFirestore = FirebaseFirestore.getInstance();
         InitializeFields();
         loadDatainListview();
 
-        final SwipeRefreshLayout pullToRefreshInHome = home_fragment_view.findViewById(R.id.pullToRefreshInHome);
-        pullToRefreshInHome.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        final SwipeRefreshLayout pullToRefreshInSearch = search_fragment_view.findViewById(R.id.pullToRefreshInSearch);
+        pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Reload current fragment
                 personArrayList.clear();
                 loadDatainListview();
-                pullToRefreshInHome.setRefreshing(false);
+                pullToRefreshInSearch.setRefreshing(false);
             }
         });
-        return home_fragment_view;
+
+        search_filter.requestFocus();
+
+        search_filter.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                filter(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+
+        return search_fragment_view;
     }
 
     private void InitializeFields() {
-        search_filter = home_fragment_view.findViewById(R.id.search_filter);
-        lvPersons = home_fragment_view.findViewById(R.id.lvPersons);
+        search_filter = search_fragment_view.findViewById(R.id.search_filter);
+        lvPersons = search_fragment_view.findViewById(R.id.lvPersons);
         personArrayList = new ArrayList<>();
         personListAdapter = new PersonListAdapter(getActivity().getApplicationContext(), personArrayList);
         lvPersons.setAdapter(personListAdapter);

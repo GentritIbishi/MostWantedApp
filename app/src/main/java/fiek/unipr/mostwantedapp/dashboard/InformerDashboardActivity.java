@@ -11,10 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.fragment.HomeFragment;
-import fiek.unipr.mostwantedapp.fragment.NotificationFragment;
-import fiek.unipr.mostwantedapp.fragment.ProfileFragment;
-import fiek.unipr.mostwantedapp.fragment.SearchFragment;
+import fiek.unipr.mostwantedapp.fragment.user.HomeFragment;
+import fiek.unipr.mostwantedapp.fragment.user.NotificationFragment;
+import fiek.unipr.mostwantedapp.fragment.user.ProfileFragment;
+import fiek.unipr.mostwantedapp.fragment.user.SearchFragment;
 
 public class InformerDashboardActivity extends AppCompatActivity {
 

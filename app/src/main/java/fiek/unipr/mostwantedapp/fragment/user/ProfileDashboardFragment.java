@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.fragment;
+package fiek.unipr.mostwantedapp.fragment.user;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

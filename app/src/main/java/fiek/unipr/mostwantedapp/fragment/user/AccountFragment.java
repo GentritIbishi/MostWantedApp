@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.fragment;
+package fiek.unipr.mostwantedapp.fragment.user;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -37,7 +37,6 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
-import fiek.unipr.mostwantedapp.update.UpdateUser;
 
 public class AccountFragment extends Fragment {
 

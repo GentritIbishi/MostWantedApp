@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/home"
     android:fitsSystemWindows="true"
-    tools:context=".fragment.SearchFragment">
+    tools:context=".fragment.user.SearchFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"

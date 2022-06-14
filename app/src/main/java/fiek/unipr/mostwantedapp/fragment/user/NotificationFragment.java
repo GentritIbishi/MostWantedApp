@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.fragment;
+package fiek.unipr.mostwantedapp.fragment.user;
 
 import android.os.Bundle;
 
