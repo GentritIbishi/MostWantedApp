@@ -19,47 +19,12 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content">
 
-                     <androidx.constraintlayout.widget.ConstraintLayout
+                     <ListView
+                         android:id="@+id/lvPersons"
                          android:layout_width="match_parent"
-                         android:layout_height="match_parent">
-
-                            <TextView
-                                android:id="@+id/tv_helpus"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="16dp"
-                                android:layout_marginTop="16dp"
-                                android:layout_marginEnd="16dp"
-                                android:layout_marginBottom="32dp"
-                                android:text="Help us with reporting something."
-                                android:textAlignment="center"
-                                android:textColor="@color/white"
-                                android:textSize="18sp"
-                                app:layout_constraintBottom_toTopOf="@+id/btnAddNewCase"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                            <Button
-                                android:id="@+id/btnAddNewCase"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:background="@drawable/ic_plus_rounded_pressed"
-                                app:layout_constraintEnd_toEndOf="@+id/tv_helpus"
-                                app:layout_constraintStart_toStartOf="@+id/tv_helpus"
-                                tools:layout_editor_absoluteY="151dp" />
-
-                            <ListView
-                                android:id="@+id/lvPersons"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="24dp"
-                                android:clickable="true"
-                                android:focusable="true"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toBottomOf="@+id/btnAddNewCase" />
-                     </androidx.constraintlayout.widget.ConstraintLayout>
+                         android:layout_height="match_parent"
+                         android:clickable="true"
+                         android:focusable="true" />
 
               </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
