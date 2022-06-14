@@ -67,7 +67,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     //nav header
     private TextView nav_header_name;
     private ImageView verifiedBadge;
-    private CircleImageView nav_header_image_view;
+    private CircleImageView nav_header_image_view, topImageProfile;
 
     public static final String PREFS_NAME = "LOG_PREF";
     public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
@@ -117,6 +117,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_drawerLayout_real = findViewById(R.id.admin_drawerLayout_real);
         admin_logout_progressBar = findViewById(R.id.admin_logout_progressBar);
         admin_toolbar = findViewById(R.id.admin_toolbar);
+        topImageProfile = findViewById(R.id.topImageProfile);
         setSupportActionBar(admin_toolbar);
 
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -468,6 +469,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             String fullName = account.getDisplayName();
             nav_header_name.setText(fullName);
             nav_header_image_view.setImageURI(account.getPhotoUrl());
+            topImageProfile.setImageURI(account.getPhotoUrl());
         }
         if(firebaseAuth != null){
             loadInfoFromFirebase(firebaseAuth);
@@ -492,6 +494,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                         setVerifiedBadge(firebaseAuth.getCurrentUser());
                         if(urlOfProfile != null){
                             Picasso.get().load(urlOfProfile).into(nav_header_image_view);
+                            Picasso.get().load(urlOfProfile).into(topImageProfile);
                         }
 
                         if(fullName != null){
@@ -507,6 +510,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         if(firebaseAuth.getCurrentUser().isAnonymous()){
             nav_header_name.setText(firebaseAuth.getCurrentUser().getUid());
             nav_header_image_view.setImageResource(R.drawable.ic_anonymous);
+            topImageProfile.setImageResource(R.drawable.ic_anonymous);
         }
     }
 
@@ -518,6 +522,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             nav_header_name.setText(phone);
             setSharedPreference(phone);
             nav_header_image_view.setImageResource(R.drawable.ic_phone_login);
+            topImageProfile.setImageResource(R.drawable.ic_phone_login);
         }
     }
 
