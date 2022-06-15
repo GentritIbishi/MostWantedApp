@@ -64,7 +64,7 @@
             android:name=".auth.GoogleSignInActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterUserActivity"
+            android:name=".register.RegisterUserActivity"
             android:exported="false" />
         <activity
             android:name=".GetStartedActivity"

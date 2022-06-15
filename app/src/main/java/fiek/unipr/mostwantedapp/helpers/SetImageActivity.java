@@ -30,8 +30,6 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.RegisterUserActivity;
-import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
 
 public class SetImageActivity extends AppCompatActivity implements View.OnClickListener {

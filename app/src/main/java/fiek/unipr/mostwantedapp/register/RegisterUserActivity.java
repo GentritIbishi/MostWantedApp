@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp;
+package fiek.unipr.mostwantedapp.register;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,8 +28,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
-import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
+import fiek.unipr.mostwantedapp.LoginActivity;
+import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.helpers.SetImageActivity;
 import fiek.unipr.mostwantedapp.models.User;
@@ -137,9 +139,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                             public void onSuccess(AuthResult authResult) {
 
                                 String userID = authResult.getUser().getUid();
-                                Date date = Calendar.getInstance().getTime();
-                                DateFormat dateFormat = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss");
-                                String register_date_time = dateFormat.format(date);
+                                String register_date_time = getTimeDate();
                                 registerUser(balance, userID, name, lastName, fullName, address, email, parentName, role, phone, numPersonal, register_date_time, grade, password, photoURL);
                                 firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -230,6 +230,16 @@ public class RegisterUserActivity extends AppCompatActivity {
             return false;
         }else {
             return true;
+        }
+    }
+
+    public static String getTimeDate() { // without parameter argument
+        try{
+            Date netDate = new Date(); // current time from here
+            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            return sfd.format(netDate);
+        } catch(Exception e) {
+            return "date";
         }
     }
 

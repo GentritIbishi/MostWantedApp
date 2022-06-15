@@ -32,6 +32,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 app:title="@string/profile"
+                android:elevation="0dp"
                 app:titleTextColor="@color/verydark"
                 android:background="@color/white"
                 app:layout_scrollFlags="scroll|enterAlways"

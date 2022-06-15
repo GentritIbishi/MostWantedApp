@@ -40,6 +40,7 @@ import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.User;
+import fiek.unipr.mostwantedapp.register.RegisterUserActivity;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
