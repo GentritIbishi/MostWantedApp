@@ -50,6 +50,7 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsInformerBinding;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.models.ReportStatus;
+import fiek.unipr.mostwantedapp.update.UpdatePerson;
 
 public class MapsInformerActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
@@ -176,6 +177,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                 //task succesfull
                                 //report succesfull finish activity qoje user te homefragment
                                 //ni progress bar duhet ktu me bindirat
+                                setLastSeenLocation(latitude, longitude, wanted_person);
                                 finish();
                                 Toast.makeText(MapsInformerActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
                                 binding.reportProgressBar.setVisibility(View.INVISIBLE);
@@ -438,6 +440,35 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 }
             });
         }
+    }
+
+    private void setLastSeenLocation(Double latitude, Double longitude, String wanted_person) {
+        DocumentReference locationReports = firebaseFirestore.collection("wanted_persons").document(wanted_person);
+
+        locationReports.update("latitude", latitude).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(MapsInformerActivity.this, R.string.latitude_updated_successfully, Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MapsInformerActivity.this, R.string.latitude_failed_to_update, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        locationReports.update("longitude", longitude).addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(MapsInformerActivity.this, R.string.longitude_updated_successfully, Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(MapsInformerActivity.this, R.string.longitude_failed_to_update, Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
 }

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:fitsSystemWindows="true"
-    android:background="@color/primary_color">
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:id="@+id/profile_location_person"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/ic_photo_person_list"/>
+            android:src="@drawable/ic_profile_picture_default"/>
 
         <TextView
             android:id="@+id/tv_location_person_fullName"
@@ -26,9 +26,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/profile_location_person"
-            android:text="Full Name"
+            android:text="@string/full_name"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/verydark"
             android:textSize="18sp"/>
 
         <TextView
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/profile_location_person"
             android:text="Location: "
-            android:textColor="@color/white"
+            android:textColor="@color/verydark"
             android:textSize="15sp"/>
 
         <TextView
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/tv_label_Location"
             android:text="Latitude"
-            android:textColor="@color/white"
+            android:textColor="@color/verydark"
             android:textSize="15sp"/>
 
         <TextView
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/tv_latitude"
             android:text="Longitude"
-            android:textColor="@color/white"
+            android:textColor="@color/verydark"
             android:textSize="15sp"/>
 
 

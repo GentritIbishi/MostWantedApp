@@ -187,6 +187,13 @@
     <string name="privileged_user">Privileged User</string>
     <string name="wanted_person">Wanted Person</string>
     <string name="locations">Locations</string>
+    <string name="total_reported">Total Reported</string>
+    <string name="location_update_successfully">Last Location is updated successfully!</string>
+    <string name="location_update_failed">Last Location failed to update!</string>
+    <string name="latitude_updated_successfully">Latitude updated successfully!</string>
+    <string name="longitude_updated_successfully">Longitude updated successfully!</string>
+    <string name="latitude_failed_to_update">Latitude failed to update!</string>
+    <string name="longitude_failed_to_update">Longitude failed to update!</string>
 
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
