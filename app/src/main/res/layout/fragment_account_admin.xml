@@ -309,12 +309,13 @@
                         <ProgressBar
                             android:id="@+id/admin_saveChangesProgressBar"
                             style="?android:attr/progressBarStyle"
+                            android:visibility="invisible"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:layout_marginEnd="16dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/admin_btnSaveChanges"
-                            app:layout_constraintEnd_toEndOf="@+id/btnSaveChanges"
-                            app:layout_constraintTop_toTopOf="@+id/btnSaveChanges" />
+                            android:layout_marginRight="16dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintRight_toRightOf="@+id/admin_btnSaveChanges"
+                            app:layout_constraintTop_toTopOf="@+id/admin_btnSaveChanges" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <ProgressBar

@@ -171,9 +171,9 @@ public class ProfileDashboardFragment extends Fragment {
 
     private void loadPieChartData(int newCountVERIFIED, int newCountUNVERIFIED, int newCountFAKE) {
         ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry((float) newCountVERIFIED, String.valueOf(getActivity().getText(R.string.reports_verified))));
-        entries.add(new PieEntry((float) newCountUNVERIFIED, String.valueOf(getActivity().getText(R.string.reports_unverified))));
-        entries.add(new PieEntry((float) newCountFAKE, String.valueOf(getActivity().getText(R.string.reports_fake))));
+        entries.add(new PieEntry((float) newCountVERIFIED, String.valueOf(getText(R.string.reports_verified))));
+        entries.add(new PieEntry((float) newCountUNVERIFIED, String.valueOf(getText(R.string.reports_unverified))));
+        entries.add(new PieEntry((float) newCountFAKE, String.valueOf(getText(R.string.reports_fake))));
 
         ArrayList<Integer> colors = new ArrayList<>();
 

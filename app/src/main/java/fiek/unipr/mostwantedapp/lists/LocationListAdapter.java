@@ -89,4 +89,5 @@ public class LocationListAdapter extends ArrayAdapter<Person> {
         });
         return listitemView;
     }
+
 }

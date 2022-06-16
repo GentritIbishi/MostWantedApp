@@ -48,6 +48,24 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        final LinearLayout l_admin_analytics = admin_dashboard_view.findViewById(R.id.l_admin_analytics);
+        l_admin_analytics.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new ProfileFragment();
+                loadFragment(fragment);
+            }
+        });
+
+        final LinearLayout l_admin_locationReports = admin_dashboard_view.findViewById(R.id.l_admin_locationReports);
+        l_admin_locationReports.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new LocationReportsFragment();
+                loadFragment(fragment);
+            }
+        });
+
         return admin_dashboard_view;
     }
 

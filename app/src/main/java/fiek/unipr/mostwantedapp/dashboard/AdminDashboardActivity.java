@@ -190,40 +190,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     case R.id.admin_menu_group_home:
                         fragment = new HomeFragment();
                         loadFragment(fragment);
-                        if(selectedTab != 1) {
-                            //set home fragment
-                            getSupportFragmentManager().beginTransaction()
-                                    .setReorderingAllowed(true)
-                                    .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
-                                    .commit();
-
-                            //unselect other tabs except home tab
-                            admin_searchTxt.setVisibility(View.GONE);
-                            admin_notificationTxt.setVisibility(View.GONE);
-                            admin_profileTxt.setVisibility(View.GONE);
-
-                            admin_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                            admin_notificationImage.setImageResource(R.drawable.ic_notification);
-                            admin_profileImage.setImageResource(R.drawable.ic_user);
-
-                            admin_searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                            admin_notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                            admin_profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-
-                            //select home tab
-                            admin_homeTxt.setVisibility(View.VISIBLE);
-                            admin_homeImage.setImageResource(R.drawable.ic_selected_home);
-                            admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
-
-                            //create animation
-                            ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f );
-                            scaleAnimation.setDuration(200);
-                            scaleAnimation.setFillAfter(true);
-                            admin_homeLayout.startAnimation(scaleAnimation);
-
-                            // set selected tab 1 as selected tab
-                            selectedTab = 1;
-                        }
                         admin_nav_view.setCheckedItem(id);
                         break;
                     case R.id.admin_menu_group_account:
@@ -368,7 +334,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //set defualt selected
-                admin_nav_view.getMenu().getItem(0).setChecked(true);
+                admin_nav_view.getMenu().getItem(0).setChecked(false);
                 //check if search is already selected or not.
                 if(selectedTab != 2) {
                     //set search fragment by default
@@ -411,7 +377,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //set defualt selected
-                admin_nav_view.getMenu().getItem(0).setChecked(true);
+                admin_nav_view.getMenu().getItem(0).setChecked(false);
                 //check if notification is already selected or not.
                 if(selectedTab != 3) {
                     //set notification fragment by default
@@ -455,6 +421,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //set defualt selected
                 admin_nav_view.getMenu().getItem(0).setChecked(true);
+                admin_nav_view.getMenu().getItem(1).setChecked(false);
+                admin_nav_view.getMenu().getItem(2).setChecked(false);
+                admin_nav_view.getMenu().getItem(3).setChecked(false);
                 //check if profile is already selected or not.
                 if(selectedTab != 4) {
                     //set profile fragment by default
