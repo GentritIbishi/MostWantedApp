@@ -47,6 +47,50 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String newLatitude, newLongitude, fullName, status, urlOfProfile, uID;
     private double latitude, longitude;
 
+    private static String POLICE_STATION_RR_REXHEP_LUCI_TITLE = "POLICE STATION - Rr. Rexhep Luci, Prishtine 10000";
+    private static double POLICE_STATION_RR_REXHEP_LUCI_LATITUDE = 42.6626792;
+    private static double POLICE_STATION_RR_REXHEP_LUCI_LONGITUDE = 21.1572832;
+
+    private static String POLICE_STATION_NR2_TITLE = "POLICE STATION Nr.2 - Hamez Jashari, Prishtine 10000";
+    private static double POLICE_STATION_NR2_LATITUDE = 42.659114;
+    private static double POLICE_STATION_NR2_LONGITUDE = 21.167420;
+
+    private static String POLICE_STATION_SHESHI_I_LIRISE_TITLE = "POLICE STATION - Sheshi i Lirise, Fushe Kosove 12000";
+    private static double POLICE_STATION_SHESHI_I_LIRISE_LATITUDE = 42.6347623;
+    private static double POLICE_STATION_SHESHI_I_LIRISE_LONGITUDE = 21.0848419;
+
+    private static String POLICE_STATION_E80_TITLE = "POLICE STATION - E80, Prishtine 10000";
+    private static double POLICE_STATION_E80_LATITUDE = 42.681564;
+    private static double POLICE_STATION_E80_LONGITUDE = 21.159672;
+
+    private static String POLICE_STATION_BISLIM_BAJGORA_TITLE = "POLICE STATION - Bislim Bajgora, Mitrovice 40000";
+    private static double POLICE_STATION_BISLIM_BAJGORA_LATITUDE = 42.890092;
+    private static double POLICE_STATION_BISLIM_BAJGORA_LONGITUDE = 20.874400;
+
+    private static String POLICE_STATION_KRALJA_MILUTINA_TITLE = "POLICE STATION - Kralja Milutina, Graçanice 10500";
+    private static double POLICE_STATION_KRALJA_MILUTINA_LATITUDE = 42.601494;
+    private static double POLICE_STATION_KRALJA_MILUTINA_LONGITUDE = 21.192242;
+
+    private static String POLICE_STATION_RR_MULLA_IDRIZI_TITLE = "POLICE STATION - Rr. Mulla Idrizi, Gjilan 60000";
+    private static double POLICE_STATION_RR_MULLA_IDRIZI_LATITUDE = 42.4631162;
+    private static double POLICE_STATION_RR_MULLA_IDRIZI_LONGITUDE = 21.4696013;
+
+    private static String POLICE_STATION_RR_JONI_TITLE = "POLICE STATION - Rr. JONI, Prizren 20000";
+    private static double POLICE_STATION_RR_JONI_LATITUDE = 42.214859;
+    private static double POLICE_STATION_RR_JONI_LONGITUDE = 20.732425;
+
+    private static String POLICE_STATION_RR_WILLIAM_WALKER_TITLE = "POLICE STATION ALPHA - Rr. William Walker, Prizren 20000";
+    private static double POLICE_STATION_RR_WILLIAM_WALKER_LATITUDE = 42.210322;
+    private static double POLICE_STATION_RR_WILLIAM_WALKER_LONGITUDE = 20.730256;
+
+    private static String POLICE_STATION_GJAKOVE_TITLE = "POLICE STATION - Gjakove 20000";
+    private static double POLICE_STATION_GJAKOVE_LATITUDE = 42.375681;
+    private static double POLICE_STATION_GJAKOVE_LONGITUDE = 20.442102;
+
+    private static String POLICE_STATION_PERLINE_TITLE = "POLICE STATION - Perline 32000";
+    private static double POLICE_STATION_PERLINE_LATITUDE = 42.609493;
+    private static double POLICE_STATION_PERLINE_LONGITUDE = 20.575675;
+
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
@@ -105,27 +149,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        String policeStation = "Police in kosovo";
-
-        List<Address> addressList = null;
-        //test
-        Geocoder geocoder = new Geocoder(MapsActivity.this);
-        try {
-            addressList = geocoder.getFromLocationName(policeStation, 20);
-        }catch (Exception e){
-            Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
-        for(int i = 0; i < addressList.size(); i++) {
-            Address address = addressList.get(i);
-            LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-            mMap.addMarker(new MarkerOptions()
-                    .position(latLng)
-                    .title(policeStation)
-                    .icon(BitmapFromVector(getApplicationContext(), R.drawable.ic_police_google)));
-        }
-
-        //test
+        setStationAsMarker(POLICE_STATION_RR_REXHEP_LUCI_LATITUDE, POLICE_STATION_RR_REXHEP_LUCI_LONGITUDE, POLICE_STATION_RR_REXHEP_LUCI_TITLE);
+        setStationAsMarker(POLICE_STATION_NR2_LATITUDE, POLICE_STATION_NR2_LONGITUDE, POLICE_STATION_NR2_TITLE);
+        setStationAsMarker(POLICE_STATION_SHESHI_I_LIRISE_LATITUDE, POLICE_STATION_SHESHI_I_LIRISE_LONGITUDE, POLICE_STATION_SHESHI_I_LIRISE_TITLE);
+        setStationAsMarker(POLICE_STATION_E80_LATITUDE, POLICE_STATION_E80_LONGITUDE, POLICE_STATION_E80_TITLE);
+        setStationAsMarker(POLICE_STATION_BISLIM_BAJGORA_LATITUDE, POLICE_STATION_BISLIM_BAJGORA_LONGITUDE, POLICE_STATION_BISLIM_BAJGORA_TITLE);
+        setStationAsMarker(POLICE_STATION_KRALJA_MILUTINA_LATITUDE, POLICE_STATION_KRALJA_MILUTINA_LONGITUDE, POLICE_STATION_KRALJA_MILUTINA_TITLE);
+        setStationAsMarker(POLICE_STATION_RR_MULLA_IDRIZI_LATITUDE, POLICE_STATION_RR_MULLA_IDRIZI_LONGITUDE, POLICE_STATION_RR_MULLA_IDRIZI_TITLE);
+        setStationAsMarker(POLICE_STATION_RR_WILLIAM_WALKER_LATITUDE, POLICE_STATION_RR_WILLIAM_WALKER_LONGITUDE, POLICE_STATION_RR_WILLIAM_WALKER_TITLE);
+        setStationAsMarker(POLICE_STATION_GJAKOVE_LATITUDE, POLICE_STATION_GJAKOVE_LONGITUDE, POLICE_STATION_GJAKOVE_TITLE);
+        setStationAsMarker(POLICE_STATION_PERLINE_LATITUDE, POLICE_STATION_PERLINE_LONGITUDE, POLICE_STATION_PERLINE_TITLE);
 
         setLocations(fullName, newLatitude, newLongitude);
         try {
@@ -133,7 +166,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng latLng = new LatLng(Double.parseDouble(newLatitude), Double.parseDouble(newLongitude));
             mMap.addMarker(new MarkerOptions().position(latLng).title("Last Seen: "+fullName));
             mMap.setMaxZoomPreference(17);
-            mMap.setMinZoomPreference(15);
+            mMap.setMinZoomPreference(0);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }catch (Exception e) {
             Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -192,5 +225,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // after generating our bitmap we are returning our bitmap.
         return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
+    private void setStationAsMarker(Double latitude, Double longitude, String police_station_title) {
+        LatLng latLng = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title(police_station_title)
+                .icon(BitmapFromVector(getApplicationContext(), R.drawable.ic_police_google)));
     }
 }
