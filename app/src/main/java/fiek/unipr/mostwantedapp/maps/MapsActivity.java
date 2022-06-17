@@ -157,7 +157,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng latLng = new LatLng(Double.parseDouble(newLatitude), Double.parseDouble(newLongitude));
             mMap.addMarker(new MarkerOptions().position(latLng).title("Last Seen: "+fullName));
             mMap.setMaxZoomPreference(17);
-            mMap.setMinZoomPreference(0);
+            mMap.setMinZoomPreference(8);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         }catch (Exception e) {
             Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
