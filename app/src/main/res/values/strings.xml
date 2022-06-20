@@ -194,7 +194,7 @@
     <string name="longitude_updated_successfully">Longitude updated successfully!</string>
     <string name="latitude_failed_to_update">Latitude failed to update!</string>
     <string name="longitude_failed_to_update">Longitude failed to update!</string>
-
+    <string name="last_seen">Last Seen:</string>
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
     <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous.</string>

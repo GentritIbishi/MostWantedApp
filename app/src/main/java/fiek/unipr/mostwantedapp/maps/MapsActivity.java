@@ -1,6 +1,7 @@
 package fiek.unipr.mostwantedapp.maps;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -9,12 +10,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,12 +34,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsBinding;
@@ -150,15 +151,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setStationAsMarker(POLICE_STATION_RR_WILLIAM_WALKER_LATITUDE, POLICE_STATION_RR_WILLIAM_WALKER_LONGITUDE, POLICE_STATION_RR_WILLIAM_WALKER_TITLE);
         setStationAsMarker(POLICE_STATION_GJAKOVE_LATITUDE, POLICE_STATION_GJAKOVE_LONGITUDE, POLICE_STATION_GJAKOVE_TITLE);
         setStationAsMarker(POLICE_STATION_PERLINE_LATITUDE, POLICE_STATION_PERLINE_LONGITUDE, POLICE_STATION_PERLINE_TITLE);
+        setStationAsMarker(POLICE_STATION_RR_JONI_LATITUDE, POLICE_STATION_RR_JONI_LONGITUDE, POLICE_STATION_RR_JONI_TITLE);
 
         setLocations(fullName, newLatitude, newLongitude);
         try {
-            // Add a marker in Sydney and move the camera
-            LatLng latLng = new LatLng(Double.parseDouble(newLatitude), Double.parseDouble(newLongitude));
-            mMap.addMarker(new MarkerOptions().position(latLng).title("Last Seen: "+fullName));
-            mMap.setMaxZoomPreference(17);
-            mMap.setMinZoomPreference(8);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            Glide.with(this)
+                    .asBitmap()
+                    .load(urlOfProfile)
+                    .apply(new RequestOptions().override(100, 100))
+                    .listener(new RequestListener<Bitmap>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                            // Add a marker in Sydney and move the camera
+                            LatLng latLng = new LatLng(Double.parseDouble(newLatitude), Double.parseDouble(newLongitude));
+                            mMap.addMarker(new MarkerOptions()
+                                    .position(latLng)
+                                    .title(getApplicationContext().getText(R.string.last_seen)+" "+fullName)
+                                    .icon(BitmapDescriptorFactory.fromBitmap(resource)));
+                            mMap.setMaxZoomPreference(17);
+                            mMap.setMinZoomPreference(8);
+                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                            return true;
+                        }
+                    });
         }catch (Exception e) {
             Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
             System.out.println(e.getMessage());
@@ -178,14 +198,47 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(i);
                             Double latitude = doc.getDouble("latitude");
                             Double longitude = doc.getDouble("longitude");
+                            String date_time = doc.getString("date_time");
+                            String description = "";
+                            description = doc.getString("description");
 
-                            try {
-                                LatLng latLng = new LatLng(latitude, longitude);
-                                mMap.addMarker(new MarkerOptions().position(latLng).title(String.valueOf(i)));
-                            }catch (Exception e){
-                                Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                System.out.println(e.getMessage());
+                            //test try to catch image of wanted person and load into marker
+                            getImageOfWantedPerson(fullName);
+
+                            //we can use urlOfProfile value if it is not null
+                            if(urlOfProfile != null){
+                                try {
+                                    int finalI = i;
+                                    String finalDescription = description;
+                                    Glide.with(MapsActivity.this)
+                                            .asBitmap()
+                                            .load(urlOfProfile)
+                                            .apply(new RequestOptions().override(100, 100))
+                                            .listener(new RequestListener<Bitmap>() {
+                                                @Override
+                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                                    return false;
+                                                }
+
+                                                @Override
+                                                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                                                    LatLng latLng = new LatLng(latitude, longitude);
+                                                    mMap.addMarker(new MarkerOptions()
+                                                            .position(latLng)
+                                                            .title(date_time+" "+fullName)
+                                                                    .snippet(finalDescription)
+                                                            .icon(BitmapDescriptorFactory.fromBitmap(resource)));
+                                                    return true;
+                                                }
+                                            })
+                                            .circleCrop()
+                                            .preload();
+                                }catch (Exception e){
+                                    Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    System.out.println(e.getMessage());
+                                }
                             }
+
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -224,5 +277,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .position(latLng)
                 .title(police_station_title)
                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.ic_police_google)));
+    }
+
+    private void getImageOfWantedPerson(String fullName) {
+        firebaseFirestore.collection("wanted_persons")
+                .whereEqualTo("fullName", fullName)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(queryDocumentSnapshots != null){
+                           DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(0);
+                           urlOfProfile = doc.getString("urlOfProfile");
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
