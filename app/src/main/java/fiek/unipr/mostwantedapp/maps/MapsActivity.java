@@ -8,14 +8,22 @@ import androidx.fragment.app.FragmentActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
@@ -37,6 +45,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.IOException;
+import java.net.URL;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsBinding;
@@ -154,8 +165,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setStationAsMarker(POLICE_STATION_RR_JONI_LATITUDE, POLICE_STATION_RR_JONI_LONGITUDE, POLICE_STATION_RR_JONI_TITLE);
 
         setLocations(fullName, newLatitude, newLongitude);
+
+        RequestOptions options = new RequestOptions();
+
         try {
-            Glide.with(this)
+            Glide.with(MapsActivity.this)
                     .asBitmap()
                     .load(urlOfProfile)
                     .apply(new RequestOptions().override(100, 100))
@@ -167,22 +181,54 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         @Override
                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                            // Add a marker in Sydney and move the camera
-                            LatLng latLng = new LatLng(Double.parseDouble(newLatitude), Double.parseDouble(newLongitude));
+                            LatLng latLng = new LatLng(Double.valueOf(newLatitude), Double.valueOf(newLongitude));
                             mMap.addMarker(new MarkerOptions()
                                     .position(latLng)
                                     .title(getApplicationContext().getText(R.string.last_seen)+" "+fullName)
                                     .icon(BitmapDescriptorFactory.fromBitmap(resource)));
-                            mMap.setMaxZoomPreference(17);
-                            mMap.setMinZoomPreference(8);
-                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                             return true;
                         }
-                    });
-        }catch (Exception e) {
-            Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-            System.out.println(e.getMessage());
+                    })
+                    .circleCrop()
+                    .preload();
+        } catch(Exception e) {
+            Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+
+
+    }
+
+    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int color, int cornerDips, int borderDips, Context context) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int borderSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) borderDips,
+                context.getResources().getDisplayMetrics());
+        final int cornerSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) cornerDips,
+                context.getResources().getDisplayMetrics());
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+
+        // prepare canvas for transfer
+        paint.setAntiAlias(true);
+        paint.setColor(0xFFFFFFFF);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawARGB(0, 0, 0, 0);
+        canvas.drawRoundRect(rectF, cornerSizePx, cornerSizePx, paint);
+
+        // draw bitmap
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        // draw border
+        paint.setColor(color);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth((float) borderSizePx);
+        canvas.drawRoundRect(rectF, cornerSizePx, cornerSizePx, paint);
+
+        return output;
     }
 
     private void setLocations(String fullName, String newLatitude, String newLongitude) {
@@ -226,8 +272,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                     mMap.addMarker(new MarkerOptions()
                                                             .position(latLng)
                                                             .title(date_time+" "+fullName)
-                                                                    .snippet(finalDescription)
+                                                            .snippet(finalDescription)
                                                             .icon(BitmapDescriptorFactory.fromBitmap(resource)));
+                                                    mMap.setMinZoomPreference(17);
+                                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                                                     return true;
                                                 }
                                             })
@@ -287,8 +335,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if(queryDocumentSnapshots != null){
-                           DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(0);
-                           urlOfProfile = doc.getString("urlOfProfile");
+                            DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(0);
+                            urlOfProfile = doc.getString("urlOfProfile");
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -297,5 +345,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    public static int dp2px(Context context, float dp) {
+        final float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5F);
     }
 }
