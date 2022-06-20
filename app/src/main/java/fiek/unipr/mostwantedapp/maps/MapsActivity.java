@@ -8,22 +8,17 @@ import androidx.fragment.app.FragmentActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
@@ -45,9 +40,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.io.IOException;
-import java.net.URL;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsBinding;
@@ -172,7 +164,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Glide.with(MapsActivity.this)
                     .asBitmap()
                     .load(urlOfProfile)
-                    .apply(new RequestOptions().override(100, 100))
+                    .apply(new RequestOptions().override(200, 200))
                     .listener(new RequestListener<Bitmap>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
@@ -181,11 +173,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         @Override
                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                            Bitmap newBitmap = addBorder(resource, MapsActivity.this);
                             LatLng latLng = new LatLng(Double.valueOf(newLatitude), Double.valueOf(newLongitude));
                             mMap.addMarker(new MarkerOptions()
                                     .position(latLng)
                                     .title(getApplicationContext().getText(R.string.last_seen)+" "+fullName)
-                                    .icon(BitmapDescriptorFactory.fromBitmap(resource)));
+                                    .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
                             return true;
                         }
                     })
@@ -198,36 +191,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public static Bitmap getRoundedCornerBitmap(Bitmap bitmap, int color, int cornerDips, int borderDips, Context context) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(),
-                Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final int borderSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) borderDips,
-                context.getResources().getDisplayMetrics());
-        final int cornerSizePx = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, (float) cornerDips,
-                context.getResources().getDisplayMetrics());
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-
-        // prepare canvas for transfer
-        paint.setAntiAlias(true);
-        paint.setColor(0xFFFFFFFF);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawARGB(0, 0, 0, 0);
-        canvas.drawRoundRect(rectF, cornerSizePx, cornerSizePx, paint);
-
-        // draw bitmap
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        // draw border
-        paint.setColor(color);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth((float) borderSizePx);
-        canvas.drawRoundRect(rectF, cornerSizePx, cornerSizePx, paint);
-
+    private static Bitmap addBorder(Bitmap resource, Context context) {
+        int w = resource.getWidth();
+        int h = resource.getHeight();
+        int radius = Math.min(h / 2, w / 2);
+        Bitmap output = Bitmap.createBitmap(w + 8, h + 8, Bitmap.Config.ARGB_8888);
+        Paint p = new Paint();
+        p.setAntiAlias(true);
+        Canvas c = new Canvas(output);
+        c.drawARGB(0, 0, 0, 0);
+        p.setStyle(Paint.Style.FILL);
+        c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
+        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        c.drawBitmap(resource, 4, 4, p);
+        p.setXfermode(null);
+        p.setStyle(Paint.Style.STROKE);
+        p.setColor(ContextCompat.getColor(context, R.color.verydark));
+        p.setStrokeWidth(10);
+        c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
         return output;
     }
 
