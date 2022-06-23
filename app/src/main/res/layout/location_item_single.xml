@@ -1,75 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:fitsSystemWindows="true"
     android:background="@color/white">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_person_list">
+        android:background="@drawable/background_person_list"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/profile_location_person"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:src="@drawable/ic_profile_picture_default"/>
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_profile_picture_default"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_location_person_fullName"
-            android:layout_marginTop="16dp"
-            android:layout_marginLeft="20dp"
-            android:layout_centerHorizontal="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/profile_location_person"
+            android:layout_centerHorizontal="true"
             android:text="@string/full_name"
+            android:textColor="@color/verydark"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/verydark"
-            android:textSize="18sp"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/profile_location_person"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_label_Location"
-            android:layout_marginTop="46dp"
-            android:layout_marginLeft="20dp"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/profile_location_person"
-            android:text="Location: "
-            android:textColor="@color/verydark"
-            android:textSize="15sp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/tv_latitude"
-            android:layout_marginTop="46dp"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/tv_label_Location"
-            android:text="Latitude"
-            android:textColor="@color/verydark"
-            android:textSize="15sp"/>
-
-        <TextView
-            android:id="@+id/tv_longitude"
-            android:layout_marginTop="46dp"
-            android:layout_marginLeft="20dp"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/tv_latitude"
-            android:text="Longitude"
-            android:textColor="@color/verydark"
-            android:textSize="15sp"/>
-
-
-
-
-
-    </RelativeLayout>
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

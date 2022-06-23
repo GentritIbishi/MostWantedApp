@@ -18,6 +18,8 @@
             android:layout_height="match_parent">
 
             <GridLayout
+                android:id="@+id/gridLayout"
+                android:visibility="visible"
                 android:columnCount="2"
                 android:rowCount="3"
                 android:alignmentMode="alignMargins"
@@ -42,7 +44,8 @@
                         android:gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
-                        <ImageView
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/imageOfAccount"
                             android:src="@drawable/ic_profile_picture_default"
                             android:layout_width="80dp"
                             android:layout_height="80dp" />
@@ -148,6 +151,12 @@
                 </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
 
             </GridLayout>
+
+            <include
+                android:id="@+id/registerUsers"
+                android:visibility="gone"
+                android:layout_gravity="center"
+                layout="@layout/persistent_add_user_or_person"/>
 
         </LinearLayout>
 

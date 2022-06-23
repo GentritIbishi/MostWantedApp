@@ -29,7 +29,7 @@ import fiek.unipr.mostwantedapp.lists.LocationActivity;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.lists.PersonActivity;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.register.RegisterPerson;
+import fiek.unipr.mostwantedapp.register.RegisterPersonActivity;
 import fiek.unipr.mostwantedapp.models.Profile;
 
 public class UserDashboardActivity extends AppCompatActivity implements View.OnClickListener{
@@ -119,7 +119,7 @@ public class UserDashboardActivity extends AppCompatActivity implements View.OnC
                 startActivity(userProfileIntent);
                 break;
             case R.id.l_registerPerson:
-                startActivity(new Intent(UserDashboardActivity.this, RegisterPerson.class));
+                startActivity(new Intent(UserDashboardActivity.this, RegisterPersonActivity.class));
                 break;
             case R.id.l_u_personsList:
                 startActivity(new Intent(UserDashboardActivity.this, PersonActivity.class));

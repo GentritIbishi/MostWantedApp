@@ -46,7 +46,7 @@ public class ProfileFragment extends Fragment {
 
     private View admin_profile_dashboard_view;
     private PieChart admin_pieChart;
-    private TextView tv_num_report_verified, tv_num_report_unverified, tv_num_report_fake;
+    private TextView tv_num_report_verified, tv_num_report_unverified, tv_num_report_fake, tv_gradeOfUser;
 
     public static final String VERIFIED = "VERIFIED";
     public static final String UNVERIFIED = "UNVERIFIED";
@@ -61,7 +61,7 @@ public class ProfileFragment extends Fragment {
     private FirebaseStorage firebaseStorage;
 
     private String uID;
-    private String fullName;
+    private String fullName, grade;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -75,6 +75,7 @@ public class ProfileFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         uID = firebaseUser.getUid();
+        getGrade(firebaseAuth);
     }
 
     @Override
@@ -86,6 +87,7 @@ public class ProfileFragment extends Fragment {
         tv_num_report_verified = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_verified);
         tv_num_report_unverified = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_unverified);
         tv_num_report_fake = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_fake);
+        tv_gradeOfUser = admin_profile_dashboard_view.findViewById(R.id.tv_gradeOfUser);
 
         final SwipeRefreshLayout pullToRefreshInSearch = admin_profile_dashboard_view.findViewById(R.id.admin_pullToRefreshProfileDashboard);
 
@@ -95,6 +97,7 @@ public class ProfileFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         uID = firebaseUser.getUid();
 
+        getGrade(firebaseAuth);
         setupPieChart();
         setPieChart();
 
@@ -227,6 +230,24 @@ public class ProfileFragment extends Fragment {
                     });
         }
     }
+
+    private void getGrade(FirebaseAuth firebaseAuth) {
+        if(checkConnection()){
+            firebaseFirestore.collection("users")
+                    .document(firebaseAuth.getCurrentUser().getUid())
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if(task.isSuccessful() && task.getResult() != null)
+                            {
+                                grade = task.getResult().getString("grade");
+                                tv_gradeOfUser.setText(grade);
+                            }
+                        }
+                    });
+        }
+    }
+
 
     @Override
     public void onStart() {

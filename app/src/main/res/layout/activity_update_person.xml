@@ -71,7 +71,7 @@
             android:background="@drawable/input_bg"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:hint="@string/age"
+            android:hint="@string/select_a_age"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:padding="10dp"
@@ -86,12 +86,12 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/input_bg"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:hint="@string/height"
+            android:hint="@string/select_a_height"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:textSize="16sp"></EditText>
 
         <EditText
@@ -103,12 +103,12 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/input_bg"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:hint="@string/weight"
+            android:hint="@string/select_a_weight"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:textSize="16sp"></EditText>
 
         <EditText
@@ -120,12 +120,12 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/input_bg"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:hint="@string/eye_color"
+            android:hint="@string/select_a_eye_color"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:textSize="16sp"></EditText>
 
         <EditText
@@ -137,12 +137,12 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/input_bg"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:hint="@string/hair_color"
+            android:hint="@string/select_a_hair_color"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:textSize="16sp"></EditText>
 
         <EditText
@@ -156,7 +156,7 @@
             android:background="@drawable/input_bg"
             android:textColor="@color/white"
             android:textColorHint="@color/white"
-            android:hint="@string/physical_appearance"
+            android:hint="@string/select_a_physical_appearance"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:padding="10dp"
@@ -171,12 +171,12 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/input_bg"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:hint="@string/acts"
+            android:hint="@string/select_a_type_of_crime"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:textSize="16sp"></EditText>
 
         <EditText
@@ -188,12 +188,12 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:background="@drawable/input_bg"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:hint="@string/status"
+            android:hint="@string/select_the_status"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:padding="10dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
             android:textSize="16sp"></EditText>
 
         <RelativeLayout

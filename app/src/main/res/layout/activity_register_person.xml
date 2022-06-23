@@ -1,201 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/primary_color"
-    tools:context=".register.RegisterPerson">
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:background="@color/white"
+    tools:context=".register.RegisterPersonActivity">
 
-        <RelativeLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
+            android:fitsSystemWindows="true"
             android:padding="10dp">
 
             <TextView
                 android:id="@+id/tv_regPerson"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
                 android:text="@string/register_person"
-                android:textSize="22sp"
                 android:textAlignment="center"
-                android:textColor="@color/white"
-                android:layout_centerHorizontal="true"/>
+                android:textColor="@color/verydark"
+                android:textSize="22sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/et_fullName"
+                android:id="@+id/et_firstName"
+                style="@android:style/Widget.EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
                 android:background="@drawable/et_register_persons"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:padding="10dp"
-                android:hint="@string/full_name"
+                android:hint="@string/register_person_first_name"
+                android:imeOptions="actionNext"
                 android:inputType="textCapSentences"
+                android:padding="10dp"
                 android:textSize="16sp"
-                android:layout_below="@+id/tv_regPerson"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_regPerson" />
+
+            <EditText
+                android:id="@+id/et_lastName"
                 style="@android:style/Widget.EditText"
-                android:imeOptions="actionNext"></EditText>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/et_register_persons"
+                android:hint="@string/register_person_last_name"
+                android:imeOptions="actionNext"
+                android:inputType="textCapSentences"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_firstName" />
+
+            <EditText
+                android:id="@+id/et_parentName"
+                style="@android:style/Widget.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/et_register_persons"
+                android:hint="@string/parent_name"
+                android:imeOptions="actionNext"
+                android:inputType="textCapSentences"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_lastName" />
 
             <EditText
                 android:id="@+id/et_address"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/et_register_persons"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/et_register_persons"
                 android:hint="@string/address"
-                android:inputType="textCapSentences"
-                android:textSize="16sp"
                 android:imeOptions="actionNext"
-                android:layout_below="@+id/et_fullName"></EditText>
+                android:inputType="textCapSentences"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_parentName" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/et_age"
-                android:background="@drawable/et_register_persons"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/age"
-                android:inputType="number"
-                android:textSize="16sp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/et_register_persons"
+                android:completionThreshold="1"
+                android:hint="@string/select_a_age"
                 android:imeOptions="actionNext"
-                android:layout_below="@+id/et_address"></EditText>
+                android:inputType="number"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_address" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/et_height"
-                android:background="@drawable/et_register_persons"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/height"
-                android:inputType="number"
-                android:textSize="16sp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/et_register_persons"
+                android:completionThreshold="1"
+                android:hint="@string/select_a_height"
                 android:imeOptions="actionNext"
-                android:layout_below="@+id/et_age"></EditText>
+                android:inputType="number"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_age" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/et_weight"
-                android:background="@drawable/et_register_persons"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/weight"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/et_register_persons"
+                android:completionThreshold="1"
+                android:hint="@string/select_a_weight"
+                android:imeOptions="actionNext"
                 android:inputType="number"
+                android:padding="10dp"
                 android:textSize="16sp"
-                android:imeOptions="actionNext"
-                android:layout_below="@+id/et_height"></EditText>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_height" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/et_eyeColor"
-                android:background="@drawable/et_register_persons"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/eye_color"
-                android:inputType="textCapSentences"
-                android:textSize="16sp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/et_register_persons"
+                android:completionThreshold="1"
+                android:hint="@string/select_a_eye_color"
                 android:imeOptions="actionNext"
-                android:layout_below="@+id/et_weight"></EditText>
+                android:inputType="textCapSentences"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_weight" />
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/et_hairColor"
-                android:background="@drawable/et_register_persons"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hair_color"
-                android:inputType="textCapSentences"
-                android:textSize="16sp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:completionThreshold="1"
+                android:background="@drawable/et_register_persons"
+                android:hint="@string/select_a_hair_color"
                 android:imeOptions="actionNext"
-                android:layout_below="@+id/et_eyeColor"></EditText>
+                android:inputType="textCapSentences"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_eyeColor"/>
 
-            <EditText
+
+            <AutoCompleteTextView
                 android:id="@+id/et_phy_appearance"
-                android:background="@drawable/et_register_persons"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/physical_appearance"
-                android:inputType="textCapSentences"
-                android:textSize="16sp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:completionThreshold="1"
+                android:background="@drawable/et_register_persons"
+                android:hint="@string/select_a_physical_appearance"
                 android:imeOptions="actionNext"
-                android:layout_below="@+id/et_hairColor"></EditText>
+                android:inputType="textCapSentences"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_hairColor"/>
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/et_acts"
-                android:background="@drawable/et_register_persons"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/acts"
-                android:inputType="textCapSentences"
-                android:textSize="16sp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:completionThreshold="1"
+                android:background="@drawable/et_register_persons"
+                android:hint="@string/select_a_type_of_crime"
                 android:imeOptions="actionNext"
-                android:layout_below="@+id/et_phy_appearance"></EditText>
+                android:inputType="textCapSentences"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_phy_appearance"/>
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/et_status"
-                android:background="@drawable/et_register_persons"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:padding="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/status"
-                android:inputType="textCapSentences"
-                android:textSize="16sp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:completionThreshold="1"
+                android:background="@drawable/et_register_persons"
+                android:hint="@string/select_the_status"
                 android:imeOptions="actionNext"
-                android:layout_below="@+id/et_acts"></EditText>
+                android:inputType="textCapSentences"
+                android:padding="10dp"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_acts"/>
 
             <Button
                 android:id="@+id/registerPerson"
-                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/button"
+                android:text="@string/register"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                android:text="@string/register_person"
-                android:background="@drawable/bt_register_person"
-                android:layout_below="@+id/et_status"></Button>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_status"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_height="match_parent"
-                android:layout_width="75dp"
-                android:layout_gravity="center"
-                android:indeterminate="true"
-                android:layout_centerInParent="true"
-                android:visibility="gone" />
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/registerPerson"
+                app:layout_constraintEnd_toEndOf="@+id/registerPerson"
+                app:layout_constraintTop_toTopOf="@+id/registerPerson" />
 
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
-</androidx.core.widget.NestedScrollView>
+</RelativeLayout>

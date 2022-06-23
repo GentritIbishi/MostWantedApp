@@ -183,7 +183,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     private void registerUser(Integer balance, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
         if(checkConnection()){
             documentReference = firebaseFirestore.collection("users").document(userID);
-            User user = new User(balance, userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password);
+            User user = new User(balance, userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, null, false);
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {

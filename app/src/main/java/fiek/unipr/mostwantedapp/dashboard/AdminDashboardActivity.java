@@ -48,10 +48,9 @@ import fiek.unipr.mostwantedapp.fragment.admin.HelpFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.NotificationFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.ProfileFragment;
-import fiek.unipr.mostwantedapp.fragment.admin.SearchFragment;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.SettingsFragment;
-import fiek.unipr.mostwantedapp.fragment.user.ProfileDashboardFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.SearchFragment;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 
 public class AdminDashboardActivity extends AppCompatActivity {
@@ -71,6 +70,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     public static final String PREFS_NAME = "LOG_PREF";
     public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
+
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser firebaseUser;
@@ -81,9 +81,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private GoogleSignInOptions gso;
     private GoogleSignInClient gsc;
     private String user_anonymousID = null;
-    Integer balance;
-    String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
-    Uri photoURL;
+
+    private Integer balance;
+    private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
+    private Uri photoURL;
 
     //num of selected tab. We have 4 tabs so value must lie between 1-4. Default value is 1, cause first tab is selected by deafult
     private int selectedTab = 1;

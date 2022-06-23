@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".helpers.PersonImage"
-    android:background="#062A61">
+    android:background="@color/white">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,13 +19,13 @@
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
             android:padding="16dp"
-            android:src="@drawable/ic_user_default"></ImageView>
+            android:src="@drawable/ic_profile_picture_default"></ImageView>
 
         <ImageView
             android:id="@+id/setNewProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_plus"
+            android:src="@drawable/ic_plus_rounded_pressed"
             android:layout_below="@id/personProfileView"
             android:layout_centerHorizontal="true"/>
 
@@ -41,7 +41,7 @@
             android:textSize="22sp"
             android:textAlignment="center"
             android:text="@string/add_profile_picture"
-            android:textColor="@color/white"
+            android:textColor="@color/verydark"
             android:textStyle="bold"></TextView>
 
         <ProgressBar

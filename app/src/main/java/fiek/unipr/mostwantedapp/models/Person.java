@@ -1,19 +1,16 @@
 package fiek.unipr.mostwantedapp.models;
 
-import android.net.Uri;
-
 public class Person {
-    String fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status;
+    String firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status;
     Integer age, height, weight;
     Double longitude, latitude;
 
+    public Person() {}
 
-
-    public Person() {
-
-    }
-
-    public Person(String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, Integer age, Integer height, Integer weight, Double longitude, Double latitude) {
+    public Person(String firstName, String lastName, String parentName, String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, Integer age, Integer height, Integer weight, Double longitude, Double latitude) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.parentName = parentName;
         this.fullName = fullName;
         this.address = address;
         this.eyeColor = eyeColor;
@@ -29,14 +26,28 @@ public class Person {
         this.latitude = latitude;
     }
 
-    public Person(String fullName, Double longitude, Double latitude)
-    {
-        this.fullName = fullName;
-        this.latitude = latitude;
-        this.longitude = longitude;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public Person(String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, Object o, String status, Integer age, Integer height, Integer weight) {
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
     }
 
     public String getFullName() {

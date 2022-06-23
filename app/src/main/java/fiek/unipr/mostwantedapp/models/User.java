@@ -1,11 +1,10 @@
 package fiek.unipr.mostwantedapp.models;
 
-import android.net.Uri;
-
 public class User {
 
     Integer balance;
-    String userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, urlOfProfile, isEmailVerified;
+    String userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, urlOfProfile;
+    Boolean isEmailVerified = false;
 
     public User() {
     }
@@ -17,7 +16,7 @@ public class User {
         this.password = password;
     }
 
-    public User(Integer balance, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password) {
+    public User(Integer balance, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, String urlOfProfile, Boolean isEmailVerified) {
         this.balance = balance;
         this.userID = userID;
         this.name = name;
@@ -32,6 +31,8 @@ public class User {
         this.register_date_time = register_date_time;
         this.grade = grade;
         this.password = password;
+        this.urlOfProfile = urlOfProfile;
+        this.isEmailVerified = isEmailVerified;
     }
 
     public Integer getBalance() {
@@ -154,11 +155,11 @@ public class User {
         this.urlOfProfile = urlOfProfile;
     }
 
-    public String getIsEmailVerified() {
+    public Boolean getEmailVerified() {
         return isEmailVerified;
     }
 
-    public void setIsEmailVerified(String isEmailVerified) {
-        this.isEmailVerified = isEmailVerified;
+    public void setEmailVerified(Boolean emailVerified) {
+        isEmailVerified = emailVerified;
     }
 }

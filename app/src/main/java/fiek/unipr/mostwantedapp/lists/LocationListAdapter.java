@@ -46,16 +46,12 @@ public class LocationListAdapter extends ArrayAdapter<Person> {
 
         // initializing our UI components of list view item.
         TextView tv_location_person_fullName = listitemView.findViewById(R.id.tv_location_person_fullName);
-        TextView tv_latitude = listitemView.findViewById(R.id.tv_latitude);
-        TextView tv_longitude = listitemView.findViewById(R.id.tv_longitude);
         ImageView profile_location_person = listitemView.findViewById(R.id.profile_location_person);
 
         // after initializing our items we are
         // setting data to our view.
         // below line is use to set data to our text view.
         tv_location_person_fullName.setText(person.getFullName());
-        tv_latitude.setText(Double.toString(person.getLatitude()));
-        tv_longitude.setText(Double.toString(person.getLongitude()));
 
 
 

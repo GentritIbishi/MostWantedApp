@@ -3,25 +3,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
+    android:background="@color/home"
+    android:fitsSystemWindows="true"
     tools:context=".fragment.admin.SearchFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
+        <EditText
+            android:id="@+id/admin_search_filter"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/search_bg"
+            android:hint="@string/search"
+            android:inputType="textCapSentences"
+            android:padding="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/admin_pullToRefreshInSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/search"
-            android:textAlignment="center"
-            android:textSize="22sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_below="@+id/admin_search_filter">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ListView
+                android:id="@+id/lvPersons"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:focusable="true" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
 
 </FrameLayout>

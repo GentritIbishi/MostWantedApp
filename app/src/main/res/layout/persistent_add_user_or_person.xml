@@ -10,11 +10,15 @@
     android:fitsSystemWindows="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout"
+        android:id="@+id/constraintPU"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/report_persistent_bg"
-        android:elevation="6dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/item_persistent_state"
+        android:clickable="true"
+        android:elevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.8"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,8 +26,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/circleImageView"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
             android:src="@drawable/ic_profile_picture_default"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -33,10 +37,10 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="3dp"
             android:text="@string/privileged_user"
             android:textColor="@color/verydark"
-            android:textSize="40sp"
+            android:textSize="17sp"
             app:layout_constraintEnd_toEndOf="@+id/circleImageView"
             app:layout_constraintStart_toStartOf="@+id/circleImageView"
             app:layout_constraintTop_toBottomOf="@+id/circleImageView" />
@@ -44,21 +48,26 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintWP"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/report_persistent_bg"
-        android:elevation="6dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/item_persistent_state"
+        android:clickable="true"
+        android:elevation="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+        app:layout_constraintTop_toBottomOf="@+id/constraintPU">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/wantedPersonImage"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="64dp"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="29dp"
             android:src="@drawable/ic_wanted_personv2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,10 +76,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="@string/wanted_person"
             android:textColor="@color/verydark"
-            android:textSize="40sp"
+            android:textSize="17sp"
             app:layout_constraintEnd_toEndOf="@+id/wantedPersonImage"
             app:layout_constraintStart_toStartOf="@+id/wantedPersonImage"
             app:layout_constraintTop_toBottomOf="@+id/wantedPersonImage" />

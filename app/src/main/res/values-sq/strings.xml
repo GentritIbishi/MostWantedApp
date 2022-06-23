@@ -16,13 +16,13 @@
     <string name="personal_number">Personal Number</string>
     <string name="guest">Report as Guest</string>
     <string name="full_name">Full Name</string>
-    <string name="age">Age</string>
-    <string name="height">Height</string>
-    <string name="weight">Weight</string>
-    <string name="eye_color">Eye Color</string>
-    <string name="hair_color">Hair Color</string>
-    <string name="physical_appearance">Physical Appearance</string>
-    <string name="acts">Acts</string>
+    <string name="select_a_age">Select a age</string>
+    <string name="select_a_height">Select a height</string>
+    <string name="select_a_weight">Select a weight</string>
+    <string name="select_a_eye_color">Select a eye color</string>
+    <string name="select_a_hair_color">Select a hair color</string>
+    <string name="select_a_physical_appearance">Select a physical appearance</string>
+    <string name="select_a_type_of_crime">Select a type of crime</string>
     <string name="register_person">Register Person</string>
     <string name="update_person">Update Person</string>
     <string name="person">Person</string>
@@ -30,6 +30,7 @@
     <string name="error_address_required">Address is required!</string>
     <string name="error_parent_name_required">Parent Name is required!</string>
     <string name="error_last_name_required">Last Name is required!</string>
+    <string name="error_first_name_required">First Name is required!</string>
     <string name="error_age_required">Age is required!</string>
     <string name="error_height_required">Height is required!</string>
     <string name="error_weight_required">Weight is required!</string>
@@ -85,7 +86,7 @@
     <string name="successfully">Successfully!</string>
     <string name="uri_failed_to_set">Uri failed to set!</string>
     <string name="profile_picture_added">Profile Picture added!</string>
-    <string name="status">Status</string>
+    <string name="select_the_status">Select the status</string>
     <string name="see_users">See Users</string>
     <string name="see_persons">See Persons</string>
     <string name="location_reports">Location Reports</string>
@@ -158,6 +159,8 @@
     <string name="account">Account</string>
     <string name="my_account">My Account</string>
     <string name="first_name">First Name*</string>
+    <string name="register_person_first_name">First Name</string>
+    <string name="register_person_last_name">Last Name</string>
     <string name="profile_picture">Profile Picture</string>
     <string name="upload_new">Upload New</string>
     <string name="delete">Delete</string>
@@ -195,16 +198,93 @@
     <string name="latitude_failed_to_update">Latitude failed to update!</string>
     <string name="longitude_failed_to_update">Longitude failed to update!</string>
     <string name="last_seen">Last Seen:</string>
+    <string name="login_info">To login next time you need verification email, thank you!</string>
+    <string name="this_person_with_this_name">This person with this name:</string>
+    <string name="exists_in_database_please_add_example">exists in database, please add for example: Filan Fisteku 1</string>
+    <string name="about_header">MostWanted App is an android application, which was created to help find persons wanted by the \"Kosovo Police\" for committing criminal offenses.</string>
+    <string name="about_contain">So the application is simple to use as people almost most of the time are active in the social network \"Facebook\" where the official fanpage of the Kosovo police every day publishes photos of wanted persons and that the citizens of Kosovo can help find those people so with a button \"Send Location\" takes the location where the citizen is stored in the firestore database taking the latitude and longitude of the location reported by the citizen.</string>
+    <string name="turn_on_notification">Turn on Notification</string>
+    <string name="need_some_helps">Need some helps?</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="email_us">Email Us</string>
+    <string name="call_us">Call Us</string>
+    <string name="support_email">gentritibishi@gmail.com</string>
+    <string name="choose_an_email_client">Choose an Email client :</string>
+    <string name="grade_name">Grade</string>
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
     <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous.</string>
     <string-array name="roles">
         <item>Admin</item>
         <item>User</item>
+        <item>Informer</item>
     </string-array>
+
+    <string-array name="eye_color">
+        <item>Amber</item>
+        <item>Blue</item>
+        <item>Brown</item>
+        <item>Gray</item>
+        <item>Green</item>
+        <item>Hazel</item>
+        <item>Red</item>
+    </string-array>
+
+    <string-array name="hair_color">
+        <item>Black</item>
+        <item>Brown</item>
+        <item>Blond</item>
+        <item>White/Gray</item>
+        <item>Red</item>
+    </string-array>
+
+    <string-array name="physical_appearance">
+        <item>Very Good</item>
+        <item>Good</item>
+        <item>Weak</item>
+    </string-array>
+
+    <string-array name="acts">
+        <item>Serious theft</item>
+        <item>Easy theft</item>
+        <item>Robbery</item>
+        <item>Abduction</item>
+        <item>Narcotics trafficking</item>
+        <item>Trafficking in human beings</item>
+        <item>Attempted murder</item>
+        <item>Murder</item>
+    </string-array>
+
+    <string name="grade">
+        <item>A</item>
+        <item>B</item>
+        <item>C</item>
+        <item>D</item>
+        <item>E</item>
+    </string>
+
+    <string-array name="status">
+        <item>WANTED PERSON</item>
+        <item>FOUND PERSON</item>
+    </string-array>
+
     <string name="title_activity_maps">MapsActivity</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps_informer">MapsInformerActivity</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 
 </resources>
