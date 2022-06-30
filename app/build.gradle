@@ -67,6 +67,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
+    implementation 'com.google.firebase:firebase-inappmessaging:20.1.2'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
@@ -99,5 +100,10 @@ dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.google.maps.android:android-maps-utils:2.3.0'
+
+    // https://mvnrepository.com/artifact/com.itextpdf/itext7-core
+    implementation 'com.itextpdf:itext7-core:7.1.10'
+
+
 
 }

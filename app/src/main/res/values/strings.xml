@@ -198,6 +198,7 @@
     <string name="latitude_failed_to_update">Latitude failed to update!</string>
     <string name="longitude_failed_to_update">Longitude failed to update!</string>
     <string name="last_seen">Last Seen:</string>
+    <string name="last_seen_location">Last Seen Location:</string>
     <string name="login_info">To login next time you need verification email, thank you!</string>
     <string name="this_person_with_this_name">This person with this name:</string>
     <string name="exists_in_database_please_add_example">exists in database, please add for example: Filan Fisteku 1</string>
@@ -219,10 +220,10 @@
     <string name="report_failed_to_assign">Report failed to assign!</string>
     <string name="kosovo_police">Kosovo Police</string>
     <string name="last_seen_address">Last Seen Address:</string>
-    <string name="first_address">First Address:</string>
-    <string name="second_address">Second Address:</string>
-    <string name="third_address">Third Address:</string>
-    <string name="forth_address">Forth Address:</string>
+    <string name="first_location">First Location:</string>
+    <string name="second_location">Second Location:</string>
+    <string name="third_location">Third Location:</string>
+    <string name="forth_location">Forth Location:</string>
     <string name="first_investigator">First Investigator</string>
     <string name="second_investigator">Second Investigator</string>
     <string name="signature">Signature</string>
@@ -230,6 +231,12 @@
     <string name="confidential_report">CONFIDENTIAL REPORT</string>
     <string name="pdf_file_generated_successfully">PDF file generated successfully.</string>
     <string name="location_reports_of">Location reports of</string>
+
+    <string name="location_cell">Location</string>
+    <string name="address_cell">Address</string>
+    <string name="latitude_cell">Latitude</string>
+    <string name="longitude_cell">Longitude</string>
+    <string name="mr">Mr.</string>
 
     <string translatable="false" name="republika_e_kosoves">Republika e Kosovës</string>
     <string translatable="false" name="republika_kosovo_republic_of_kosovo">Republika Kosovo - Republic of Kosovo</string>

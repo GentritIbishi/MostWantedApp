@@ -10,33 +10,24 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.pdf.PdfDocument;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
-import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TableRow;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -57,8 +48,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Table;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -68,20 +57,40 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.geom.Rectangle;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfPage;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.StampingProperties;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.extgstate.PdfExtGState;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.property.HorizontalAlignment;
+import com.itextpdf.layout.property.TextAlignment;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
+
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
-import java.util.Collection;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsBinding;
 import fiek.unipr.mostwantedapp.helpers.ScalingUtilities;
@@ -177,16 +186,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapAdmin);
         mapFragment.getMapAsync(this);
-
-
-        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.ic_republic_of_kosovo);
-        scaledbmp = Bitmap.createScaledBitmap(bmp, 80, 80, true);
-
-//        bmp = ScalingUtilities.decodeResource(getResources(), R.drawable.ic_republic_of_kosovo_, 45, 50, ScalingUtilities.ScalingLogic.FIT);
-//        scaledbmp = ScalingUtilities.createScaledBitmap(bmp, 45, 50, ScalingUtilities.ScalingLogic.FIT);
-
-        kp_bmp = ScalingUtilities.decodeResource(getResources(), R.drawable.ic_kp_5_opacity, 430, 480, ScalingUtilities.ScalingLogic.FIT);
-        kp_scaledbmp = ScalingUtilities.createScaledBitmap(kp_bmp, A4_PORTRAIT_pageWidth, A4_PORTRAIT_pageHeight/2, ScalingUtilities.ScalingLogic.FIT);
 
         // below code is used for
         // checking our permissions.
@@ -380,8 +379,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                         lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4, first_investigator, second_investigator, fullName);
 
                                 //create pdf file and upload in firestore and add link option for share
-                                generatePDF(first_investigator, second_investigator, last_seen_address, first_address,
-                                        second_address, third_address, forth_address);
+                                try {
+                                    generatePDF(first_investigator, second_investigator, last_seen_address, first_address,
+                                            second_address, third_address, forth_address);
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+
                             }
                         });
 
@@ -502,147 +506,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void generatePDF(String first_investigator, String second_investigator,
-                             String last_seen_address, String first_address,
-                             String second_address, String third_address,
-                             String forth_address) {
-        // creating an object variable
-        // for our PDF document.
-        PdfDocument pdfDocument = new PdfDocument();
-
-        // two variables for paint "paint" is used
-        // for drawing shapes and we will use "title"
-        // for adding text in our PDF file.
-        Paint paint = new Paint();
-        Paint title = new Paint();
-
-        // we are adding page info to our PDF file
-        // in which we will be passing our pageWidth,
-        // pageHeight and number of pages and after that
-        // we are calling it to create our PDF.
-        PdfDocument.PageInfo mypageInfo = new PdfDocument.PageInfo.Builder(A4_PORTRAIT_pageWidth, A4_PORTRAIT_pageHeight, 1).create();
-
-        // below line is used for setting
-        // start page for our PDF file.
-        PdfDocument.Page myPage = pdfDocument.startPage(mypageInfo);
-
-        // creating a variable for canvas
-        // from our page of PDF.
-        Canvas canvas = myPage.getCanvas();
-
-        // below line is used to draw our image on our PDF file.
-        // the first parameter of our drawbitmap method is
-        // our bitmap
-        // second parameter is position from left
-        // third parameter is position from top and last
-        // one is our variable for paint.
-
-        canvas.drawBitmap(scaledbmp, (A4_PORTRAIT_pageWidth/2)-40, 20, new Paint(Paint.FILTER_BITMAP_FLAG));
-        canvas.drawBitmap(kp_scaledbmp, 109, 210.5F, new Paint(Paint.FILTER_BITMAP_FLAG));
-
-        // below line is used for adding typeface for
-        // our text which we will be adding in our PDF file.
-        title.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-
-        // below line is used for setting text size
-        // which we will be displaying in our PDF file.
-        title.setTextSize(10);
-        title.setStrokeWidth(2f);
-        title.setColor(ContextCompat.getColor(this, R.color.verydark));
-
-        // below line is used to draw text in our PDF file.
-        // the first parameter is our text, second parameter
-        // is position from start, third parameter is position from top
-        // and then we are passing our variable of paint which is title.
-
-        title.setTextAlign(Paint.Align.CENTER);
-
-        canvas.drawText(String.valueOf(this.getText(R.string.republika_e_kosoves)), A4_PORTRAIT_pageWidth/2, 115, title);
-        canvas.drawText(String.valueOf(this.getText(R.string.republika_kosovo_republic_of_kosovo)), A4_PORTRAIT_pageWidth/2, 125, title);
-        canvas.drawText(String.valueOf(this.getText(R.string.mpb_three_language)), A4_PORTRAIT_pageWidth/2, 135, title);
-
-        paint.setColor(ContextCompat.getColor(this, R.color.verydark));
-        canvas.drawLine(0,140, A4_PORTRAIT_pageWidth, 140, paint);
-
-        // similarly we are creating another text and in this
-        // we are aligning this text to center of our PDF file.
-        title.setTypeface(Typeface.defaultFromStyle(Typeface.NORMAL));
-        title.setColor(ContextCompat.getColor(this, R.color.verydark));
-        title.setTextSize(22);
-        title.setStrokeWidth(5f);
-
-        // below line is used for setting
-        // our text to center of PDF.
-        title.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(String.valueOf(this.getText(R.string.confidential_report)), A4_PORTRAIT_pageWidth /2, A4_PORTRAIT_pageHeight /3, title);
-
-
-        title.setTextSize(18);
-        title.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(this.getText(R.string.location_reports_of)+" "+ fullName, A4_PORTRAIT_pageWidth /2, 360, title);
-
-
-        title.setTextSize(13);
-        title.setTextAlign(Paint.Align.LEFT);
-
-        canvas.drawText(this.getText(R.string.last_seen)+ " "+ last_seen_address, A4_PORTRAIT_pageWidth /3, 390, title);
-        canvas.drawText("1."+ " "+ first_address, A4_PORTRAIT_pageWidth /3, 410, title);
-        canvas.drawText("2."+ " "+ second_address, A4_PORTRAIT_pageWidth /3, 430, title);
-        canvas.drawText("3."+ " "+ third_address, A4_PORTRAIT_pageWidth /3, 450, title);
-        canvas.drawText("4."+ " "+ forth_address, A4_PORTRAIT_pageWidth /3, 470, title);
-
-
-        // line
-//        canvas.drawLine(120,280, 380, 280, paint);
-//        canvas.drawLine(0,280, A4_PORTRAIT_pageWidth, 280, paint);
-
-
-
-        title.setTextSize(13);
-        title.setStrokeWidth(1f);
-        title.setColor(ContextCompat.getColor(this, R.color.verydark));
-
-        canvas.drawText(first_investigator+":", A4_PORTRAIT_pageWidth/5, 700, title);
-        canvas.drawLine(A4_PORTRAIT_pageWidth/5, 705, A4_PORTRAIT_pageWidth/4, 705, title);
-
-        canvas.drawText(second_investigator+":", (float) (A4_PORTRAIT_pageWidth/1.5), 700, title);
-        canvas.drawLine((float) (A4_PORTRAIT_pageWidth/1.5), 705, (float) (A4_PORTRAIT_pageWidth/1.4), 705, title);
-
-        // after adding all attributes to our
-        // PDF file we will be finishing our page.
-        pdfDocument.finishPage(myPage);
-
-        File directory = getFilesDir();
-
-        // below line is used to set the name of
-        // our PDF file and its path.
-        File file = new File(directory, "GFG.pdf");
-
-        try {
-
-            if(!file.exists()){
-                file.createNewFile();
-            }
-            // after creating a file name we will
-            // write our PDF file to that location.
-            pdfDocument.writeTo(new FileOutputStream(file));
-
-            Uri uri = Uri.fromFile(file);
-            uploadPDFtoFirebase(uri);
-
-            // below line is to print toast message
-            // on completion of PDF generation.
-            Toast.makeText(MapsActivity.this, this.getText(R.string.pdf_file_generated_successfully), Toast.LENGTH_SHORT).show();
-        } catch (IOException e) {
-            // below line is used
-            // to handle error
-            Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-        // after storing our pdf to that
-        // location we are closing our PDF file.
-        pdfDocument.close();
-    }
-
     private void uploadPDFtoFirebase(Uri pdfUri) {
         //upload image to storage in firebase
         StorageReference profRef = storageReference.child("assigned_reports/"+firebaseAuth.getCurrentUser().getUid()+"/"+getTimeDate()+"/"+fullName+"/assign_report.pdf");
@@ -692,5 +555,160 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void requestPermissionForPDF() {
         // requesting permissions if not provided.
         ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, MANAGE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+    }
+
+    private void generatePDF(String first_investigator, String second_investigator,
+                             String last_seen_address, String first_address,
+                             String second_address, String third_address,
+                             String forth_address) throws FileNotFoundException {
+        String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+       // File directory = getFilesDir();
+        File file = new File(pdfPath, "GFG.pdf");
+        OutputStream outputStream = new FileOutputStream(file);
+        PdfWriter writer = new PdfWriter(file);
+        PdfDocument pdfDocument = new PdfDocument(writer);
+        PdfCanvas canvas = new PdfCanvas(pdfDocument.addNewPage());
+        canvas.saveState();
+        PdfExtGState state = new PdfExtGState();
+        state.setFillOpacity(0.6f);
+        canvas.setExtGState(state);
+
+        Document document = new Document(pdfDocument, PageSize.A4);
+        pdfDocument.setDefaultPageSize(PageSize.A4);
+
+        document.setMargins(15,15,15,15);
+
+        Drawable ic_republic_of_kosovo = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_republic_of_kosovo);
+        Bitmap bmp_ic_republic_of_kosovo = ((BitmapDrawable)ic_republic_of_kosovo).getBitmap();
+        ByteArrayOutputStream stream_ic_republic_of_kosovo = new ByteArrayOutputStream();
+        bmp_ic_republic_of_kosovo.compress(Bitmap.CompressFormat.PNG, 100, stream_ic_republic_of_kosovo);
+        byte[] bitmap_data_ic_republic_of_kosovo = stream_ic_republic_of_kosovo.toByteArray();
+
+        ImageData image_data_ic_republic_of_kosovo = ImageDataFactory.create(bitmap_data_ic_republic_of_kosovo);
+        Image image_ic_republic_of_kosovo = new Image(image_data_ic_republic_of_kosovo);
+
+        Drawable ic_kp = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_kp_10_opacity);
+        Bitmap bmp_ic_kp = ((BitmapDrawable)ic_kp).getBitmap();
+        ByteArrayOutputStream stream_ic_kp = new ByteArrayOutputStream();
+        bmp_ic_kp.compress(Bitmap.CompressFormat.PNG, 100, stream_ic_kp);
+        byte[] bitmap_data_ic_kp = stream_ic_kp.toByteArray();
+
+        ImageData image_data_ic_kp = ImageDataFactory.create(bitmap_data_ic_kp);
+        Image image_ic_kp = new Image(image_data_ic_kp);
+
+        // Initial point of the line in begin
+        canvas.moveTo(0, pdfDocument.getDefaultPageSize().getHeight()/1.225);
+
+        // Drawing the line in begin
+        canvas.lineTo(pdfDocument.getDefaultPageSize().getWidth(), pdfDocument.getDefaultPageSize().getHeight()/1.225);
+
+        canvas.addImage(image_data_ic_kp, 0, pdfDocument.getDefaultPageSize().getHeight()/2+image_data_ic_kp.getHeight()/2, pdfDocument.getDefaultPageSize().getWidth(), false);
+        canvas.restoreState();
+
+        DeviceRgb setColor = new DeviceRgb(8, 106, 119);
+        float columnWidth[] = {220, 120, 100, 120};
+        Table table1 = new Table(columnWidth);
+        table1.setMargin(20);
+
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.location_cell)))));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.address_cell)))));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.latitude_cell)))));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.longitude_cell)))));
+
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.last_seen_location)))));
+        table1.addCell(new Cell().add(new Paragraph(last_seen_address)));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(newLatitude))));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(newLongitude))));
+
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.first_location)))));
+        table1.addCell(new Cell().add(new Paragraph(first_address)));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat1))));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon1))));
+
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.second_location)))));
+        table1.addCell(new Cell().add(new Paragraph(second_address)));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat2))));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon2))));
+
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.third_location)))));
+        table1.addCell(new Cell().add(new Paragraph(third_address)));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat3))));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon3))));
+
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.forth_location)))));
+        table1.addCell(new Cell().add(new Paragraph(forth_address)));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat4))));
+        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon4))));
+
+        table1.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        image_ic_republic_of_kosovo.setWidth(80);
+        image_ic_republic_of_kosovo.setHeight(90);
+
+        image_ic_kp.setWidth(100);
+        image_ic_kp.setHeight(100);
+
+        image_ic_republic_of_kosovo.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        image_ic_kp.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        Paragraph republika_e_kosoves = new Paragraph(String.valueOf(this.getText(R.string.republika_e_kosoves)));
+        Paragraph republika_kosovo_republic_of_kosovo = new Paragraph(String.valueOf(this.getText(R.string.republika_kosovo_republic_of_kosovo)));
+        Paragraph mpb_three_language = new Paragraph(String.valueOf(this.getText(R.string.mpb_three_language)));
+        Paragraph confidential_report = new Paragraph(String.valueOf(this.getText(R.string.confidential_report)));
+        Paragraph location_report_of = new Paragraph(this.getText(R.string.location_reports_of)+" "+fullName);
+        Paragraph _first_investigator = new Paragraph(this.getText(R.string.mr)+" "+first_investigator);
+        Paragraph _second_investigator = new Paragraph(this.getText(R.string.mr)+" "+second_investigator);
+
+        _first_investigator.setFixedPosition(60, 60, _first_investigator.getWidth());
+        _second_investigator.setFixedPosition(430, 60, _second_investigator.getWidth());
+
+
+        canvas.moveTo(55, pdfDocument.getDefaultPageSize().getHeight()-800);
+        canvas.lineTo(160, pdfDocument.getDefaultPageSize().getHeight()-800);
+
+        canvas.moveTo(425, pdfDocument.getDefaultPageSize().getHeight()-800);
+        canvas.lineTo(530, pdfDocument.getDefaultPageSize().getHeight()-800);
+
+
+        republika_e_kosoves.setMultipliedLeading(0.5f);
+        republika_kosovo_republic_of_kosovo.setMultipliedLeading(0.5f);
+        mpb_three_language.setMultipliedLeading(0.5f);
+
+        republika_e_kosoves.setFontSize(10f);
+        republika_kosovo_republic_of_kosovo.setFontSize(10f);
+        mpb_three_language.setFontSize(10f);
+        confidential_report.setFontSize(22f);
+        location_report_of.setFontSize(18f);
+
+        republika_e_kosoves.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        republika_kosovo_republic_of_kosovo.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        mpb_three_language.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        confidential_report.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        location_report_of.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        republika_e_kosoves.setTextAlignment(TextAlignment.CENTER);
+        republika_kosovo_republic_of_kosovo.setTextAlignment(TextAlignment.CENTER);
+        mpb_three_language.setTextAlignment(TextAlignment.CENTER);
+        confidential_report.setTextAlignment(TextAlignment.CENTER);
+        location_report_of.setTextAlignment(TextAlignment.CENTER);
+
+        confidential_report.setMarginTop(pdfDocument.getDefaultPageSize().getHeight()/5);
+
+        document.add(image_ic_republic_of_kosovo);
+        document.add(republika_e_kosoves);
+        document.add(republika_kosovo_republic_of_kosovo);
+        document.add(mpb_three_language);
+        document.add(confidential_report);
+        document.add(location_report_of);
+        document.add(table1);
+        document.add(_first_investigator);
+        document.add(_second_investigator);
+        document.close();
+
+        Uri uri = Uri.fromFile(file);
+        uploadPDFtoFirebase(uri);
+
+        Toast.makeText(this, R.string.pdf_file_generated_successfully, Toast.LENGTH_SHORT).show();
     }
 }
