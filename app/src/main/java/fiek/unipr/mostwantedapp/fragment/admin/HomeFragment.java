@@ -215,7 +215,9 @@ public class HomeFragment extends Fragment {
                     {
                         urlOfProfile = task.getResult().getString("urlOfProfile");
                         if(urlOfProfile != null){
-                            Picasso.get().load(urlOfProfile).into(imageOfAccount);
+                            if(imageOfAccount != null){
+                                Picasso.get().load(urlOfProfile).into(imageOfAccount);
+                            }
                         }
                     }
                 }

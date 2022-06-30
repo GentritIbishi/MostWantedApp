@@ -211,6 +211,32 @@
     <string name="support_email">gentritibishi@gmail.com</string>
     <string name="choose_an_email_client">Choose an Email client :</string>
     <string name="grade_name">Grade</string>
+    <string name="assign_police_investigators">Assign police investigators</string>
+    <string name="the_first_investigator">The first investigator</string>
+    <string name="the_second_investigator">The second investigator</string>
+    <string name="generate_the_report">Generate the report</string>
+    <string name="report_assigned_successfully">Report assigned successfully!</string>
+    <string name="report_failed_to_assign">Report failed to assign!</string>
+    <string name="kosovo_police">Kosovo Police</string>
+    <string name="last_seen_address">Last Seen Address:</string>
+    <string name="first_address">First Address:</string>
+    <string name="second_address">Second Address:</string>
+    <string name="third_address">Third Address:</string>
+    <string name="forth_address">Forth Address:</string>
+    <string name="first_investigator">First Investigator</string>
+    <string name="second_investigator">Second Investigator</string>
+    <string name="signature">Signature</string>
+    <string name="assigned_report_for">Assigned report for</string>
+    <string name="confidential_report">CONFIDENTIAL REPORT</string>
+    <string name="pdf_file_generated_successfully">PDF file generated successfully.</string>
+    <string name="location_reports_of">Location reports of</string>
+
+    <string translatable="false" name="republika_e_kosoves">Republika e Kosovës</string>
+    <string translatable="false" name="republika_kosovo_republic_of_kosovo">Republika Kosovo - Republic of Kosovo</string>
+    <string translatable="false" name="mpb_three_language">MINISTRIA E PUNËVE TË BRENDSHME - MINISTARSTVO UNUTRAŠNJIH POSLOVA - MINISTRY OF INTERNAL AFFAIRS</string>
+    <string translatable="false" name="kp_three_language">POLICIA E KOSOVËS - КОСОВСКА ПОЛИЦИЈА - KOSOVO POLICE</string>
+    <string translatable="false" name="rk_three_language">RAPORT KONFIDENCIAL - ПОВЕРЉИВ ИЗВЕШТАЈ - CONFIDENTIAL REPORT</string>
+
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>
     <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous.</string>
