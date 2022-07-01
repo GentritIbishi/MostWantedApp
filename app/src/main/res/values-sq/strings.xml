@@ -26,6 +26,8 @@
     <string name="register_person">Register Person</string>
     <string name="update_person">Update Person</string>
     <string name="person">Person</string>
+    <string name="error_first_investigator_required">First investigator is required!</string>
+    <string name="error_second_investigator_required">Second investigator is required!</string>
     <string name="error_fullname_required">Full name is required!</string>
     <string name="error_address_required">Address is required!</string>
     <string name="error_parent_name_required">Parent Name is required!</string>
@@ -231,6 +233,9 @@
     <string name="confidential_report">CONFIDENTIAL REPORT</string>
     <string name="pdf_file_generated_successfully">PDF file generated successfully.</string>
     <string name="location_reports_of">Location reports of</string>
+    <string name="pdf_url_is_saved_in_user_collection_successfully">Pdf url is saved in user collection!</string>
+    <string name="pdf_url_is_saved_in_assigned_collection_successfully">Pdf url is saved in assigned collection!</string>
+    <string name="share">Share</string>
 
     <string name="location_cell">Location</string>
     <string name="address_cell">Address</string>

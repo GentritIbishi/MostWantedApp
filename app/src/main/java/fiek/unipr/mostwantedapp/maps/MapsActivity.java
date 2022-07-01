@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -92,9 +93,11 @@ import fiek.unipr.mostwantedapp.models.ReportAssigned;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int PERMISSION_REQUEST_CODE = 200;
-    private String newLatitude, newLongitude, fullName, status, urlOfProfile, uID;
-    private String last_seen_address, first_address, second_address, third_address, forth_address;
-    private double latitude, longitude;
+    private static final String USER_COLLECTION = "users";
+    private static final String ASSIGNED_REPORTS_COLLECTION = "assigned_reports";
+    private String newLatitude, newLongitude, fullName, status, urlOfProfile, uID,
+            last_seen_address, first_address, second_address, third_address, forth_address,
+            urlOfPdfUploaded, date;
     private double lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4;
 
     private GoogleMap mMap;
@@ -104,6 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
     private DocumentReference documentReference;
+    private DocumentReference assigned_report_doc;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
     private UploadTask uploadTask;
@@ -152,6 +156,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 binding.btnAssignInvestigator.setVisibility(View.GONE);
                 binding.generateConstraint.setVisibility(View.VISIBLE);
+            }
+        });
+
+        binding.btnShareUrlOfPdf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(urlOfPdfUploaded != null){
+                    btnShare(urlOfPdfUploaded);
+                }
             }
         });
 
@@ -309,16 +322,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             public void onClick(View view) {
                                 String first_investigator = binding.theFirstInvestigator.getText().toString();
                                 String second_investigator = binding.theSecondInvestigator.getText().toString();
-                                assignedReport(getApplicationContext(), Double.valueOf(newLatitude), Double.valueOf(newLongitude),
-                                        lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4, first_investigator, second_investigator, fullName);
 
-                                //create pdf file and upload in firestore and add link option for share
-                                try {
-                                    generatePDF(first_investigator, second_investigator, last_seen_address, first_address,
-                                            second_address, third_address, forth_address);
-                                } catch (FileNotFoundException e) {
-                                    e.printStackTrace();
+                                if(TextUtils.isEmpty(first_investigator)){
+                                    binding.theFirstInvestigator.setError(getText(R.string.error_first_investigator_required));
+                                    binding.theFirstInvestigator.requestFocus();
                                 }
+                                if(TextUtils.isEmpty(second_investigator)){
+                                    binding.theSecondInvestigator.setError(getText(R.string.error_second_investigator_required));
+                                    binding.theSecondInvestigator.requestFocus();
+                                }
+                                else {
+                                    try {
+                                    assignedReport(getApplicationContext(), Double.valueOf(newLatitude), Double.valueOf(newLongitude),
+                                            lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4, first_investigator, second_investigator, fullName);
+
+                                    //create pdf file and upload in firestore and add link option for share
+                                        generatePDF(first_investigator, second_investigator, last_seen_address, first_address,
+                                                second_address, third_address, forth_address);
+
+                                    } catch (FileNotFoundException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+
+
 
                             }
                         });
@@ -395,20 +422,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         second_address = getAddress(ctx, lat2, lon2);
         third_address = getAddress(ctx, lat3, lon3);
         forth_address = getAddress(ctx, lat4, lon4);
+        date = getTimeDate();
 
         ReportAssigned reportAssigned = new ReportAssigned(first_investigator, second_investigator, fullNameOfWantedPerson
-                ,last_seen_address, first_address, second_address, third_address, forth_address);
+                ,last_seen_address, first_address, second_address, third_address, forth_address, date);
 
-        firebaseFirestore.collection("assigned_reports").document(getTimeDate()).set(reportAssigned).addOnSuccessListener(new OnSuccessListener<Void>() {
+        firebaseFirestore.collection("assigned_reports").document(date).set(reportAssigned).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(ctx, R.string.report_assigned_successfully, Toast.LENGTH_SHORT).show();
-                finish();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ctx, R.string.report_failed_to_assign, Toast.LENGTH_SHORT).show();
                 Toast.makeText(ctx, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -449,24 +475,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 profRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
-                        documentReference.update("latest_assigned_report", uri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if(task != null && task.isSuccessful()) {
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Toast.makeText(MapsActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
-                                            finish();
-                                        }
-                                    }, 3000);
-                                }else {
-                                    Toast.makeText(MapsActivity.this, "No pdf uploaded!", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-
+                        //save uri of pdf uploaded file
+                        urlOfPdfUploaded = uri.toString();
+                        binding.tvUrl.setText(urlOfPdfUploaded);
+                        saveReportUrlToUserCollection(documentReference, firebaseFirestore, urlOfPdfUploaded, USER_COLLECTION);
+                        saveReportUrlToReportCollection(assigned_report_doc, firebaseFirestore, urlOfPdfUploaded, ASSIGNED_REPORTS_COLLECTION);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -474,6 +487,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+    }
+
+    private void saveReportUrlToReportCollection(DocumentReference documentReference, FirebaseFirestore firebaseFirestore, String urlOfPdfUploaded,
+                      String collection) {
+        if(date!=null) {
+            documentReference = firebaseFirestore.collection(collection).document(date);
+            documentReference.update("assigned_report_url", urlOfPdfUploaded).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(task != null && task.isSuccessful()) {
+                        Toast.makeText(MapsActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(MapsActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+
+    private void saveReportUrlToUserCollection(DocumentReference documentReference, FirebaseFirestore firebaseFirestore, String urlOfPdfUploaded,
+                               String collection) {
+        documentReference = firebaseFirestore.collection(collection).document(firebaseAuth.getCurrentUser().getUid());
+        documentReference.update("latest_assigned_report_url", urlOfPdfUploaded).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task != null && task.isSuccessful()) {
+                    Toast.makeText(MapsActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(MapsActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -645,6 +690,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         uploadPDFtoFirebase(uri);
 
         Toast.makeText(this, R.string.pdf_file_generated_successfully, Toast.LENGTH_SHORT).show();
+        binding.generateConstraint.setVisibility(View.INVISIBLE);
+        binding.generatedSuccessfully.setVisibility(View.VISIBLE);
+    }
+
+    private void btnShare(String urlOfPdfUploaded) {
+        Intent sendIntent = new Intent(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, urlOfPdfUploaded);
+
+        // (Optional) Here we're setting the title of the content
+        sendIntent.putExtra(Intent.EXTRA_TITLE, this.getText(R.string.location_reports_of)+" "+fullName);
+        // (Optional) Here we're passing a content URI to an image to be displayed
+        Uri uri = Uri.parse(urlOfPdfUploaded);
+        sendIntent.setData(uri);
+        sendIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        // Show the Sharesheet
+        startActivity(Intent.createChooser(sendIntent, null));
     }
 
     private void initMap() {

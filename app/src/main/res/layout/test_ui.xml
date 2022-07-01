@@ -26,23 +26,52 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:layout_marginEnd="32dp"
             android:text="@string/pdf_file_generated_successfully"
             android:textAlignment="center"
-            android:textSize="16sp"
+            android:textColor="@color/verydark"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/tv_url"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
-            android:src="@drawable/ic_grade"
+            android:layout_marginEnd="32dp"
+            android:clickable="true"
+            android:text="pdfUrl"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_pdf_generated_succesfully" />
+
+        <Button
+            android:id="@+id/btnShareUrlOfPdf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="6dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="80dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/input_bg_white"
+            android:drawableLeft="@drawable/ic_baseline_share_24"
+            android:paddingLeft="15dp"
+            android:text="@string/share"
+            android:textColor="@color/verydark"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_url" />
 
 <!--        share here-->
 

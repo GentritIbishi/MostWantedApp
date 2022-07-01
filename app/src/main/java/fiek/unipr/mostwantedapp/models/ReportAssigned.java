@@ -2,9 +2,9 @@ package fiek.unipr.mostwantedapp.models;
 
 public class ReportAssigned {
     private String first_investigator, second_investigator, fullNameOfWantedPerson;
-    private String last_seen_address, first_address, second_address, third_address, forth_address;
+    private String last_seen_address, first_address, second_address, third_address, forth_address, date;
 
-    public ReportAssigned(String first_investigator, String second_investigator, String fullNameOfWantedPerson, String last_seen_address, String first_address, String second_address, String third_address, String forth_address) {
+    public ReportAssigned(String first_investigator, String second_investigator, String fullNameOfWantedPerson, String last_seen_address, String first_address, String second_address, String third_address, String forth_address, String date) {
         this.first_investigator = first_investigator;
         this.second_investigator = second_investigator;
         this.fullNameOfWantedPerson = fullNameOfWantedPerson;
@@ -13,6 +13,7 @@ public class ReportAssigned {
         this.second_address = second_address;
         this.third_address = third_address;
         this.forth_address = forth_address;
+        this.date = date;
     }
 
     public String getFirst_investigator() {
@@ -77,5 +78,13 @@ public class ReportAssigned {
 
     public void setForth_address(String forth_address) {
         this.forth_address = forth_address;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
