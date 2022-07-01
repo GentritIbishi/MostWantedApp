@@ -236,13 +236,57 @@
     <string name="address_cell">Address</string>
     <string name="latitude_cell">Latitude</string>
     <string name="longitude_cell">Longitude</string>
-    <string name="mr">Mr.</string>
+    <string name="investigator">Inv.</string>
 
     <string translatable="false" name="republika_e_kosoves">Republika e Kosovës</string>
     <string translatable="false" name="republika_kosovo_republic_of_kosovo">Republika Kosovo - Republic of Kosovo</string>
     <string translatable="false" name="mpb_three_language">MINISTRIA E PUNËVE TË BRENDSHME - MINISTARSTVO UNUTRAŠNJIH POSLOVA - MINISTRY OF INTERNAL AFFAIRS</string>
     <string translatable="false" name="kp_three_language">POLICIA E KOSOVËS - КОСОВСКА ПОЛИЦИЈА - KOSOVO POLICE</string>
     <string translatable="false" name="rk_three_language">RAPORT KONFIDENCIAL - ПОВЕРЉИВ ИЗВЕШТАЈ - CONFIDENTIAL REPORT</string>
+
+    <string name="POLICE_STATION_RR_REXHEP_LUCI_TITLE">POLICE STATION - Rr. Rexhep Luci, Prishtine 10000</string>
+    <string name="POLICE_STATION_RR_REXHEP_LUCI_LATITUDE">42.6626792</string>
+    <string name="POLICE_STATION_RR_REXHEP_LUCI_LONGITUDE">21.1572832</string>
+
+    <string name="POLICE_STATION_NR2_TITLE">POLICE STATION Nr.2 - Hamez Jashari, Prishtine 10000</string>
+    <string name="POLICE_STATION_NR2_LATITUDE">42.659114</string>
+    <string name="POLICE_STATION_NR2_LONGITUDE">21.167420</string>
+
+    <string name="POLICE_STATION_SHESHI_I_LIRISE_TITLE">POLICE STATION - Sheshi i Lirise, Fushe Kosove 12000</string>
+    <string name="POLICE_STATION_SHESHI_I_LIRISE_LATITUDE">42.6347623</string>
+    <string name="POLICE_STATION_SHESHI_I_LIRISE_LONGITUDE">21.0848419</string>
+
+    <string name="POLICE_STATION_E80_TITLE">POLICE STATION - E80, Prishtine 10000</string>
+    <string name="POLICE_STATION_E80_LATITUDE">42.681564</string>
+    <string name="POLICE_STATION_E80_LONGITUDE">21.159672</string>
+
+    <string name="POLICE_STATION_BISLIM_BAJGORA_TITLE">POLICE STATION - Bislim Bajgora, Mitrovice 40000</string>
+    <string name="POLICE_STATION_BISLIM_BAJGORA_LATITUDE">42.890092</string>
+    <string name="POLICE_STATION_BISLIM_BAJGORA_LONGITUDE">20.874400</string>
+
+    <string name="POLICE_STATION_KRALJA_MILUTINA_TITLE">POLICE STATION - Kralja Milutina, Graçanice 10500</string>
+    <string name="POLICE_STATION_KRALJA_MILUTINA_LATITUDE">42.601494</string>
+    <string name="POLICE_STATION_KRALJA_MILUTINA_LONGITUDE">21.192242</string>
+
+    <string name="POLICE_STATION_RR_MULLA_IDRIZI_TITLE">POLICE STATION - Rr. Mulla Idrizi, Gjilan 60000</string>
+    <string name="POLICE_STATION_RR_MULLA_IDRIZI_LATITUDE">42.4631162</string>
+    <string name="POLICE_STATION_RR_MULLA_IDRIZI_LONGITUDE">21.4696013</string>
+
+    <string name="POLICE_STATION_RR_JONI_TITLE">POLICE STATION - Rr. JONI, Prizren 20000</string>
+    <string name="POLICE_STATION_RR_JONI_LATITUDE">42.214859</string>
+    <string name="POLICE_STATION_RR_JONI_LONGITUDE">20.732425</string>
+
+    <string name="POLICE_STATION_RR_WILLIAM_WALKER_TITLE">POLICE STATION ALPHA - Rr. William Walker, Prizren 20000</string>
+    <string name="POLICE_STATION_RR_WILLIAM_WALKER_LATITUDE">42.210322</string>
+    <string name="POLICE_STATION_RR_WILLIAM_WALKER_LONGITUDE">20.730256</string>
+    
+    <string name="POLICE_STATION_GJAKOVE_TITLE">POLICE STATION - Gjakove 20000</string>
+    <string name="POLICE_STATION_GJAKOVE_LATITUDE">42.375681</string>
+    <string name="POLICE_STATION_GJAKOVE_LONGITUDE">20.442102</string>
+
+    <string name="POLICE_STATION_PERLINE_TITLE">POLICE STATION - Perline 32000</string>
+    <string name="POLICE_STATION_PERLINE_LATITUDE">42.609493</string>
+    <string name="POLICE_STATION_PERLINE_LONGITUDE">20.575675</string>
 
 
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police.</string>

@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -61,12 +60,8 @@ import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.geom.PageSize;
-import com.itextpdf.kernel.geom.Rectangle;
 import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfPage;
-import com.itextpdf.kernel.pdf.PdfReader;
 import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.kernel.pdf.StampingProperties;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
 import com.itextpdf.kernel.pdf.extgstate.PdfExtGState;
 import com.itextpdf.layout.Document;
@@ -74,7 +69,6 @@ import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 
@@ -93,73 +87,18 @@ import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsBinding;
-import fiek.unipr.mostwantedapp.helpers.ScalingUtilities;
 import fiek.unipr.mostwantedapp.models.ReportAssigned;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
-    private ActivityMapsBinding binding;
+    private static final int PERMISSION_REQUEST_CODE = 200;
     private String newLatitude, newLongitude, fullName, status, urlOfProfile, uID;
     private String last_seen_address, first_address, second_address, third_address, forth_address;
     private double latitude, longitude;
     private double lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4;
 
-    // declaring width and height
-    // for our PDF file. exchange width with height if u want landscape
-    private int A4_PORTRAIT_pageWidth = 595;
-    private int A4_PORTRAIT_pageHeight = 842;
-
-    // creating a bitmap variable
-    // for storing our images
-    private Bitmap bmp, scaledbmp, kp_bmp, kp_scaledbmp, profile_picture_bmp, profile_picture_scaledbmp;
-
-    // constant code for runtime permissions
-    private static final int PERMISSION_REQUEST_CODE = 200;
-
-    private static String POLICE_STATION_RR_REXHEP_LUCI_TITLE = "POLICE STATION - Rr. Rexhep Luci, Prishtine 10000";
-    private static double POLICE_STATION_RR_REXHEP_LUCI_LATITUDE = 42.6626792;
-    private static double POLICE_STATION_RR_REXHEP_LUCI_LONGITUDE = 21.1572832;
-
-    private static String POLICE_STATION_NR2_TITLE = "POLICE STATION Nr.2 - Hamez Jashari, Prishtine 10000";
-    private static double POLICE_STATION_NR2_LATITUDE = 42.659114;
-    private static double POLICE_STATION_NR2_LONGITUDE = 21.167420;
-
-    private static String POLICE_STATION_SHESHI_I_LIRISE_TITLE = "POLICE STATION - Sheshi i Lirise, Fushe Kosove 12000";
-    private static double POLICE_STATION_SHESHI_I_LIRISE_LATITUDE = 42.6347623;
-    private static double POLICE_STATION_SHESHI_I_LIRISE_LONGITUDE = 21.0848419;
-
-    private static String POLICE_STATION_E80_TITLE = "POLICE STATION - E80, Prishtine 10000";
-    private static double POLICE_STATION_E80_LATITUDE = 42.681564;
-    private static double POLICE_STATION_E80_LONGITUDE = 21.159672;
-
-    private static String POLICE_STATION_BISLIM_BAJGORA_TITLE = "POLICE STATION - Bislim Bajgora, Mitrovice 40000";
-    private static double POLICE_STATION_BISLIM_BAJGORA_LATITUDE = 42.890092;
-    private static double POLICE_STATION_BISLIM_BAJGORA_LONGITUDE = 20.874400;
-
-    private static String POLICE_STATION_KRALJA_MILUTINA_TITLE = "POLICE STATION - Kralja Milutina, Graçanice 10500";
-    private static double POLICE_STATION_KRALJA_MILUTINA_LATITUDE = 42.601494;
-    private static double POLICE_STATION_KRALJA_MILUTINA_LONGITUDE = 21.192242;
-
-    private static String POLICE_STATION_RR_MULLA_IDRIZI_TITLE = "POLICE STATION - Rr. Mulla Idrizi, Gjilan 60000";
-    private static double POLICE_STATION_RR_MULLA_IDRIZI_LATITUDE = 42.4631162;
-    private static double POLICE_STATION_RR_MULLA_IDRIZI_LONGITUDE = 21.4696013;
-
-    private static String POLICE_STATION_RR_JONI_TITLE = "POLICE STATION - Rr. JONI, Prizren 20000";
-    private static double POLICE_STATION_RR_JONI_LATITUDE = 42.214859;
-    private static double POLICE_STATION_RR_JONI_LONGITUDE = 20.732425;
-
-    private static String POLICE_STATION_RR_WILLIAM_WALKER_TITLE = "POLICE STATION ALPHA - Rr. William Walker, Prizren 20000";
-    private static double POLICE_STATION_RR_WILLIAM_WALKER_LATITUDE = 42.210322;
-    private static double POLICE_STATION_RR_WILLIAM_WALKER_LONGITUDE = 20.730256;
-
-    private static String POLICE_STATION_GJAKOVE_TITLE = "POLICE STATION - Gjakove 20000";
-    private static double POLICE_STATION_GJAKOVE_LATITUDE = 42.375681;
-    private static double POLICE_STATION_GJAKOVE_LONGITUDE = 20.442102;
-
-    private static String POLICE_STATION_PERLINE_TITLE = "POLICE STATION - Perline 32000";
-    private static double POLICE_STATION_PERLINE_LATITUDE = 42.609493;
-    private static double POLICE_STATION_PERLINE_LONGITUDE = 20.575675;
+    private GoogleMap mMap;
+    private ActivityMapsBinding binding;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -182,16 +121,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         storageReference = FirebaseStorage.getInstance().getReference();
         uID = firebaseUser.getUid();
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.mapAdmin);
-        mapFragment.getMapAsync(this);
+        initMap();
 
         // below code is used for
         // checking our permissions.
-        if (checkPermissionForPDF()) {
-            Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show();
-        } else {
+        if (!checkPermissionForPDF()) {
             requestPermissionForPDF();
         }
 
@@ -227,17 +161,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        setStationAsMarker(POLICE_STATION_RR_REXHEP_LUCI_LATITUDE, POLICE_STATION_RR_REXHEP_LUCI_LONGITUDE, POLICE_STATION_RR_REXHEP_LUCI_TITLE);
-        setStationAsMarker(POLICE_STATION_NR2_LATITUDE, POLICE_STATION_NR2_LONGITUDE, POLICE_STATION_NR2_TITLE);
-        setStationAsMarker(POLICE_STATION_SHESHI_I_LIRISE_LATITUDE, POLICE_STATION_SHESHI_I_LIRISE_LONGITUDE, POLICE_STATION_SHESHI_I_LIRISE_TITLE);
-        setStationAsMarker(POLICE_STATION_E80_LATITUDE, POLICE_STATION_E80_LONGITUDE, POLICE_STATION_E80_TITLE);
-        setStationAsMarker(POLICE_STATION_BISLIM_BAJGORA_LATITUDE, POLICE_STATION_BISLIM_BAJGORA_LONGITUDE, POLICE_STATION_BISLIM_BAJGORA_TITLE);
-        setStationAsMarker(POLICE_STATION_KRALJA_MILUTINA_LATITUDE, POLICE_STATION_KRALJA_MILUTINA_LONGITUDE, POLICE_STATION_KRALJA_MILUTINA_TITLE);
-        setStationAsMarker(POLICE_STATION_RR_MULLA_IDRIZI_LATITUDE, POLICE_STATION_RR_MULLA_IDRIZI_LONGITUDE, POLICE_STATION_RR_MULLA_IDRIZI_TITLE);
-        setStationAsMarker(POLICE_STATION_RR_WILLIAM_WALKER_LATITUDE, POLICE_STATION_RR_WILLIAM_WALKER_LONGITUDE, POLICE_STATION_RR_WILLIAM_WALKER_TITLE);
-        setStationAsMarker(POLICE_STATION_GJAKOVE_LATITUDE, POLICE_STATION_GJAKOVE_LONGITUDE, POLICE_STATION_GJAKOVE_TITLE);
-        setStationAsMarker(POLICE_STATION_PERLINE_LATITUDE, POLICE_STATION_PERLINE_LONGITUDE, POLICE_STATION_PERLINE_TITLE);
-        setStationAsMarker(POLICE_STATION_RR_JONI_LATITUDE, POLICE_STATION_RR_JONI_LONGITUDE, POLICE_STATION_RR_JONI_TITLE);
+        setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_REXHEP_LUCI_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_REXHEP_LUCI_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_RR_REXHEP_LUCI_TITLE)));
+        setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_NR2_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_NR2_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_NR2_TITLE)));
+        setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_SHESHI_I_LIRISE_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_SHESHI_I_LIRISE_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_SHESHI_I_LIRISE_TITLE)));
+        setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_E80_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_E80_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_E80_TITLE)));
+        setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_BISLIM_BAJGORA_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_BISLIM_BAJGORA_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_BISLIM_BAJGORA_TITLE)));
+        setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_KRALJA_MILUTINA_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_KRALJA_MILUTINA_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_KRALJA_MILUTINA_TITLE)));
+        setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_MULLA_IDRIZI_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_MULLA_IDRIZI_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_RR_MULLA_IDRIZI_TITLE)));
+        setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_WILLIAM_WALKER_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_WILLIAM_WALKER_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_RR_WILLIAM_WALKER_TITLE)));
+        setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_GJAKOVE_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_GJAKOVE_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_GJAKOVE_TITLE)));
+        setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_PERLINE_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_PERLINE_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_PERLINE_TITLE)));
+        setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_TITLE)));
 
         setLocations(fullName, newLatitude, newLongitude);
 
@@ -355,7 +289,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                                             .title(date_time+" "+fullName)
                                                             .snippet(finalDescription)
                                                             .icon(BitmapDescriptorFactory.fromBitmap(resource)));
-                                                    mMap.setMinZoomPreference(17);
+                                                    mMap.setMinZoomPreference(13);
                                                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                                                     return true;
                                                 }
@@ -562,7 +496,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                              String second_address, String third_address,
                              String forth_address) throws FileNotFoundException {
         String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-       // File directory = getFilesDir();
+        // File directory = getFilesDir();
         File file = new File(pdfPath, "GFG.pdf");
         OutputStream outputStream = new FileOutputStream(file);
         PdfWriter writer = new PdfWriter(file);
@@ -602,7 +536,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Drawing the line in begin
         canvas.lineTo(pdfDocument.getDefaultPageSize().getWidth(), pdfDocument.getDefaultPageSize().getHeight()/1.225);
 
-        canvas.addImage(image_data_ic_kp, 0, pdfDocument.getDefaultPageSize().getHeight()/2+image_data_ic_kp.getHeight()/2, pdfDocument.getDefaultPageSize().getWidth(), false);
+        //image ic_kp as background of pdf
+        canvas.addImage(image_data_ic_kp, 0, 0, pdfDocument.getDefaultPageSize().getWidth(), false);
         canvas.restoreState();
 
         DeviceRgb setColor = new DeviceRgb(8, 106, 119);
@@ -657,8 +592,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Paragraph mpb_three_language = new Paragraph(String.valueOf(this.getText(R.string.mpb_three_language)));
         Paragraph confidential_report = new Paragraph(String.valueOf(this.getText(R.string.confidential_report)));
         Paragraph location_report_of = new Paragraph(this.getText(R.string.location_reports_of)+" "+fullName);
-        Paragraph _first_investigator = new Paragraph(this.getText(R.string.mr)+" "+first_investigator);
-        Paragraph _second_investigator = new Paragraph(this.getText(R.string.mr)+" "+second_investigator);
+        Paragraph _first_investigator = new Paragraph(this.getText(R.string.investigator)+" "+first_investigator);
+        Paragraph _second_investigator = new Paragraph(this.getText(R.string.investigator)+" "+second_investigator);
 
         _first_investigator.setFixedPosition(60, 60, _first_investigator.getWidth());
         _second_investigator.setFixedPosition(430, 60, _second_investigator.getWidth());
@@ -710,5 +645,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         uploadPDFtoFirebase(uri);
 
         Toast.makeText(this, R.string.pdf_file_generated_successfully, Toast.LENGTH_SHORT).show();
+    }
+
+    private void initMap() {
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.mapAdmin);
+        mapFragment.getMapAsync(this);
     }
 }
