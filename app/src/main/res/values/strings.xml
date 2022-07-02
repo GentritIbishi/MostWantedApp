@@ -236,6 +236,7 @@
     <string name="pdf_url_is_saved_in_user_collection_successfully">Pdf url is saved in user collection!</string>
     <string name="pdf_url_is_saved_in_assigned_collection_successfully">Pdf url is saved in assigned collection!</string>
     <string name="share">Share</string>
+    <string name="share_pdf_generated_link">Share pdf generated link.</string>
 
     <string name="location_cell">Location</string>
     <string name="address_cell">Address</string>
