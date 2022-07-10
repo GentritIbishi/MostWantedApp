@@ -164,7 +164,7 @@
     <string name="register_person_first_name">First Name</string>
     <string name="register_person_last_name">Last Name</string>
     <string name="profile_picture">Profile Picture</string>
-    <string name="upload_new">Upload New</string>
+    <string name="upload">Upload New</string>
     <string name="delete">Delete</string>
     <string name="last_name">Last Name*</string>
     <string name="parent_name_account">Parent Name*</string>

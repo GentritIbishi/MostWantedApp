@@ -29,10 +29,8 @@ import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
 
-import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
-import fiek.unipr.mostwantedapp.databinding.ActivityMainBinding;
+import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.databinding.ActivityPhoneSignInBinding;
 
 public class PhoneSignInActivity extends AppCompatActivity {
@@ -288,7 +286,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
     }
     
     private void goToInformerDashboard() {
-        Intent intent = new Intent(PhoneSignInActivity.this, InformerDashboardActivity.class);
+        Intent intent = new Intent(PhoneSignInActivity.this, UserDashboardActivity.class);
         startActivity(intent);
         finish();
     }

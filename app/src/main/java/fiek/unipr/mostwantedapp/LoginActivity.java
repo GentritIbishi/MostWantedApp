@@ -19,8 +19,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,11 +31,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import fiek.unipr.mostwantedapp.auth.ForgotPasswordActivity;
-import fiek.unipr.mostwantedapp.auth.GoogleSignInActivity;
 import fiek.unipr.mostwantedapp.auth.PhoneSignInActivity;
 import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
-import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
+import fiek.unipr.mostwantedapp.dashboard.AdminUserDashboardActivity;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.User;
 import fiek.unipr.mostwantedapp.register.RegisterUserActivity;
@@ -54,11 +51,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private DocumentReference documentReference;
     private TextView forgotPassword, tv_createNewAccount;
     private EditText etEmail, etPassword;
-    private Button bt_Login, btnPhone, btnGoogle, btnAnonymous;
-    private ProgressBar login_progressBar;
-    private ProgressBar google_progressBar;
-    private ProgressBar phone_progressBar;
-    private ProgressBar anonymous_progressBar;
+    private Button bt_Login, btnPhone, btnAnonymous;
+    private ProgressBar login_progressBar, phone_progressBar, anonymous_progressBar;
 
 
     @Override
@@ -71,9 +65,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
-
-        btnGoogle = findViewById(R.id.btnGoogle);
-        btnGoogle.setOnClickListener(this);
 
         tv_createNewAccount = findViewById(R.id.tv_remember);
         tv_createNewAccount.setOnClickListener(this);
@@ -94,7 +85,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgotPassword.setOnClickListener(this);
 
         login_progressBar = findViewById(R.id.login_progressBar);
-        google_progressBar = findViewById(R.id.google_progressBar);
         phone_progressBar = findViewById(R.id.phone_progressBar);
         anonymous_progressBar = findViewById(R.id.anonymous_progressBar);
     }
@@ -102,7 +92,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-        checkGoogleSignIn();
         if(firebaseUser != null)
         {
             if(firebaseUser.isAnonymous()){
@@ -120,18 +109,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.tv_remember:
                 startActivity(new Intent(this, RegisterUserActivity.class));
-                break;
-            case R.id.btnGoogle:
-                enableProgressBar(google_progressBar, btnGoogle);
-                final Handler handler = new Handler(Looper.getMainLooper());
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        //Do something after 2000ms
-                        startActivity(new Intent(getApplicationContext(), GoogleSignInActivity.class));
-                        disableProgressBar(google_progressBar, btnGoogle);
-                    }
-                }, 1000);
                 break;
             case R.id.btnPhone:
                 enableProgressBar(phone_progressBar, btnPhone);
@@ -327,7 +304,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void goToInformerDashboard() {
-        Intent intent = new Intent(LoginActivity.this, InformerDashboardActivity.class);
+        Intent intent = new Intent(LoginActivity.this, UserDashboardActivity.class);
         startActivity(intent);
         finish();
     }
@@ -339,21 +316,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void goToUserDashboard() {
-        Intent intent = new Intent(LoginActivity.this, UserDashboardActivity.class);
+        Intent intent = new Intent(LoginActivity.this, AdminUserDashboardActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    private void checkGoogleSignIn() {
-        if(checkConnection()){
-            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-            if(account != null){
-                goToInformerDashboard();
-            }
-        }else {
-            Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
-        }
-
     }
 
     private void sendEmailVerification() {

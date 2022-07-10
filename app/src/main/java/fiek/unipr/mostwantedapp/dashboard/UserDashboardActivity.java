@@ -1,138 +1,217 @@
 package fiek.unipr.mostwantedapp.dashboard;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
-
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
-import fiek.unipr.mostwantedapp.lists.LocationActivity;
-import fiek.unipr.mostwantedapp.LoginActivity;
-import fiek.unipr.mostwantedapp.lists.PersonActivity;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.register.RegisterPersonActivity;
-import fiek.unipr.mostwantedapp.models.Profile;
+import fiek.unipr.mostwantedapp.fragment.user.HomeFragment;
+import fiek.unipr.mostwantedapp.fragment.user.NotificationFragment;
+import fiek.unipr.mostwantedapp.fragment.user.ProfileFragment;
+import fiek.unipr.mostwantedapp.fragment.user.SearchFragment;
 
-public class UserDashboardActivity extends AppCompatActivity implements View.OnClickListener{
+public class UserDashboardActivity extends AppCompatActivity {
 
-    public static final String PREFS_NAME = "userPreference";
-    private String role;
-    private String fullName;
-    private String email;
-    FirebaseAuth firebaseAuth;
-    FirebaseUser firebaseUser;
-    StorageReference storageReference;
-    LinearLayout l_userProfile, l_registerPerson, l_u_personsList, l_u_locationReports;
-    ImageView user_img_profile;
-    TextView tv_dashboard;
-    Button bt_logout;
-    ProgressBar progressBar;
+    //num of selected tab. We have 4 tabs so value must lie between 1-4. Default value is 1, cause first tab is selected by deafult
+    private int selectedTab = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_dashboard);
 
-        l_registerPerson = findViewById(R.id.l_registerPerson);
-        l_registerPerson.setOnClickListener(this);
-        l_userProfile = findViewById(R.id.l_userProfile);
-        l_userProfile.setOnClickListener(this);
-        l_u_personsList = findViewById(R.id.l_u_personsList);
-        l_u_personsList.setOnClickListener(this);
-        l_u_locationReports = findViewById(R.id.l_u_locationReports);
-        l_u_locationReports.setOnClickListener(this);
-        tv_dashboard = findViewById(R.id.tv_dashboard);
-        bt_logout = findViewById(R.id.bt_logout);
-        user_img_profile = findViewById(R.id.user_img_profile);
-        progressBar = findViewById(R.id.progressBar);
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        storageReference = FirebaseStorage.getInstance().getReference();
+        final LinearLayout homeLayout = findViewById(R.id.homeLayout);
+        final LinearLayout searchLayout = findViewById(R.id.searchLayout);
+        final LinearLayout notificationLayout = findViewById(R.id.notificationLayout);
+        final LinearLayout profileLayout = findViewById(R.id.profileLayout);
 
-        StorageReference profileRef = storageReference.child("users/"+firebaseAuth.getCurrentUser().getUid()+"/profile.jpg");
-        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        final ImageView homeImage = findViewById(R.id.homeImage);
+        final ImageView searchImage = findViewById(R.id.searchImage);
+        final ImageView notificationImage = findViewById(R.id.notificationImage);
+        final ImageView profileImage = findViewById(R.id.profileImage);
+
+        final TextView homeTxt = findViewById(R.id.homeTxt);
+        final TextView searchTxt = findViewById(R.id.searchTxt);
+        final TextView notificationTxt = findViewById(R.id.notificationTxt);
+        final TextView profileTxt = findViewById(R.id.profileTxt);
+
+        //set home fragment by default
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.fragmentContainer, HomeFragment.class, null)
+                .commit();
+
+        homeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(Uri uri) {
-                Picasso.get().load(uri).transform(new CircleTransform()).into(user_img_profile);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(UserDashboardActivity.this, R.string.image_not_set, Toast.LENGTH_SHORT).show();
-            }
-        });
+            public void onClick(View view) {
+                //check if home is already selected or not.
+                if(selectedTab != 1) {
+                    //set home fragment
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragmentContainer, HomeFragment.class, null)
+                            .commit();
 
-        // kthej preferencat
-        SharedPreferences settings = getSharedPreferences("loginPreferences", 0);
-        role = settings.getString("Role", "");
-        fullName = settings.getString("fullName", "");
-        email = settings.getString("email", "");
+                    //unselect other tabs except home tab
+                    searchTxt.setVisibility(View.GONE);
+                    notificationTxt.setVisibility(View.GONE);
+                    profileTxt.setVisibility(View.GONE);
 
+                    searchImage.setImageResource(R.drawable.ic_search_navbottom);
+                    notificationImage.setImageResource(R.drawable.ic_notification);
+                    profileImage.setImageResource(R.drawable.ic_user);
 
-            ((Activity) UserDashboardActivity.this).runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                        ((TextView) tv_dashboard).setText(fullName+", Dashboard");
+                    searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+                    //select home tab
+                    homeTxt.setVisibility(View.VISIBLE);
+                    homeImage.setImageResource(R.drawable.ic_selected_home);
+                    homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
+
+                    //create animation
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f );
+                    scaleAnimation.setDuration(200);
+                    scaleAnimation.setFillAfter(true);
+                    homeLayout.startAnimation(scaleAnimation);
+
+                    // set selected tab 1 as selected tab
+                    selectedTab = 1;
                 }
-            });
-
-
-        bt_logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                FirebaseAuth.getInstance().signOut();
-                progressBar.setVisibility(View.GONE);
-                Intent signout = new Intent(UserDashboardActivity.this, LoginActivity.class);
-                signout.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(signout);
-                finish();
             }
         });
-    }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId())
-        {
-            case R.id.l_userProfile:
-                Intent userProfileIntent = new Intent(UserDashboardActivity.this, Profile.class);
-                startActivity(userProfileIntent);
-                break;
-            case R.id.l_registerPerson:
-                startActivity(new Intent(UserDashboardActivity.this, RegisterPersonActivity.class));
-                break;
-            case R.id.l_u_personsList:
-                startActivity(new Intent(UserDashboardActivity.this, PersonActivity.class));
-                break;
-            case R.id.l_u_locationReports:
-                startActivity(new Intent(UserDashboardActivity.this, LocationActivity.class));
-                break;
-        }
-    }
+        searchLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-    @Override
-    public void onBackPressed() {
-        return;
+                //check if search is already selected or not.
+                if(selectedTab != 2) {
+                    //set search fragment by default
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragmentContainer, SearchFragment.class, null)
+                            .commit();
+
+                    //unselect other tabs except search tab
+                    homeTxt.setVisibility(View.GONE);
+                    notificationTxt.setVisibility(View.GONE);
+                    profileTxt.setVisibility(View.GONE);
+
+                    homeImage.setImageResource(R.drawable.ic_home_);
+                    notificationImage.setImageResource(R.drawable.ic_notification);
+                    profileImage.setImageResource(R.drawable.ic_user);
+
+                    homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+                    //select home tab
+                    searchTxt.setVisibility(View.VISIBLE);
+                    searchImage.setImageResource(R.drawable.ic_selected_search);
+                    searchLayout.setBackgroundResource(R.drawable.round_back_search_100);
+
+                    //create animation
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f );
+                    scaleAnimation.setDuration(200);
+                    scaleAnimation.setFillAfter(true);
+                    searchLayout.startAnimation(scaleAnimation);
+
+                    // set selected tab 1 as selected tab
+                    selectedTab = 2;
+                }
+            }
+        });
+
+        notificationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //check if notification is already selected or not.
+                if(selectedTab != 3) {
+                    //set notification fragment by default
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragmentContainer, NotificationFragment.class, null)
+                            .commit();
+
+                    //unselect other tabs except notification tab
+                    homeTxt.setVisibility(View.GONE);
+                    searchTxt.setVisibility(View.GONE);
+                    profileTxt.setVisibility(View.GONE);
+
+                    homeImage.setImageResource(R.drawable.ic_home_);
+                    searchImage.setImageResource(R.drawable.ic_search_navbottom);
+                    profileImage.setImageResource(R.drawable.ic_user);
+
+                    homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+                    //select notification tab
+                    notificationTxt.setVisibility(View.VISIBLE);
+                    notificationImage.setImageResource(R.drawable.ic_selected_notification);
+                    notificationLayout.setBackgroundResource(R.drawable.round_back_notification_100);
+
+                    //create animation
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f );
+                    scaleAnimation.setDuration(200);
+                    scaleAnimation.setFillAfter(true);
+                    notificationLayout.startAnimation(scaleAnimation);
+
+                    // set selected tab 1 as selected tab
+                    selectedTab = 3;
+                }
+            }
+        });
+
+        profileLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //check if profile is already selected or not.
+                if(selectedTab != 4) {
+                    //set profile fragment by default
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.fragmentContainer, ProfileFragment.class, null)
+                            .commit();
+
+                    //unselect other tabs except profile tab
+                    homeTxt.setVisibility(View.GONE);
+                    searchTxt.setVisibility(View.GONE);
+                    notificationTxt.setVisibility(View.GONE);
+
+                    homeImage.setImageResource(R.drawable.ic_home_);
+                    searchImage.setImageResource(R.drawable.ic_search_navbottom);
+                    notificationImage.setImageResource(R.drawable.ic_notification);
+
+                    homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+
+                    //select notification tab
+                    profileTxt.setVisibility(View.VISIBLE);
+                    profileImage.setImageResource(R.drawable.ic_selected_user);
+                    profileLayout.setBackgroundResource(R.drawable.round_back_profile_100);
+
+                    //create animation
+                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f );
+                    scaleAnimation.setDuration(200);
+                    scaleAnimation.setFillAfter(true);
+                    profileLayout.startAnimation(scaleAnimation);
+
+                    // set selected tab 1 as selected tab
+                    selectedTab = 4;
+                }
+            }
+        });
+
     }
 
 }

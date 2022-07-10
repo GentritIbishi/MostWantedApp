@@ -169,6 +169,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        binding.imgClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.generatedSuccessfully.setVisibility(View.GONE);
+                binding.btnAssignInvestigator.setVisibility(View.VISIBLE);
+            }
+        });
+
+        binding.btnShareUrlOfPdf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(urlOfPdfUploaded != null){
+                    btnShare(urlOfPdfUploaded);
+                }
+            }
+        });
+
+        binding.btnGenerateReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.generateReportProgressBar.setVisibility(View.VISIBLE);
+                binding.btnGenerateReport.setEnabled(false);
+                String first_investigator = binding.theFirstInvestigator.getText().toString();
+                String second_investigator = binding.theSecondInvestigator.getText().toString();
+
+                if(TextUtils.isEmpty(first_investigator)){
+                    binding.theFirstInvestigator.setError(getText(R.string.error_first_investigator_required));
+                    binding.theFirstInvestigator.requestFocus();
+                }
+                if(TextUtils.isEmpty(second_investigator)){
+                    binding.theSecondInvestigator.setError(getText(R.string.error_second_investigator_required));
+                    binding.theSecondInvestigator.requestFocus();
+                }
+                else {
+                    try {
+                        assignedReport(getApplicationContext(), Double.valueOf(newLatitude), Double.valueOf(newLongitude),
+                                lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4, first_investigator, second_investigator, fullName);
+
+                        //create pdf file and upload in firestore and add link option for share
+                        generatePDF(first_investigator, second_investigator, last_seen_address, first_address,
+                                second_address, third_address, forth_address);
+
+                        binding.generateReportProgressBar.setVisibility(View.INVISIBLE);
+                        binding.btnGenerateReport.setEnabled(true);
+
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
     }
 
     @Override
@@ -318,38 +370,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         }
 
-                        binding.btnGenerateReport.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                String first_investigator = binding.theFirstInvestigator.getText().toString();
-                                String second_investigator = binding.theSecondInvestigator.getText().toString();
-
-                                if(TextUtils.isEmpty(first_investigator)){
-                                    binding.theFirstInvestigator.setError(getText(R.string.error_first_investigator_required));
-                                    binding.theFirstInvestigator.requestFocus();
-                                }
-                                if(TextUtils.isEmpty(second_investigator)){
-                                    binding.theSecondInvestigator.setError(getText(R.string.error_second_investigator_required));
-                                    binding.theSecondInvestigator.requestFocus();
-                                }
-                                else {
-                                    try {
-                                        assignedReport(getApplicationContext(), Double.valueOf(newLatitude), Double.valueOf(newLongitude),
-                                                lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4, first_investigator, second_investigator, fullName);
-
-                                        //create pdf file and upload in firestore and add link option for share
-                                        generatePDF(first_investigator, second_investigator, last_seen_address, first_address,
-                                                second_address, third_address, forth_address);
-                                    } catch (FileNotFoundException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-
-
-
-                            }
-                        });
-
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -431,7 +451,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(ctx, R.string.report_assigned_successfully, Toast.LENGTH_SHORT).show();
-                binding.generateConstraint.setVisibility(View.INVISIBLE);
+                binding.generateConstraint.setVisibility(View.GONE);
                 binding.generatedSuccessfully.setVisibility(View.VISIBLE);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -479,15 +499,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onSuccess(Uri uri) {
                         //save uri of pdf uploaded file
                         urlOfPdfUploaded = uri.toString();
-                        setShortUrl(urlOfPdfUploaded);
-                        binding.btnShareUrlOfPdf.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if(urlOfPdfUploaded != null){
-                                    btnShare(urlOfPdfUploaded);
-                                }
-                            }
-                        });
+                        setShortUrl(uri);
                         saveReportUrlToUserCollection(documentReference, firebaseFirestore, urlOfPdfUploaded, USER_COLLECTION);
                         saveReportUrlToReportCollection(assigned_report_doc, firebaseFirestore, urlOfPdfUploaded, ASSIGNED_REPORTS_COLLECTION);
                     }
@@ -501,28 +513,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void setShortUrl(String link) {
+    private void setShortUrl(Uri link) {
         Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLink(Uri.parse(link))
+                .setLongLink(link)
                 .setDomainUriPrefix(DYNAMIC_DOMAIN)
                 // Set parameters
                 // ...
                 .buildShortDynamicLink();
 
         shortLinkTask.addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
-                    @Override
-                    public void onComplete(@NonNull Task<ShortDynamicLink> task) {
-                        if (task.isSuccessful()) {
-                            // Short link created
-                            Uri shortLink = task.getResult().getShortLink();
-                            Uri flowchartLink = task.getResult().getPreviewLink();
-                            urlOfPdfUploaded = shortLink.toString();
-                            binding.tvUrl.setText(urlOfPdfUploaded);
-                        } else {
-                            Toast.makeText(MapsActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+            @Override
+            public void onComplete(@NonNull Task<ShortDynamicLink> task) {
+                if (task.isSuccessful()) {
+                    // Short link created
+                    Uri shortLink = task.getResult().getShortLink();
+                    System.out.println(shortLink.toString());
+                } else {
+                    Toast.makeText(MapsActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void saveReportUrlToReportCollection(DocumentReference documentReference, FirebaseFirestore firebaseFirestore, String urlOfPdfUploaded,
@@ -620,7 +630,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         canvas.restoreState();
 
         DeviceRgb setColor = new DeviceRgb(8, 106, 119);
-        float columnWidth[] = {220, 120, 100, 120};
+        float columnWidth[] = {120, 200, 120, 120};
         Table table1 = new Table(columnWidth);
         table1.setMargin(20);
 

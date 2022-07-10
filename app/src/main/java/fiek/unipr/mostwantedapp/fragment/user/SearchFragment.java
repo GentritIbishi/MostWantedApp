@@ -49,7 +49,7 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        search_fragment_view = inflater.inflate(R.layout.fragment_search, container, false);
+        search_fragment_view = inflater.inflate(R.layout.fragment_search_user, container, false);
         firebaseFirestore = FirebaseFirestore.getInstance();
         InitializeFields();
         loadDatainListview();

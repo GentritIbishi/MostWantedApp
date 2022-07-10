@@ -63,10 +63,7 @@
             android:name=".auth.PhoneSignInActivity"
             android:exported="false" />
         <activity
-            android:name=".dashboard.InformerDashboardActivity"
-            android:exported="false" />
-        <activity
-            android:name=".auth.GoogleSignInActivity"
+            android:name=".dashboard.UserDashboardActivity"
             android:exported="false" />
         <activity
             android:name=".register.RegisterUserActivity"
@@ -99,7 +96,7 @@
         <activity android:name=".helpers.PersonImage" />
         <activity android:name=".update.UpdateUser" />
         <activity android:name=".models.Profile" />
-        <activity android:name=".dashboard.UserDashboardActivity" />
+        <activity android:name=".dashboard.AdminUserDashboardActivity" />
         <activity android:name=".dashboard.AdminDashboardActivity" />
         <activity android:name=".register.RegisterUsersActivity" />
         <activity android:name=".register.RegisterPersonActivity" />

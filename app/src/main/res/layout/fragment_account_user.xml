@@ -58,7 +58,7 @@
                             android:layout_toRightOf="@id/imageOfProfile"
                             android:background="@drawable/button_pink_lighter"
                             android:padding="10dp"
-                            android:text="@string/upload_new"
+                            android:text="@string/upload"
                             android:textColor="@color/white" />
 
                         <Button

@@ -266,6 +266,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
                     if (task.getResult().exists()) {
                         Toast.makeText(RegisterPersonActivity.this, RegisterPersonActivity.this.getText(R.string.this_person_with_this) + " " + fullName + " "+ RegisterPersonActivity.this.getText(R.string.exists_in_database_please_add_example), Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
+                        registerPerson.setEnabled(true);
                     } else {
                         firebaseFirestore.collection("wanted_persons").document(fullName).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override

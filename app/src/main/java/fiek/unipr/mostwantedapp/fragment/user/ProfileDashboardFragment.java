@@ -76,7 +76,7 @@ public class ProfileDashboardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        profile_dashboard_view = inflater.inflate(R.layout.fragment_profile_dashboard, container, false);
+        profile_dashboard_view = inflater.inflate(R.layout.fragment_profile_dashboard_user, container, false);
 
         pieChart = profile_dashboard_view.findViewById(R.id.pieChart);
         final SwipeRefreshLayout pullToRefreshInSearch = profile_dashboard_view.findViewById(R.id.pullToRefreshProfileDashboard);
@@ -125,16 +125,20 @@ public class ProfileDashboardFragment extends Fragment {
                                     String status = doc.getString("status");
                                     String informer_person = doc.getString("informer_person");
 
-                                    if (status.equals(VERIFIED) && informer_person.equals(fullName)) {
-                                        newCountVERIFIED++;
-                                    }
+                                    if(fullName != null){
+                                        if (status.equals(VERIFIED) && informer_person.equals(fullName)) {
+                                            newCountVERIFIED++;
+                                        }
 
-                                    if (status.equals(UNVERIFIED) && informer_person.equals(fullName)) {
-                                        newCountUNVERIFIED++;
-                                    }
+                                        if (status.equals(UNVERIFIED) && informer_person.equals(fullName)) {
+                                            newCountUNVERIFIED++;
+                                        }
 
-                                    if (status.equals(FAKE) && informer_person.equals(fullName)) {
-                                        newCountFAKE++;
+                                        if (status.equals(FAKE) && informer_person.equals(fullName)) {
+                                            newCountFAKE++;
+                                        }
+                                    }else {
+                                        fullName = "";
                                     }
                                 }
 

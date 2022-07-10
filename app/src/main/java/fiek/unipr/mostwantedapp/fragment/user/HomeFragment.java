@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        home_fragment_view = inflater.inflate(R.layout.fragment_home, container, false);
+        home_fragment_view = inflater.inflate(R.layout.fragment_home_user, container, false);
         firebaseFirestore = FirebaseFirestore.getInstance();
         InitializeFields();
         loadDatainListview();

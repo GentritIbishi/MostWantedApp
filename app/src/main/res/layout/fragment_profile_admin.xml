@@ -17,28 +17,38 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:padding="10dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/admin_tvReports"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
                     android:fontFamily="@font/open_sans"
                     android:padding="10dp"
                     android:text="@string/total_reported"
                     android:textAlignment="center"
                     android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/all_constrain"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/admin_tvReports">
+                    android:layout_below="@+id/admin_tvReports"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/admin_tvReports">
 
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,8 +58,10 @@
                         android:layout_below="@+id/admin_tvReports"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginEnd="8dp"
                         android:background="@drawable/bg_counters"
                         android:elevation="6dp"
+                        app:layout_constraintEnd_toStartOf="@+id/unverified_report"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
@@ -92,12 +104,14 @@
                         android:layout_width="150dp"
                         android:layout_height="130dp"
                         android:layout_below="@+id/admin_tvReports"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="32dp"
                         android:background="@drawable/bg_counters"
                         android:elevation="6dp"
                         app:layout_constraintBottom_toTopOf="@+id/fake_report"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/verified_report"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.0">
 
@@ -142,10 +156,12 @@
                         android:layout_below="@+id/admin_tvReports"
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="16dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_marginBottom="16dp"
                         android:background="@drawable/bg_counters"
                         android:elevation="6dp"
                         app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/gradeSector"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/verified_report">
 
@@ -188,6 +204,7 @@
                         android:layout_width="150dp"
                         android:layout_height="130dp"
                         android:layout_below="@+id/admin_tvReports"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="32dp"
                         android:layout_marginBottom="16dp"
@@ -195,6 +212,7 @@
                         android:elevation="6dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/fake_report"
                         app:layout_constraintTop_toBottomOf="@+id/unverified_report">
 
                         <ImageView
@@ -238,24 +256,27 @@
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/admin_cardViewGraph"
-                    android:layout_below="@+id/all_constrain"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
+                    android:layout_below="@+id/all_constrain"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="16dp"
                     android:elevation="10dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="15dp"
-                    app:cardCornerRadius="10dp">
+                    app:cardCornerRadius="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/all_constrain">
 
                     <!--Linear layout to display pie chart -->
                     <!-- and details of pie chart-->
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:elevation="6dp"
-                        android:weightSum="2">
+                        android:elevation="6dp">
 
                         <!--Pie chart to display the data-->
 
@@ -263,19 +284,20 @@
                             android:id="@+id/admin_pieChart"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="6dp"
-                            android:elevation="6dp"
                             android:layout_weight="1"
-                            android:layout_marginTop="15dp"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginBottom="15dp"/>
+                            android:elevation="6dp"
+                            android:padding="6dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                    </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
                 </androidx.cardview.widget.CardView>
 
-            </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </ScrollView>
 

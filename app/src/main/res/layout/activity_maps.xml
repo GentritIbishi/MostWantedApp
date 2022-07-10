@@ -109,20 +109,32 @@
                 android:text="@string/generate_the_report"
                 android:textColor="@color/white"
                 android:textStyle="bold"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/the_second_investigator" />
+
+            <ProgressBar
+                android:id="@+id/generateReportProgressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toBottomOf="@+id/btnGenerateReport"
+                app:layout_constraintEnd_toEndOf="@+id/btnGenerateReport"
+                app:layout_constraintTop_toTopOf="@+id/btnGenerateReport" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/generatedSuccessfully"
-            android:visibility="invisible"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:visibility="gone"
+            android:layout_marginStart="48dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="48dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/report_persistent_bg"
             android:elevation="6dp"
@@ -130,6 +142,19 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/img_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="32dp"
+                android:clickable="true"
+                android:src="@drawable/close_image_state"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toEndOf="@+id/tv_pdf_generated_succesfully"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_pdf_generated_succesfully"
@@ -144,31 +169,15 @@
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/tv_url"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:clickable="true"
-                android:text=""
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_pdf_generated_succesfully" />
+                app:layout_constraintTop_toBottomOf="@+id/img_close" />
 
             <Button
                 android:id="@+id/btnShareUrlOfPdf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="80dp"
+                android:layout_marginStart="64dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="80dp"
+                android:layout_marginEnd="64dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/input_bg_white"
                 android:drawableLeft="@drawable/ic_baseline_share_24"
@@ -181,7 +190,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_url" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_pdf_generated_succesfully" />
 
             <!--        share here-->
 

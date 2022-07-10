@@ -30,7 +30,7 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.dashboard.InformerDashboardActivity;
+import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
 
 public class SetImageActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -93,7 +93,7 @@ public class SetImageActivity extends AppCompatActivity implements View.OnClickL
 
     private void goToInformerDashboard() {
         skip_progressBar.setVisibility(View.VISIBLE);
-        Intent intent = new Intent(SetImageActivity.this, InformerDashboardActivity.class);
+        Intent intent = new Intent(SetImageActivity.this, UserDashboardActivity.class);
         startActivity(intent);
         skip_progressBar.setVisibility(View.INVISIBLE);
         finish();

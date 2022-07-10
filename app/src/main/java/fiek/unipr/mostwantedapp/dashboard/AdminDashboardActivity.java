@@ -78,8 +78,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
-    private GoogleSignInOptions gso;
-    private GoogleSignInClient gsc;
     private String user_anonymousID = null;
 
     private Integer balance;
@@ -151,33 +149,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_nav_view.getMenu().getItem(0).setChecked(true);
         getSupportFragmentManager().beginTransaction().replace(R.id.admin_fragmentContainer, new HomeFragment()).commit();
 
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        gsc = GoogleSignIn.getClient(AdminDashboardActivity.this, gso);
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(AdminDashboardActivity.this);
-        if(account != null){
-            personal_number = null;
-            balance = 0;
-            name = account.getGivenName();
-            lastname = account.getFamilyName();
-            fullName = account.getDisplayName();
-            address = null;
-            email = account.getEmail();
-            parentName = null;
-            grade = "E";
-            photoURL = account.getPhotoUrl();
-            googleID = account.getId();
-
-            nav_header_name.setText(fullName);
-        }
-
         admin_menu_group_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Logout(account);
+                Logout();
             }
         });
 
@@ -279,7 +254,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                         break;
                     case R.id.admin_menu_group_logout:
                         admin_logout_progressBar.setVisibility(View.VISIBLE);
-                        Logout(account);
+                        Logout();
                         break;
                     default:
                         return true;
@@ -465,16 +440,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     }
 
-
-
-    //functions
-
-    private void Logout(GoogleSignInAccount account) {
-        //check for google login
-        if(account != null){
-            SignOut();
-        }
-
+    private void Logout() {
         //check for phone authentication
         if(firebaseAuth != null){
             firebaseAuth.signOut();
@@ -489,16 +455,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
         finish();
-    }
-
-    private void SignOut() {
-        gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                finish();
-                startActivity(new Intent(AdminDashboardActivity.this, LoginActivity.class));
-            }
-        });
     }
 
     private void loadFragment(Fragment fragment) {

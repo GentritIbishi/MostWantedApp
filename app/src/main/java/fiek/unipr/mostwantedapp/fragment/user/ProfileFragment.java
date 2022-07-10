@@ -89,7 +89,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        profile_fragment_view = inflater.inflate(R.layout.fragment_profile, container, false);
+        profile_fragment_view = inflater.inflate(R.layout.fragment_profile_user, container, false);
 
         drawerLayout = profile_fragment_view.findViewById(R.id.drawerLayout);
         logout_progressBar = profile_fragment_view.findViewById(R.id.logout_progressBar);
@@ -153,12 +153,12 @@ public class ProfileFragment extends Fragment {
                 Fragment fragment = null;
                 switch (id)
                 {
-                    case R.id.menu_group_account:
+                    case R.id.user_menu_group_account:
                         fragment = new AccountFragment();
                         loadFragment(fragment);
                         nav_view.setCheckedItem(id);
                         break;
-                    case R.id.menu_group_home:
+                    case R.id.user_menu_group_home:
                         fragment = new ProfileDashboardFragment();
                         loadFragment(fragment);
                         nav_view.setCheckedItem(id);

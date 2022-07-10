@@ -57,8 +57,6 @@ public class HomeFragment extends Fragment {
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
-    private GoogleSignInOptions gso;
-    private GoogleSignInClient gsc;
     private String user_anonymousID = null;
 
     private Integer balance;
@@ -96,29 +94,6 @@ public class HomeFragment extends Fragment {
         loadInfoAnonymousFirebase();
         loadInfoFromFirebase(firebaseAuth);
         loadInfoPhoneFirebase();
-
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        gsc = GoogleSignIn.getClient(getActivity(), gso);
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
-        if(account != null){
-            personal_number = null;
-            balance = 0;
-            name = account.getGivenName();
-            lastname = account.getFamilyName();
-            fullName = account.getDisplayName();
-            address = null;
-            email = account.getEmail();
-            parentName = null;
-            grade = "E";
-            photoURL = account.getPhotoUrl();
-            googleID = account.getId();
-
-            imageOfAccount.setImageURI(photoURL);
-        }
 
         final LinearLayout l_admin_myAccount = admin_dashboard_view.findViewById(R.id.l_admin_myAccount);
         final GridLayout gridLayout = admin_dashboard_view.findViewById(R.id.gridLayout);
