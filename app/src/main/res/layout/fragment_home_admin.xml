@@ -8,158 +8,493 @@
     android:fitsSystemWindows="true"
     tools:context=".fragment.admin.HomeFragment">
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/admin_home_pullToRefreshProfileDashboard"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <GridLayout
-                android:id="@+id/gridLayout"
-                android:visibility="visible"
-                android:columnCount="2"
-                android:rowCount="3"
-                android:alignmentMode="alignMargins"
-                android:columnOrderPreserved="false"
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
-                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    app:cardElevation="6dp"
-                    app:cardCornerRadius="12dp"
-                    android:layout_margin="12dp">
-                    <LinearLayout
-                        android:id="@+id/l_admin_myAccount"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:clickable="true"
-                        android:background="@drawable/item_dashboard_selected"
-                        android:gravity="center"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:background="@drawable/dashboard_top_bg"
+                    android:layout_height="100dp">
+
+                    <TextView
+                        android:id="@+id/rightNowDateTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="24dp"
+                        android:fontFamily="@font/open_sans"
+                        android:text="Mon, Feb 20, 2020"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/textView5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginBottom="24dp"
+                        android:text="@string/dashboard"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imageOfDashboard"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginEnd="32dp"
+                        android:src="@drawable/ic_profile_picture_default"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <GridLayout
+                    android:id="@+id/gridLayout"
+                    android:visibility="visible"
+                    android:columnCount="2"
+                    android:rowCount="3"
+                    android:alignmentMode="alignMargins"
+                    android:columnOrderPreserved="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        app:cardElevation="6dp"
+                        app:cardCornerRadius="12dp"
+                        android:layout_margin="12dp">
+                        <LinearLayout
+                            android:id="@+id/l_admin_myAccount"
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:clickable="true"
+                            android:background="@drawable/item_dashboard_selected"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/imageOfAccount"
+                                android:src="@drawable/ic_profile_picture_default"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp" />
+                            <TextView
+                                android:layout_marginTop="12dp"
+                                android:textColor="#6f6f6f"
+                                android:text="@string/my_account"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                    </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+                    <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        app:cardElevation="6dp"
+                        app:cardCornerRadius="12dp"
+                        android:layout_margin="12dp">
+                        <LinearLayout
+                            android:id="@+id/l_admin_register"
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:clickable="true"
+                            android:background="@drawable/item_dashboard_selected"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:src="@drawable/admin_ic_register"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp" />
+
+                            <TextView
+                                android:layout_marginTop="12dp"
+                                android:textColor="#6f6f6f"
+                                android:text="@string/register"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                    </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+                    <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        app:cardElevation="6dp"
+                        app:cardCornerRadius="12dp"
+                        android:layout_margin="12dp">
+                        <LinearLayout
+                            android:id="@+id/l_admin_locationReports"
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:clickable="true"
+                            android:background="@drawable/item_dashboard_selected"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:src="@drawable/ic_world_map_pin"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp" />
+                            <TextView
+                                android:layout_marginTop="12dp"
+                                android:textColor="#6f6f6f"
+                                android:text="@string/locations"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                    </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+                    <com.google.android.material.circularreveal.cardview.CircularRevealCardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_rowWeight="1"
+                        app:cardElevation="6dp"
+                        app:cardCornerRadius="12dp"
+                        android:layout_margin="12dp">
+                        <LinearLayout
+                            android:id="@+id/l_admin_analytics"
+                            android:orientation="vertical"
+                            android:padding="16dp"
+                            android:clickable="true"
+                            android:background="@drawable/item_dashboard_selected"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:src="@drawable/ic_analytics"
+                                android:layout_width="80dp"
+                                android:layout_height="80dp" />
+                            <TextView
+                                android:layout_marginTop="12dp"
+                                android:textColor="#6f6f6f"
+                                android:text="@string/analytics"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" />
+                        </LinearLayout>
+                    </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+
+                </GridLayout>
+
+                <include
+                    android:id="@+id/registerUsers"
+                    android:visibility="gone"
+                    android:layout_gravity="center"
+                    layout="@layout/persistent_add_user_or_person"/>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/admin_home_tvReports"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:fontFamily="@font/open_sans"
+                        android:padding="10dp"
+                        android:text="Total reports"
+                        android:textAlignment="center"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/admin_home_all_constrain"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/imageOfAccount"
-                            android:src="@drawable/ic_profile_picture_default"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp" />
-                        <TextView
-                            android:layout_marginTop="12dp"
-                            android:textColor="#6f6f6f"
-                            android:text="@string/my_account"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/admin_home_tvReports"
+                        android:layout_marginTop="24dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/admin_home_tvReports">
 
-                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    app:cardElevation="6dp"
-                    app:cardCornerRadius="12dp"
-                    android:layout_margin="12dp">
-                    <LinearLayout
-                        android:id="@+id/l_admin_register"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:clickable="true"
-                        android:background="@drawable/item_dashboard_selected"
-                        android:gravity="center"
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/admin_home_verified_report"
+                            android:layout_width="150dp"
+                            android:layout_height="130dp"
+                            android:layout_below="@+id/admin_home_tvReports"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="8dp"
+                            android:background="@drawable/bg_counters"
+                            android:elevation="6dp"
+                            app:layout_constraintEnd_toStartOf="@+id/unverified_report"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <ImageView
+                                android:layout_width="27dp"
+                                android:layout_height="27dp"
+                                android:src="@drawable/ic_analytics_gray_light"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/admin_home_tv_num_report_verified"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/verydark"
+                                android:textSize="35sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:layout_width="90dp"
+                                android:layout_height="38dp"
+                                android:layout_marginBottom="3dp"
+                                android:text="@string/reports_verified"
+                                android:textAlignment="center"
+                                android:textColor="@color/verydark"
+                                android:textSize="15sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="@+id/admin_home_tv_num_report_verified"
+                                app:layout_constraintStart_toStartOf="@+id/admin_home_tv_num_report_verified"
+                                app:layout_constraintTop_toBottomOf="@+id/admin_home_tv_num_report_verified" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/admin_home_unverified_report"
+                            android:layout_width="150dp"
+                            android:layout_height="130dp"
+                            android:layout_below="@+id/admin_home_tvReports"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="32dp"
+                            android:background="@drawable/bg_counters"
+                            android:elevation="6dp"
+                            app:layout_constraintBottom_toTopOf="@+id/admin_home_fake_report"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/admin_home_verified_report"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="0.0">
+
+                            <ImageView
+                                android:layout_width="27dp"
+                                android:layout_height="27dp"
+                                android:src="@drawable/ic_analytics_gray_light"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/admin_home_tv_num_report_unverified"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/verydark"
+                                android:textSize="35sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:layout_width="90dp"
+                                android:layout_height="38dp"
+                                android:layout_marginBottom="3dp"
+                                android:text="@string/reports_unverified"
+                                android:textAlignment="center"
+                                android:textColor="@color/verydark"
+                                android:textSize="15sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="@+id/admin_home_tv_num_report_unverified"
+                                app:layout_constraintStart_toStartOf="@+id/admin_home_tv_num_report_unverified"
+                                app:layout_constraintTop_toBottomOf="@+id/admin_home_tv_num_report_unverified" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/admin_home_fake_report"
+                            android:layout_width="150dp"
+                            android:layout_height="130dp"
+                            android:layout_below="@+id/admin_home_tvReports"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginBottom="16dp"
+                            android:background="@drawable/bg_counters"
+                            android:elevation="6dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/admin_home_gradeSector"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/admin_home_verified_report">
+
+                            <ImageView
+                                android:layout_width="27dp"
+                                android:layout_height="27dp"
+                                android:src="@drawable/ic_analytics_gray_light"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/admin_home_tv_num_report_fake"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/verydark"
+                                android:textSize="35sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:layout_width="90dp"
+                                android:layout_height="38dp"
+                                android:layout_marginBottom="3dp"
+                                android:text="@string/reports_fake"
+                                android:textAlignment="center"
+                                android:textColor="@color/verydark"
+                                android:textSize="15sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="@+id/admin_home_tv_num_report_fake"
+                                app:layout_constraintStart_toStartOf="@+id/admin_home_tv_num_report_fake"
+                                app:layout_constraintTop_toBottomOf="@+id/admin_home_tv_num_report_fake" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/admin_home_gradeSector"
+                            android:layout_width="150dp"
+                            android:layout_height="130dp"
+                            android:layout_below="@+id/admin_home_tvReports"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="32dp"
+                            android:layout_marginBottom="16dp"
+                            android:background="@drawable/bg_counters"
+                            android:elevation="6dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/admin_home_fake_report"
+                            app:layout_constraintTop_toBottomOf="@+id/admin_home_unverified_report">
+
+                            <ImageView
+                                android:layout_width="27dp"
+                                android:layout_height="27dp"
+                                android:src="@drawable/ic_grade"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/admin_home_tv_gradeOfUser"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="E"
+                                android:textColor="@color/verydark"
+                                android:textSize="35sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:layout_width="90dp"
+                                android:layout_height="38dp"
+                                android:layout_marginBottom="3dp"
+                                android:text="@string/grade_name"
+                                android:textAlignment="center"
+                                android:textAllCaps="true"
+                                android:textColor="@color/verydark"
+                                android:textSize="15sp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="@+id/admin_home_tv_gradeOfUser"
+                                app:layout_constraintStart_toStartOf="@+id/admin_home_tv_gradeOfUser"
+                                app:layout_constraintTop_toBottomOf="@+id/admin_home_tv_gradeOfUser" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    <androidx.cardview.widget.CardView
+                        android:padding="10dp"
+                        android:id="@+id/admin_home_cardViewGraph"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="200dp"
+                        android:layout_below="@+id/admin_home_all_constrain"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="16dp"
+                        android:elevation="10dp"
+                        app:cardCornerRadius="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/admin_home_all_constrain">
 
-                        <ImageView
-                            android:src="@drawable/admin_ic_register"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp" />
+                        <!--Linear layout to display pie chart -->
+                        <!-- and details of pie chart-->
 
-                        <TextView
-                            android:layout_marginTop="12dp"
-                            android:textColor="#6f6f6f"
-                            android:text="@string/register"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:padding="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:elevation="6dp">
 
-                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    app:cardElevation="6dp"
-                    app:cardCornerRadius="12dp"
-                    android:layout_margin="12dp">
-                    <LinearLayout
-                        android:id="@+id/l_admin_locationReports"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:clickable="true"
-                        android:background="@drawable/item_dashboard_selected"
-                        android:gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:src="@drawable/ic_world_map_pin"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp" />
-                        <TextView
-                            android:layout_marginTop="12dp"
-                            android:textColor="#6f6f6f"
-                            android:text="@string/locations"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+                            <!--Pie chart to display the data-->
 
-                <com.google.android.material.circularreveal.cardview.CircularRevealCardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_columnWeight="1"
-                    android:layout_rowWeight="1"
-                    app:cardElevation="6dp"
-                    app:cardCornerRadius="12dp"
-                    android:layout_margin="12dp">
-                    <LinearLayout
-                        android:id="@+id/l_admin_analytics"
-                        android:orientation="vertical"
-                        android:padding="16dp"
-                        android:clickable="true"
-                        android:background="@drawable/item_dashboard_selected"
-                        android:gravity="center"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                        <ImageView
-                            android:src="@drawable/ic_analytics"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp" />
-                        <TextView
-                            android:layout_marginTop="12dp"
-                            android:textColor="#6f6f6f"
-                            android:text="@string/analytics"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" />
-                    </LinearLayout>
-                </com.google.android.material.circularreveal.cardview.CircularRevealCardView>
+                            <com.github.mikephil.charting.charts.PieChart
+                                android:id="@+id/admin_home_pieChart"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:elevation="6dp"
+                                android:padding="6dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
 
-            </GridLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <include
-                android:id="@+id/registerUsers"
-                android:visibility="gone"
-                android:layout_gravity="center"
-                layout="@layout/persistent_add_user_or_person"/>
 
-        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
 
-    </ScrollView>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>

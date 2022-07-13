@@ -9,95 +9,55 @@
     android:fitsSystemWindows="true"
     tools:context=".fragment.user.ProfileFragment">
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:fitsSystemWindows="true"
-        tools:openDrawer="start">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBarLayout"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/user_profile_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:elevation="6dp"
-            android:fitsSystemWindows="true"
-            android:theme="@style/Theme.MostWantedApp.AppBarOverlay">
-
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:gravity="center"
-                app:title="@string/profile"
-                android:elevation="0dp"
-                app:titleTextColor="@color/verydark"
-                android:background="@color/white"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay"/>
-
-            <androidx.fragment.app.FragmentContainerView
-                android:id="@+id/fragment_to_change"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view"
-            android:theme="@style/NavigationTheme"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:layout_gravity="start"
-            app:drawerLayoutCornerSize="10dp"
-            app:headerLayout="@layout/nav_header"
-            app:menu="@menu/user_nav_menu"
-            app:itemTextColor="@color/color_text_state"
-            app:itemBackground="@drawable/menu_back_state"
-            app:itemTextAppearance="@style/TextViewStyle"
-            app:itemIconTint="@color/secondary_color">
+            android:layout_height="match_parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:orientation="vertical"
                 android:padding="16dp">
 
-                <Button
-                    android:id="@+id/menu_group_logout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/button"
-                    android:fontFamily="@font/open_sans_light"
-                    android:gravity="center"
-                    android:text="@string/logout"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/user_nav_header_image_view"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_profile_picture_default"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ProgressBar
-                    android:id="@+id/logout_progressBar"
-                    style="?android:attr/progressBarStyle"
-                    android:visibility="gone"
+                <TextView
+                    android:id="@+id/user_nav_header_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/user_nav_header_image_view"
+                    android:fontFamily="@font/open_sans_light"
+                    android:text="@string/your_name"
+                    android:textColor="@color/verydark"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="@+id/user_nav_header_image_view"
+                    app:layout_constraintStart_toStartOf="@+id/user_nav_header_image_view"
+                    app:layout_constraintTop_toBottomOf="@+id/user_verifiedBadge" />
+
+                <ImageView
+                    android:id="@+id/user_verifiedBadge"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/menu_group_logout"
-                    app:layout_constraintEnd_toEndOf="@+id/menu_group_logout"
-                    app:layout_constraintTop_toTopOf="@+id/menu_group_logout" />
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/user_nav_header_name"
+                    android:src="@drawable/ic_verified_badge"
+                    android:visibility="invisible"
+                    app:layout_constraintEnd_toEndOf="@+id/user_nav_header_image_view"
+                    app:layout_constraintStart_toStartOf="@+id/user_nav_header_image_view"
+                    app:layout_constraintTop_toBottomOf="@+id/user_nav_header_image_view" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </com.google.android.material.navigation.NavigationView>
-
-    </androidx.drawerlayout.widget.DrawerLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>

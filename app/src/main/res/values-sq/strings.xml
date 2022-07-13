@@ -164,7 +164,7 @@
     <string name="register_person_first_name">First Name</string>
     <string name="register_person_last_name">Last Name</string>
     <string name="profile_picture">Profile Picture</string>
-    <string name="upload">Upload New</string>
+    <string name="upload">Upload</string>
     <string name="delete">Delete</string>
     <string name="last_name">Last Name*</string>
     <string name="parent_name_account">Parent Name*</string>
@@ -244,11 +244,11 @@
     <string name="longitude_cell">Longitude</string>
     <string name="investigator">Inv.</string>
 
-    <string translatable="false" name="republika_e_kosoves">Republika e Kosovës</string>
-    <string translatable="false" name="republika_kosovo_republic_of_kosovo">Republika Kosovo - Republic of Kosovo</string>
-    <string translatable="false" name="mpb_three_language">MINISTRIA E PUNËVE TË BRENDSHME - MINISTARSTVO UNUTRAŠNJIH POSLOVA - MINISTRY OF INTERNAL AFFAIRS</string>
-    <string translatable="false" name="kp_three_language">POLICIA E KOSOVËS - КОСОВСКА ПОЛИЦИЈА - KOSOVO POLICE</string>
-    <string translatable="false" name="rk_three_language">RAPORT KONFIDENCIAL - ПОВЕРЉИВ ИЗВЕШТАЈ - CONFIDENTIAL REPORT</string>
+    <string name="republika_e_kosoves" translatable="false">Republika e Kosovës</string>
+    <string name="republika_kosovo_republic_of_kosovo" translatable="false">Republika Kosovo - Republic of Kosovo</string>
+    <string name="mpb_three_language" translatable="false">MINISTRIA E PUNËVE TË BRENDSHME - MINISTARSTVO UNUTRAŠNJIH POSLOVA - MINISTRY OF INTERNAL AFFAIRS</string>
+    <string name="kp_three_language" translatable="false">POLICIA E KOSOVËS - КОСОВСКА ПОЛИЦИЈА - KOSOVO POLICE</string>
+    <string name="rk_three_language" translatable="false">RAPORT KONFIDENCIAL - ПОВЕРЉИВ ИЗВЕШТАЈ - CONFIDENTIAL REPORT</string>
 
     <string name="POLICE_STATION_RR_REXHEP_LUCI_TITLE">POLICE STATION - Rr. Rexhep Luci, Prishtine 10000</string>
     <string name="POLICE_STATION_RR_REXHEP_LUCI_LATITUDE">42.6626792</string>

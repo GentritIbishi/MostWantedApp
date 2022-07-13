@@ -70,6 +70,7 @@ public class HomeFragment extends Fragment {
         // below line is use to get data from Firebase
         // firestore using collection in android.
         firebaseFirestore.collection("wanted_persons")
+                .limit(3)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override

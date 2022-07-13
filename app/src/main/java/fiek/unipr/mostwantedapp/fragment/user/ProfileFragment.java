@@ -15,6 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -49,17 +50,8 @@ import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 public class ProfileFragment extends Fragment {
 
     private View profile_fragment_view;
-    public static final String PROFILE_INFORMER_PREFS = "profileInformerPreferences";
-    private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
-    private Toolbar toolbar;
-    private NavigationView nav_view;
-    private ImageView addReport;
-    private Button menu_group_logout;
-    private ProgressBar logout_progressBar;
+    public static final String PROFILE_USER_PREFS = "PROFILE_USER_PREFS";
 
-    public static final String PREFS_NAME = "LOG_PREF";
-    public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser firebaseUser;
@@ -67,15 +59,14 @@ public class ProfileFragment extends Fragment {
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
-    private GoogleSignInOptions gso;
-    private GoogleSignInClient gsc;
-    private TextView nav_header_name;
-    private ImageView verifiedBadge;
-    private CircleImageView nav_header_image_view;
+
+    private TextView user_nav_header_name;
+    private ImageView user_verifiedBadge;
+    private CircleImageView user_nav_header_image_view;
     private String user_anonymousID = null;
-    Integer balance;
-    String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
-    Uri photoURL;
+    private Integer balance;
+    private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
+    private Uri photoURL;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,86 +82,24 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         profile_fragment_view = inflater.inflate(R.layout.fragment_profile_user, container, false);
 
-        drawerLayout = profile_fragment_view.findViewById(R.id.drawerLayout);
-        logout_progressBar = profile_fragment_view.findViewById(R.id.logout_progressBar);
-        toolbar = profile_fragment_view.findViewById(R.id.toolbar);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        toggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, toolbar, R.string.open, R.string.close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
-        nav_view = profile_fragment_view.findViewById(R.id.nav_view);
-        menu_group_logout = profile_fragment_view.findViewById(R.id.menu_group_logout);
-
-        //Get All Nav header to use elements like textview and any...
-        View headerView = nav_view.getHeaderView(0);
-        nav_header_name = headerView.findViewById(R.id.nav_header_name);
-        verifiedBadge = headerView.findViewById(R.id.verifiedBadge);
-        nav_header_image_view = headerView.findViewById(R.id.nav_header_image_view);
-
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
-        //set deafult seleted
-        nav_view.getMenu().getItem(0).setChecked(true);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_to_change, new ProfileDashboardFragment()).commit();
+        user_nav_header_image_view = profile_fragment_view.findViewById(R.id.user_nav_header_image_view);
+        user_nav_header_name = profile_fragment_view.findViewById(R.id.user_nav_header_name);
+        user_verifiedBadge = profile_fragment_view.findViewById(R.id.user_verifiedBadge);
 
-        gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        gsc = GoogleSignIn.getClient(getContext(), gso);
-
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
-        if(account != null){
-            personal_number = null;
-            balance = 0;
-            name = account.getGivenName();
-            lastname = account.getFamilyName();
-            fullName = account.getDisplayName();
-            address = null;
-            email = account.getEmail();
-            parentName = null;
-            grade = "E";
-            photoURL = account.getPhotoUrl();
-            googleID = account.getId();
-
-            nav_header_name.setText(fullName);
-        }
-
-        menu_group_logout.setOnClickListener(new View.OnClickListener() {
+        final SwipeRefreshLayout pullToRefreshInSearch = profile_fragment_view.findViewById(R.id.user_profile_refresh);
+        pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onClick(View view) {
-                Logout(account);
-            }
-        });
-
-        nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                int id = menuItem.getItemId();
-                Fragment fragment = null;
-                switch (id)
-                {
-                    case R.id.user_menu_group_account:
-                        fragment = new AccountFragment();
-                        loadFragment(fragment);
-                        nav_view.setCheckedItem(id);
-                        break;
-                    case R.id.user_menu_group_home:
-                        fragment = new ProfileDashboardFragment();
-                        loadFragment(fragment);
-                        nav_view.setCheckedItem(id);
-                        break;
-                    case R.id.menu_group_logout:
-                         logout_progressBar.setVisibility(View.VISIBLE);
-                         Logout(account);
-                        break;
-                    default:
-                        return true;
-                }
-                return true;
+            public void onRefresh() {
+                // Reload current fragment
+                loadInfoFromFirebase(firebaseAuth);
+                loadInfoPhoneFirebase();
+                loadInfoAnonymousFirebase();
+                pullToRefreshInSearch.setRefreshing(false);
             }
         });
 
@@ -190,11 +119,11 @@ public class ProfileFragment extends Fragment {
                         //set Image, verified if is email verified, name
                         setVerifiedBadge(firebaseAuth.getCurrentUser());
                         if(urlOfProfile != null){
-                            Picasso.get().load(urlOfProfile).into(nav_header_image_view);
+                            Picasso.get().load(urlOfProfile).into(user_nav_header_image_view);
                         }
 
                         if(fullName != null){
-                            nav_header_name.setText(fullName);
+                            user_nav_header_name.setText(fullName);
                         }
                     }
                 }
@@ -211,29 +140,9 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void Logout(GoogleSignInAccount account) {
-        //check for google login
-        if(account != null){
-            SignOut();
-        }
-
-        //check for phone authentication
-        if(firebaseAuth != null){
-            firebaseAuth.signOut();
-            sendUserToLogin();
-        }
-        logout_progressBar.setVisibility(View.GONE);
-    }
-
     @Override
     public void onStart() {
         super.onStart();
-            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getContext());
-            if (account != null) {
-                String fullName = account.getDisplayName();
-                nav_header_name.setText(fullName);
-                nav_header_image_view.setImageURI(account.getPhotoUrl());
-            }
             if(firebaseAuth != null){
                 loadInfoFromFirebase(firebaseAuth);
                 loadInfoAnonymousFirebase();
@@ -241,62 +150,34 @@ public class ProfileFragment extends Fragment {
             }
         }
 
-    private void loadFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_to_change, fragment);
-        drawerLayout.closeDrawer(GravityCompat.START);
-        fragmentTransaction.addToBackStack(null);
-        fragmentTransaction.commit();
-    }
-
     private void loadInfoPhoneFirebase() {
         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
         if(!empty(phone))
         {
             //logged in with phone
-            nav_header_name.setText(phone);
+            user_nav_header_name.setText(phone);
             setSharedPreference(phone);
-            nav_header_image_view.setImageResource(R.drawable.ic_phone_login);
+            user_nav_header_image_view.setImageResource(R.drawable.ic_phone_login);
         }
     }
 
     private void loadInfoAnonymousFirebase() {
         if(firebaseAuth.getCurrentUser().isAnonymous()){
-            nav_header_name.setText(firebaseAuth.getCurrentUser().getUid());
-            nav_header_image_view.setImageResource(R.drawable.ic_anonymous);
+            user_nav_header_name.setText(firebaseAuth.getCurrentUser().getUid());
+            user_nav_header_image_view.setImageResource(R.drawable.ic_anonymous);
         }
     }
 
     public void setSharedPreference(String phone) {
-        SharedPreferences settings = getActivity().getSharedPreferences(PROFILE_INFORMER_PREFS, 0);
+        SharedPreferences settings = getActivity().getSharedPreferences(PROFILE_USER_PREFS, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("phone", phone);
         editor.commit();
     }
 
-
-    public void sendUserToLogin() {
-        Intent loginIntent = new Intent(getActivity(), LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(loginIntent);
-        getActivity().finish();
-    }
-
-    private void SignOut() {
-        gsc.signOut().addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                getActivity().finish();
-                startActivity(new Intent(getActivity(), LoginActivity.class));
-            }
-        });
-    }
-
     private void setVerifiedBadge(FirebaseUser firebaseUser) {
         if(firebaseUser.isEmailVerified()){
-            verifiedBadge.setVisibility(View.VISIBLE);
+            user_verifiedBadge.setVisibility(View.VISIBLE);
         }
     }
 

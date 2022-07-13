@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,18 +28,20 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 
 public class PersonImage extends AppCompatActivity {
 
-    String fullName;
-    StorageReference storageReference;
-    ImageView personProfileView, setNewProfile;
-    TextView tv_addprofile;
-    ProgressBar progressBarPerson;
-    FirebaseAuth firebaseAuth;
-    FirebaseUser firebaseUser;
-    FirebaseFirestore firebaseFirestore;
+    private String fullName;
+    private StorageReference storageReference;
+    private CircleImageView personProfileView;
+    private ImageView setNewProfile;
+    private TextView tv_addprofile;
+    private ProgressBar progressBarPerson;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser firebaseUser;
+    private FirebaseFirestore firebaseFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,4 +136,5 @@ public class PersonImage extends AppCompatActivity {
             }
         });
     }
+
 }

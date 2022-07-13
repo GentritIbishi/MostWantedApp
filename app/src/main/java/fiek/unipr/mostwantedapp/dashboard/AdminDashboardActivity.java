@@ -496,13 +496,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(AdminDashboardActivity.this);
-        if (account != null) {
-            String fullName = account.getDisplayName();
-            nav_header_name.setText(fullName);
-            nav_header_image_view.setImageURI(account.getPhotoUrl());
-            topImageProfile.setImageURI(account.getPhotoUrl());
-        }
         if(firebaseAuth != null){
             loadInfoFromFirebase(firebaseAuth);
             loadInfoAnonymousFirebase();

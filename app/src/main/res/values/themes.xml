@@ -27,7 +27,7 @@
         <item name="android:textColor">@color/verydark</item>
     </style>
     <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@color/secondary_color</item>
+        <item name="color">@color/verydark</item>
         <item name="android:width">80dp</item>
         <item name="android:height">80dp</item>
     </style>
