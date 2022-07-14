@@ -25,6 +25,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_below="@+id/admin_tvMyAccount"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/report_persistent_bg"
                     android:elevation="6dp"
                     android:padding="20dp"

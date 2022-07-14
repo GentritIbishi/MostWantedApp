@@ -24,6 +24,7 @@
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
+                    android:elevation="6dp"
                     android:background="@drawable/dashboard_top_bg"
                     android:layout_height="100dp">
 
@@ -34,9 +35,10 @@
                         android:layout_marginStart="32dp"
                         android:layout_marginTop="24dp"
                         android:fontFamily="@font/open_sans"
-                        android:text="Mon, Feb 20, 2020"
+                        android:text="Mon, Jan 1, 2022"
                         android:textSize="14sp"
                         android:textStyle="bold"
+                        android:textColor="@color/verydark"
                         app:layout_constraintBottom_toTopOf="@+id/hiDashboard"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -51,13 +53,14 @@
                         android:text="@string/dashboard"
                         android:textSize="24sp"
                         android:textStyle="bold"
+                        android:textColor="@color/verydark"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imageOfDashboard"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:layout_marginEnd="32dp"
                         android:src="@drawable/ic_profile_picture_default"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -102,7 +105,7 @@
                             <TextView
                                 android:layout_marginTop="12dp"
                                 android:textColor="#6f6f6f"
-                                android:text="@string/my_account"
+                                android:text="@string/profile"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -346,12 +349,10 @@
                             android:layout_below="@+id/admin_home_tvReports"
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
-                            android:layout_marginEnd="8dp"
                             android:layout_marginBottom="16dp"
                             android:background="@drawable/bg_counters"
                             android:elevation="6dp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/admin_home_gradeSector"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/admin_home_verified_report">
 

@@ -8,7 +8,12 @@
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/bg_counters.xml" value="0.21" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/bgtest.xml" value="0.2415" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/button.xml" value="0.2415" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/button_normal.xml" value="0.1905" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/button_red.xml" value="0.1905" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/button_red_normal.xml" value="0.1905" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/button_red_pressed.xml" value="0.1905" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/close_image_state.xml" value="0.201" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/dashboard_top_bg.xml" value="0.1905" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/description_report_bg.xml" value="0.189" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.19" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/ic_grade.xml" value="0.2325" />
@@ -22,13 +27,16 @@
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/item_persistent_normal.xml" value="0.2415" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/item_persistent_pressed.xml" value="0.2415" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/item_persistent_state.xml" value="0.2415" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/menu_back_normal.xml" value="0.1905" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/menu_back_pressed.xml" value="0.1905" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/menu_back_state.xml" value="0.1905" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/persistent_bg_user_informer.xml" value="0.2415" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/persistent_bg_user_person.xml" value="0.167" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/report_persistent_bg.xml" value="0.167" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/reportttt.xml" value="0.264" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/search_bg.xml" value="0.189" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/testbggg.xml" value="0.189" />
-        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_admin_dashboard.xml" value="0.19072164948453607" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_admin_dashboard.xml" value="0.264" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_get_started.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_informer_dashboard.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/activity_limit_person.xml" value="0.1503623188405797" />

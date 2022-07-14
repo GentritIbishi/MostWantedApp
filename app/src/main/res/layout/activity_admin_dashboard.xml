@@ -33,12 +33,13 @@
                 android:elevation="0dp"
                 android:gravity="center"
                 app:titleTextColor="@color/verydark"
-                android:background="@color/light_gray"
+                android:background="@color/white"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/topImageProfile"
+                        android:visibility="invisible"
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="right"
@@ -58,6 +59,7 @@
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/admin_nav_view"
+            android:padding="10dp"
             android:theme="@style/NavigationTheme"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -75,20 +77,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="5dp"
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/admin_menu_group_logout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button"
+                    android:background="@drawable/button_red"
                     android:fontFamily="@font/open_sans_light"
                     android:gravity="center"
                     android:text="@string/logout"
                     android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
+                    android:padding="10dp"
+                    android:drawableLeft="@drawable/ic_baseline_logout_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

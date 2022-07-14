@@ -28,6 +28,9 @@
     <color name="lighter_90">#eeeeee</color>
     <color name="pink_lighter">#887ef3</color>
     <color name="yellow">#FFFF00</color>
+    <color name="blue_middle">#4AB4DE</color>
+    <color name="gray_light_d3">#d3d3d3</color>
+    <color name="red_light">#FFCCCB</color>
 
     <color name="home">#1194AA</color>
     <color name="search">#C9379d</color>
