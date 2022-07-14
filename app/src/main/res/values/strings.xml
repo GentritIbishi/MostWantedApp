@@ -222,6 +222,7 @@
     <string name="report_failed_to_assign">Report failed to assign!</string>
     <string name="kosovo_police">Kosovo Police</string>
     <string name="last_seen_address">Last Seen Address:</string>
+    <string name="no_location_report">NO LOCATION REPORT</string>
     <string name="first_location">First Location:</string>
     <string name="second_location">Second Location:</string>
     <string name="third_location">Third Location:</string>
@@ -237,6 +238,7 @@
     <string name="pdf_url_is_saved_in_assigned_collection_successfully">Pdf url is saved in assigned collection!</string>
     <string name="share">Share</string>
     <string name="share_pdf_generated_link">Share pdf generated link.</string>
+    <string name="hi">Hi,</string>
 
     <string name="location_cell">Location</string>
     <string name="address_cell">Address</string>

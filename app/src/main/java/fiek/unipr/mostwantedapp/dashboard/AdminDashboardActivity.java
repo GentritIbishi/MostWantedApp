@@ -24,10 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
@@ -43,11 +39,10 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.fragment.admin.AboutFragment;
-import fiek.unipr.mostwantedapp.fragment.admin.AccountFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.HelpFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.NotificationFragment;
-import fiek.unipr.mostwantedapp.fragment.admin.ProfileFragment;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.SettingsFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.SearchFragment;
@@ -169,7 +164,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                         admin_nav_view.setCheckedItem(id);
                         break;
                     case R.id.admin_menu_group_account:
-                        fragment = new AccountFragment();
+                        fragment = new ProfileFragment();
                         loadFragment(fragment);
                         //unselect all tabs
                         admin_homeTxt.setVisibility(View.GONE);

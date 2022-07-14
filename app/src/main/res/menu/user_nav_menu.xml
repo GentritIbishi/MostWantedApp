@@ -6,7 +6,7 @@
             android:title="@string/home"/>
         <item
             android:id="@+id/user_menu_group_account"
-            android:title="@string/account"/>
+            android:title="@string/profile"/>
         <item
             android:id="@+id/user_menu_group_settings"
             android:title="@string/settings"/>

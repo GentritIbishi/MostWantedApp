@@ -102,6 +102,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String DYNAMIC_DOMAIN = "https://fiek.page.link";
     private static final int PERMISSION_REQUEST_CODE = 200;
     private static final String USER_COLLECTION = "users";
+    private static final String NO_LOCATION_REPORT = "";
     private static final String ASSIGNED_REPORTS_COLLECTION = "assigned_reports";
     private String newLatitude, newLongitude, fullName, status, urlOfProfile, uID,
             last_seen_address, first_address, second_address, third_address, forth_address,
@@ -640,30 +641,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.longitude_cell)))));
 
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.last_seen_location)))));
-        table1.addCell(new Cell().add(new Paragraph(last_seen_address)));
+        if(last_seen_address != null){
+            table1.addCell(new Cell().add(new Paragraph(last_seen_address)));
+        }else {
+            table1.addCell(new Cell().add(new Paragraph(NO_LOCATION_REPORT)));
+        }
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(newLatitude))));
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(newLongitude))));
 
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.first_location)))));
-        table1.addCell(new Cell().add(new Paragraph(first_address)));
+        if(first_address != null){
+            table1.addCell(new Cell().add(new Paragraph(first_address)));
+        }else {
+            table1.addCell(new Cell().add(new Paragraph(NO_LOCATION_REPORT)));
+        }
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat1))));
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon1))));
 
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.second_location)))));
-        table1.addCell(new Cell().add(new Paragraph(second_address)));
+        if(second_address != null){
+            table1.addCell(new Cell().add(new Paragraph(second_address)));
+        }else {
+            table1.addCell(new Cell().add(new Paragraph(NO_LOCATION_REPORT)));
+        }
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat2))));
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon2))));
 
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.third_location)))));
-        table1.addCell(new Cell().add(new Paragraph(third_address)));
+        if(third_address != null){
+            table1.addCell(new Cell().add(new Paragraph(third_address)));
+        }else {
+            table1.addCell(new Cell().add(new Paragraph(NO_LOCATION_REPORT)));
+        }
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat3))));
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon3))));
 
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.forth_location)))));
-        table1.addCell(new Cell().add(new Paragraph(forth_address)));
+        if(forth_address != null){
+            table1.addCell(new Cell().add(new Paragraph(forth_address)));
+        }else {
+            table1.addCell(new Cell().add(new Paragraph(NO_LOCATION_REPORT)));
+        }
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat4))));
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon4))));
-
         table1.setHorizontalAlignment(HorizontalAlignment.CENTER);
 
         image_ic_republic_of_kosovo.setWidth(80);

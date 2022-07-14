@@ -1,6 +1,5 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -9,15 +8,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.text.Layout;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -34,15 +30,10 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -53,7 +44,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
@@ -75,6 +69,7 @@ public class HomeFragment extends Fragment {
 
     private View admin_dashboard_view;
     private CircleImageView imageOfAccount, imageOfDashboard;
+    private TextView rightNowDateTime, hiDashboard;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser firebaseUser;
@@ -83,6 +78,7 @@ public class HomeFragment extends Fragment {
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
     private String user_anonymousID = null;
+
 
     private Integer balance;
     private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
@@ -114,6 +110,8 @@ public class HomeFragment extends Fragment {
         imageOfDashboard = admin_dashboard_view.findViewById(R.id.imageOfDashboard);
 
         admin_home_pieChart = admin_dashboard_view.findViewById(R.id.admin_home_pieChart);
+        rightNowDateTime = admin_dashboard_view.findViewById(R.id.rightNowDateTime);
+        hiDashboard = admin_dashboard_view.findViewById(R.id.hiDashboard);
         admin_home_tv_num_report_verified = admin_dashboard_view.findViewById(R.id.admin_home_tv_num_report_verified);
         admin_home_tv_num_report_unverified = admin_dashboard_view.findViewById(R.id.admin_home_tv_num_report_unverified);
         admin_home_tv_num_report_fake = admin_dashboard_view.findViewById(R.id.admin_home_tv_num_report_fake);
@@ -128,6 +126,7 @@ public class HomeFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
+        rightNowDateTime.setText(getTimeDate());
         getGrade(firebaseAuth);
         setupPieChart();
         setPieChart();
@@ -179,7 +178,7 @@ public class HomeFragment extends Fragment {
         l_admin_myAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new AccountFragment();
+                Fragment fragment = new ProfileFragment();
                 loadFragment(fragment);
             }
         });
@@ -197,7 +196,7 @@ public class HomeFragment extends Fragment {
         l_admin_analytics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new ProfileFragment();
+                Fragment fragment = new AnalyticsFragment();
                 loadFragment(fragment);
             }
         });
@@ -240,12 +239,15 @@ public class HomeFragment extends Fragment {
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
-            documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
-            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            firebaseFirestore
+                    .collection("users")
+                    .document(firebaseAuth.getCurrentUser().getUid())
+                    .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if(task.isSuccessful() && task.getResult() != null)
                     {
+                        fullName = task.getResult().getString("fullName");
                         urlOfProfile = task.getResult().getString("urlOfProfile");
                         if(urlOfProfile != null){
                             if(imageOfAccount != null){
@@ -379,7 +381,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void loadFullNameFromFirebase(FirebaseAuth firebaseAuth) {
+    private void loadInfoAndSayHiFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
             firebaseFirestore.collection("users")
                     .document(firebaseAuth.getCurrentUser().getUid())
@@ -388,7 +390,9 @@ public class HomeFragment extends Fragment {
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if(task.isSuccessful() && task.getResult() != null)
                             {
+                                name = task.getResult().getString("name");
                                 fullName = task.getResult().getString("fullName");
+                                hiDashboard.setText(getActivity().getText(R.string.hi)+" "+name);
                             }
                         }
                     });
@@ -416,7 +420,20 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if(firebaseAuth != null){
-            loadFullNameFromFirebase(firebaseAuth);
+            loadInfoAndSayHiFromFirebase(firebaseAuth);
+            loadInfoAnonymousFirebase();
+            loadInfoFromFirebase(firebaseAuth);
+            loadInfoPhoneFirebase();
+        }
+    }
+
+    public static String getTimeDate() { // without parameter argument
+        try{
+            Date netDate = new Date(); // current time from here
+            SimpleDateFormat sfd = new SimpleDateFormat("E, dd MMM yyyy", Locale.getDefault());
+            return sfd.format(netDate);
+        } catch(Exception e) {
+            return "date";
         }
     }
 
