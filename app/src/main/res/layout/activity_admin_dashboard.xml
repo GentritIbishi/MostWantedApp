@@ -37,15 +37,15 @@
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/topImageProfile"
-                        android:visibility="invisible"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="right"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/ic_profile_picture_default"
-                        />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/topImageProfile"
+                    android:visibility="invisible"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_profile_picture_default"
+                    />
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -65,6 +65,7 @@
             android:layout_height="match_parent"
             android:background="@color/white"
             android:layout_gravity="start"
+            android:layout_marginBottom="3dp"
             app:drawerLayoutCornerSize="10dp"
             app:headerLayout="@layout/nav_header"
             app:menu="@menu/admin_nav_menu"
@@ -120,8 +121,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/white"
-        android:elevation="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_navigation_bottom"
+        android:elevation="3dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingStart="20dp"
@@ -134,7 +138,7 @@
         <LinearLayout
             android:id="@+id/admin_homeLayout"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="center"
@@ -144,17 +148,17 @@
 
             <ImageView
                 android:id="@+id/admin_homeImage"
-                android:layout_width="20dp"
+                android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_selected_home" />
+                android:src="@drawable/ic_home_unselected" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/admin_searchLayout"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="center"
@@ -167,7 +171,7 @@
                 android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_search_navbottom" />
+                android:src="@drawable/ic_search_unselected" />
 
             <TextView
                 android:id="@+id/admin_searchTxt"
@@ -185,7 +189,7 @@
         <LinearLayout
             android:id="@+id/admin_notificationLayout"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="center"
@@ -198,7 +202,7 @@
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_notification" />
+                android:src="@drawable/ic_notification_unselected" />
 
             <TextView
                 android:id="@+id/admin_notificationTxt"
@@ -216,7 +220,7 @@
         <LinearLayout
             android:id="@+id/admin_profileLayout"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:gravity="center"
@@ -229,7 +233,7 @@
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_user" />
+                android:src="@drawable/ic_profile_unselected" />
 
             <TextView
                 android:id="@+id/admin_profileTxt"

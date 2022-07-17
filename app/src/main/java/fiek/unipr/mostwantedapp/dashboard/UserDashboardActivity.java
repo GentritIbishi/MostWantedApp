@@ -174,8 +174,8 @@ public class UserDashboardActivity extends AppCompatActivity {
                         user_profileTxt.setVisibility(View.GONE);
 
                         user_homeImage.setImageResource(R.drawable.ic_home_);
-                        user_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                        user_notificationImage.setImageResource(R.drawable.ic_notification);
+                        user_searchImage.setImageResource(R.drawable.ic_search_unselected);
+                        user_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
                         user_profileImage.setImageResource(R.drawable.ic_user);
 
                         user_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -195,8 +195,8 @@ public class UserDashboardActivity extends AppCompatActivity {
                         user_profileTxt.setVisibility(View.GONE);
 
                         user_homeImage.setImageResource(R.drawable.ic_home_);
-                        user_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                        user_notificationImage.setImageResource(R.drawable.ic_notification);
+                        user_searchImage.setImageResource(R.drawable.ic_search_unselected);
+                        user_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
                         user_profileImage.setImageResource(R.drawable.ic_user);
 
                         user_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -216,8 +216,8 @@ public class UserDashboardActivity extends AppCompatActivity {
                         user_profileTxt.setVisibility(View.GONE);
 
                         user_homeImage.setImageResource(R.drawable.ic_home_);
-                        user_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                        user_notificationImage.setImageResource(R.drawable.ic_notification);
+                        user_searchImage.setImageResource(R.drawable.ic_search_unselected);
+                        user_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
                         user_profileImage.setImageResource(R.drawable.ic_user);
 
                         user_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -237,8 +237,8 @@ public class UserDashboardActivity extends AppCompatActivity {
                         user_profileTxt.setVisibility(View.GONE);
 
                         user_homeImage.setImageResource(R.drawable.ic_home_);
-                        user_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                        user_notificationImage.setImageResource(R.drawable.ic_notification);
+                        user_searchImage.setImageResource(R.drawable.ic_search_unselected);
+                        user_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
                         user_profileImage.setImageResource(R.drawable.ic_user);
 
                         user_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -275,8 +275,8 @@ public class UserDashboardActivity extends AppCompatActivity {
                     user_notificationTxt.setVisibility(View.GONE);
                     user_profileTxt.setVisibility(View.GONE);
 
-                    user_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                    user_notificationImage.setImageResource(R.drawable.ic_notification);
+                    user_searchImage.setImageResource(R.drawable.ic_search_unselected);
+                    user_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
                     user_profileImage.setImageResource(R.drawable.ic_user);
 
                     user_searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -318,7 +318,7 @@ public class UserDashboardActivity extends AppCompatActivity {
                     user_profileTxt.setVisibility(View.GONE);
 
                     user_homeImage.setImageResource(R.drawable.ic_home_);
-                    user_notificationImage.setImageResource(R.drawable.ic_notification);
+                    user_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
                     user_profileImage.setImageResource(R.drawable.ic_user);
 
                     user_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -359,7 +359,7 @@ public class UserDashboardActivity extends AppCompatActivity {
                     user_profileTxt.setVisibility(View.GONE);
 
                     user_homeImage.setImageResource(R.drawable.ic_home_);
-                    user_searchImage.setImageResource(R.drawable.ic_search_navbottom);
+                    user_searchImage.setImageResource(R.drawable.ic_search_unselected);
                     user_profileImage.setImageResource(R.drawable.ic_user);
 
                     user_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
@@ -400,8 +400,8 @@ public class UserDashboardActivity extends AppCompatActivity {
                     user_notificationTxt.setVisibility(View.GONE);
 
                     user_homeImage.setImageResource(R.drawable.ic_home_);
-                    user_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                    user_notificationImage.setImageResource(R.drawable.ic_notification);
+                    user_searchImage.setImageResource(R.drawable.ic_search_unselected);
+                    user_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
 
                     user_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                     user_searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));

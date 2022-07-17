@@ -25,7 +25,7 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:elevation="6dp"
-                    android:background="@drawable/dashboard_top_bg"
+                    android:background="@drawable/bg_dashboard_top"
                     android:layout_height="100dp">
 
                     <TextView

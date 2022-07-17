@@ -97,6 +97,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
         final LinearLayout admin_notificationLayout = findViewById(R.id.admin_notificationLayout);
         final LinearLayout admin_profileLayout = findViewById(R.id.admin_profileLayout);
 
+        final ImageView admin_homeImage = findViewById(R.id.admin_homeImage);
+        final ImageView admin_searchImage = findViewById(R.id.admin_searchImage);
+        final ImageView admin_notificationImage = findViewById(R.id.admin_notificationImage);
+        final ImageView admin_profileImage = findViewById(R.id.admin_profileImage);
+
         //nav
         admin_drawerLayout_real = findViewById(R.id.admin_drawerLayout_real);
         admin_logout_progressBar = findViewById(R.id.admin_logout_progressBar);
@@ -125,7 +130,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
         //nav
 
         //set home fragment by default
-        admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
+        // admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
+        admin_homeImage.setImageResource(R.drawable.ic_home_selected);
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
                 .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
@@ -188,20 +194,33 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 1){
-                    admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
-                    admin_searchLayout.setBackgroundResource(android.R.color.transparent);
-                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
-                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
+//                    admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
+//                    admin_searchLayout.setBackgroundResource(android.R.color.transparent);
+//                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
+//                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
+
+                    admin_homeImage.setImageResource(R.drawable.ic_home_selected);
+                    admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
+                    admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
+                    admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
+
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
                             .commit();
                 }
                 if(selectedTab == 1){
-                    admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
-                    admin_searchLayout.setBackgroundResource(android.R.color.transparent);
-                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
-                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
+//                    admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
+//                    admin_searchLayout.setBackgroundResource(android.R.color.transparent);
+//                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
+//                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
+
+                    admin_homeImage.setImageResource(R.drawable.ic_home_selected);
+                    admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
+                    admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
+                    admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
+
+
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
@@ -214,10 +233,16 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 2){
-                    admin_homeLayout.setBackgroundResource(android.R.color.transparent);
-                    admin_searchLayout.setBackgroundResource(R.drawable.round_back_home_100);
-                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
-                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
+//                    admin_homeLayout.setBackgroundResource(android.R.color.transparent);
+//                    admin_searchLayout.setBackgroundResource(R.drawable.round_back_home_100);
+//                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
+//                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
+
+                    admin_searchImage.setImageResource(R.drawable.ic_search_selected);
+                    admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
+                    admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
+                    admin_homeImage.setImageResource(R.drawable.ic_home_unselected);
+
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.admin_fragmentContainer, SearchFragment.class, null)
@@ -236,10 +261,16 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                     if(selectedTab != 3){
-                        admin_homeLayout.setBackgroundResource(android.R.color.transparent);
-                        admin_searchLayout.setBackgroundResource(android.R.color.transparent);
-                        admin_notificationLayout.setBackgroundResource(R.drawable.round_back_home_100);
-                        admin_profileLayout.setBackgroundResource(android.R.color.transparent);
+//                        admin_homeLayout.setBackgroundResource(android.R.color.transparent);
+//                        admin_searchLayout.setBackgroundResource(android.R.color.transparent);
+//                        admin_notificationLayout.setBackgroundResource(R.drawable.round_back_home_100);
+//                        admin_profileLayout.setBackgroundResource(android.R.color.transparent);
+
+                        admin_notificationImage.setImageResource(R.drawable.ic_notification_selected);
+                        admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
+                        admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
+                        admin_homeImage.setImageResource(R.drawable.ic_home_unselected);
+
                         getSupportFragmentManager().beginTransaction()
                                 .setReorderingAllowed(true)
                                 .replace(R.id.admin_fragmentContainer, NotificationFragment.class, null)
@@ -259,10 +290,16 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                     if(selectedTab != 4){
-                        admin_homeLayout.setBackgroundResource(android.R.color.transparent);
-                        admin_searchLayout.setBackgroundResource(android.R.color.transparent);
-                        admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
-                        admin_profileLayout.setBackgroundResource(R.drawable.round_back_home_100);
+//                        admin_homeLayout.setBackgroundResource(android.R.color.transparent);
+//                        admin_searchLayout.setBackgroundResource(android.R.color.transparent);
+//                        admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
+//                        admin_profileLayout.setBackgroundResource(R.drawable.round_back_home_100);
+
+                        admin_profileImage.setImageResource(R.drawable.ic_profile_selected);
+                        admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
+                        admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
+                        admin_homeImage.setImageResource(R.drawable.ic_home_unselected);
+
                         getSupportFragmentManager().beginTransaction()
                                 .setReorderingAllowed(true)
                                 .replace(R.id.admin_fragmentContainer, ProfileFragment.class, null)
