@@ -136,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_weight="1"
-            android:background="@drawable/round_back_home_100"
+            android:background="@android:color/transparent"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingStart="5dp"
@@ -148,16 +148,6 @@
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:src="@drawable/ic_selected_home" />
-
-            <TextView
-                android:id="@+id/admin_homeTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="@string/home"
-                android:textColor="@color/home"
-                android:textSize="16sp"
-                android:textStyle="bold" />
 
         </LinearLayout>
 

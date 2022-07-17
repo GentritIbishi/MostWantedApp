@@ -97,16 +97,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         final LinearLayout admin_notificationLayout = findViewById(R.id.admin_notificationLayout);
         final LinearLayout admin_profileLayout = findViewById(R.id.admin_profileLayout);
 
-        final ImageView admin_homeImage = findViewById(R.id.admin_homeImage);
-        final ImageView admin_searchImage = findViewById(R.id.admin_searchImage);
-        final ImageView admin_notificationImage = findViewById(R.id.admin_notificationImage);
-        final ImageView admin_profileImage = findViewById(R.id.admin_profileImage);
-
-        final TextView admin_homeTxt = findViewById(R.id.admin_homeTxt);
-        final TextView admin_searchTxt = findViewById(R.id.admin_searchTxt);
-        final TextView admin_notificationTxt = findViewById(R.id.admin_notificationTxt);
-        final TextView admin_profileTxt = findViewById(R.id.admin_profileTxt);
-
         //nav
         admin_drawerLayout_real = findViewById(R.id.admin_drawerLayout_real);
         admin_logout_progressBar = findViewById(R.id.admin_logout_progressBar);
@@ -135,6 +125,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         //nav
 
         //set home fragment by default
+        admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
                 .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
@@ -142,7 +133,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         //set deafult seleted
         admin_nav_view.getMenu().getItem(0).setChecked(true);
-        getSupportFragmentManager().beginTransaction().replace(R.id.admin_fragmentContainer, new HomeFragment()).commit();
 
         admin_menu_group_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,85 +156,21 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     case R.id.admin_menu_group_account:
                         fragment = new ProfileFragment();
                         loadFragment(fragment);
-                        //unselect all tabs
-                        admin_homeTxt.setVisibility(View.GONE);
-                        admin_searchTxt.setVisibility(View.GONE);
-                        admin_notificationTxt.setVisibility(View.GONE);
-                        admin_profileTxt.setVisibility(View.GONE);
-
-                        admin_homeImage.setImageResource(R.drawable.ic_home_);
-                        admin_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                        admin_notificationImage.setImageResource(R.drawable.ic_notification);
-                        admin_profileImage.setImageResource(R.drawable.ic_user);
-
-                        admin_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        //unselect all tabs
                         admin_nav_view.setCheckedItem(id);
                         break;
                     case R.id.admin_menu_group_settings:
                         fragment = new SettingsFragment();
                         loadFragment(fragment);
-                        //unselect all tabs
-                        admin_homeTxt.setVisibility(View.GONE);
-                        admin_searchTxt.setVisibility(View.GONE);
-                        admin_notificationTxt.setVisibility(View.GONE);
-                        admin_profileTxt.setVisibility(View.GONE);
-
-                        admin_homeImage.setImageResource(R.drawable.ic_home_);
-                        admin_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                        admin_notificationImage.setImageResource(R.drawable.ic_notification);
-                        admin_profileImage.setImageResource(R.drawable.ic_user);
-
-                        admin_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        //unselect all tabs
                         admin_nav_view.setCheckedItem(id);
                         break;
                     case R.id.admin_menu_group_help:
                         fragment = new HelpFragment();
                         loadFragment(fragment);
-                        //unselect all tabs
-                        admin_homeTxt.setVisibility(View.GONE);
-                        admin_searchTxt.setVisibility(View.GONE);
-                        admin_notificationTxt.setVisibility(View.GONE);
-                        admin_profileTxt.setVisibility(View.GONE);
-
-                        admin_homeImage.setImageResource(R.drawable.ic_home_);
-                        admin_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                        admin_notificationImage.setImageResource(R.drawable.ic_notification);
-                        admin_profileImage.setImageResource(R.drawable.ic_user);
-
-                        admin_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        //unselect all tabs
                         admin_nav_view.setCheckedItem(id);
                         break;
                     case R.id.admin_menu_group_about:
                         fragment = new AboutFragment();
                         loadFragment(fragment);
-                        //unselect all tabs
-                        admin_homeTxt.setVisibility(View.GONE);
-                        admin_searchTxt.setVisibility(View.GONE);
-                        admin_notificationTxt.setVisibility(View.GONE);
-                        admin_profileTxt.setVisibility(View.GONE);
-
-                        admin_homeImage.setImageResource(R.drawable.ic_home_);
-                        admin_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                        admin_notificationImage.setImageResource(R.drawable.ic_notification);
-                        admin_profileImage.setImageResource(R.drawable.ic_user);
-
-                        admin_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        admin_profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                        //unselect all tabs
                         admin_nav_view.setCheckedItem(id);
                         break;
                     case R.id.admin_menu_group_logout:
@@ -261,42 +187,25 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_homeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //check if home is already selected or not.
-                if(selectedTab != 1) {
-                    //set defualt selected
-                    admin_nav_view.getMenu().getItem(0).setChecked(true);
-                    //set home fragment
+                if(selectedTab != 1){
+                    admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
+                    admin_searchLayout.setBackgroundResource(android.R.color.transparent);
+                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
+                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
                             .commit();
-
-                    //unselect other tabs except home tab
-                    admin_searchTxt.setVisibility(View.GONE);
-                    admin_notificationTxt.setVisibility(View.GONE);
-                    admin_profileTxt.setVisibility(View.GONE);
-
-                    admin_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                    admin_notificationImage.setImageResource(R.drawable.ic_notification);
-                    admin_profileImage.setImageResource(R.drawable.ic_user);
-
-                    admin_searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    admin_notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    admin_profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-
-                    //select home tab
-                    admin_homeTxt.setVisibility(View.VISIBLE);
-                    admin_homeImage.setImageResource(R.drawable.ic_selected_home);
+                }
+                if(selectedTab == 1){
                     admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
-
-                    //create animation
-                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 0.0f, Animation.RELATIVE_TO_SELF, 0.0f );
-                    scaleAnimation.setDuration(200);
-                    scaleAnimation.setFillAfter(true);
-                    admin_homeLayout.startAnimation(scaleAnimation);
-
-                    // set selected tab 1 as selected tab
-                    selectedTab = 1;
+                    admin_searchLayout.setBackgroundResource(android.R.color.transparent);
+                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
+                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
+                            .commit();
                 }
             }
         });
@@ -304,42 +213,21 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_searchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //set defualt selected
-                admin_nav_view.getMenu().getItem(0).setChecked(false);
-                //check if search is already selected or not.
-                if(selectedTab != 2) {
-                    //set search fragment by default
+                if(selectedTab != 2){
+                    admin_homeLayout.setBackgroundResource(android.R.color.transparent);
+                    admin_searchLayout.setBackgroundResource(R.drawable.round_back_home_100);
+                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
+                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.admin_fragmentContainer, SearchFragment.class, null)
                             .commit();
-
-                    //unselect other tabs except search tab
-                    admin_homeTxt.setVisibility(View.GONE);
-                    admin_notificationTxt.setVisibility(View.GONE);
-                    admin_profileTxt.setVisibility(View.GONE);
-
-                    admin_homeImage.setImageResource(R.drawable.ic_home_);
-                    admin_notificationImage.setImageResource(R.drawable.ic_notification);
-                    admin_profileImage.setImageResource(R.drawable.ic_user);
-
-                    admin_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    admin_notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    admin_profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-
-                    //select home tab
-                    admin_searchTxt.setVisibility(View.VISIBLE);
-                    admin_searchImage.setImageResource(R.drawable.ic_selected_search);
-                    admin_searchLayout.setBackgroundResource(R.drawable.round_back_search_100);
-
-                    //create animation
-                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f );
-                    scaleAnimation.setDuration(200);
-                    scaleAnimation.setFillAfter(true);
-                    admin_searchLayout.startAnimation(scaleAnimation);
-
-                    // set selected tab 1 as selected tab
-                    selectedTab = 2;
+                }
+                if(selectedTab == 2){
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.admin_fragmentContainer, SearchFragment.class, null)
+                            .commit();
                 }
             }
         });
@@ -347,89 +235,45 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_notificationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //set defualt selected
-                admin_nav_view.getMenu().getItem(0).setChecked(false);
-                //check if notification is already selected or not.
-                if(selectedTab != 3) {
-                    //set notification fragment by default
-                    getSupportFragmentManager().beginTransaction()
-                            .setReorderingAllowed(true)
-                            .replace(R.id.admin_fragmentContainer, NotificationFragment.class, null)
-                            .commit();
+                    if(selectedTab != 3){
+                        admin_homeLayout.setBackgroundResource(android.R.color.transparent);
+                        admin_searchLayout.setBackgroundResource(android.R.color.transparent);
+                        admin_notificationLayout.setBackgroundResource(R.drawable.round_back_home_100);
+                        admin_profileLayout.setBackgroundResource(android.R.color.transparent);
+                        getSupportFragmentManager().beginTransaction()
+                                .setReorderingAllowed(true)
+                                .replace(R.id.admin_fragmentContainer, NotificationFragment.class, null)
+                                .commit();
+                    }
+                    if(selectedTab == 3){
+                        getSupportFragmentManager().beginTransaction()
+                                .setReorderingAllowed(true)
+                                .replace(R.id.admin_fragmentContainer, NotificationFragment.class, null)
+                                .commit();
+                    }
 
-                    //unselect other tabs except notification tab
-                    admin_homeTxt.setVisibility(View.GONE);
-                    admin_searchTxt.setVisibility(View.GONE);
-                    admin_profileTxt.setVisibility(View.GONE);
-
-                    admin_homeImage.setImageResource(R.drawable.ic_home_);
-                    admin_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                    admin_profileImage.setImageResource(R.drawable.ic_user);
-
-                    admin_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    admin_searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    admin_profileLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-
-                    //select notification tab
-                    admin_notificationTxt.setVisibility(View.VISIBLE);
-                    admin_notificationImage.setImageResource(R.drawable.ic_selected_notification);
-                    admin_notificationLayout.setBackgroundResource(R.drawable.round_back_notification_100);
-
-                    //create animation
-                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f );
-                    scaleAnimation.setDuration(200);
-                    scaleAnimation.setFillAfter(true);
-                    admin_notificationLayout.startAnimation(scaleAnimation);
-
-                    // set selected tab 1 as selected tab
-                    selectedTab = 3;
-                }
             }
         });
 
         admin_profileLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //set defualt selected
-                admin_nav_view.getMenu().getItem(0).setChecked(true);
-                admin_nav_view.getMenu().getItem(1).setChecked(false);
-                admin_nav_view.getMenu().getItem(2).setChecked(false);
-                admin_nav_view.getMenu().getItem(3).setChecked(false);
-                //check if profile is already selected or not.
-                if(selectedTab != 4) {
-                    //set profile fragment by default
-                    getSupportFragmentManager().beginTransaction()
-                            .setReorderingAllowed(true)
-                            .replace(R.id.admin_fragmentContainer, ProfileFragment.class, null)
-                            .commit();
-
-                    //unselect other tabs except profile tab
-                    admin_homeTxt.setVisibility(View.GONE);
-                    admin_searchTxt.setVisibility(View.GONE);
-                    admin_notificationTxt.setVisibility(View.GONE);
-
-                    admin_homeImage.setImageResource(R.drawable.ic_home_);
-                    admin_searchImage.setImageResource(R.drawable.ic_search_navbottom);
-                    admin_notificationImage.setImageResource(R.drawable.ic_notification);
-
-                    admin_homeLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    admin_searchLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-                    admin_notificationLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
-
-                    //select notification tab
-                    admin_profileTxt.setVisibility(View.VISIBLE);
-                    admin_profileImage.setImageResource(R.drawable.ic_selected_user);
-                    admin_profileLayout.setBackgroundResource(R.drawable.round_back_profile_100);
-
-                    //create animation
-                    ScaleAnimation scaleAnimation = new ScaleAnimation(0.8f, 1.0f, 1f, 1f, Animation.RELATIVE_TO_SELF, 1.0f, Animation.RELATIVE_TO_SELF, 0.0f );
-                    scaleAnimation.setDuration(200);
-                    scaleAnimation.setFillAfter(true);
-                    admin_profileLayout.startAnimation(scaleAnimation);
-
-                    // set selected tab 1 as selected tab
-                    selectedTab = 4;
-                }
+                    if(selectedTab != 4){
+                        admin_homeLayout.setBackgroundResource(android.R.color.transparent);
+                        admin_searchLayout.setBackgroundResource(android.R.color.transparent);
+                        admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
+                        admin_profileLayout.setBackgroundResource(R.drawable.round_back_home_100);
+                        getSupportFragmentManager().beginTransaction()
+                                .setReorderingAllowed(true)
+                                .replace(R.id.admin_fragmentContainer, ProfileFragment.class, null)
+                                .commit();
+                    }
+                    if(selectedTab == 4){
+                        getSupportFragmentManager().beginTransaction()
+                                .setReorderingAllowed(true)
+                                .replace(R.id.admin_fragmentContainer, ProfileFragment.class, null)
+                                .commit();
+                    }
             }
         });
 
