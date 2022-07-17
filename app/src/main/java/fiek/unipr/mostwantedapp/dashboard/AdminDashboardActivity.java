@@ -16,8 +16,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,22 +48,29 @@ import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
+    private int selectedTab = 1;
+    private Integer balance;
+    private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
+    private Uri photoURL;
     public static final String ADMIN_INFORMER_PREFS = "ADMIN_INFORMER_PREFS";
+    private String user_anonymousID = null;
+
     private DrawerLayout admin_drawerLayout_real;
     private ActionBarDrawerToggle admin_toggle;
     private Toolbar admin_toolbar;
     private NavigationView admin_nav_view;
     private Button admin_menu_group_logout;
     private ProgressBar admin_logout_progressBar;
+    private ImageView admin_homeImage, admin_searchImage, admin_notificationImage, admin_profileImage;
+    private LinearLayout admin_homeLayout, admin_searchLayout, admin_notificationLayout, admin_profileLayout;
 
     //nav header
     private TextView nav_header_name;
     private ImageView verifiedBadge;
     private CircleImageView nav_header_image_view, topImageProfile;
+    //nav header
 
-    public static final String PREFS_NAME = "LOG_PREF";
-    public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
-
+    //FirebaseDatabase
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser firebaseUser;
@@ -73,14 +78,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
-    private String user_anonymousID = null;
-
-    private Integer balance;
-    private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
-    private Uri photoURL;
-
-    //num of selected tab. We have 4 tabs so value must lie between 1-4. Default value is 1, cause first tab is selected by deafult
-    private int selectedTab = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,53 +89,29 @@ public class AdminDashboardActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
-        final LinearLayout admin_homeLayout = findViewById(R.id.admin_homeLayout);
-        final LinearLayout admin_searchLayout = findViewById(R.id.admin_searchLayout);
-        final LinearLayout admin_notificationLayout = findViewById(R.id.admin_notificationLayout);
-        final LinearLayout admin_profileLayout = findViewById(R.id.admin_profileLayout);
+        admin_nav_view = findViewById(R.id.admin_nav_view);
+        View nav_header_view = admin_nav_view.getHeaderView(0);
+        nav_header_name = nav_header_view.findViewById(R.id.nav_header_name);
+        verifiedBadge = nav_header_view.findViewById(R.id.verifiedBadge);
+        nav_header_image_view = nav_header_view.findViewById(R.id.nav_header_image_view);
 
-        final ImageView admin_homeImage = findViewById(R.id.admin_homeImage);
-        final ImageView admin_searchImage = findViewById(R.id.admin_searchImage);
-        final ImageView admin_notificationImage = findViewById(R.id.admin_notificationImage);
-        final ImageView admin_profileImage = findViewById(R.id.admin_profileImage);
+        admin_homeLayout = findViewById(R.id.admin_homeLayout);
+        admin_searchLayout = findViewById(R.id.admin_searchLayout);
+        admin_notificationLayout = findViewById(R.id.admin_notificationLayout);
+        admin_profileLayout = findViewById(R.id.admin_profileLayout);
 
-        //nav
+        admin_homeImage = findViewById(R.id.admin_homeImage);
+        admin_searchImage = findViewById(R.id.admin_searchImage);
+        admin_notificationImage = findViewById(R.id.admin_notificationImage);
+        admin_profileImage = findViewById(R.id.admin_profileImage);
+
         admin_drawerLayout_real = findViewById(R.id.admin_drawerLayout_real);
         admin_logout_progressBar = findViewById(R.id.admin_logout_progressBar);
         admin_toolbar = findViewById(R.id.admin_toolbar);
         topImageProfile = findViewById(R.id.topImageProfile);
-        setSupportActionBar(admin_toolbar);
-
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        //toolbar.setNavigationIcon(R.drawable.ic_toolbar);
-        admin_toolbar.setTitle("");
-        admin_toolbar.setSubtitle("");
-        //toolbar.setLogo(R.drawable.ic_toolbar);
-
-        admin_toggle = new ActionBarDrawerToggle(AdminDashboardActivity.this, admin_drawerLayout_real, admin_toolbar, R.string.open, R.string.close);
-        admin_drawerLayout_real.addDrawerListener(admin_toggle);
-        admin_toggle.syncState();
-        admin_nav_view = findViewById(R.id.admin_nav_view);
         admin_menu_group_logout = findViewById(R.id.admin_menu_group_logout);
 
-        //Get All Nav header to use elements like textview and any...
-        View headerView = admin_nav_view.getHeaderView(0);
-        nav_header_name = headerView.findViewById(R.id.nav_header_name);
-        verifiedBadge = headerView.findViewById(R.id.verifiedBadge);
-        nav_header_image_view = headerView.findViewById(R.id.nav_header_image_view);
-        //Get All Nav header to use elements like textview and any...
-        //nav
-
-        //set home fragment by default
-        // admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
-        admin_homeImage.setImageResource(R.drawable.ic_home_selected);
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
-                .commit();
-
-        //set deafult seleted
-        admin_nav_view.getMenu().getItem(0).setChecked(true);
+        setHomeDefaultConfig();
 
         admin_menu_group_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,26 +130,31 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     case R.id.admin_menu_group_home:
                         fragment = new HomeFragment();
                         loadFragment(fragment);
+                        setHomeSelected();
                         admin_nav_view.setCheckedItem(id);
                         break;
-                    case R.id.admin_menu_group_account:
+                    case R.id.admin_menu_group_profile:
                         fragment = new ProfileFragment();
                         loadFragment(fragment);
+                        setProfileSelected();
                         admin_nav_view.setCheckedItem(id);
                         break;
                     case R.id.admin_menu_group_settings:
                         fragment = new SettingsFragment();
                         loadFragment(fragment);
+                        setHomeSelected();
                         admin_nav_view.setCheckedItem(id);
                         break;
                     case R.id.admin_menu_group_help:
                         fragment = new HelpFragment();
                         loadFragment(fragment);
+                        setHomeSelected();
                         admin_nav_view.setCheckedItem(id);
                         break;
                     case R.id.admin_menu_group_about:
                         fragment = new AboutFragment();
                         loadFragment(fragment);
+                        setHomeSelected();
                         admin_nav_view.setCheckedItem(id);
                         break;
                     case R.id.admin_menu_group_logout:
@@ -194,33 +172,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 1){
-//                    admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
-//                    admin_searchLayout.setBackgroundResource(android.R.color.transparent);
-//                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
-//                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
-
-                    admin_homeImage.setImageResource(R.drawable.ic_home_selected);
-                    admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
-                    admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
-                    admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
-
+                    setHomeSelected();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
                             .commit();
                 }
                 if(selectedTab == 1){
-//                    admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
-//                    admin_searchLayout.setBackgroundResource(android.R.color.transparent);
-//                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
-//                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
-
-                    admin_homeImage.setImageResource(R.drawable.ic_home_selected);
-                    admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
-                    admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
-                    admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
-
-
+                    setHomeSelected();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
@@ -233,16 +192,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(selectedTab != 2){
-//                    admin_homeLayout.setBackgroundResource(android.R.color.transparent);
-//                    admin_searchLayout.setBackgroundResource(R.drawable.round_back_home_100);
-//                    admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
-//                    admin_profileLayout.setBackgroundResource(android.R.color.transparent);
-
-                    admin_searchImage.setImageResource(R.drawable.ic_search_selected);
-                    admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
-                    admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
-                    admin_homeImage.setImageResource(R.drawable.ic_home_unselected);
-
+                    setSearchSelected();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.admin_fragmentContainer, SearchFragment.class, null)
@@ -261,16 +211,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                     if(selectedTab != 3){
-//                        admin_homeLayout.setBackgroundResource(android.R.color.transparent);
-//                        admin_searchLayout.setBackgroundResource(android.R.color.transparent);
-//                        admin_notificationLayout.setBackgroundResource(R.drawable.round_back_home_100);
-//                        admin_profileLayout.setBackgroundResource(android.R.color.transparent);
-
-                        admin_notificationImage.setImageResource(R.drawable.ic_notification_selected);
-                        admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
-                        admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
-                        admin_homeImage.setImageResource(R.drawable.ic_home_unselected);
-
+                        setNotificationSelected();
                         getSupportFragmentManager().beginTransaction()
                                 .setReorderingAllowed(true)
                                 .replace(R.id.admin_fragmentContainer, NotificationFragment.class, null)
@@ -290,16 +231,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                     if(selectedTab != 4){
-//                        admin_homeLayout.setBackgroundResource(android.R.color.transparent);
-//                        admin_searchLayout.setBackgroundResource(android.R.color.transparent);
-//                        admin_notificationLayout.setBackgroundResource(android.R.color.transparent);
-//                        admin_profileLayout.setBackgroundResource(R.drawable.round_back_home_100);
-
-                        admin_profileImage.setImageResource(R.drawable.ic_profile_selected);
-                        admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
-                        admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
-                        admin_homeImage.setImageResource(R.drawable.ic_home_unselected);
-
+                        setProfileSelected();
                         getSupportFragmentManager().beginTransaction()
                                 .setReorderingAllowed(true)
                                 .replace(R.id.admin_fragmentContainer, ProfileFragment.class, null)
@@ -314,6 +246,59 @@ public class AdminDashboardActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void setHomeDefaultConfig() {
+
+        setSupportActionBar(admin_toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        admin_toolbar.setTitle("");
+        admin_toolbar.setSubtitle("");
+
+        admin_toggle = new ActionBarDrawerToggle(AdminDashboardActivity.this, admin_drawerLayout_real, admin_toolbar, R.string.open, R.string.close);
+        admin_drawerLayout_real.addDrawerListener(admin_toggle);
+        admin_toggle.syncState();
+
+        //set home fragment by default
+        // admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
+        admin_homeImage.setImageResource(R.drawable.ic_home_selected);
+        getSupportFragmentManager().beginTransaction()
+                .setReorderingAllowed(true)
+                .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
+                .commit();
+
+        //set deafult seleted
+        admin_nav_view.getMenu().getItem(0).setChecked(true);
+    }
+
+    private void setHomeSelected() {
+        admin_homeImage.setImageResource(R.drawable.ic_home_selected);
+        admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
+        admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
+        admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
+        admin_nav_view.getMenu().getItem(0).setChecked(true);
+    }
+
+    private void setSearchSelected() {
+        admin_searchImage.setImageResource(R.drawable.ic_search_selected);
+        admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
+        admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
+        admin_homeImage.setImageResource(R.drawable.ic_home_unselected);
+    }
+
+    private void setProfileSelected() {
+        admin_profileImage.setImageResource(R.drawable.ic_profile_selected);
+        admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
+        admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
+        admin_homeImage.setImageResource(R.drawable.ic_home_unselected);
+        admin_nav_view.getMenu().getItem(1).setChecked(true);
+    }
+
+    private void setNotificationSelected() {
+        admin_notificationImage.setImageResource(R.drawable.ic_notification_selected);
+        admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
+        admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
+        admin_homeImage.setImageResource(R.drawable.ic_home_unselected);
     }
 
     private void Logout() {

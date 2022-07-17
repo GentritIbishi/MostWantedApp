@@ -62,6 +62,7 @@
                             android:layout_below="@+id/admin_tvProfilePictureTxt"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="3dp"
                             android:layout_marginBottom="8dp"
                             android:layout_toRightOf="@id/admin_imageOfProfile"
                             android:background="@drawable/button"
@@ -69,6 +70,7 @@
                             android:text="@string/upload"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/admin_btnDeletePhoto"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.0" />
@@ -77,6 +79,7 @@
                             android:id="@+id/admin_btnDeletePhoto"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="8dp"
@@ -126,8 +129,7 @@
                         android:layout_marginBottom="0dp"
                         android:background="@drawable/input_bg_white"
                         android:inputType="textPersonName"
-                        android:padding="16dp"
-                        android:text="Name" />
+                        android:padding="16dp"/>
 
                     <TextView
                         android:id="@+id/admin_tvParentName"
@@ -155,8 +157,7 @@
                         android:layout_marginBottom="0dp"
                         android:background="@drawable/input_bg_white"
                         android:inputType="textPersonName"
-                        android:padding="16dp"
-                        android:text="Parent Name" />
+                        android:padding="16dp"/>
 
                     <TextView
                         android:id="@+id/admin_tvLastName"
@@ -184,8 +185,7 @@
                         android:layout_marginBottom="0dp"
                         android:background="@drawable/input_bg_white"
                         android:inputType="textPersonName"
-                        android:padding="16dp"
-                        android:text="Last Name" />
+                        android:padding="16dp"/>
 
                     <TextView
                         android:id="@+id/admin_tvAddressAccount"
@@ -213,8 +213,7 @@
                         android:layout_marginBottom="0dp"
                         android:background="@drawable/input_bg_white"
                         android:inputType="textPostalAddress"
-                        android:padding="16dp"
-                        android:text="Address" />
+                        android:padding="16dp"/>
 
                     <TextView
                         android:id="@+id/admin_tvPersonalNumber"
@@ -242,8 +241,7 @@
                         android:layout_marginBottom="0dp"
                         android:background="@drawable/input_bg_white"
                         android:inputType="number"
-                        android:padding="16dp"
-                        android:text="1234567890" />
+                        android:padding="16dp"/>
 
                     <TextView
                         android:id="@+id/admin_tvPhoneNumberAccount"
@@ -271,8 +269,7 @@
                         android:layout_marginBottom="0dp"
                         android:background="@drawable/input_bg_white"
                         android:inputType="phone"
-                        android:padding="16dp"
-                        android:text="+38344XXXXXX" />
+                        android:padding="16dp"/>
 
 
                     <TextView
@@ -301,8 +298,7 @@
                         android:layout_marginBottom="0dp"
                         android:background="@drawable/input_bg_white"
                         android:inputType="textEmailAddress"
-                        android:padding="16dp"
-                        android:text="example@example.com" />
+                        android:padding="16dp"/>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"

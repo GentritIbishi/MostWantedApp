@@ -156,6 +156,8 @@ public class HomeFragment extends Fragment {
 
         final ConstraintLayout constraintPU = registerUsers.findViewById(R.id.constraintPU);
         final ConstraintLayout constraintWP = registerUsers.findViewById(R.id.constraintWP);
+        final ConstraintLayout cons_dashboard_top = admin_dashboard_view.findViewById(R.id.cons_dashboard_top);
+        final ConstraintLayout cons_analytics = admin_dashboard_view.findViewById(R.id.cons_analytics);
 
         constraintPU.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,6 +191,8 @@ public class HomeFragment extends Fragment {
             public void onClick(View view) {
                 gridLayout.setVisibility(View.GONE);
                 registerUsers.setVisibility(View.VISIBLE);
+                cons_dashboard_top.setVisibility(View.GONE);
+                cons_analytics.setVisibility(View.GONE);
             }
         });
 

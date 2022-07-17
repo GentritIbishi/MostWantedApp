@@ -23,10 +23,11 @@
                 android:layout_height="match_parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cons_dashboard_top"
                     android:layout_width="match_parent"
-                    android:elevation="6dp"
+                    android:layout_height="100dp"
                     android:background="@drawable/bg_dashboard_top"
-                    android:layout_height="100dp">
+                    android:elevation="6dp">
 
                     <TextView
                         android:id="@+id/rightNowDateTime"
@@ -36,9 +37,9 @@
                         android:layout_marginTop="24dp"
                         android:fontFamily="@font/open_sans"
                         android:text="Mon, Jan 1, 2022"
+                        android:textColor="@color/verydark"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        android:textColor="@color/verydark"
                         app:layout_constraintBottom_toTopOf="@+id/hiDashboard"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
@@ -51,9 +52,9 @@
                         android:layout_marginStart="32dp"
                         android:layout_marginBottom="24dp"
                         android:text="@string/dashboard"
+                        android:textColor="@color/verydark"
                         android:textSize="24sp"
                         android:textStyle="bold"
-                        android:textColor="@color/verydark"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent" />
 
@@ -212,6 +213,7 @@
                     layout="@layout/persistent_add_user_or_person"/>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/cons_analytics"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="10dp">
@@ -249,12 +251,12 @@
                             android:layout_width="150dp"
                             android:layout_height="130dp"
                             android:layout_below="@+id/admin_home_tvReports"
-                            android:layout_marginStart="32dp"
+                            android:layout_marginStart="48dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
                             android:background="@drawable/bg_counters"
                             android:elevation="6dp"
-                            app:layout_constraintEnd_toStartOf="@+id/unverified_report"
+                            app:layout_constraintEnd_toStartOf="@+id/admin_home_unverified_report"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
@@ -299,7 +301,7 @@
                             android:layout_below="@+id/admin_home_tvReports"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
-                            android:layout_marginEnd="32dp"
+                            android:layout_marginEnd="48dp"
                             android:background="@drawable/bg_counters"
                             android:elevation="6dp"
                             app:layout_constraintBottom_toTopOf="@+id/admin_home_fake_report"
@@ -347,12 +349,14 @@
                             android:layout_width="150dp"
                             android:layout_height="130dp"
                             android:layout_below="@+id/admin_home_tvReports"
-                            android:layout_marginStart="32dp"
+                            android:layout_marginStart="48dp"
                             android:layout_marginTop="16dp"
+                            android:layout_marginEnd="8dp"
                             android:layout_marginBottom="16dp"
                             android:background="@drawable/bg_counters"
                             android:elevation="6dp"
                             app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toStartOf="@+id/admin_home_gradeSector"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/admin_home_verified_report">
 
@@ -397,7 +401,7 @@
                             android:layout_below="@+id/admin_home_tvReports"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="16dp"
-                            android:layout_marginEnd="32dp"
+                            android:layout_marginEnd="48dp"
                             android:layout_marginBottom="16dp"
                             android:background="@drawable/bg_counters"
                             android:elevation="6dp"
@@ -446,7 +450,6 @@
 
 
                     <androidx.cardview.widget.CardView
-                        android:padding="10dp"
                         android:id="@+id/admin_home_cardViewGraph"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
@@ -456,6 +459,7 @@
                         android:layout_marginEnd="32dp"
                         android:layout_marginBottom="16dp"
                         android:elevation="10dp"
+                        android:padding="10dp"
                         app:cardCornerRadius="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -466,10 +470,10 @@
                         <!-- and details of pie chart-->
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:padding="10dp"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:elevation="6dp">
+                            android:elevation="6dp"
+                            android:padding="10dp">
 
                             <!--Pie chart to display the data-->
 
