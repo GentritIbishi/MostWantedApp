@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.lists;
+package fiek.unipr.mostwantedapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;

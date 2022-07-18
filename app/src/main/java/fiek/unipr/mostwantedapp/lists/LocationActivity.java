@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.adapter.LocationListAdapter;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class LocationActivity extends AppCompatActivity {

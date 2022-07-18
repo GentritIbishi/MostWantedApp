@@ -284,6 +284,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
         admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
         admin_homeImage.setImageResource(R.drawable.ic_home_unselected);
+        unSelectAllItemInMenu();
     }
 
     private void setProfileSelected() {
@@ -299,6 +300,13 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
         admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
         admin_homeImage.setImageResource(R.drawable.ic_home_unselected);
+        unSelectAllItemInMenu();
+    }
+
+    private void unSelectAllItemInMenu() {
+        for(int i = 0; i<admin_nav_view.getMenu().size();i++){
+            admin_nav_view.getMenu().getItem(i).setChecked(false);
+        }
     }
 
     private void Logout() {

@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.adapter.UserListAdapter;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class UserActivity extends AppCompatActivity {
