@@ -169,27 +169,20 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
 
         long elapsedSeconds = different / secondsInMilli;
 
-//        if(elapsedDays != 0)
-//        {
-//            user_report_time_elapsed += elapsedDays+" d";
-//        }
-//
-//        if(elapsedHours != 0)
-//        {
-//            user_report_time_elapsed += elapsedHours+" h";
-//        }
-//
-//        if(elapsedMinutes != 0)
-//        {
-//            user_report_time_elapsed += elapsedMinutes+" m";
-//        }
-//
-//        if(elapsedSeconds != 0)
-//        {
-//            user_report_time_elapsed += elapsedSeconds+" s";
-//        }
+        long weeks = elapsedDays/7;
 
-        user_report_time_elapsed = elapsedDays+"d " + elapsedHours +"h "+ elapsedMinutes +"m "+ elapsedSeconds+"s ";
+        if(weeks != 0){
+            user_report_time_elapsed = weeks+"w ";
+        }else if(elapsedDays != 0) {
+            user_report_time_elapsed = elapsedDays+"d ";
+        }else if(elapsedHours != 0){
+            user_report_time_elapsed = elapsedHours+"h ";
+        }else if(elapsedMinutes != 0){
+            user_report_time_elapsed = elapsedMinutes+"m ";
+        }else if(elapsedSeconds != 0){
+            user_report_time_elapsed = elapsedSeconds+"s ";
+        }
+
     }
 
     public static String getTimeDate() { // without parameter argument
