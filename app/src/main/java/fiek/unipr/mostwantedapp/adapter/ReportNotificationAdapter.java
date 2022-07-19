@@ -40,6 +40,7 @@ import fiek.unipr.mostwantedapp.models.Report;
 public class ReportNotificationAdapter extends ArrayAdapter<Report> {
     // constructor for our list view adapter.
 
+    private CircleImageView user_reported_image;
     private static String ANONYMOUS = "ANONYMOUS";
     private String urlOfProfile, user_report_time_elapsed, informer_person;
     private List<Report> reportList = null;
@@ -70,13 +71,34 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
         TextView user_report_time = listitemView.findViewById(R.id.user_report_time);
         CircleImageView user_reported_image = listitemView.findViewById(R.id.user_reported_image);
 
+        getUrlOfProfile(report.getuID());
 
         try {
-
             // after initializing our items we are
             // setting data to our view.
             // below line is use to set data to our text view.
             user_report_name.setText(report.getInformer_person());
+
+            informer_person = user_report_name.getText().toString();
+
+            if (informer_person != null && informer_person.equals(ANONYMOUS)){
+
+                user_reported_image.setImageResource(R.drawable.ic_anonymous);
+
+            }else if(informer_person != null && informer_person.startsWith("+383")){
+
+                user_reported_image.setImageResource(R.drawable.ic_phone_login);
+
+            }else {
+                // in below line we are using Picasso to
+                // load image from URL in our Image VIew.
+                Picasso.get()
+                        .load(urlOfProfile)
+                        .transform(new CircleTransform())
+                        .into(user_reported_image);
+            }
+
+
             user_report_description.setText(report.getDescription());
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
@@ -88,32 +110,6 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
                 if(user_report_time_elapsed != null){
                     user_report_time.setText(user_report_time_elapsed);
                 }
-
-
-            getUrlOfProfile(report.getuID());
-
-            if (informer_person != null && informer_person.equals(ANONYMOUS)){
-                // in below line we are using Picasso to
-                // load image from URL in our Image VIew.
-                Picasso.get()
-                        .load(R.drawable.ic_anonymous)
-                        .transform(new CircleTransform())
-                        .into(user_reported_image);
-            }else if(informer_person != null && informer_person.startsWith("+")){
-                // in below line we are using Picasso to
-                // load image from URL in our Image VIew.
-                Picasso.get()
-                        .load(R.drawable.ic_phone_login)
-                        .transform(new CircleTransform())
-                        .into(user_reported_image);
-            }else {
-                // in below line we are using Picasso to
-                // load image from URL in our Image VIew.
-                Picasso.get()
-                        .load(urlOfProfile)
-                        .transform(new CircleTransform())
-                        .into(user_reported_image);
-            }
 
         } catch (ParseException e) {
             e.printStackTrace();
@@ -148,10 +144,6 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
     public void printDifference(Date startDate, Date endDate) {
         //milliseconds
         long different = endDate.getTime() - startDate.getTime();
-
-//        System.out.println("startDate : " + startDate);
-//        System.out.println("endDate : "+ endDate);
-//        System.out.println("different : " + different);
 
         long secondsInMilli = 1000;
         long minutesInMilli = secondsInMilli * 60;
@@ -203,7 +195,6 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         urlOfProfile = documentSnapshot.getString("urlOfProfile");
-                        informer_person = documentSnapshot.getString("informer_person");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

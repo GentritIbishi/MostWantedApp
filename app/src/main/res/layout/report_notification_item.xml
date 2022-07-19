@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:padding="5dp"
     android:background="@color/light_gray"
-    android:elevation="6dp">
+    android:elevation="10dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/user_reported_image"
