@@ -7,13 +7,13 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -48,9 +48,9 @@ import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsInformerBinding;
+import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.models.ReportStatus;
-import fiek.unipr.mostwantedapp.update.UpdatePerson;
 
 public class MapsInformerActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
@@ -58,9 +58,11 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     public static final String PROFILE_INFORMER_PREFS = "profileInformerPreferences";
+    public static final String USER_INFORMER_PREFS = "USER_INFORMER_PREFS";
+    public static final String ANONYMOUS = "ANONYMOUS";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
-    private static final int IMAGE_CODE = 15;
+    private static final int PICK_IMAGE = 15;
     private FusedLocationProviderClient mfusedLocationProviderClient;
     private GoogleMap mMap;
     private boolean locationPermissionGranted = false;
@@ -69,6 +71,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
     private StorageReference storageReference;
+    private DocumentReference documentReference;
 
     private String wanted_person, acts, address, eyeColor, hairColor, phy_appearance, status, urlOfProfile;
     private String dateNtime;
@@ -80,25 +83,26 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private Marker marker;
     private Map<String, Object> images = new HashMap<>();
     private Bundle mapsInformerBundle;
+    private ProgressDialog progressDialog;
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setOnMapClickListener(this);
+    public void onStart() {
+        super.onStart();
+        if(firebaseAuth != null){
 
-        if (locationPermissionGranted) {
-            getDeviceLocation();
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return;
+            if(firebaseAuth.getCurrentUser().isAnonymous()){
+                loadInfoAnonymousFirebase();
             }
-            mMap.setMyLocationEnabled(true);
-        }else {
-            Toast.makeText(this, "No permit!", Toast.LENGTH_SHORT).show();
-        }
 
+            else if(!empty(firebaseAuth.getCurrentUser().getPhoneNumber())){
+                loadInfoPhoneFirebase();
+            }
+
+            else {
+                loadInfoFromFirebase(firebaseAuth);
+            }
+
+        }
     }
 
     @Override
@@ -107,6 +111,9 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
         binding = ActivityMapsInformerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(this.getText(R.string.image_uploaded_successfully)+"");
 
         binding.LocationReport.setVisibility(View.VISIBLE);
         binding.OtherReports.setVisibility(View.GONE);
@@ -118,9 +125,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
         mapsInformerBundle = new Bundle();
         getFromBundle(mapsInformerBundle);
-
-        getUIDorPHONE();
-        getInformerFullName(firebaseAuth.getCurrentUser().getUid());
 
         getLocationPermission();
 
@@ -137,14 +141,13 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             }
         });
 
-        binding.btChooseImage.setOnClickListener(new View.OnClickListener() {
+        binding.choose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent,"Select Picture"), IMAGE_CODE);
+                startActivityForResult(intent, PICK_IMAGE);
             }
         });
 
@@ -174,9 +177,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful() && task !=null) {
-                                //task succesfull
-                                //report succesfull finish activity qoje user te homefragment
-                                //ni progress bar duhet ktu me bindirat
                                 setLastSeenLocation(latitude, longitude, wanted_person);
                                 finish();
                                 Toast.makeText(MapsInformerActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
@@ -195,11 +195,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     DocumentReference docRef = firebaseFirestore
                             .collection("locations_reports")
                             .document(dateNtime);
-
-                    //thirri metodat per me set emrin, cila bon e bon set
-                    getUIDorPHONE();
-                    getInformerFullName(firebaseAuth.getCurrentUser().getUid());
-
                     Report report = new Report(binding.etDescription.getText().toString(),
                             dateNtime,
                             firebaseAuth.getCurrentUser().getUid(),
@@ -248,6 +243,26 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setOnMapClickListener(this);
+
+        if (locationPermissionGranted) {
+            getDeviceLocation();
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mMap.setMyLocationEnabled(true);
+        }else {
+            Toast.makeText(this, "No permit!", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     private void getFromBundle(Bundle bundle) {
 
         try {
@@ -268,36 +283,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             e.getMessage();
         }
 
-    }
-
-    private void getInformerFullName(String uID) {
-        firebaseFirestore.collection("users").document(uID)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot!=null && documentSnapshot.exists()) {
-                            informer_person = documentSnapshot.getString("fullName");
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void getUIDorPHONE() {
-        if(firebaseAuth != null){
-            if(firebaseAuth.getCurrentUser().getPhoneNumber() !=null && !TextUtils.isEmpty(firebaseAuth.getCurrentUser().getPhoneNumber())){
-                informer_person = firebaseAuth.getCurrentUser().getPhoneNumber();
-                SharedPreferences settings = getSharedPreferences(PROFILE_INFORMER_PREFS, 0);
-                informer_person = settings.getString("phone", null);
-            }else if(firebaseAuth.getCurrentUser().isAnonymous()){
-                    informer_person = "ANONYMOUS";
-            }
-        }
     }
 
     public static String getTimeDate() { // without parameter argument
@@ -400,25 +385,26 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == IMAGE_CODE && resultCode == RESULT_OK) {
-
+        if(requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
             if(data.getClipData() != null) {
-
+                progressDialog.show();
                 int totalitem = data.getClipData().getItemCount();
                 for(int i=0; i<totalitem;i++){
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
                     uploadImageToFirebase(imageUri, totalitem);
-                    binding.tvReportImage.setText(totalitem +" "+getText(R.string.image_uploaded_v2));
+                    binding.alert.setText(this.getText(R.string.you_have_selected)+" "+totalitem+" "+this.getText(R.string.images));
                 }
-            }else {
-                Toast.makeText(this, R.string.empty, Toast.LENGTH_SHORT).show();
+            }else if(data.getData() != null) {
+                progressDialog.show();
+                Uri imageUri = data.getData();
+                uploadImageToFirebase(imageUri, 1);
+                binding.alert.setText(this.getText(R.string.you_have_selected)+" "+1+" "+this.getText(R.string.images));
+                Toast.makeText(this, this.getText(R.string.image_uploaded_successfully), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     private void uploadImageToFirebase(Uri imageUri, int totalitem) {
-        //upload image to storage in firebase
-
         dateNtime = getTimeDate();
         for(int i = 0; i < totalitem; i++) {
             StorageReference fileRef = storageReference.child("wanted_persons/locations_reports/"+dateNtime+"/Image"+i+".jpg");
@@ -440,6 +426,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 }
             });
         }
+        progressDialog.dismiss();
     }
 
     private void setLastSeenLocation(Double latitude, Double longitude, String wanted_person) {
@@ -469,6 +456,50 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             }
         });
 
+    }
+
+    private void loadInfoPhoneFirebase() {
+        String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
+        if(!empty(phone))
+        {
+            //logged in with phone
+            informer_person = phone;
+        }
+    }
+
+    private void loadInfoAnonymousFirebase() {
+        if(firebaseAuth.getCurrentUser().isAnonymous()){
+            informer_person = ANONYMOUS;
+        }
+    }
+
+    public static boolean empty( final String s ) {
+        // Null-safe, short-circuit evaluation.
+        return s == null || s.trim().isEmpty();
+    }
+
+    private boolean checkConnection() {
+        CheckInternet checkInternet = new CheckInternet();
+        if(!checkInternet.isConnected(this)){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
+        if(checkConnection()){
+            documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+            documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if(task.isSuccessful() && task.getResult() != null)
+                    {
+                        informer_person = task.getResult().getString("fullName");
+                    }
+                }
+            });
+        }
     }
 
 }

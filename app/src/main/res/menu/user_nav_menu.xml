@@ -5,7 +5,7 @@
             android:id="@+id/user_menu_group_home"
             android:title="@string/home"/>
         <item
-            android:id="@+id/user_menu_group_account"
+            android:id="@+id/user_menu_group_profile"
             android:title="@string/profile"/>
         <item
             android:id="@+id/user_menu_group_settings"

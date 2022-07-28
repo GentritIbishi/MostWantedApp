@@ -35,11 +35,15 @@
 
             <ListView
                 android:id="@+id/lvPersons"
-                android:padding="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="5.0sp"
                 android:clickable="true"
-                android:focusable="true" />
+                android:divider="@android:color/transparent"
+                android:dividerHeight="5.0sp"
+                android:elevation="6dp"
+                android:focusable="true"
+                android:padding="5dp" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </RelativeLayout>

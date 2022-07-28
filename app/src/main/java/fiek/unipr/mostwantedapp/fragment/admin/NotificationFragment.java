@@ -1,10 +1,15 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -17,12 +22,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -135,6 +146,71 @@ public class NotificationFragment extends Fragment {
                         Toast.makeText(getActivity().getApplicationContext(), "Fail to load data..", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void realTimeCheckForNewReportNotification() {
+        firebaseFirestore.collection("locations_reports")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                            switch (dc.getType()) {
+                                case ADDED:
+                                    NotificationCompat.Builder new_builder = new NotificationCompat.Builder(getContext(), "My Notification");
+                                    new_builder.setContentTitle("New Report added!");
+                                    new_builder.setContentText(dc.getDocument().getString("description"));
+                                    new_builder.setSmallIcon(R.drawable.ic_launcher_background);
+                                    new_builder.setAutoCancel(true);
+
+                                    NotificationManagerCompat new_managerCompat = NotificationManagerCompat.from(getContext());
+                                    new_managerCompat.notify(1, new_builder.build());
+
+                                    Toast.makeText(getContext(), "New report: " + dc.getDocument().getData(), Toast.LENGTH_SHORT).show();
+                                    break;
+                                case MODIFIED:
+                                    NotificationCompat.Builder modified_builder = new NotificationCompat.Builder(getContext(), "My Notification");
+                                    modified_builder.setContentTitle("New Report modified!");
+                                    modified_builder.setContentText(dc.getDocument().getString("description"));
+                                    modified_builder.setSmallIcon(R.drawable.ic_launcher_background);
+                                    modified_builder.setAutoCancel(true);
+
+                                    NotificationManagerCompat modified_managerCompat = NotificationManagerCompat.from(getContext());
+                                    modified_managerCompat.notify(2, modified_builder.build());
+
+                                    Toast.makeText(getContext(), "Modified report: " + dc.getDocument().getData(), Toast.LENGTH_SHORT).show();
+                                    break;
+                                case REMOVED:
+                                    NotificationCompat.Builder removed_builder = new NotificationCompat.Builder(getContext(), "My Notification");
+                                    removed_builder.setContentTitle("New Report modified!");
+                                    removed_builder.setContentText(dc.getDocument().getString("description"));
+                                    removed_builder.setSmallIcon(R.drawable.ic_launcher_background);
+                                    removed_builder.setAutoCancel(true);
+
+                                    NotificationManagerCompat removed_managerCompat = NotificationManagerCompat.from(getContext());
+                                    removed_managerCompat.notify(2, removed_builder.build());
+
+                                    Toast.makeText(getContext(), "Removed report: " + dc.getDocument().getData(), Toast.LENGTH_SHORT).show();
+                                    break;
+                            }
+                        }
+
+                    }
+                });
+    }
+
+
+    private void checkNotificationPermission() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("My Notification", "My Notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getActivity().getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
     }
 
 }

@@ -185,7 +185,7 @@ public class AccountFragment extends Fragment {
                         DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
                         docRef.update("urlOfProfile", uri.toString());
                         acc_uploadProgressBar.setVisibility(View.GONE);
-                        Toast.makeText(getContext(), R.string.image_uploaded_successfully, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.images_uploaded_successfully, Toast.LENGTH_SHORT).show();
                     }
                 });
             }

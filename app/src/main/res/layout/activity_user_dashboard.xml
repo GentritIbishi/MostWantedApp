@@ -8,7 +8,6 @@
     android:background="@color/white"
     tools:context=".dashboard.UserDashboardActivity">
 
-
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/user_drawerLayout_real"
         android:layout_width="match_parent"
@@ -40,6 +39,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/topImageProfile"
+                    android:visibility="invisible"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="right"
@@ -59,11 +59,13 @@
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/user_nav_view"
+            android:padding="10dp"
             android:theme="@style/NavigationTheme"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/white"
             android:layout_gravity="start"
+            android:layout_marginBottom="3dp"
             app:drawerLayoutCornerSize="10dp"
             app:headerLayout="@layout/nav_header"
             app:menu="@menu/user_nav_menu"
@@ -76,20 +78,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="5dp"
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/user_menu_group_logout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button"
+                    android:background="@drawable/button_red"
                     android:fontFamily="@font/open_sans_light"
                     android:gravity="center"
                     android:text="@string/logout"
                     android:textColor="@color/white"
-                    android:textSize="14sp"
+                    android:textSize="15sp"
                     android:textStyle="bold"
+                    android:padding="10dp"
+                    android:drawableLeft="@drawable/ic_baseline_logout_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -116,138 +120,131 @@
         android:id="@+id/user_bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="4"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:elevation="10dp"
-        android:background="@color/white"
-        android:gravity="center"
         android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_navigation_bottom"
+        android:elevation="15dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingTop="15dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="15dp"
+        android:weightSum="4"
         tools:targetApi="lollipop">
 
         <LinearLayout
             android:id="@+id/user_homeLayout"
-            android:background="@drawable/round_back_home_100"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center"
             android:orientation="horizontal"
             android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:gravity="center"
-            android:layout_weight="1">
+            android:paddingEnd="5dp">
 
             <ImageView
                 android:id="@+id/user_homeImage"
-                android:layout_width="20dp"
+                android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_selected_home"/>
-
-            <TextView
-                android:id="@+id/user_homeTxt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/home"
-                android:textStyle="bold"
-                android:textColor="@color/home"
-                android:layout_marginStart="10dp"
-                android:textSize="16sp"/>
+                android:src="@drawable/ic_home_unselected" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/user_searchLayout"
-            android:background="@android:color/transparent"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center"
             android:orientation="horizontal"
             android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:gravity="center"
-            android:layout_weight="1">
+            android:paddingEnd="5dp">
 
             <ImageView
                 android:id="@+id/user_searchImage"
                 android:layout_width="25dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_search_unselected"/>
+                android:src="@drawable/ic_search_unselected" />
 
             <TextView
                 android:id="@+id/user_searchTxt"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/search"
-                android:textStyle="bold"
-                android:textColor="@color/search"
                 android:layout_marginStart="10dp"
-                android:textSize="16sp"/>
+                android:text="@string/search"
+                android:textColor="@color/search"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/user_notificationLayout"
-            android:background="@android:color/transparent"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center"
             android:orientation="horizontal"
             android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:gravity="center"
-            android:layout_weight="1">
+            android:paddingEnd="5dp">
 
             <ImageView
                 android:id="@+id/user_notificationImage"
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_notification_unselected"/>
+                android:src="@drawable/ic_notification_unselected" />
 
             <TextView
                 android:id="@+id/user_notificationTxt"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/notification"
-                android:textStyle="bold"
-                android:textColor="@color/notification"
                 android:layout_marginStart="10dp"
-                android:textSize="16sp"/>
+                android:text="@string/notification"
+                android:textColor="@color/notification"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/user_profileLayout"
-            android:background="@android:color/transparent"
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:gravity="center"
             android:orientation="horizontal"
             android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:gravity="center"
-            android:layout_weight="1">
+            android:paddingEnd="5dp">
 
             <ImageView
                 android:id="@+id/user_profileImage"
                 android:layout_width="20dp"
                 android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
-                android:src="@drawable/ic_user"/>
+                android:src="@drawable/ic_profile_unselected" />
 
             <TextView
                 android:id="@+id/user_profileTxt"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/profile"
-                android:textStyle="bold"
-                android:textColor="@color/profile"
                 android:layout_marginStart="10dp"
-                android:textSize="16sp"/>
+                android:text="@string/profile"
+                android:textColor="@color/profile"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
         </LinearLayout>
 

@@ -30,11 +30,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/tv_reportImage"
+        android:id="@+id/alert"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/upload_any_phone_optional"
+        android:text="@string/upload_any_media_optional"
         android:textSize="14sp"
         android:textAlignment="center"
         android:visibility="visible"
@@ -46,18 +46,18 @@
         app:layout_constraintTop_toBottomOf="@+id/et_description" />
 
     <Button
-        android:id="@+id/bt_chooseImage"
+        android:id="@+id/choose"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@drawable/button"
-        android:text="@string/choose_image"
+        android:text="@string/choose"
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/et_description"
         app:layout_constraintStart_toStartOf="@+id/et_description"
-        app:layout_constraintTop_toBottomOf="@+id/tv_reportImage" />
+        app:layout_constraintTop_toBottomOf="@+id/alert" />
 
     <Button
         android:id="@+id/bt_Report"
@@ -69,9 +69,9 @@
         android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/bt_chooseImage"
-        app:layout_constraintStart_toStartOf="@+id/bt_chooseImage"
-        app:layout_constraintTop_toBottomOf="@+id/bt_chooseImage" />
+        app:layout_constraintEnd_toEndOf="@+id/choose"
+        app:layout_constraintStart_toStartOf="@+id/choose"
+        app:layout_constraintTop_toBottomOf="@+id/choose" />
 
     <Button
         android:id="@+id/bt_skipDecsImg"

@@ -151,12 +151,15 @@
     <string name="set_current_location">Set current location</string>
     <string name="location_set_tap_if_u_want_to_change">Location is set, tap long if you want to change!</string>
     <string name="add_any_additional_info_optional">Add any additional info (optional)</string>
-    <string name="choose_image">Choose Image</string>
-    <string name="upload_any_phone_optional">Upload any photo (Optional)</string>
+    <string name="choose">Choose</string>
+    <string name="upload_any_media_optional">Upload any media (Optional)</string>
+    <string name="you_have_selected">You have selected</string>
+    <string name="images">Images</string>
     <string name="location_not_set_please_set_new_location">Location not set, please set new location!</string>
     <string name="failed_to_register">Failed to register</string>
     <string name="position">Position</string>
     <string name="please_turn_on_location_on_your_phone">Please turn on location on your phone!</string>
+    <string name="image_uploading_please_wait">Image Uploading Please Wait............</string>
     <string name="image_uploaded_v2">Image Uploaded!</string>
     <string name="account">Account</string>
     <string name="my_account">My Account</string>
@@ -185,6 +188,7 @@
     <string name="real_time_statistics">Real Time Statistics</string>
     <string name="no_firebase_authentication">No Firebase Authentication</string>
     <string name="image_deleted_successfully">Image deleted successfully!</string>
+    <string name="images_uploaded_successfully">Images uploaded successfully!</string>
     <string name="image_uploaded_successfully">Image uploaded successfully!</string>
     <string name="help">Help</string>
     <string name="about">About</string>
@@ -239,6 +243,7 @@
     <string name="share">Share</string>
     <string name="share_pdf_generated_link">Share pdf generated link.</string>
     <string name="hi">Hi,</string>
+    <string name="select_one_or_more_picture">Select One or More Picture</string>
 
     <string name="location_cell">Location</string>
     <string name="address_cell">Address</string>

@@ -120,7 +120,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
                 String phone_number = binding.etPhoneNumber.getText().toString().trim();
                 String phone = country_code + "" + phone_number;
                 if(TextUtils.isEmpty(phone)){
-                    Toast.makeText(PhoneSignInActivity.this, R.string.please_enter_your_country_code_and_phone_number_for_verification, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PhoneSignInActivity.this, getText(R.string.please_enter_your_country_code_and_phone_number_for_verification), Toast.LENGTH_SHORT).show();
                 }else {
                     startPhoneNumberVerification(phone);
                 }
@@ -134,7 +134,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
                 String phone_number = binding.etPhoneNumber.getText().toString().trim();
                 String phone = country_code + "" + phone_number;
                 if(TextUtils.isEmpty(phone)){
-                    Toast.makeText(PhoneSignInActivity.this, R.string.please_enter_your_country_code_and_phone_number_for_verification, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PhoneSignInActivity.this, getText(R.string.please_enter_your_country_code_and_phone_number_for_verification), Toast.LENGTH_SHORT).show();
                 }else {
                     resendVerificationCode(phone, forceResendingToken);
                 }
@@ -156,7 +156,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(code)){
                     verify_phone_progressBar.setVisibility(View.INVISIBLE);
                     binding.btnVerificationCode.setEnabled(true);
-                    Toast.makeText(PhoneSignInActivity.this, R.string.please_enter_verification_code, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PhoneSignInActivity.this, getText(R.string.please_enter_verification_code), Toast.LENGTH_SHORT).show();
                 }else {
                     verifyPhoneNumberWithCode(mVerificationId, code);
                 }
@@ -269,7 +269,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
                         verify_phone_progressBar.setVisibility(View.INVISIBLE);
                         binding.btnVerificationCode.setEnabled(true);
                         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-                        Toast.makeText(PhoneSignInActivity.this, R.string.logged_in_as+" "+phone, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PhoneSignInActivity.this, getText(R.string.logged_in_as)+" "+phone, Toast.LENGTH_SHORT).show();
                         //start informer activity
                         setSharedPreference(phone);
                         goToInformerDashboard();

@@ -10,7 +10,12 @@
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="@android:color/transparent"
+        android:layout_marginTop="5.0sp"
+        android:dividerHeight="5.0sp"
         android:clickable="true"
+        android:focusable="true"
+        android:elevation="6dp"
         android:id="@+id/lvLocationOfPersons"></ListView>
 
 </FrameLayout>

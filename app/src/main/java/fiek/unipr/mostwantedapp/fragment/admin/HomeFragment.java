@@ -1,13 +1,18 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -36,9 +41,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -213,6 +221,9 @@ public class HomeFragment extends Fragment {
                 loadFragment(fragment);
             }
         });
+
+        checkNotificationPermission();
+        realTimeCheckForNewReportNotification();
 
         return admin_dashboard_view;
     }
@@ -438,6 +449,73 @@ public class HomeFragment extends Fragment {
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";
+        }
+    }
+
+    private void realTimeCheckForNewReportNotification() {
+        firebaseFirestore.collection("locations_reports")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots,
+                                        @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                            switch (dc.getType()) {
+                                case ADDED:
+                                    NotificationCompat.Builder new_builder = new NotificationCompat.Builder(getContext(), "NEW_REPORT_ADDED");
+                                    new_builder.setContentTitle("NEW_REPORT_ADDED");
+                                    new_builder.setContentText(dc.getDocument().getString("description"));
+                                    new_builder.setSmallIcon(R.drawable.ic_launcher_background);
+                                    new_builder.setAutoCancel(true);
+
+                                    NotificationManagerCompat new_managerCompat = NotificationManagerCompat.from(getContext());
+                                    new_managerCompat.notify(1, new_builder.build());
+                                    break;
+                                case MODIFIED:
+                                    NotificationCompat.Builder modified_builder = new NotificationCompat.Builder(getContext(), "NEW_REPORT_MODIFIED");
+                                    modified_builder.setContentTitle("NEW_REPORT_MODIFIED");
+                                    modified_builder.setContentText(dc.getDocument().getString("description"));
+                                    modified_builder.setSmallIcon(R.drawable.ic_launcher_background);
+                                    modified_builder.setAutoCancel(true);
+
+                                    NotificationManagerCompat modified_managerCompat = NotificationManagerCompat.from(getContext());
+                                    modified_managerCompat.notify(2, modified_builder.build());
+                                    break;
+                                case REMOVED:
+                                    NotificationCompat.Builder removed_builder = new NotificationCompat.Builder(getContext(), "NEW_REPORT_REMOVED");
+                                    removed_builder.setContentTitle("NEW_REPORT_REMOVED!");
+                                    removed_builder.setContentText(dc.getDocument().getString("description"));
+                                    removed_builder.setSmallIcon(R.drawable.ic_launcher_background);
+                                    removed_builder.setAutoCancel(true);
+
+                                    NotificationManagerCompat removed_managerCompat = NotificationManagerCompat.from(getContext());
+                                    removed_managerCompat.notify(2, removed_builder.build());
+                                    break;
+                            }
+                        }
+
+                    }
+                });
+    }
+
+
+    private void checkNotificationPermission() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel NEW_REPORT_ADDED_CHANNEL = new NotificationChannel("NEW_REPORT_ADDED", "NEW_REPORT_ADDED", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager NEW_REPORT_ADDED_MANAGER = getActivity().getSystemService(NotificationManager.class);
+            NEW_REPORT_ADDED_MANAGER.createNotificationChannel(NEW_REPORT_ADDED_CHANNEL);
+
+            NotificationChannel NEW_REPORT_MODIFIED_CHANNEL = new NotificationChannel("NEW_REPORT_MODIFIED", "NEW_REPORT_MODIFIED", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager NEW_REPORT_MODIFIED_MANAGER = getActivity().getSystemService(NotificationManager.class);
+            NEW_REPORT_MODIFIED_MANAGER.createNotificationChannel(NEW_REPORT_MODIFIED_CHANNEL);
+
+            NotificationChannel NEW_REPORT_REMOVED_CHANNEL = new NotificationChannel("NEW_REPORT_REMOVED", "NEW_REPORT_REMOVED", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager NEW_REPORT_REMOVED_MANAGER = getActivity().getSystemService(NotificationManager.class);
+            NEW_REPORT_REMOVED_MANAGER.createNotificationChannel(NEW_REPORT_REMOVED_CHANNEL);
         }
     }
 

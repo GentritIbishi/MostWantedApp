@@ -7,12 +7,12 @@
     android:layout_height="wrap_content"
     android:padding="10dp"
     android:fitsSystemWindows="true"
+    android:elevation="10dp"
     android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_person_list">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/profile_person"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:text="Status"
-            android:textColor="@color/verydark"
+            android:textColor="@android:color/holo_red_dark"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
