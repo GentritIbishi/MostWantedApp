@@ -1,9 +1,13 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,11 +17,13 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +58,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -60,6 +68,8 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
+import fiek.unipr.mostwantedapp.helpers.PersonImage;
+import fiek.unipr.mostwantedapp.models.NotificationAdmin;
 import fiek.unipr.mostwantedapp.register.RegisterPersonActivity;
 import fiek.unipr.mostwantedapp.register.RegisterUsersActivity;
 
@@ -225,6 +235,7 @@ public class HomeFragment extends Fragment {
         checkNotificationPermission();
         realTimeCheckForNewReportNotification();
 
+
         return admin_dashboard_view;
     }
 
@@ -258,21 +269,21 @@ public class HomeFragment extends Fragment {
                     .collection("users")
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful() && task.getResult() != null)
-                    {
-                        fullName = task.getResult().getString("fullName");
-                        urlOfProfile = task.getResult().getString("urlOfProfile");
-                        if(urlOfProfile != null){
-                            if(imageOfAccount != null){
-                                Picasso.get().load(urlOfProfile).into(imageOfAccount);
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if(task.isSuccessful() && task.getResult() != null)
+                            {
+                                fullName = task.getResult().getString("fullName");
+                                urlOfProfile = task.getResult().getString("urlOfProfile");
+                                if(urlOfProfile != null){
+                                    if(imageOfAccount != null){
+                                        Picasso.get().load(urlOfProfile).into(imageOfAccount);
+                                    }
+                                    Picasso.get().load(urlOfProfile).into(imageOfDashboard);
+                                }
                             }
-                            Picasso.get().load(urlOfProfile).into(imageOfDashboard);
                         }
-                    }
-                }
-            });
+                    });
         }
     }
 
@@ -464,36 +475,19 @@ public class HomeFragment extends Fragment {
                         }
 
                         for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                            String notificationBody = dc.getDocument().getString("description");
                             switch (dc.getType()) {
                                 case ADDED:
-                                    NotificationCompat.Builder new_builder = new NotificationCompat.Builder(getContext(), "NEW_REPORT_ADDED");
-                                    new_builder.setContentTitle("NEW_REPORT_ADDED");
-                                    new_builder.setContentText(dc.getDocument().getString("description"));
-                                    new_builder.setSmallIcon(R.drawable.ic_launcher_background);
-                                    new_builder.setAutoCancel(true);
-
-                                    NotificationManagerCompat new_managerCompat = NotificationManagerCompat.from(getContext());
-                                    new_managerCompat.notify(1, new_builder.build());
+                                    String notificationTitleAdded = "New Report added";
+                                    saveNotificationInFirestoreAdded(getTimeDate(), notificationTitleAdded, notificationBody);
                                     break;
                                 case MODIFIED:
-                                    NotificationCompat.Builder modified_builder = new NotificationCompat.Builder(getContext(), "NEW_REPORT_MODIFIED");
-                                    modified_builder.setContentTitle("NEW_REPORT_MODIFIED");
-                                    modified_builder.setContentText(dc.getDocument().getString("description"));
-                                    modified_builder.setSmallIcon(R.drawable.ic_launcher_background);
-                                    modified_builder.setAutoCancel(true);
-
-                                    NotificationManagerCompat modified_managerCompat = NotificationManagerCompat.from(getContext());
-                                    modified_managerCompat.notify(2, modified_builder.build());
+                                    String notificationTitleModified = "New Report modified";
+                                    saveNotificationInFirestoreModified(getTimeDate(), notificationTitleModified, notificationBody);
                                     break;
                                 case REMOVED:
-                                    NotificationCompat.Builder removed_builder = new NotificationCompat.Builder(getContext(), "NEW_REPORT_REMOVED");
-                                    removed_builder.setContentTitle("NEW_REPORT_REMOVED!");
-                                    removed_builder.setContentText(dc.getDocument().getString("description"));
-                                    removed_builder.setSmallIcon(R.drawable.ic_launcher_background);
-                                    removed_builder.setAutoCancel(true);
-
-                                    NotificationManagerCompat removed_managerCompat = NotificationManagerCompat.from(getContext());
-                                    removed_managerCompat.notify(2, removed_builder.build());
+                                    String notificationTitleRemoved = "New Report removed";
+                                    saveNotificationInFirestoreRemoved(getTimeDate(), notificationTitleRemoved, notificationBody);
                                     break;
                             }
                         }
@@ -502,6 +496,113 @@ public class HomeFragment extends Fragment {
                 });
     }
 
+
+    private void saveNotificationInFirestoreAdded(String notificationTime, String notificationTitle, String notificationBody) {
+        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle);
+        firebaseFirestore.collection("notifications_admin")
+                .whereEqualTo("notificationBody", notificationBody)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                       if(task.getResult().size() == 0){
+                           firebaseFirestore.collection("notifications_admin").document().set(objNotificationAdmin).addOnSuccessListener(new OnSuccessListener<Void>() {
+                               @Override
+                               public void onSuccess(Void aVoid) {
+                                   //not exist make notification and save for next time
+                                   Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                   NotificationCompat.Builder new_builder = new NotificationCompat.Builder(getContext(), notificationTitle);
+                                   new_builder.setContentTitle(notificationTitle);
+                                   new_builder.setContentText(notificationBody);
+                                   new_builder.setSmallIcon(R.drawable.ic_app);
+                                   new_builder.setSound(new_defaultSoundUri);
+                                   new_builder.setAutoCancel(true);
+
+                                   NotificationManagerCompat new_managerCompat = NotificationManagerCompat.from(getContext());
+                                   new_managerCompat.notify(1, new_builder.build());
+                               }
+                           }).addOnFailureListener(new OnFailureListener() {
+                               @Override
+                               public void onFailure(@NonNull Exception e) {
+                                   Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                               }
+                           });
+                       }
+                    }
+                });
+
+    }
+
+    private void saveNotificationInFirestoreModified(String notificationTime, String notificationTitle, String notificationBody) {
+        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle);
+        firebaseFirestore.collection("notifications_admin")
+                .whereEqualTo("notificationBody", notificationBody)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.getResult().size() == 0){
+                            firebaseFirestore.collection("notifications_admin").document().set(objNotificationAdmin).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    //not exist make notification and save for next time
+                                    Uri modified_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                    NotificationCompat.Builder modified_builder = new NotificationCompat.Builder(getContext(), notificationTitle);
+                                    modified_builder.setContentTitle(notificationTitle);
+                                    modified_builder.setContentText(notificationBody);
+                                    modified_builder.setSmallIcon(R.drawable.ic_app);
+                                    modified_builder.setSound(modified_defaultSoundUri);
+                                    modified_builder.setAutoCancel(true);
+
+                                    NotificationManagerCompat modified_managerCompat = NotificationManagerCompat.from(getContext());
+                                    modified_managerCompat.notify(2, modified_builder.build());
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                });
+
+    }
+
+    private void saveNotificationInFirestoreRemoved(String notificationTime, String notificationTitle, String notificationBody) {
+        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle);
+        firebaseFirestore.collection("notifications_admin")
+                .whereEqualTo("notificationBody", notificationBody)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.getResult().size() == 0){
+                            firebaseFirestore.collection("notifications_admin").document().set(objNotificationAdmin).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    //not exist make notification and save for next time
+                                    Uri removed_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                    NotificationCompat.Builder removed_builder = new NotificationCompat.Builder(getContext(), notificationTitle);
+                                    removed_builder.setContentTitle(notificationTitle);
+                                    removed_builder.setContentText(notificationBody);
+                                    removed_builder.setSmallIcon(R.drawable.ic_app);
+                                    removed_builder.setSound(removed_defaultSoundUri);
+                                    removed_builder.setAutoCancel(true);
+                                    NotificationManagerCompat removed_managerCompat = NotificationManagerCompat.from(getContext());
+                                    removed_managerCompat.notify(3, removed_builder.build());
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                });
+
+    }
 
     private void checkNotificationPermission() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
