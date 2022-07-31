@@ -376,5 +376,7 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="title_activity_single_report" translatable="false">SingleReportActivity</string>
+    <string name="error_failed_to_get_image_from_database">Failed to get image from database</string>
 
 </resources>
