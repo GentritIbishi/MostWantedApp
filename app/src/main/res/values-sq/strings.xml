@@ -378,5 +378,11 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="title_activity_single_report" translatable="false">SingleReportActivity</string>
     <string name="error_failed_to_get_image_from_database">Failed to get image from database</string>
+    <string name="informer_report">Informer Report</string>
+    <string name="status">status</string>
+    <string name="date_and_time">Date and Time</string>
+    <string name="uid">uid</string>
+    <string name="informer_person_name">Informer Person Name</string>
+    <string name="report_description">Report Description</string>
 
 </resources>

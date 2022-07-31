@@ -12,6 +12,7 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Bundle;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -78,6 +79,13 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
 
         singleReportMapBundle = new Bundle();
         getFromBundle(singleReportMapBundle);
+
+        binding.reportStatus.setText(getApplicationContext().getText(R.string.status)+": "+ status);
+        binding.reportDateTime.setText(getApplicationContext().getText(R.string.date_and_time)+": "+ date_time);
+        binding.reportUIDInformer.setText(getApplicationContext().getText(R.string.uid)+": "+ uID);
+        binding.reportInformerPersonName.setText(getApplicationContext().getText(R.string.informer_person_name)+": "+ informer_person);
+        binding.reportDescription.setText(getApplicationContext().getText(R.string.report_description)+": "+ description);
+
         initMap();
 
     }
