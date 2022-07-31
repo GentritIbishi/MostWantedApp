@@ -150,63 +150,6 @@ public class NotificationFragment extends Fragment {
                 });
     }
 
-    private void realTimeCheckForNewReportNotification() {
-        firebaseFirestore.collection("locations_reports")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot snapshots,
-                                        @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
-                            switch (dc.getType()) {
-                                case ADDED:
-                                    Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                    NotificationCompat.Builder new_builder = new NotificationCompat.Builder(getContext(), "My Notification");
-                                    new_builder.setContentTitle("New Report added!");
-                                    new_builder.setContentText(dc.getDocument().getString("description"));
-                                    new_builder.setSmallIcon(R.drawable.ic_app);
-                                    new_builder.setSound(new_defaultSoundUri);
-                                    new_builder.setAutoCancel(true);
-
-                                    NotificationManagerCompat new_managerCompat = NotificationManagerCompat.from(getContext());
-                                    new_managerCompat.notify(1, new_builder.build());
-                                    break;
-                                case MODIFIED:
-                                    Uri modified_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                    NotificationCompat.Builder modified_builder = new NotificationCompat.Builder(getContext(), "My Notification");
-                                    modified_builder.setContentTitle("New Report modified!");
-                                    modified_builder.setContentText(dc.getDocument().getString("description"));
-                                    modified_builder.setSmallIcon(R.drawable.ic_app);
-                                    modified_builder.setSound(modified_defaultSoundUri);
-                                    modified_builder.setAutoCancel(true);
-
-                                    NotificationManagerCompat modified_managerCompat = NotificationManagerCompat.from(getContext());
-                                    modified_managerCompat.notify(2, modified_builder.build());
-                                    break;
-                                case REMOVED:
-                                    Uri removed_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                    NotificationCompat.Builder removed_builder = new NotificationCompat.Builder(getContext(), "My Notification");
-                                    removed_builder.setContentTitle("New Report modified!");
-                                    removed_builder.setContentText(dc.getDocument().getString("description"));
-                                    removed_builder.setSmallIcon(R.drawable.ic_app);
-                                    removed_builder.setSound(removed_defaultSoundUri);
-                                    removed_builder.setAutoCancel(true);
-
-                                    NotificationManagerCompat removed_managerCompat = NotificationManagerCompat.from(getContext());
-                                    removed_managerCompat.notify(3, removed_builder.build());
-                                    break;
-                            }
-                        }
-
-                    }
-                });
-    }
-
-
     private void checkNotificationPermission() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("My Notification", "My Notification", NotificationManager.IMPORTANCE_DEFAULT);

@@ -1,10 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
@@ -17,13 +14,11 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,8 +53,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -68,7 +61,6 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
-import fiek.unipr.mostwantedapp.helpers.PersonImage;
 import fiek.unipr.mostwantedapp.models.NotificationAdmin;
 import fiek.unipr.mostwantedapp.register.RegisterPersonActivity;
 import fiek.unipr.mostwantedapp.register.RegisterUsersActivity;
@@ -144,7 +136,7 @@ public class HomeFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
-        rightNowDateTime.setText(getTimeDate());
+        rightNowDateTime.setText(getDate());
         getGrade(firebaseAuth);
         setupPieChart();
         setPieChart();
@@ -453,10 +445,20 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    public static String getTimeDate() { // without parameter argument
+    public static String getDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
             SimpleDateFormat sfd = new SimpleDateFormat("E, dd MMM yyyy", Locale.getDefault());
+            return sfd.format(netDate);
+        } catch(Exception e) {
+            return "date";
+        }
+    }
+
+    public static String getDateTime() { // without parameter argument
+        try{
+            Date netDate = new Date(); // current time from here
+            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";
@@ -476,18 +478,19 @@ public class HomeFragment extends Fragment {
 
                         for (DocumentChange dc : snapshots.getDocumentChanges()) {
                             String notificationBody = dc.getDocument().getString("description");
+                            String notificationBodySub = notificationBody.substring(0, 40);
                             switch (dc.getType()) {
                                 case ADDED:
                                     String notificationTitleAdded = "New Report added";
-                                    saveNotificationInFirestoreAdded(getTimeDate(), notificationTitleAdded, notificationBody);
+                                    saveNotificationInFirestoreAdded(getDateTime(), notificationTitleAdded, notificationBody, notificationBodySub);
                                     break;
                                 case MODIFIED:
                                     String notificationTitleModified = "New Report modified";
-                                    saveNotificationInFirestoreModified(getTimeDate(), notificationTitleModified, notificationBody);
+                                    saveNotificationInFirestoreModified(getDateTime(), notificationTitleModified, notificationBody, notificationBodySub);
                                     break;
                                 case REMOVED:
                                     String notificationTitleRemoved = "New Report removed";
-                                    saveNotificationInFirestoreRemoved(getTimeDate(), notificationTitleRemoved, notificationBody);
+                                    saveNotificationInFirestoreRemoved(getDateTime(), notificationTitleRemoved, notificationBody, notificationBodySub);
                                     break;
                             }
                         }
@@ -497,10 +500,10 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void saveNotificationInFirestoreAdded(String notificationTime, String notificationTitle, String notificationBody) {
-        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle);
+    private void saveNotificationInFirestoreAdded(String notificationTime, String notificationTitle, String notificationBody, String notificationBodySub) {
+        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationBodySub);
         firebaseFirestore.collection("notifications_admin")
-                .whereEqualTo("notificationBody", notificationBody)
+                .whereEqualTo("notificationBodySub", notificationBodySub)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -533,10 +536,10 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void saveNotificationInFirestoreModified(String notificationTime, String notificationTitle, String notificationBody) {
-        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle);
+    private void saveNotificationInFirestoreModified(String notificationTime, String notificationTitle, String notificationBody, String notificationBodySub) {
+        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationBodySub);
         firebaseFirestore.collection("notifications_admin")
-                .whereEqualTo("notificationBody", notificationBody)
+                .whereEqualTo("notificationBodySub", notificationBodySub)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -569,10 +572,10 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void saveNotificationInFirestoreRemoved(String notificationTime, String notificationTitle, String notificationBody) {
-        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle);
+    private void saveNotificationInFirestoreRemoved(String notificationTime, String notificationTitle, String notificationBody, String notificationBodySub) {
+        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationBodySub);
         firebaseFirestore.collection("notifications_admin")
-                .whereEqualTo("notificationBody", notificationBody)
+                .whereEqualTo("notificationBodySub", notificationBodySub)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

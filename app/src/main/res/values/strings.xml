@@ -383,6 +383,10 @@
     <string name="date_and_time">Date and Time</string>
     <string name="uid">uid</string>
     <string name="informer_person_name">Informer Person Name</string>
-    <string name="report_description">Report Description</string>
+    <string name="report_description">REPORT DESCRIPTION</string>
+    <string name="report_status">STATUS</string>
+    <string name="report_uid">UID</string>
+    <string name="report_informer">INFORMER</string>
+    <string name="report_date_time">DATETIME</string>
 
 </resources>
