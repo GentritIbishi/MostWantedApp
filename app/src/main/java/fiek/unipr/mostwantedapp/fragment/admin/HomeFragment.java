@@ -481,15 +481,15 @@ public class HomeFragment extends Fragment {
                             String notificationBodySub = notificationBody.substring(0, 40);
                             switch (dc.getType()) {
                                 case ADDED:
-                                    String notificationTitleAdded = "New Report added";
+                                    String notificationTitleAdded = getText(R.string.report_added)+" "+notificationBody+ "...";
                                     saveNotificationInFirestoreAdded(getDateTime(), notificationTitleAdded, notificationBody, notificationBodySub);
                                     break;
                                 case MODIFIED:
-                                    String notificationTitleModified = "New Report modified";
+                                    String notificationTitleModified = getText(R.string.report_modified)+" "+notificationBody+ "...";
                                     saveNotificationInFirestoreModified(getDateTime(), notificationTitleModified, notificationBody, notificationBodySub);
                                     break;
                                 case REMOVED:
-                                    String notificationTitleRemoved = "New Report removed";
+                                    String notificationTitleRemoved = getText(R.string.report_removed)+" "+notificationBody+ "...";
                                     saveNotificationInFirestoreRemoved(getDateTime(), notificationTitleRemoved, notificationBody, notificationBodySub);
                                     break;
                             }

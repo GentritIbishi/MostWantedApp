@@ -388,5 +388,9 @@
     <string name="report_uid">UID</string>
     <string name="report_informer">INFORMER</string>
     <string name="report_date_time">DATETIME</string>
+    <string name="report_added">Report added:</string>
+    <string name="report_modified">Report modified:</string>
+    <string name="report_removed">Report removed:</string>
+    <string name="report_title">REPORT TITLE</string>
 
 </resources>
