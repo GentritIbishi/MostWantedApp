@@ -62,6 +62,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.NotificationAdmin;
+import fiek.unipr.mostwantedapp.models.NotificationAdminState;
 import fiek.unipr.mostwantedapp.register.RegisterPersonActivity;
 import fiek.unipr.mostwantedapp.register.RegisterUsersActivity;
 
@@ -478,19 +479,16 @@ public class HomeFragment extends Fragment {
 
                         for (DocumentChange dc : snapshots.getDocumentChanges()) {
                             String notificationBody = dc.getDocument().getString("description");
-                            String notificationBodySub = notificationBody.substring(0, 40);
+                            String notificationTitle = dc.getDocument().getString("title");
                             switch (dc.getType()) {
                                 case ADDED:
-                                    String notificationTitleAdded = getText(R.string.report_added)+" "+notificationBody+ "...";
-                                    saveNotificationInFirestoreAdded(getDateTime(), notificationTitleAdded, notificationBody, notificationBodySub);
+                                    saveNotificationInFirestoreAdded(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.ADDED));
                                     break;
                                 case MODIFIED:
-                                    String notificationTitleModified = getText(R.string.report_modified)+" "+notificationBody+ "...";
-                                    saveNotificationInFirestoreModified(getDateTime(), notificationTitleModified, notificationBody, notificationBodySub);
+                                    saveNotificationInFirestoreModified(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.MODIFIED));
                                     break;
                                 case REMOVED:
-                                    String notificationTitleRemoved = getText(R.string.report_removed)+" "+notificationBody+ "...";
-                                    saveNotificationInFirestoreRemoved(getDateTime(), notificationTitleRemoved, notificationBody, notificationBodySub);
+                                    saveNotificationInFirestoreRemoved(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.REMOVED));
                                     break;
                             }
                         }
@@ -500,10 +498,10 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void saveNotificationInFirestoreAdded(String notificationTime, String notificationTitle, String notificationBody, String notificationBodySub) {
-        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationBodySub);
+    private void saveNotificationInFirestoreAdded(String notificationTime, String notificationTitle, String notificationBody, String notificationType) {
+        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationType);
         firebaseFirestore.collection("notifications_admin")
-                .whereEqualTo("notificationBodySub", notificationBodySub)
+                .whereEqualTo("notificationTitle", notificationTitle)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -536,10 +534,10 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void saveNotificationInFirestoreModified(String notificationTime, String notificationTitle, String notificationBody, String notificationBodySub) {
-        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationBodySub);
+    private void saveNotificationInFirestoreModified(String notificationTime, String notificationTitle, String notificationBody, String notificationType) {
+        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationType);
         firebaseFirestore.collection("notifications_admin")
-                .whereEqualTo("notificationBodySub", notificationBodySub)
+                .whereEqualTo("notificationTitle", notificationTitle)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -572,10 +570,10 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void saveNotificationInFirestoreRemoved(String notificationTime, String notificationTitle, String notificationBody, String notificationBodySub) {
-        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationBodySub);
+    private void saveNotificationInFirestoreRemoved(String notificationTime, String notificationTitle, String notificationBody, String notificationType) {
+        NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationType);
         firebaseFirestore.collection("notifications_admin")
-                .whereEqualTo("notificationBodySub", notificationBodySub)
+                .whereEqualTo("notificationTitle", notificationTitle)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override

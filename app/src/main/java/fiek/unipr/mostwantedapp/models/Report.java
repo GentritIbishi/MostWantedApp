@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Report {
-    private String Description, Date_time, uID, informer_person, wanted_person;
+    private String Title, Description, Date_time, uID, informer_person, wanted_person;
     private ReportStatus status = ReportStatus.UNVERIFIED;
     private Double longitude, latitude;
     private Map<String, Object> images = new HashMap<>();
@@ -12,7 +12,8 @@ public class Report {
     public Report() {
     }
 
-    public Report(String description, String date_time, String uID, String informer_person, String wanted_person, ReportStatus status, Double longitude, Double latitude, Map<String, Object> images) {
+    public Report(String title, String description, String date_time, String uID, String informer_person, String wanted_person, ReportStatus status, Double longitude, Double latitude, Map<String, Object> images) {
+        Title = title;
         Description = description;
         Date_time = date_time;
         this.uID = uID;
@@ -22,6 +23,14 @@ public class Report {
         this.longitude = longitude;
         this.latitude = latitude;
         this.images = images;
+    }
+
+    public String getTitle() {
+        return Title;
+    }
+
+    public void setTitle(String title) {
+        Title = title;
     }
 
     public String getDescription() {

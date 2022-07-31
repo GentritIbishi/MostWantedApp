@@ -1,16 +1,16 @@
 package fiek.unipr.mostwantedapp.models;
 
 public class NotificationAdmin {
-    String notificationTime, notificationBody, notificationTitle, notificationBodySub;
+    String notificationTime, notificationBody, notificationTitle, notificationType;
 
     public NotificationAdmin() {
     }
 
-    public NotificationAdmin(String notificationTime, String notificationBody, String notificationTitle, String notificationBodySub) {
+    public NotificationAdmin(String notificationTime, String notificationBody, String notificationTitle, String notificationType) {
         this.notificationTime = notificationTime;
         this.notificationBody = notificationBody;
         this.notificationTitle = notificationTitle;
-        this.notificationBodySub = notificationBodySub;
+        this.notificationType = notificationType;
     }
 
     public String getNotificationTime() {
@@ -37,11 +37,11 @@ public class NotificationAdmin {
         this.notificationTitle = notificationTitle;
     }
 
-    public String getNotificationBodySub() {
-        return notificationBodySub;
+    public String getNotificationType() {
+        return notificationType;
     }
 
-    public void setNotificationBodySub(String notificationBodySub) {
-        this.notificationBodySub = notificationBodySub;
+    public void setNotificationType(String notificationType) {
+        this.notificationType = notificationType;
     }
 }

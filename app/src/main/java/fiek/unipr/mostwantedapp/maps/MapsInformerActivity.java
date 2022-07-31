@@ -163,7 +163,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                             .collection("locations_reports")
                             .document(dateNtime);
 
-                    Report report = new Report(binding.etDescription.getText().toString(),
+                    Report report = new Report(binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
                             dateNtime,
                             firebaseAuth.getCurrentUser().getUid(),
                             informer_person,
@@ -195,7 +195,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     DocumentReference docRef = firebaseFirestore
                             .collection("locations_reports")
                             .document(dateNtime);
-                    Report report = new Report(binding.etDescription.getText().toString(),
+                    Report report = new Report(binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
                             dateNtime,
                             firebaseAuth.getCurrentUser().getUid(),
                             informer_person,
