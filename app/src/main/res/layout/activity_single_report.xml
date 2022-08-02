@@ -57,6 +57,7 @@
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/et_report_status"
                                     android:textColor="@color/verydark"
+                                    android:textStyle="bold"
                                     android:fontFamily="@font/open_sans_bold"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
@@ -71,6 +72,12 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
+                            android:textColorHint="@color/verydark"
+                            app:counterOverflowTextColor="@color/white"
+                            app:helperTextTextColor="@color/white"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
                             android:hint="@string/report_uid"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -78,6 +85,9 @@
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/et_report_uid"
+                                    android:textColor="@color/verydark"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/open_sans_bold"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
 
@@ -91,6 +101,12 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
+                            android:textColorHint="@color/verydark"
+                            app:counterOverflowTextColor="@color/white"
+                            app:helperTextTextColor="@color/white"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
                             android:hint="@string/report_informer"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -98,6 +114,9 @@
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/et_report_informer"
+                                    android:textColor="@color/verydark"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/open_sans_bold"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
 
@@ -111,6 +130,12 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
+                            android:textColorHint="@color/verydark"
+                            app:counterOverflowTextColor="@color/white"
+                            app:helperTextTextColor="@color/white"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
                             android:hint="@string/report_date_time"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -118,6 +143,38 @@
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/et_report_date_time"
+                                    android:textColor="@color/verydark"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/open_sans_bold"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/et_report_title_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="32dp"
+                            android:textColorHint="@color/verydark"
+                            app:counterOverflowTextColor="@color/white"
+                            app:helperTextTextColor="@color/white"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
+                            android:hint="@string/report_title"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/et_report_date_time_layout">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/et_report_title"
+                                    android:textColor="@color/verydark"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/open_sans_bold"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
 
@@ -131,13 +188,22 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
+                            android:textColorHint="@color/verydark"
+                            app:counterOverflowTextColor="@color/white"
+                            app:helperTextTextColor="@color/white"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
                             android:hint="@string/report_description"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/et_report_date_time_layout">
+                            app:layout_constraintTop_toBottomOf="@+id/et_report_title_layout">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/et_report_description"
+                                    android:textColor="@color/verydark"
+                                    android:textStyle="bold"
+                                    android:fontFamily="@font/open_sans_bold"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
 

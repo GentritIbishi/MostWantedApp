@@ -37,6 +37,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -73,7 +74,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
     private FirebaseStorage firebaseStorage;
     private UploadTask uploadTask;
 
-    private String date_time, description, informer_person, status, uID, wanted_person, urlOfProfile;
+    private String date_time, title, description, informer_person, status, uID, wanted_person, urlOfProfile;
     private Double latitude, longitude;
     private int totalImages;
     private String[] images;
@@ -96,21 +97,36 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
         singleReportMapBundle = new Bundle();
         getFromBundle(singleReportMapBundle);
 
-        binding.etReportStatus.setText(status);
-        binding.etReportDateTime.setText(date_time);
-        binding.etReportUid.setText(uID);
-        binding.etReportInformer.setText(informer_person);
-        binding.etReportDescription.setText(description);
+        setReportInformation(uID, date_time, informer_person, title, description, status);
 
-        binding.etReportStatus.setFocusable(false);
-        binding.etReportDateTime.setFocusable(false);
-        binding.etReportUid.setFocusable(false);
-        binding.etReportInformer.setFocusable(false);
-        binding.etReportDescription.setFocusable(false);
+        disableEditable(binding.etReportStatus);
+        disableEditable(binding.etReportDateTime);
+        disableEditable(binding.etReportUid);
+        disableEditable(binding.etReportInformer);
+        disableEditable(binding.etReportTitle);
+        disableEditable(binding.etReportDescription);
 
         initMap();
 
 
+    }
+
+    private void disableEditable(TextInputEditText textInputEditText) {
+        textInputEditText.setFocusable(false);
+        textInputEditText.setFocusableInTouchMode(false);
+        textInputEditText.setClickable(false);
+        textInputEditText.setKeyListener(null);
+        textInputEditText.setCursorVisible(false);
+        textInputEditText.setPressed(false);
+    }
+
+    private void setReportInformation(String uID, String date_time, String informer_person, String title, String description, String status) {
+        binding.etReportUid.setText(uID);
+        binding.etReportDateTime.setText(date_time);
+        binding.etReportInformer.setText(informer_person);
+        binding.etReportTitle.setText(title);
+        binding.etReportDescription.setText(description);
+        binding.etReportStatus.setText(status);
     }
 
     @Override
@@ -134,6 +150,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
         try {
             bundle = getIntent().getExtras();
             date_time = bundle.getString("date_time");
+            title = bundle.getString("title");
             description = bundle.getString("description");
             informer_person = bundle.getString("informer_person");
             latitude = bundle.getDouble("latitude");
