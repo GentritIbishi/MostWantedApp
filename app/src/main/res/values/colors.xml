@@ -15,7 +15,7 @@
     <color name="text_color">#7e8187</color>
     <color name="mint_green">#3EB489</color>
     <color name="button_pressed">#6286a1</color>
-    <color name="pink">#6579ea</color>
+    <color name="pink_light">#6579ea</color>
     <color name="light_gray">#F2F2F2</color>
     <color name="red">#eb4034</color>
     <color name="darkblack">#999999</color>
@@ -50,4 +50,5 @@
     <color name="pie_green">#66BB6A</color>
     <color name="pie_red">#EF5350</color>
     <color name="pie_blue">#29B6F6</color>
+    <color name="pink_dark">#BF66F9</color>
 </resources>

@@ -392,5 +392,12 @@
     <string name="report_modified">Report modified:</string>
     <string name="report_removed">Report removed:</string>
     <string name="report_title">REPORT TITLE</string>
+    <string name="failed_to_save">Failed to save!</string>
+
+    <string-array name="status_state">
+        <item>VERIFIED</item>
+        <item>UNVERIFIED</item>
+        <item>FAKE</item>
+    </string-array>
 
 </resources>

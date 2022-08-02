@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -16,6 +17,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,14 +45,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
@@ -99,7 +104,15 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
 
         setReportInformation(uID, date_time, informer_person, title, description, status);
 
-        disableEditable(binding.etReportStatus);
+        setDropDownOptions();
+
+        binding.btnSaveReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                save(binding.autoCompleteReportStatus.getText().toString());
+            }
+        });
+
         disableEditable(binding.etReportDateTime);
         disableEditable(binding.etReportUid);
         disableEditable(binding.etReportInformer);
@@ -108,7 +121,61 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
 
         initMap();
 
+    }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        if(wanted_person != null) {
+            setMarker(wanted_person);
+        }
+
+    }
+
+    private void initMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.single_report_map);
+        mapFragment.getMapAsync(this);
+    }
+
+    private void setDropDownOptions() {
+        String[] status_state = getApplicationContext().getResources().getStringArray(R.array.status_state);
+        ArrayAdapter<String> statusStateAdapter = new ArrayAdapter<>(getApplicationContext(),
+                R.layout.drop_down_item_report_status_state, status_state);
+        binding.autoCompleteReportStatus.setAdapter(statusStateAdapter);
+        binding.autoCompleteReportStatus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                binding.autocompleteReportStatusLayout.setHintTextColor(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.verydark)));
+                binding.autocompleteReportStatusLayout.setBoxStrokeColor(getApplicationContext().getResources().getColor(R.color.verydark));
+                binding.autocompleteReportStatusLayout.setBoxStrokeColorStateList(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.verydark)));
+                binding.autocompleteReportStatusLayout.setCounterTextColor(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.verydark)));
+                binding.autocompleteReportStatusLayout.setEndIconTintList(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.verydark)));
+                binding.btnSaveReport.setVisibility(View.VISIBLE);
+            }
+        });
+
+    }
+
+    private void save(String value) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("status", value);
+
+        firebaseFirestore.collection("locations_reports")
+                .document(date_time)
+                .set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(SingleReportActivity.this, getApplicationContext().getText(R.string.saved_successfully), Toast.LENGTH_SHORT).show();
+                        binding.btnSaveReport.setVisibility(View.GONE);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(SingleReportActivity.this, getApplicationContext().getText(R.string.failed_to_save), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void disableEditable(TextInputEditText textInputEditText) {
@@ -126,23 +193,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
         binding.etReportInformer.setText(informer_person);
         binding.etReportTitle.setText(title);
         binding.etReportDescription.setText(description);
-        binding.etReportStatus.setText(status);
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        if(wanted_person != null) {
-            setMarker(wanted_person);
-        }
-
-    }
-
-    private void initMap() {
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.single_report_map);
-        mapFragment.getMapAsync(this);
+        binding.autoCompleteReportStatus.setText(status);
     }
 
     private void getFromBundle(Bundle bundle) {

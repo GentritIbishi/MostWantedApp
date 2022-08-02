@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
     android:orientation="vertical"
     android:fitsSystemWindows="true">
 
@@ -36,62 +37,33 @@
                     android:layout_height="wrap_content">
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/et_report_status_layout"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="32dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="32dp"
-                            android:textColorHint="@color/verydark"
-                            app:counterOverflowTextColor="@color/white"
-                            app:helperTextTextColor="@color/white"
-                            android:textDirection="firstStrong"
-                            android:textStyle="bold"
-                            app:boxBackgroundColor="@color/light_gray"
-                            android:hint="@string/report_status"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent">
-
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/et_report_status"
-                                    android:textColor="@color/verydark"
-                                    android:textStyle="bold"
-                                    android:fontFamily="@font/open_sans_bold"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/et_report_uid_layout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
-                            android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
+                            android:hint="@string/report_uid"
                             android:textColorHint="@color/verydark"
-                            app:counterOverflowTextColor="@color/white"
-                            app:helperTextTextColor="@color/white"
                             android:textDirection="firstStrong"
                             android:textStyle="bold"
                             app:boxBackgroundColor="@color/light_gray"
-                            android:hint="@string/report_uid"
+                            app:counterOverflowTextColor="@color/white"
+                            app:helperTextTextColor="@color/white"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/et_report_status_layout">
+                            app:layout_constraintTop_toTopOf="parent">
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/et_report_uid"
-                                    android:textColor="@color/verydark"
-                                    android:textStyle="bold"
-                                    android:fontFamily="@font/open_sans_bold"
                                     android:layout_width="match_parent"
-                                    android:layout_height="wrap_content" />
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/open_sans_bold"
+                                    android:textColor="@color/verydark"
+                                    android:textStyle="bold" />
 
                         </com.google.android.material.textfield.TextInputLayout>
+
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/et_report_informer_layout"
@@ -214,7 +186,7 @@
                             android:layout_width="fill_parent"
                             android:layout_height="200dp"
                             android:layout_marginStart="32dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
                             android:background="@drawable/bg_single_report_image"
                             android:scaleType="fitXY"
@@ -227,16 +199,67 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="32dp"
-                            android:layout_marginTop="10dp"
+                            android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
                             android:animationDuration="2000"
+                            android:background="@drawable/bg_gallery"
                             android:padding="10dp"
                             android:spacing="5dp"
                             android:unselectedAlpha="50"
-                            android:background="@drawable/bg_gallery"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/autocomplete_report_status_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="32dp"
+                            android:hint="@string/report_status"
+                            android:textColorHint="@color/verydark"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/image_gallery">
+
+                                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                    android:id="@+id/auto_complete_report_status"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:inputType="none"
+                                    android:paddingTop="16dp"
+                                    android:paddingBottom="16dp"
+                                    android:text="test"
+                                    android:textColor="@color/verydark"
+                                    android:textStyle="bold" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSaveReport"
+                            android:visibility="invisible"
+                            android:theme="@style/Theme.MaterialComponents.Light"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="32dp"
+                            android:layout_marginBottom="16dp"
+                            android:textColor="@color/white"
+                            app:icon="@drawable/ic_check"
+                            android:background="@drawable/button_round"
+                            app:iconSize="50dp"
+                            app:iconGravity="textTop"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_report_status_layout" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

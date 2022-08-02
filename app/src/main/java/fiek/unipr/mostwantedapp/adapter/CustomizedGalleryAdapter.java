@@ -61,9 +61,7 @@ public class CustomizedGalleryAdapter extends BaseAdapter {
         // create a ImageView programmatically
         ImageView imageView = new ImageView(context);
 
-//        // set image in ImageView
-//        imageView.setImageResource(images[position]);
-
+        // set image in ImageView
         Glide.with(context)
                 .asBitmap()
                 .load(images[position])
