@@ -8,9 +8,9 @@
     android:fitsSystemWindows="true">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2">
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1">
 
                 <fragment
                     android:id="@+id/single_report_map"
@@ -22,13 +22,14 @@
         </LinearLayout>
 
         <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.1">
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:fillViewport="true"
+            android:layout_weight="0.5">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
-                    android:background="@drawable/bg_profile"
+                    android:background="@drawable/bg_single_report"
                     android:layout_marginTop="5dp"
                     android:elevation="6dp"
                     android:layout_width="match_parent"
@@ -42,6 +43,12 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="32dp"
+                            android:textColorHint="@color/verydark"
+                            app:counterOverflowTextColor="@color/white"
+                            app:helperTextTextColor="@color/white"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
                             android:hint="@string/report_status"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -49,6 +56,8 @@
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/et_report_status"
+                                    android:textColor="@color/verydark"
+                                    android:fontFamily="@font/open_sans_bold"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content" />
 

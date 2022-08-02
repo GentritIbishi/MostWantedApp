@@ -11,6 +11,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -44,8 +46,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
@@ -217,12 +221,32 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
                                                 public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                                                     Bitmap newBitmap = addBorder(resource, getApplicationContext());
                                                     LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
-                                                    mMap.addMarker(new MarkerOptions()
-                                                            .position(latLng)
-                                                            .title(getApplicationContext().getText(R.string.last_seen)+" "+wanted_person)
-                                                            .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
-                                                    mMap.setMinZoomPreference(17);
-                                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                                                    Geocoder geocoder;
+                                                    List<Address> addresses = null;
+                                                    geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+
+                                                    try {
+                                                        addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                                                        String address = addresses.get(0).getAddressLine(0);
+                                                        String city = addresses.get(0).getLocality();
+                                                        String state = addresses.get(0).getAdminArea();
+                                                        String country = addresses.get(0).getCountryName();
+                                                        String postalCode = addresses.get(0).getPostalCode();
+                                                        String knownName = addresses.get(0).getFeatureName();
+
+                                                        mMap.addMarker(new MarkerOptions()
+                                                                .position(latLng)
+                                                                .title(wanted_person)
+                                                                .snippet(address + ", "+ city+ ", "+ postalCode)
+                                                                .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
+                                                        mMap.setMinZoomPreference(17);
+                                                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
+
                                                     return true;
                                                 }
                                             })
