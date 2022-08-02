@@ -12,6 +12,9 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +44,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.adapter.CustomizedGalleryAdapter;
 import fiek.unipr.mostwantedapp.databinding.ActivitySingleReportBinding;
 import fiek.unipr.mostwantedapp.maps.MapsActivity;
 
@@ -63,6 +71,10 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
 
     private String date_time, description, informer_person, status, uID, wanted_person, urlOfProfile;
     private Double latitude, longitude;
+    private int totalImages;
+    private String[] images;
+
+    private CustomizedGalleryAdapter customGalleryAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +106,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
 
         initMap();
 
+
     }
 
     @Override
@@ -124,11 +137,61 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
             status = bundle.getString("status");
             uID = bundle.getString("uID");
             wanted_person = bundle.getString("wanted_person");
+            totalImages = bundle.getInt("totalImages");
+            images = bundle.getStringArray("images");
+
+            setFirstImageSelectedInGallery(0);
+            customGalleryAdapter = new CustomizedGalleryAdapter(getApplicationContext(), images);
+            binding.imageGallery.setAdapter(customGalleryAdapter);
+
+
+            binding.imageGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // Whichever image is clicked, that is set in the  selectedImageView
+                    // position will indicate the location of image
+                    Glide.with(getApplicationContext())
+                            .asBitmap()
+                            .load(images[position])
+                            .listener(new RequestListener<Bitmap>() {
+                                @Override
+                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                    return false;
+                                }
+
+                                @Override
+                                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                                    binding.imageView.setImageBitmap(resource);
+                                    return true;
+                                }
+                            })
+                            .preload();
+                }
+            });
 
         } catch (Exception e) {
             e.getMessage();
         }
 
+    }
+
+    private void setFirstImageSelectedInGallery(int position) {
+        Glide.with(getApplicationContext())
+                .asBitmap()
+                .load(images[position])
+                .listener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        binding.imageView.setImageBitmap(resource);
+                        return true;
+                    }
+                })
+                .preload();
     }
 
     private void setMarker(String wanted_person) {
@@ -198,4 +261,13 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
         c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
         return output;
     }
+
+    private void getTotalImage(int totalImages) {
+        String[] str = new String[totalImages];
+        for(int i = 0; i<totalImages; i++){
+            //search for
+            str[i] = "image"+i;
+        }
+    }
+
 }

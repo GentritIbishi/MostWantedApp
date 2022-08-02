@@ -391,22 +391,21 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 int totalitem = data.getClipData().getItemCount();
                 for(int i=0; i<totalitem;i++){
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                    uploadImageToFirebase(imageUri, totalitem);
+                    uploadImageToFirebase(imageUri, i);
                     binding.alert.setText(this.getText(R.string.you_have_selected)+" "+totalitem+" "+this.getText(R.string.images));
                 }
             }else if(data.getData() != null) {
                 progressDialog.show();
                 Uri imageUri = data.getData();
-                uploadImageToFirebase(imageUri, 1);
+                uploadImageToFirebase(imageUri, 0);
                 binding.alert.setText(this.getText(R.string.you_have_selected)+" "+1+" "+this.getText(R.string.images));
                 Toast.makeText(this, this.getText(R.string.image_uploaded_successfully), Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private void uploadImageToFirebase(Uri imageUri, int totalitem) {
+    private void uploadImageToFirebase(Uri imageUri, Integer i) {
         dateNtime = getTimeDate();
-        for(int i = 0; i < totalitem; i++) {
             StorageReference fileRef = storageReference.child("wanted_persons/locations_reports/"+dateNtime+"/Image"+i+".jpg");
             int finalI = i;
             fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -425,7 +424,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     Toast.makeText(MapsInformerActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
                 }
             });
-        }
         progressDialog.dismiss();
     }
 

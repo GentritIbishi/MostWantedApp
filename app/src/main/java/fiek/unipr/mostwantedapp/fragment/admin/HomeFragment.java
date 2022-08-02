@@ -519,7 +519,8 @@ public class HomeFragment extends Fragment {
                                    new_builder.setSound(new_defaultSoundUri);
                                    new_builder.setAutoCancel(true);
 
-                                   NotificationManagerCompat new_managerCompat = NotificationManagerCompat.from(getContext());
+
+                                   NotificationManagerCompat new_managerCompat = NotificationManagerCompat.from(getActivity());
                                    new_managerCompat.notify(1, new_builder.build());
                                }
                            }).addOnFailureListener(new OnFailureListener() {
@@ -555,7 +556,7 @@ public class HomeFragment extends Fragment {
                                     modified_builder.setSound(modified_defaultSoundUri);
                                     modified_builder.setAutoCancel(true);
 
-                                    NotificationManagerCompat modified_managerCompat = NotificationManagerCompat.from(getContext());
+                                    NotificationManagerCompat modified_managerCompat = NotificationManagerCompat.from(getActivity());
                                     modified_managerCompat.notify(2, modified_builder.build());
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -590,8 +591,10 @@ public class HomeFragment extends Fragment {
                                     removed_builder.setSmallIcon(R.drawable.ic_app);
                                     removed_builder.setSound(removed_defaultSoundUri);
                                     removed_builder.setAutoCancel(true);
-                                    NotificationManagerCompat removed_managerCompat = NotificationManagerCompat.from(getContext());
+
+                                    NotificationManagerCompat removed_managerCompat = NotificationManagerCompat.from(getActivity());
                                     removed_managerCompat.notify(3, removed_builder.build());
+
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override

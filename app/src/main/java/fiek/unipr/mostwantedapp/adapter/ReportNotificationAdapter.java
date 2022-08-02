@@ -23,8 +23,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
@@ -129,6 +131,21 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
                 viewBundle.putDouble("longitude", report.getLongitude());
                 viewBundle.putString("uID", report.getuID());
                 viewBundle.putString("wanted_person", report.getWanted_person());
+                viewBundle.putInt("totalImages", report.getImages().size());
+
+                int totalImages = report.getImages().size();
+
+                Map<String, Object> images = new HashMap<>();
+                images = report.getImages();
+
+                String[] arrImages = new String[totalImages];
+
+                for(int i = 0; i<totalImages; i++) {
+                    arrImages[i] = images.get("image"+i).toString();
+                }
+
+                viewBundle.putStringArray("images", arrImages);
+
                 intent.putExtras(viewBundle);
                 v.getContext().startActivity(intent);
             }
