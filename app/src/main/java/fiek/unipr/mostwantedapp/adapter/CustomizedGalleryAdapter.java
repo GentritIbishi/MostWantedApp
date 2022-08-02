@@ -2,6 +2,11 @@ package fiek.unipr.mostwantedapp.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,6 +14,7 @@ import android.widget.Gallery;
 import android.widget.ImageView;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -73,11 +79,13 @@ public class CustomizedGalleryAdapter extends BaseAdapter {
                         return true;
                     }
                 })
+                .circleCrop()
                 .preload();
 
         // set ImageView param
         imageView.setLayoutParams(new Gallery.LayoutParams(200, 200));
         return imageView;
     }
+
 }
 
