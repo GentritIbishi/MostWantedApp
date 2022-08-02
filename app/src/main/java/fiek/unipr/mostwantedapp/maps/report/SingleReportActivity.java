@@ -144,7 +144,6 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
             customGalleryAdapter = new CustomizedGalleryAdapter(getApplicationContext(), images);
             binding.imageGallery.setAdapter(customGalleryAdapter);
 
-
             binding.imageGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
