@@ -144,28 +144,24 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
                 viewBundle.putString("uID", report.getuID());
                 viewBundle.putString("wanted_person", report.getWanted_person());
 
-                try {
-                    if(report.getImages().containsValue(null)) {
-                        viewBundle.putInt("totalImages", 0);
-                        viewBundle.putStringArray("images", null);
-                    }else {
-                        viewBundle.putInt("totalImages", report.getImages().size());
+                if(report.getImages() == null || report.getImages().equals(null) || report.getImages().isEmpty()) {
+                    viewBundle.putInt("totalImages", 0);
+                    viewBundle.putStringArray("images", null);
+                }else {
+                    viewBundle.putInt("totalImages", report.getImages().size());
 
-                        int totalImages = report.getImages().size();
+                    int totalImages = report.getImages().size();
 
-                        Map<String, Object> images;
-                        images = (Map<String, Object>) report.getImages();
+                    Map<String, Object> images;
+                    images = (Map<String, Object>) report.getImages();
 
-                        String[] arrImages = new String[totalImages];
+                    String[] arrImages = new String[totalImages];
 
-                        for(int i = 0; i<totalImages; i++) {
-                            arrImages[i] = images.get("image"+i).toString();
-                        }
-
-                        viewBundle.putStringArray("images", arrImages);
+                    for(int i = 0; i<totalImages; i++) {
+                        arrImages[i] = images.get("image"+i).toString();
                     }
-                }catch (Exception e) {
-                    System.out.println("ERROR"+e.getMessage());
+
+                    viewBundle.putStringArray("images", arrImages);
                 }
 
                 intent.putExtras(viewBundle);
