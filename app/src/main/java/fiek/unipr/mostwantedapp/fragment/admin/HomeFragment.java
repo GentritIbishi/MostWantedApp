@@ -2,6 +2,7 @@ package fiek.unipr.mostwantedapp.fragment.admin;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.RingtoneManager;
@@ -482,13 +483,13 @@ public class HomeFragment extends Fragment {
                             String notificationTitle = dc.getDocument().getString("title");
                             switch (dc.getType()) {
                                 case ADDED:
-                                    saveNotificationInFirestoreAdded(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.ADDED));
+                                    saveNotificationInFirestoreAdded(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.ADDED), getContext());
                                     break;
                                 case MODIFIED:
-                                    saveNotificationInFirestoreModified(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.MODIFIED));
+                                    saveNotificationInFirestoreModified(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.MODIFIED), getContext());
                                     break;
                                 case REMOVED:
-                                    saveNotificationInFirestoreRemoved(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.REMOVED));
+                                    saveNotificationInFirestoreRemoved(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.REMOVED), getContext());
                                     break;
                             }
                         }
@@ -498,7 +499,7 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void saveNotificationInFirestoreAdded(String notificationTime, String notificationTitle, String notificationBody, String notificationType) {
+    private void saveNotificationInFirestoreAdded(String notificationTime, String notificationTitle, String notificationBody, String notificationType, Context context) {
         NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationType);
         firebaseFirestore.collection("notifications_admin")
                 .whereEqualTo("notificationTitle", notificationTitle)
@@ -512,15 +513,14 @@ public class HomeFragment extends Fragment {
                                public void onSuccess(Void aVoid) {
                                    //not exist make notification and save for next time
                                    Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                   NotificationCompat.Builder new_builder = new NotificationCompat.Builder(getContext(), notificationTitle);
+                                   NotificationCompat.Builder new_builder = new NotificationCompat.Builder(context, notificationTitle);
                                    new_builder.setContentTitle(notificationTitle);
                                    new_builder.setContentText(notificationBody);
                                    new_builder.setSmallIcon(R.drawable.ic_app);
                                    new_builder.setSound(new_defaultSoundUri);
                                    new_builder.setAutoCancel(true);
 
-
-                                   NotificationManagerCompat new_managerCompat = NotificationManagerCompat.from(getActivity());
+                                   NotificationManagerCompat new_managerCompat = NotificationManagerCompat.from(context);
                                    new_managerCompat.notify(1, new_builder.build());
                                }
                            }).addOnFailureListener(new OnFailureListener() {
@@ -535,7 +535,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void saveNotificationInFirestoreModified(String notificationTime, String notificationTitle, String notificationBody, String notificationType) {
+    private void saveNotificationInFirestoreModified(String notificationTime, String notificationTitle, String notificationBody, String notificationType, Context context) {
         NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationType);
         firebaseFirestore.collection("notifications_admin")
                 .whereEqualTo("notificationTitle", notificationTitle)
@@ -549,14 +549,14 @@ public class HomeFragment extends Fragment {
                                 public void onSuccess(Void aVoid) {
                                     //not exist make notification and save for next time
                                     Uri modified_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                    NotificationCompat.Builder modified_builder = new NotificationCompat.Builder(getContext(), notificationTitle);
+                                    NotificationCompat.Builder modified_builder = new NotificationCompat.Builder(context, notificationTitle);
                                     modified_builder.setContentTitle(notificationTitle);
                                     modified_builder.setContentText(notificationBody);
                                     modified_builder.setSmallIcon(R.drawable.ic_app);
                                     modified_builder.setSound(modified_defaultSoundUri);
                                     modified_builder.setAutoCancel(true);
 
-                                    NotificationManagerCompat modified_managerCompat = NotificationManagerCompat.from(getActivity());
+                                    NotificationManagerCompat modified_managerCompat = NotificationManagerCompat.from(context);
                                     modified_managerCompat.notify(2, modified_builder.build());
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
@@ -571,7 +571,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void saveNotificationInFirestoreRemoved(String notificationTime, String notificationTitle, String notificationBody, String notificationType) {
+    private void saveNotificationInFirestoreRemoved(String notificationTime, String notificationTitle, String notificationBody, String notificationType, Context context) {
         NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationType);
         firebaseFirestore.collection("notifications_admin")
                 .whereEqualTo("notificationTitle", notificationTitle)
@@ -585,14 +585,14 @@ public class HomeFragment extends Fragment {
                                 public void onSuccess(Void aVoid) {
                                     //not exist make notification and save for next time
                                     Uri removed_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                    NotificationCompat.Builder removed_builder = new NotificationCompat.Builder(getContext(), notificationTitle);
+                                    NotificationCompat.Builder removed_builder = new NotificationCompat.Builder(context, notificationTitle);
                                     removed_builder.setContentTitle(notificationTitle);
                                     removed_builder.setContentText(notificationBody);
                                     removed_builder.setSmallIcon(R.drawable.ic_app);
                                     removed_builder.setSound(removed_defaultSoundUri);
                                     removed_builder.setAutoCancel(true);
 
-                                    NotificationManagerCompat removed_managerCompat = NotificationManagerCompat.from(getActivity());
+                                    NotificationManagerCompat removed_managerCompat = NotificationManagerCompat.from(context);
                                     removed_managerCompat.notify(3, removed_builder.build());
 
                                 }

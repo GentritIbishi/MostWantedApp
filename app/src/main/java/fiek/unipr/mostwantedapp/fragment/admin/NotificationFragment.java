@@ -41,8 +41,10 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.PersonListAdapter;
@@ -62,11 +64,19 @@ public class NotificationFragment extends Fragment {
     private ArrayList<Report> reportArrayList;
     private FirebaseFirestore firebaseFirestore;
     private String Description, Date_time, uID, informer_person, wanted_person;
+    private Map<String, Object> images = new HashMap<>();
     private ReportStatus status = ReportStatus.UNVERIFIED;
     private Double longitude, latitude;
 
     public NotificationFragment() {
         // Required empty public constructor
+    }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        checkNotificationPermission();
     }
 
     @Override
@@ -127,6 +137,7 @@ public class NotificationFragment extends Fragment {
                                 status = report.getStatus();
                                 uID = report.getuID();
                                 wanted_person = report.getWanted_person();
+                                images = report.getImages();
 
 
                                 // after getting data from Firebase we are

@@ -393,6 +393,15 @@
     <string name="report_removed">Report removed:</string>
     <string name="report_title">REPORT TITLE</string>
     <string name="failed_to_save">Failed to save!</string>
+    <string name="ok">ok</string>
+    <string name="text_location_permission">text_location_permission</string>
+    <string name="title_location_permission">title_location_permission</string>
+    <string name="no_location_found_tap_on_map_for_manual_location">No location found, tap on map for manual location!</string>
+    <string name="failed_to_save_report">Failed to save report</string>
+    <string name="failed_to_find_document_for_save_images">Failed to find document for save images</string>
+    <string name="thank_you_for_collaboration">Thank you for collaboration.</string>
+    <string name="report_is_saving">Report is saving...</string>
+    <string name="if_loading_takes_too_long_please_press_the_button_again">If loading takes too long please press \"Report\" again!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

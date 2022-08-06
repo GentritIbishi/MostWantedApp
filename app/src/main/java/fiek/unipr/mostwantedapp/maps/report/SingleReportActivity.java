@@ -144,6 +144,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
         ArrayAdapter<String> statusStateAdapter = new ArrayAdapter<>(getApplicationContext(),
                 R.layout.drop_down_item_report_status_state, status_state);
         binding.autoCompleteReportStatus.setAdapter(statusStateAdapter);
+        String status_old = binding.autoCompleteReportStatus.getText().toString();
         binding.autoCompleteReportStatus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -152,7 +153,14 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
                 binding.autocompleteReportStatusLayout.setBoxStrokeColorStateList(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.verydark)));
                 binding.autocompleteReportStatusLayout.setCounterTextColor(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.verydark)));
                 binding.autocompleteReportStatusLayout.setEndIconTintList(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.verydark)));
-                binding.btnSaveReport.setVisibility(View.VISIBLE);
+
+                String status_new = binding.autoCompleteReportStatus.getText().toString();
+
+                if(status_old.equals(status_new)){
+                    binding.btnSaveReport.setVisibility(View.GONE);
+                }else {
+                    binding.btnSaveReport.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -212,34 +220,40 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
             totalImages = bundle.getInt("totalImages");
             images = bundle.getStringArray("images");
 
-            setFirstImageSelectedInGallery(0);
-            customGalleryAdapter = new CustomizedGalleryAdapter(getApplicationContext(), images);
-            binding.imageGallery.setAdapter(customGalleryAdapter);
+            if(images != null && images.length > 0){
+                binding.imageGallery.setVisibility(View.VISIBLE);
+                binding.imageView.setVisibility(View.VISIBLE);
+                setFirstImageSelectedInGallery(0);
+                customGalleryAdapter = new CustomizedGalleryAdapter(getApplicationContext(), images);
+                binding.imageGallery.setAdapter(customGalleryAdapter);
 
-            binding.imageGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    // Whichever image is clicked, that is set in the  selectedImageView
-                    // position will indicate the location of image
-                    Glide.with(getApplicationContext())
-                            .asBitmap()
-                            .load(images[position])
-                            .listener(new RequestListener<Bitmap>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                    return false;
-                                }
+                binding.imageGallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        // Whichever image is clicked, that is set in the  selectedImageView
+                        // position will indicate the location of image
+                        Glide.with(getApplicationContext())
+                                .asBitmap()
+                                .load(images[position])
+                                .listener(new RequestListener<Bitmap>() {
+                                    @Override
+                                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                        return false;
+                                    }
 
-                                @Override
-                                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                    binding.imageView.setImageBitmap(resource);
-                                    return true;
-                                }
-                            })
-                            .preload();
-                }
-            });
-
+                                    @Override
+                                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                                        binding.imageView.setImageBitmap(resource);
+                                        return true;
+                                    }
+                                })
+                                .preload();
+                    }
+                });
+            }else {
+                binding.imageGallery.setVisibility(View.GONE);
+                binding.imageView.setVisibility(View.GONE);
+            }
         } catch (Exception e) {
             e.getMessage();
         }
@@ -288,7 +302,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
                                                 @Override
                                                 public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                                                     Bitmap newBitmap = addBorder(resource, getApplicationContext());
-                                                    LatLng latLng = new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
+                                                    LatLng latLng = new LatLng(latitude, longitude);
 
                                                     Geocoder geocoder;
                                                     List<Address> addresses = null;
@@ -353,12 +367,9 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
         return output;
     }
 
-    private void getTotalImage(int totalImages) {
-        String[] str = new String[totalImages];
-        for(int i = 0; i<totalImages; i++){
-            //search for
-            str[i] = "image"+i;
-        }
+    public static boolean empty( final String s ) {
+        // Null-safe, short-circuit evaluation.
+        return s == null || s.trim().isEmpty();
     }
 
 }

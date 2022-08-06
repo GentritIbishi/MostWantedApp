@@ -241,21 +241,21 @@
 
                         </com.google.android.material.textfield.TextInputLayout>
 
-                        <com.google.android.material.button.MaterialButton
+                        <Button
                             android:id="@+id/btnSaveReport"
-                            android:visibility="invisible"
-                            android:theme="@style/Theme.MaterialComponents.Light"
-                            android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_marginStart="32dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="64dp"
                             android:layout_marginTop="16dp"
-                            android:layout_marginEnd="32dp"
+                            android:layout_marginEnd="64dp"
                             android:layout_marginBottom="16dp"
+                            android:background="@drawable/button_rectangle"
+                            android:drawableLeft="@drawable/ic_check"
+                            android:paddingLeft="20dp"
+                            android:textSize="16sp"
+                            android:text="@string/save_changes"
                             android:textColor="@color/white"
-                            app:icon="@drawable/ic_check"
-                            android:background="@drawable/button_round"
-                            app:iconSize="50dp"
-                            app:iconGravity="textTop"
+                            android:visibility="gone"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"

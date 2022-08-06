@@ -2,22 +2,23 @@ package fiek.unipr.mostwantedapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -30,7 +31,6 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.maps.report.SingleReportActivity;
 
@@ -66,9 +66,7 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
         TextView user_report_name = listitemView.findViewById(R.id.user_report_name);
         TextView user_report_description = listitemView.findViewById(R.id.user_report_description);
         TextView user_report_time = listitemView.findViewById(R.id.user_report_time);
-        CircleImageView user_reported_image = listitemView.findViewById(R.id.user_reported_image);
-
-        getUrlOfProfile(report.getuID());
+        user_reported_image = listitemView.findViewById(R.id.user_reported_image);
 
         try {
             // after initializing our items we are
@@ -82,17 +80,29 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
 
                 user_reported_image.setImageResource(R.drawable.ic_anonymous);
 
-            }else if(informer_person != null && informer_person.startsWith("+383")){
+            }else if(informer_person != null && informer_person.startsWith("+")){
 
                 user_reported_image.setImageResource(R.drawable.ic_phone_login);
 
-            }else {
+            }else if(!informer_person.equals(ANONYMOUS) && !informer_person.startsWith("+")){
                 // in below line we are using Picasso to
                 // load image from URL in our Image VIew.
-                Picasso.get()
-                        .load(urlOfProfile)
-                        .transform(new CircleTransform())
-                        .into(user_reported_image);
+                Glide.with(getContext())
+                        .load(report.getInformer_person_urlOfProfile())
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                user_reported_image.setImageDrawable(resource);
+                                return true;
+                            }
+                        })
+                        .circleCrop()
+                        .preload();
             }
 
 
@@ -128,24 +138,35 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
                 viewBundle.putString("description", report.getDescription());
                 viewBundle.putString("informer_person", report.getInformer_person());
                 viewBundle.putString("status", report.getStatus().toString());
+                viewBundle.putString("informer_person_urlOfProfile", report.getInformer_person_urlOfProfile());
                 viewBundle.putDouble("latitude", report.getLatitude());
                 viewBundle.putDouble("longitude", report.getLongitude());
                 viewBundle.putString("uID", report.getuID());
                 viewBundle.putString("wanted_person", report.getWanted_person());
-                viewBundle.putInt("totalImages", report.getImages().size());
 
-                int totalImages = report.getImages().size();
+                try {
+                    if(report.getImages().containsValue(null)) {
+                        viewBundle.putInt("totalImages", 0);
+                        viewBundle.putStringArray("images", null);
+                    }else {
+                        viewBundle.putInt("totalImages", report.getImages().size());
 
-                Map<String, Object> images = new HashMap<>();
-                images = report.getImages();
+                        int totalImages = report.getImages().size();
 
-                String[] arrImages = new String[totalImages];
+                        Map<String, Object> images;
+                        images = (Map<String, Object>) report.getImages();
 
-                for(int i = 0; i<totalImages; i++) {
-                    arrImages[i] = images.get("image"+i).toString();
+                        String[] arrImages = new String[totalImages];
+
+                        for(int i = 0; i<totalImages; i++) {
+                            arrImages[i] = images.get("image"+i).toString();
+                        }
+
+                        viewBundle.putStringArray("images", arrImages);
+                    }
+                }catch (Exception e) {
+                    System.out.println("ERROR"+e.getMessage());
                 }
-
-                viewBundle.putStringArray("images", arrImages);
 
                 intent.putExtras(viewBundle);
                 v.getContext().startActivity(intent);
@@ -198,23 +219,6 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
         } catch(Exception e) {
             return "date";
         }
-    }
-
-    private void getUrlOfProfile(String uID) {
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseFirestore.collection("users").document(uID)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        urlOfProfile = documentSnapshot.getString("urlOfProfile");
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "No url", Toast.LENGTH_SHORT).show();
-                    }
-                });
     }
 
 }

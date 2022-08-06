@@ -9,7 +9,6 @@ import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -36,11 +35,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -49,6 +50,7 @@ import java.util.Map;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsInformerBinding;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
+import fiek.unipr.mostwantedapp.models.Image;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.models.ReportStatus;
 
@@ -57,12 +59,12 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private ActivityMapsInformerBinding binding;
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    public static final String PROFILE_INFORMER_PREFS = "profileInformerPreferences";
-    public static final String USER_INFORMER_PREFS = "USER_INFORMER_PREFS";
     public static final String ANONYMOUS = "ANONYMOUS";
+    public static final String PHONE_USER = "PHONE_USER";
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final float DEFAULT_ZOOM = 15f;
     private static final int PICK_IMAGE = 15;
+    private int upload_count = 0;
     private FusedLocationProviderClient mfusedLocationProviderClient;
     private GoogleMap mMap;
     private boolean locationPermissionGranted = false;
@@ -73,37 +75,20 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private StorageReference storageReference;
     private DocumentReference documentReference;
 
-    private String wanted_person, acts, address, eyeColor, hairColor, phy_appearance, status, urlOfProfile;
+    private String wanted_person, acts, address, eyeColor, hairColor, phy_appearance, status, urlOfProfile, informer_person_urlOfProfile;
     private String dateNtime;
     private Integer age, height, weight;
     private Double latitude, longitude;
-    private String description= "No description!";
+    private String description = "No description!";
     private String informer_person = "ANONYMOUS";
     private MarkerOptions markerOptionsDefault;
     private Marker marker;
-    private Map<String, Object> images = new HashMap<>();
     private Bundle mapsInformerBundle;
     private ProgressDialog progressDialog;
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        if(firebaseAuth != null){
-
-            if(firebaseAuth.getCurrentUser().isAnonymous()){
-                loadInfoAnonymousFirebase();
-            }
-
-            else if(!empty(firebaseAuth.getCurrentUser().getPhoneNumber())){
-                loadInfoPhoneFirebase();
-            }
-
-            else {
-                loadInfoFromFirebase(firebaseAuth);
-            }
-
-        }
-    }
+    private Double default_latitude=42.667542, default_longitude=21.166191;
+    private ArrayList<Uri> ImageList = new ArrayList<Uri>();
+    Map<String, Object> imageListMap = new HashMap<>();
+    private Uri ImageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +98,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         setContentView(binding.getRoot());
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(this.getText(R.string.image_uploaded_successfully)+"");
+        progressDialog.setMessage(this.getText(R.string.report_is_saving) + "");
 
         binding.LocationReport.setVisibility(View.VISIBLE);
         binding.OtherReports.setVisibility(View.GONE);
@@ -132,10 +117,10 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             @Override
             public void onClick(View view) {
                 //lat long i din ni check if not null eshte mire
-                if(latitude != null && longitude != null){
+                if (latitude != null && longitude != null) {
                     binding.LocationReport.setVisibility(View.GONE);
                     binding.OtherReports.setVisibility(View.VISIBLE);
-                }else {
+                } else {
                     Toast.makeText(MapsInformerActivity.this, R.string.location_not_set_please_set_new_location, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -157,72 +142,9 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 binding.btReport.setEnabled(false);
                 binding.reportProgressBar.setVisibility(View.VISIBLE);
 
-                if(dateNtime != null) {
-                    //ktu merren komplet infot edhe bohet regjistrimi
-                    DocumentReference docRef = firebaseFirestore
-                            .collection("locations_reports")
-                            .document(dateNtime);
-
-                    Report report = new Report(binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
-                            dateNtime,
-                            firebaseAuth.getCurrentUser().getUid(),
-                            informer_person,
-                            wanted_person,
-                            ReportStatus.UNVERIFIED,
-                            longitude,
-                            latitude,
-                            images);
-
-                    docRef.set(report).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful() && task !=null) {
-                                setLastSeenLocation(latitude, longitude, wanted_person);
-                                finish();
-                                Toast.makeText(MapsInformerActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
-                                binding.reportProgressBar.setVisibility(View.INVISIBLE);
-                            }else {
-                                //task not successfull dhe null
-                                Toast.makeText(MapsInformerActivity.this, R.string.failed_to_register, Toast.LENGTH_SHORT).show();
-                                binding.btReport.setEnabled(true);
-                                binding.reportProgressBar.setVisibility(View.INVISIBLE);
-                            }
-                        }
-                    });
-                }else {
-                    dateNtime = getTimeDate();
-                    //ktu merren komplet infot edhe bohet regjistrimi
-                    DocumentReference docRef = firebaseFirestore
-                            .collection("locations_reports")
-                            .document(dateNtime);
-                    Report report = new Report(binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
-                            dateNtime,
-                            firebaseAuth.getCurrentUser().getUid(),
-                            informer_person,
-                            wanted_person,
-                            ReportStatus.UNVERIFIED,
-                            longitude,
-                            latitude,
-                            images);
-
-                    docRef.set(report).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful() && task !=null) {
-                                //task succesfull
-                                Toast.makeText(MapsInformerActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
-                                finish();
-                                binding.reportProgressBar.setVisibility(View.INVISIBLE);
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    });
-                }
+                progressDialog.show();
+                binding.alert.setText(getApplicationContext().getText(R.string.if_loading_takes_too_long_please_press_the_button_again));
+                save(informer_person, wanted_person, longitude, latitude, getTimeDate());
             }
         });
 
@@ -240,26 +162,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 binding.OtherReports.setVisibility(View.VISIBLE);
             }
         });
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setOnMapClickListener(this);
-
-        if (locationPermissionGranted) {
-            getDeviceLocation();
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            mMap.setMyLocationEnabled(true);
-        }else {
-            Toast.makeText(this, "No permit!", Toast.LENGTH_SHORT).show();
-        }
 
     }
 
@@ -285,49 +187,74 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (firebaseAuth != null) {
+
+            if (firebaseAuth.getCurrentUser().isAnonymous()) {
+                loadInfoAnonymousFirebase();
+            } else if (!empty(firebaseAuth.getCurrentUser().getPhoneNumber())) {
+                loadInfoPhoneFirebase();
+            } else {
+                loadInfoFromFirebase(firebaseAuth);
+            }
+
+        }
+    }
+
     public static String getTimeDate() { // without parameter argument
-        try{
+        try {
             Date netDate = new Date(); // current time from here
             SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
             return sfd.format(netDate);
-        } catch(Exception e) {
+        } catch (Exception e) {
             return "date";
         }
     }
 
-    private void getDeviceLocation() {
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setOnMapClickListener(this);
         mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         try {
-            if(locationPermissionGranted){
+            if (locationPermissionGranted) {
                 Task location = mfusedLocationProviderClient.getLastLocation();
-                if(location != null) {
+                if (location != null) {
                     location.addOnCompleteListener(new OnCompleteListener() {
                         @Override
                         public void onComplete(@NonNull Task task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 Location currentLocation = (Location) task.getResult();
-                                //bohen set lokacionet per future
                                 latitude = currentLocation.getLatitude();
                                 longitude = currentLocation.getLongitude();
-                                //move camera te lokacioni jon
-                                moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-                                        DEFAULT_ZOOM);
-                                markerOptionsDefault = new MarkerOptions().position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
-                                        .title(wanted_person +" "+ R.string.position).icon(BitmapDescriptorFactory.defaultMarker());
-                                mMap.addMarker(markerOptionsDefault);
-
-                            }else {
-                                Toast.makeText(MapsInformerActivity.this, "No location found, tap on map for manual location!", Toast.LENGTH_SHORT).show();
+                                setMarkerLocation(latitude, longitude);
+                                mMap.setMyLocationEnabled(true);
+                            } else {
+                                Toast.makeText(MapsInformerActivity.this, getApplicationContext().getText(R.string.no_location_found_tap_on_map_for_manual_location), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-                }else {
+                } else {
                     Toast.makeText(this, R.string.please_turn_on_location_on_your_phone, Toast.LENGTH_SHORT).show();
+                    setMarkerLocation(default_latitude, default_longitude);
                 }
+            } else {
+                setMarkerLocation(default_latitude, default_longitude);
             }
-        }catch (SecurityException e) {
-            Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (SecurityException e) {
+            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+
+    }
+
+    private void setMarkerLocation(Double latitude, Double longitude) {
+        moveCamera(new LatLng(default_latitude, default_longitude),
+                DEFAULT_ZOOM);
+        markerOptionsDefault = new MarkerOptions().position(new LatLng(default_latitude, default_longitude))
+                .title(wanted_person + " " + getApplicationContext().getText(R.string.position)).icon(BitmapDescriptorFactory.defaultMarker());
+        mMap.addMarker(markerOptionsDefault);
     }
 
     private void getLocationPermission() {
@@ -338,9 +265,11 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 initMap();
             }else {
                 ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+                initMap();
             }
         }else {
             ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+            initMap();
         }
     }
 
@@ -360,9 +289,10 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                         locationPermissionGranted = false;
                         return;
                     }
+                }else {
+                    locationPermissionGranted = true;
+                    initMap();
                 }
-                locationPermissionGranted = true;
-                initMap();
             }
         }
     }
@@ -378,7 +308,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         longitude = latLng.longitude;
         mMap.clear();
         markerOptionsDefault = new MarkerOptions().position(latLng)
-                .title(wanted_person +" "+ R.string.position).icon(BitmapDescriptorFactory.defaultMarker());
+                .title(wanted_person +" "+ getApplicationContext().getText(R.string.position)).icon(BitmapDescriptorFactory.defaultMarker());
         mMap.addMarker(markerOptionsDefault);
     }
 
@@ -387,67 +317,31 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == PICK_IMAGE && resultCode == RESULT_OK) {
             if(data.getClipData() != null) {
-                progressDialog.show();
                 int totalitem = data.getClipData().getItemCount();
                 for(int i=0; i<totalitem;i++){
-                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
-                    uploadImageToFirebase(imageUri, i);
-                    binding.alert.setText(this.getText(R.string.you_have_selected)+" "+totalitem+" "+this.getText(R.string.images));
+                    ImageUri = data.getClipData().getItemAt(i).getUri();
+                    ImageList.add(ImageUri);
+                    binding.alert.setText(this.getText(R.string.you_have_selected)+" "+ImageList.size()+" "+this.getText(R.string.images));
                 }
             }else if(data.getData() != null) {
-                progressDialog.show();
-                Uri imageUri = data.getData();
-                uploadImageToFirebase(imageUri, 0);
-                binding.alert.setText(this.getText(R.string.you_have_selected)+" "+1+" "+this.getText(R.string.images));
-                Toast.makeText(this, this.getText(R.string.image_uploaded_successfully), Toast.LENGTH_SHORT).show();
+                ImageUri = data.getData();
+                ImageList.add(ImageUri);
+                binding.alert.setText(this.getText(R.string.you_have_selected)+" "+ ImageList.size() +" "+this.getText(R.string.images));
             }
         }
-    }
-
-    private void uploadImageToFirebase(Uri imageUri, Integer i) {
-        dateNtime = getTimeDate();
-            StorageReference fileRef = storageReference.child("wanted_persons/locations_reports/"+dateNtime+"/Image"+i+".jpg");
-            int finalI = i;
-            fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            images.put("image"+ finalI, uri.toString());
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(MapsInformerActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
-                }
-            });
-        progressDialog.dismiss();
     }
 
     private void setLastSeenLocation(Double latitude, Double longitude, String wanted_person) {
         DocumentReference locationReports = firebaseFirestore.collection("wanted_persons").document(wanted_person);
 
-        locationReports.update("latitude", latitude).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(MapsInformerActivity.this, R.string.latitude_updated_successfully, Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
+        locationReports.update("latitude", latitude).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(MapsInformerActivity.this, R.string.latitude_failed_to_update, Toast.LENGTH_SHORT).show();
             }
         });
 
-        locationReports.update("longitude", longitude).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void unused) {
-                Toast.makeText(MapsInformerActivity.this, R.string.longitude_updated_successfully, Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
+        locationReports.update("longitude", longitude).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(MapsInformerActivity.this, R.string.longitude_failed_to_update, Toast.LENGTH_SHORT).show();
@@ -497,6 +391,247 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     }
                 }
             });
+        }
+    }
+
+    private void storeLink (String dateNtime, Uri uri, Integer count) {
+        imageListMap.put("image"+ count, uri.toString());
+        firebaseFirestore.collection("locations_reports")
+                .document(dateNtime)
+                        .update("images", imageListMap).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MapsInformerActivity.this, "ERROR UPDATING Images!"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        progressDialog.setMessage(getApplicationContext().getString(R.string.thank_you_for_collaboration));
+    }
+
+    private void save(String informer_person, String wanted_person, Double longitude, Double latitude, String dateNtime) {
+            if(informer_person.equals(ANONYMOUS))
+            {
+                DocumentReference docRef = firebaseFirestore
+                        .collection("locations_reports")
+                        .document(dateNtime);
+                Report report = new Report(binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
+                        dateNtime,
+                        firebaseAuth.getCurrentUser().getUid(),
+                        informer_person,
+                        wanted_person,
+                        ANONYMOUS,
+                        ReportStatus.UNVERIFIED,
+                        longitude,
+                        latitude,
+                        null);
+
+                docRef.set(report).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful() && task !=null) {
+                            // Toast.makeText(MapsInformerActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
+                            setLastSeenLocation(latitude, longitude, wanted_person);
+                            if(ImageList.size() != 0){
+                                for(upload_count = 0; upload_count < ImageList.size(); upload_count++){
+                                    Uri IndividualImage = ImageList.get(upload_count);
+                                    StorageReference fileRef = storageReference.child("wanted_persons/locations_reports/"+dateNtime+"/Image"+upload_count+".jpg");
+                                    int finalI = upload_count;
+                                    fileRef.putFile(IndividualImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri) {
+                                                    storeLink(dateNtime, uri, finalI);
+                                                }
+                                            });
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(MapsInformerActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                                progressDialog.dismiss();
+                                finish();
+                                binding.reportProgressBar.setVisibility(View.INVISIBLE);
+                            }else {
+                                progressDialog.setMessage(getApplicationContext().getString(R.string.thank_you_for_collaboration)+"");
+                                progressDialog.dismiss();
+                                finish();
+                                binding.reportProgressBar.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MapsInformerActivity.this, getApplicationContext().getText(R.string.failed_to_save_report)+" "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
+            }else if(informer_person.startsWith("+"))
+            {
+                DocumentReference docRef = firebaseFirestore
+                        .collection("locations_reports")
+                        .document(dateNtime);
+                Report report = new Report(binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
+                        dateNtime,
+                        firebaseAuth.getCurrentUser().getUid(),
+                        informer_person,
+                        wanted_person,
+                        PHONE_USER,
+                        ReportStatus.UNVERIFIED,
+                        longitude,
+                        latitude,
+                        null);
+
+                docRef.set(report).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful() && task !=null) {
+                            setLastSeenLocation(latitude, longitude, wanted_person);
+                            if(ImageList.size() != 0){
+                                for(int upload_count = 0; upload_count < ImageList.size(); upload_count++){
+                                    Uri IndividualImage = ImageList.get(upload_count);
+                                    StorageReference fileRef = storageReference.child("wanted_persons/locations_reports/"+dateNtime+"/Image"+upload_count+".jpg");
+                                    int finalI = upload_count;
+                                    fileRef.putFile(IndividualImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                @Override
+                                                public void onSuccess(Uri uri) {
+                                                    storeLink(dateNtime, uri, finalI);
+                                                }
+                                            });
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                                progressDialog.dismiss();
+                                finish();
+                                binding.reportProgressBar.setVisibility(View.INVISIBLE);
+                            }else {
+                                progressDialog.setMessage(getApplicationContext().getString(R.string.thank_you_for_collaboration)+"");
+                                progressDialog.dismiss();
+                                finish();
+                                binding.reportProgressBar.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        System.out.println("Error krejt"+e.getMessage());
+                        finish();
+                    }
+                });
+            }else if(!informer_person.equals(ANONYMOUS) && !informer_person.startsWith("+"))
+            {
+                firebaseFirestore.collection("users")
+                        .whereEqualTo("fullName", informer_person)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful() && task.getResult().size() != 0)
+                                {
+                                    informer_person_urlOfProfile = task.getResult().getDocuments().get(0).getString("urlOfProfile");
+
+                                    DocumentReference docRef = firebaseFirestore
+                                            .collection("locations_reports")
+                                            .document(dateNtime);
+                                    Report report = new Report(binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
+                                            dateNtime,
+                                            firebaseAuth.getCurrentUser().getUid(),
+                                            informer_person,
+                                            wanted_person,
+                                            informer_person_urlOfProfile,
+                                            ReportStatus.UNVERIFIED,
+                                            longitude,
+                                            latitude,
+                                            null);
+
+                                    docRef.set(report).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful() && task !=null) {
+                                                setLastSeenLocation(latitude, longitude, wanted_person);
+                                                if(ImageList.size() != 0){
+                                                    for(int upload_count = 0; upload_count < ImageList.size(); upload_count++){
+                                                        Uri IndividualImage = ImageList.get(upload_count);
+                                                        StorageReference fileRef = storageReference.child("wanted_persons/locations_reports/"+dateNtime+"/Image"+upload_count+".jpg");
+                                                        int finalI = upload_count;
+                                                        fileRef.putFile(IndividualImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                            @Override
+                                                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                    @Override
+                                                                    public void onSuccess(Uri uri) {
+                                                                        storeLink(dateNtime, uri, finalI);
+                                                                    }
+                                                                });
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Toast.makeText(MapsInformerActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                    }
+                                                    ImageList.clear();
+                                                    imageListMap.clear();
+                                                    progressDialog.dismiss();
+                                                    finish();
+                                                    binding.reportProgressBar.setVisibility(View.INVISIBLE);
+                                                }else {
+                                                    progressDialog.setMessage(getApplicationContext().getString(R.string.thank_you_for_collaboration)+"");
+                                                    progressDialog.dismiss();
+                                                    finish();
+                                                    binding.reportProgressBar.setVisibility(View.INVISIBLE);
+                                                }
+                                            }
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        }
+                                    });
+                                }
+                            }
+                        });
+            }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(progressDialog!=null && progressDialog.isShowing()){
+            progressDialog.cancel();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(progressDialog!=null && progressDialog.isShowing()){
+            progressDialog.cancel();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if ( progressDialog!=null && progressDialog.isShowing() ){
+            progressDialog.cancel();
         }
     }
 
