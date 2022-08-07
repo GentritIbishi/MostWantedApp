@@ -1,66 +1,159 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
+import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.adapter.ModifedReportNotificationAdapter;
+import fiek.unipr.mostwantedapp.adapter.ReportNotificationAdapter;
+import fiek.unipr.mostwantedapp.models.NotificationAdminState;
+import fiek.unipr.mostwantedapp.models.NotificationReportUser;
+import fiek.unipr.mostwantedapp.models.Report;
+import fiek.unipr.mostwantedapp.models.ReportStatus;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link NotificationFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class NotificationFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private View notification_fragment_view;
+    private ListView user_lvReportNotification;
+    private ModifedReportNotificationAdapter reportNotificationAdapter;
+    private ArrayList<NotificationReportUser> reportArrayList;
+    private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
+    private String notificationReportDateTime, notificationReportBody, notificationReportTitle, notificationReportType,
+            notificationReportStatusChangedTo, notificationDateTimeChanged;
+    private Map<String, Object> images = new HashMap<>();
+    private ReportStatus status = ReportStatus.UNVERIFIED;
+    private Double longitude, latitude;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public NotificationFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment NotificationFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static NotificationFragment newInstance(String param1, String param2) {
-        NotificationFragment fragment = new NotificationFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public NotificationFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        checkNotificationPermission();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification_user, container, false);
+        notification_fragment_view = inflater.inflate(R.layout.fragment_notification_user, container, false);
+
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        InitializeFields();
+        loadDatainListview(firebaseAuth.getUid());
+
+        final SwipeRefreshLayout pullToRefreshInHome = notification_fragment_view.findViewById(R.id.user_pullToRefreshInNotification);
+        pullToRefreshInHome.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Reload current fragment
+                reportArrayList.clear();
+                loadDatainListview(firebaseAuth.getUid());
+                pullToRefreshInHome.setRefreshing(false);
+            }
+        });
+
+        return notification_fragment_view;
     }
+
+    private void InitializeFields() {
+        user_lvReportNotification = notification_fragment_view.findViewById(R.id.user_lvReportNotification);
+        reportArrayList = new ArrayList<>();
+        reportNotificationAdapter = new ModifedReportNotificationAdapter(getActivity().getApplicationContext(), reportArrayList);
+        user_lvReportNotification.setAdapter(reportNotificationAdapter);
+    }
+
+    private void loadDatainListview(String notificationReportUID) {
+        // below line is use to get data from Firebase
+        // firestore using collection in android.
+        firebaseFirestore.collection("notifications_user")
+                .whereEqualTo("notificationReportUID", notificationReportUID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        // after getting the data we are calling on success method
+                        // and inside this method we are checking if the received
+                        // query snapshot is empty or not.
+                        if (!queryDocumentSnapshots.isEmpty()) {
+                            // if the snapshot is not empty we are hiding
+                            // our progress bar and adding our data in a list.
+                            List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                            for (DocumentSnapshot d : list) {
+                                // after getting this list we are passing
+                                // that list to our object class.
+                                NotificationReportUser report = d.toObject(NotificationReportUser.class);
+
+                                notificationReportDateTime = report.getNotificationReportDateTime();
+                                notificationReportType = report.getNotificationReportType();
+                                notificationReportBody = report.getNotificationReportBody();
+                                notificationReportTitle = report.getNotificationReportTitle();
+                                notificationReportStatusChangedTo = report.getNotificationReportStatusChangedTo();
+                                notificationDateTimeChanged = report.getNotificationDateTimeChanged();
+
+
+                                // after getting data from Firebase we are
+                                // storing that data in our array list
+                                reportArrayList.add(report);
+                            }
+
+                            reportNotificationAdapter.notifyDataSetChanged();
+                        } else {
+                            // if the snapshot is empty we are displaying a toast message.
+                            Toast.makeText(getActivity().getApplicationContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // we are displaying a toast message
+                        // when we get any error from Firebase.
+                        Toast.makeText(getActivity().getApplicationContext(), "Fail to load data..", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void checkNotificationPermission() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("My Notification", "My Notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getActivity().getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
+    }
+
 }

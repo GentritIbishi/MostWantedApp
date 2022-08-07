@@ -402,6 +402,11 @@
     <string name="thank_you_for_collaboration">Thank you for collaboration.</string>
     <string name="report_is_saving">Report is saving...</string>
     <string name="if_loading_takes_too_long_please_press_the_button_again">If loading takes too long please press \"Report\" again!</string>
+    <string name="update_status_of_report_with">Update status of report with</string>
+    <string name="has_been_changed_to">has been changed to</string>
+    <string name="your_report_with">your report with</string>
+    <string name="and_with_title">and with_title</string>
+    <string name="has_new_status_right_now">has new status right now!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

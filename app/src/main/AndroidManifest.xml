@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fiek.unipr.mostwantedapp">
-
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -28,7 +27,6 @@
         android:roundIcon="@drawable/ic_app"
         android:supportsRtl="true"
         android:theme="@style/Theme.MostWantedApp">
-
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -104,8 +102,8 @@
         <activity android:name=".dashboard.AdminDashboardActivity" />
         <activity android:name=".register.RegisterUsersActivity" />
         <activity android:name=".register.RegisterPersonActivity" />
+        <activity android:name=".maps.report.ReportInfoActivity" />
         <activity android:name=".LoginActivity" />
-
         <!--
  Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.

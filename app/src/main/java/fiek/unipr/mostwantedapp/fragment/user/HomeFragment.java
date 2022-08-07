@@ -1,12 +1,20 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,17 +34,28 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.PersonListAdapter;
 import fiek.unipr.mostwantedapp.maps.MapsInformerActivity;
+import fiek.unipr.mostwantedapp.models.NotificationAdmin;
+import fiek.unipr.mostwantedapp.models.NotificationAdminState;
+import fiek.unipr.mostwantedapp.models.NotificationReportUser;
 import fiek.unipr.mostwantedapp.models.Person;
+import fiek.unipr.mostwantedapp.models.Report;
 
 public class HomeFragment extends Fragment {
 
@@ -45,6 +64,7 @@ public class HomeFragment extends Fragment {
     private PersonListAdapter personListAdapter;
     private ArrayList<Person> personArrayList;
     private FirebaseFirestore firebaseFirestore;
+    private FirebaseAuth firebaseAuth;
     private String fullName;
 
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
@@ -61,6 +81,14 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         getLocationPermission();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        realTimeCheckReportStatus(firebaseAuth.getUid());
     }
 
     @Override
@@ -96,7 +124,6 @@ public class HomeFragment extends Fragment {
         // below line is use to get data from Firebase
         // firestore using collection in android.
         firebaseFirestore.collection("wanted_persons")
-                .limit(3)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -134,6 +161,80 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(getActivity().getApplicationContext(), "Fail to load data..", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void realTimeCheckReportStatus(String uID) {
+        firebaseFirestore.collection("locations_reports")
+                .whereEqualTo("uID", uID)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                            String notificationReportDateTime = dc.getDocument().getString("date_time");
+                            String notificationReportBody = dc.getDocument().getString("description");
+                            String notificationReportTitle = dc.getDocument().getString("title");
+                            String notificationReportStatusChangedTo = dc.getDocument().getString("status");
+
+                            switch (dc.getType()) {
+                                case MODIFIED:
+                                    saveNotificationInFirestoreModified(uID, notificationReportDateTime, notificationReportBody, notificationReportTitle
+                                    , String.valueOf(NotificationAdminState.MODIFIED), notificationReportStatusChangedTo, getDateTime());
+                                    break;
+                            }
+                        }
+                    }
+                });
+
+    }
+
+    private void saveNotificationInFirestoreModified(String notificationReportUID, String notificationReportDateTime, String notificationReportBody, String notificationReportTitle, String notificationReportType,
+                                                     String notificationReportStatusChangedTo, String notificationDateTimeChanged) {
+        NotificationReportUser objNotificationReportUser = new NotificationReportUser(notificationReportDateTime, notificationReportBody, notificationReportTitle, notificationReportType, notificationReportStatusChangedTo, notificationReportUID, notificationDateTimeChanged);
+        firebaseFirestore.collection("notifications_user")
+                .whereEqualTo("notificationReportTitle", notificationReportTitle)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.getResult().size() == 0){
+                            firebaseFirestore.collection("notifications_user").document(notificationDateTimeChanged).set(objNotificationReportUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    //not exist make notification and save for next time
+                                    Uri modified_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), notificationReportTitle);
+                                    notificationBuilder.setContentTitle(notificationReportTitle);
+                                    notificationBuilder.setContentText(notificationReportBody);
+                                    notificationBuilder.setSmallIcon(R.drawable.ic_app);
+                                    notificationBuilder.setSound(modified_defaultSoundUri);
+                                    notificationBuilder.setAutoCancel(true);
+
+                                    SharedPreferences prefs = getActivity().getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
+                                    int notificationReportStatusModified = prefs.getInt("notificationReportStatusModified", 1);
+
+                                    NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                                    notificationManager.notify(notificationReportStatusModified, notificationBuilder.build());
+
+                                    SharedPreferences.Editor editor = prefs.edit();
+                                    notificationReportStatusModified++;
+                                    editor.putInt("notificationReportStatusModified", notificationReportStatusModified);
+                                    editor.commit();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                });
+
     }
 
     private void getLocationPermission() {
@@ -193,6 +294,16 @@ public class HomeFragment extends Fragment {
             }
         }catch (SecurityException e) {
             Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public static String getDateTime() { // without parameter argument
+        try{
+            Date netDate = new Date(); // current time from here
+            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            return sfd.format(netDate);
+        } catch(Exception e) {
+            return "date";
         }
     }
 
