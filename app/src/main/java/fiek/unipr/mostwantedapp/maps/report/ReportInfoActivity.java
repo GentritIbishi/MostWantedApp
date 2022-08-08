@@ -37,10 +37,11 @@ public class ReportInfoActivity extends AppCompatActivity {
         reportInfoBundle = new Bundle();
         getFromBundle(reportInfoBundle);
 
-        report_info_title.setText(getApplicationContext().getText(R.string.update_status_of_report_with)+" "+notificationReportDateTime+" "+getApplicationContext().getText(R.string.has_been_changed_to)+" "+notificationReportStatusChangedTo);
+        report_info_title.setText(getApplicationContext().getText(R.string.hello_dear)+" "+notificationReportUID);
 
         report_info_description.setText(getApplicationContext().getText(R.string.your_report_with)+" "+
-                notificationReportDateTime+ " "+ getApplicationContext().getText(R.string.and_with_title)+" "+notificationReportTitle+" "+getApplicationContext().getText(R.string.has_new_status_right_now));
+                notificationReportDateTime+ " "+ getApplicationContext().getText(R.string.and_with_title)+" "+notificationReportTitle+" "+getApplicationContext().getText(R.string.has_new_status_right_now)+" "
+        + getApplicationContext().getText(R.string.update_status_of_report_with)+" "+notificationReportDateTime+" "+getApplicationContext().getText(R.string.has_been_changed_to)+" "+notificationReportStatusChangedTo);
     }
 
     private void getFromBundle(Bundle bundle) {

@@ -404,9 +404,14 @@
     <string name="if_loading_takes_too_long_please_press_the_button_again">If loading takes too long please press \"Report\" again!</string>
     <string name="update_status_of_report_with">Update status of report with</string>
     <string name="has_been_changed_to">has been changed to</string>
-    <string name="your_report_with">your report with</string>
-    <string name="and_with_title">and with_title</string>
+    <string name="your_report_with">Your report with: </string>
+    <string name="and_with_title">and with title: </string>
     <string name="has_new_status_right_now">has new status right now!</string>
+    <string name="hello_dear">Hello, dear</string>
+    <string name="status_of_report_has_changed_to">Status of report has changed to</string>
+    <string name="please_be_real_in_giving_information_next_time">please be real in giving information next time.</string>
+    <string name="you_earn">you earn</string>
+    <string name="thank_you">thank you</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

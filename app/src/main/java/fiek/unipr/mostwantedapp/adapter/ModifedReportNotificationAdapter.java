@@ -36,7 +36,8 @@ import fiek.unipr.mostwantedapp.models.Report;
 
 public class ModifedReportNotificationAdapter extends ArrayAdapter<NotificationReportUser> {
 
-    private static String ANONYMOUS = "ANONYMOUS";
+    private static String FAKE = "FAKE";
+    private static String VERIFIED = "VERIFIED";
     private String urlOfProfile, user_report_time_elapsed, informer_person;
     private List<NotificationReportUser> modifiedReportList = null;
     private ArrayList<NotificationReportUser> arraylist;
@@ -69,10 +70,20 @@ public class ModifedReportNotificationAdapter extends ArrayAdapter<NotificationR
             // after initializing our items we are
             // setting data to our view.
             // below line is use to set data to our text view.
-            user_report_modified_name.setText(getContext().getText(R.string.update_status_of_report_with)+" "+report.getNotificationReportDateTime()+" "+getContext().getText(R.string.has_been_changed_to)+" "+report.getNotificationReportStatusChangedTo());
+            user_report_modified_name.setText(getContext().getText(R.string.your_report_with)+" "+report.getNotificationReportDateTime()+" "+getContext().getText(R.string.and_with_title)+" "+report.getNotificationReportTitle()+" "+getContext().getText(R.string.has_new_status_right_now));
 
-            user_report_modified_description.setText(getContext().getText(R.string.your_report_with)+" "+
-                    report.getNotificationReportDateTime()+ " "+ getContext().getText(R.string.and_with_title)+" "+report.getNotificationReportTitle()+" "+getContext().getText(R.string.has_new_status_right_now));
+            String verified = getContext().getText(R.string.status_of_report_has_changed_to)+" "+
+                    report.getNotificationReportStatusChangedTo()+ " \n"+ getContext().getText(R.string.you_earn)+20+" "+ "coins\n"+getContext().getText(R.string.thank_you_for_collaboration);
+
+            String fake = getContext().getText(R.string.status_of_report_has_changed_to)+" "+
+                    report.getNotificationReportStatusChangedTo()+ " \n"+ getContext().getText(R.string.please_be_real_in_giving_information_next_time)+", "+
+                    getContext().getText(R.string.thank_you);
+
+            if(report.getNotificationReportStatusChangedTo().equals(FAKE)){
+                user_report_modified_description.setText(fake);
+            }else if(report.getNotificationReportStatusChangedTo().equals(VERIFIED)){
+                user_report_modified_description.setText(verified);
+            }
 
             //Your report with date: and title: and decription has been changed to
 
