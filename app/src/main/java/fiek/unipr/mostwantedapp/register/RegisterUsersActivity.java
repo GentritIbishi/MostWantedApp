@@ -5,10 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Patterns;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -20,6 +23,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,8 +44,9 @@ import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterUsersActivity extends AppCompatActivity {
 
-    private EditText admin_etName, admin_etLastName, admin_etParentName, admin_etPhone, admin_etAddress, admin_etNumPersonal,
-            admin_etEmail, admin_etPassword, admin_etConfirmPassword;
+    private TextInputEditText admin_etName, admin_etLastName, admin_etParentName, admin_etPhone, admin_etAddress, admin_etNumPersonal,
+            admin_etEmailToUser, admin_etPasswordToUser, admin_etConfirmPassword;
+    private TextInputLayout admin_etNumPersonalLayout;
     private Button admin_bt_Register;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -48,7 +55,7 @@ public class RegisterUsersActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private ProgressBar admin_ri_progressBar;
     private SpinnerAdapter spAdapter;
-    private Spinner admin_spinner1;
+    private MaterialAutoCompleteTextView et_role_autocomplete;
 
 
     @Override
@@ -63,20 +70,18 @@ public class RegisterUsersActivity extends AppCompatActivity {
         admin_etPhone = findViewById(R.id.admin_etPhone);
         admin_etAddress = findViewById(R.id.admin_etAddress);
         admin_etNumPersonal = findViewById(R.id.admin_etNumPersonal);
-        admin_etEmail = findViewById(R.id.admin_etEmailToRecovery);
-        admin_etPassword = findViewById(R.id.admin_etPassword);
+        admin_etNumPersonalLayout = findViewById(R.id.admin_etNumPersonalLayout);
+        admin_etEmailToUser = findViewById(R.id.admin_etEmailToUser);
+        admin_etPasswordToUser = findViewById(R.id.admin_etPasswordToUser);
         admin_etConfirmPassword = findViewById(R.id.admin_etConfirmPassword);
 
         admin_ri_progressBar = findViewById(R.id.admin_ri_progressBar);
 
         admin_bt_Register = findViewById(R.id.admin_bt_Register);
 
-        admin_spinner1 = (Spinner) findViewById(R.id.admin_spinner1);
-        admin_spinner1.setSelection(0);
-
-        spAdapter = new SpinnerAdapter(RegisterUsersActivity.this, R.layout.spinner_row, getResources().getStringArray(R.array.roles));
-        spAdapter.setDropDownViewResource(android.R.layout.simple_list_item_1);
-        admin_spinner1.setAdapter(spAdapter);
+        et_role_autocomplete = findViewById(R.id.et_role_autocomplete);
+        ArrayAdapter<String> role_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.roles));
+        et_role_autocomplete.setAdapter(role_adapter);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -93,10 +98,10 @@ public class RegisterUsersActivity extends AppCompatActivity {
                 String address = admin_etAddress.getText().toString().trim();
                 String numPersonal = admin_etNumPersonal.getText().toString().trim();
                 String parentName = admin_etParentName.getText().toString().trim();
-                String email = admin_etEmail.getText().toString().trim();
-                String password = admin_etPassword.getText().toString();
+                String email = admin_etEmailToUser.getText().toString().trim();
+                String password = admin_etPasswordToUser.getText().toString();
                 String confirm_password = admin_etConfirmPassword.getText().toString();
-                String role = admin_spinner1.getSelectedItem().toString();
+                String role = et_role_autocomplete.getText().toString();
                 String grade = "";
                 if(role.equals("Admin") || role.equals("User")){
                     grade = "A";
@@ -127,23 +132,23 @@ public class RegisterUsersActivity extends AppCompatActivity {
                     admin_etAddress.setError(getText(R.string.error_address_required));
                     admin_etAddress.requestFocus();
                 }else if(TextUtils.isEmpty(email)){
-                    admin_etEmail.setError(getText(R.string.error_email_required));
-                    admin_etEmail.requestFocus();
+                    admin_etEmailToUser.setError(getText(R.string.error_email_required));
+                    admin_etEmailToUser.requestFocus();
                 }else if(!email.matches("^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
-                    admin_etEmail.setError(getText(R.string.error_validate_email));
-                    admin_etEmail.requestFocus();
+                    admin_etEmailToUser.setError(getText(R.string.error_validate_email));
+                    admin_etEmailToUser.requestFocus();
                 }else if(!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")){
-                    admin_etPassword.setError(getText(R.string.error_password_weak));
-                    admin_etPassword.requestFocus();
+                    admin_etPasswordToUser.setError(getText(R.string.error_password_weak));
+                    admin_etPasswordToUser.requestFocus();
                 } else if(TextUtils.isEmpty(password)){
-                    admin_etPassword.setError(getText(R.string.error_password_required));
-                    admin_etPassword.requestFocus();
+                    admin_etPasswordToUser.setError(getText(R.string.error_password_required));
+                    admin_etPasswordToUser.requestFocus();
                 }else if(TextUtils.isEmpty(confirm_password)){
                     admin_etConfirmPassword.setError(getText(R.string.error_confirm_password_required));
                     admin_etConfirmPassword.requestFocus();
                 }else if(!password.matches(confirm_password)){
-                    admin_etPassword.setError(getText(R.string.error_password_not_same));
-                    admin_etPassword.requestFocus();
+                    admin_etPasswordToUser.setError(getText(R.string.error_password_not_same));
+                    admin_etPasswordToUser.requestFocus();
                 }else {
 
                     admin_ri_progressBar.setVisibility(View.VISIBLE);
@@ -185,6 +190,36 @@ public class RegisterUsersActivity extends AppCompatActivity {
                     }
 
                 }
+            }
+        });
+
+        admin_etNumPersonalLayout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(RegisterUsersActivity.this, getApplicationContext().getText(R.string.info_number_personal_is_ten_digit), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        admin_etNumPersonal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.length()>10){
+                    admin_etNumPersonalLayout.setError(getApplicationContext().getText(R.string.no_more_than_ten_digits));
+                }else if(charSequence.length() < 10) {
+                    admin_etNumPersonalLayout.setError(null);
+                }else if(charSequence.length() == 10){
+                    admin_etNumPersonalLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
 
@@ -241,8 +276,8 @@ public class RegisterUsersActivity extends AppCompatActivity {
         admin_etPhone.setText("");
         admin_etAddress.setText("");
         admin_etNumPersonal.setText("");
-        admin_etEmail.setText("");
-        admin_etPassword.setText("");
+        admin_etEmailToUser.setText("");
+        admin_etPasswordToUser.setText("");
         admin_etConfirmPassword.setText("");
     }
 

@@ -6,17 +6,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,9 +27,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -38,8 +39,9 @@ import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterUserActivity extends AppCompatActivity {
 
-    private EditText etName, etLastName, etParentName, etPhone, etAddress, etNumPersonal,
-            etEmail, etPassword, etConfirmPassword;
+    private TextInputEditText etName, etLastName, etParentName, etPhone, etAddress, etNumPersonal,
+            etEmailToInformer, etPasswordToInformer, etConfirmPassword;
+    private TextInputLayout etNumPersonalLayout;
     private Button bt_Register;
     private TextView tv_alreadyHaveAccount;
     private FirebaseAuth firebaseAuth;
@@ -61,8 +63,9 @@ public class RegisterUserActivity extends AppCompatActivity {
         etPhone = findViewById(R.id.etPhone);
         etAddress = findViewById(R.id.etAddress);
         etNumPersonal = findViewById(R.id.etNumPersonal);
-        etEmail = findViewById(R.id.etEmailToRecovery);
-        etPassword = findViewById(R.id.etPassword);
+        etNumPersonalLayout = findViewById(R.id.etNumPersonalLayout);
+        etEmailToInformer = findViewById(R.id.etEmailToInformer);
+        etPasswordToInformer = findViewById(R.id.etPasswordToInformer);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         ri_progressBar = findViewById(R.id.ri_progressBar);
 
@@ -84,8 +87,8 @@ public class RegisterUserActivity extends AppCompatActivity {
                 String address = etAddress.getText().toString().trim();
                 String numPersonal = etNumPersonal.getText().toString().trim();
                 String parentName = etParentName.getText().toString().trim();
-                String email = etEmail.getText().toString().trim();
-                String password = etPassword.getText().toString();
+                String email = etEmailToInformer.getText().toString().trim();
+                String password = etPasswordToInformer.getText().toString();
                 String confirm_password = etConfirmPassword.getText().toString();
                 String grade = "E";
                 String role = "Informer";
@@ -111,23 +114,23 @@ public class RegisterUserActivity extends AppCompatActivity {
                     etAddress.setError(getText(R.string.error_address_required));
                     etAddress.requestFocus();
                 }else if(TextUtils.isEmpty(email)){
-                    etEmail.setError(getText(R.string.error_email_required));
-                    etEmail.requestFocus();
+                    etEmailToInformer.setError(getText(R.string.error_email_required));
+                    etEmailToInformer.requestFocus();
                 }else if(!email.matches("^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
-                    etEmail.setError(getText(R.string.error_validate_email));
-                    etEmail.requestFocus();
+                    etEmailToInformer.setError(getText(R.string.error_validate_email));
+                    etEmailToInformer.requestFocus();
                 }else if(!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")){
-                    etPassword.setError(getText(R.string.error_password_weak));
-                    etPassword.requestFocus();
+                    etPasswordToInformer.setError(getText(R.string.error_password_weak));
+                    etPasswordToInformer.requestFocus();
                 } else if(TextUtils.isEmpty(password)){
-                    etPassword.setError(getText(R.string.error_password_required));
-                    etPassword.requestFocus();
+                    etPasswordToInformer.setError(getText(R.string.error_password_required));
+                    etPasswordToInformer.requestFocus();
                 }else if(TextUtils.isEmpty(confirm_password)){
                     etConfirmPassword.setError(getText(R.string.error_confirm_password_required));
                     etConfirmPassword.requestFocus();
                 }else if(!password.matches(confirm_password)){
-                    etPassword.setError(getText(R.string.error_password_not_same));
-                    etPassword.requestFocus();
+                    etPasswordToInformer.setError(getText(R.string.error_password_not_same));
+                    etPasswordToInformer.requestFocus();
                 }else {
 
                     ri_progressBar.setVisibility(View.VISIBLE);
@@ -178,6 +181,36 @@ public class RegisterUserActivity extends AppCompatActivity {
             }
         });
 
+        etNumPersonalLayout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(RegisterUserActivity.this, getApplicationContext().getText(R.string.info_number_personal_is_ten_digit), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        etNumPersonal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.length()>10){
+                    etNumPersonalLayout.setError(getApplicationContext().getText(R.string.no_more_than_ten_digits));
+                }else if(charSequence.length() < 10) {
+                    etNumPersonalLayout.setError(null);
+                }else if(charSequence.length() == 10){
+                    etNumPersonalLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
     }
 
     private void registerUser(Integer balance, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
@@ -189,7 +222,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 public void onSuccess(Void unused) {
                     ri_progressBar.setVisibility(View.INVISIBLE);
                     bt_Register.setEnabled(true);
-                    Toast.makeText(RegisterUserActivity.this, RegisterUserActivity.this.getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterUserActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterUserActivity.this, getApplicationContext().getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterUserActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
                     setEmptyFields();
                     goToSetProfilePicture();
                 }
@@ -212,8 +245,8 @@ public class RegisterUserActivity extends AppCompatActivity {
         etPhone.setText("");
         etAddress.setText("");
         etNumPersonal.setText("");
-        etEmail.setText("");
-        etPassword.setText("");
+        etEmailToInformer.setText("");
+        etPasswordToInformer.setText("");
         etConfirmPassword.setText("");
     }
 
