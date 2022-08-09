@@ -18,7 +18,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -32,59 +31,22 @@ import fiek.unipr.mostwantedapp.models.Person;
 
 public class RegisterPersonActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String PREFS_NAME = "regPersonPreference";
+    public static final String KG = "KG";
+    public static final String CM = "CM";
+    public static final String AGE = "AGE";
     public static final Double LATITUDE_DEFAULT = 0.00000;
     public static final Double LONGITUDE_DEFAULT = 0.00000;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
-    DocumentReference documentReference;
     private StorageReference storageReference;
     private MaterialAutoCompleteTextView et_age, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts, et_status;
     private EditText et_firstName, et_lastName, et_address, et_parentName;
     private Button registerPerson;
     private ProgressBar progressBar;
-    private static final Integer AGE_ARRAY[] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-            18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-            35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
-            52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68,
-            69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
-            86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102,
-            103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116,
-            117, 118, 119, 120 };
-    private static final Integer HEIGHT_IN_CM_ARRAY[] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-            18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-            35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
-            52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68,
-            69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
-            86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102,
-            103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116,
-            117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130,
-            131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144,
-            145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158,
-            159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172,
-            173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186,
-            187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200,
-            201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214,
-            215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228,
-            229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242,
-            243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256,
-            257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270,
-            271, 272};
-
-    private static final Integer WEIGHT_IN_KG_ARRAY[] = new Integer[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-            18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-            35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
-            52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68,
-            69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
-            86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102,
-            103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116,
-            117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130,
-            131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144,
-            145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158,
-            159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172,
-            173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186,
-            187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200};
+    private String[] WEIGHT_ARRAY = null;
+    private String[] HEIGHT_ARRAY = null;
+    private String[] AGE_ARRAY = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +55,10 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+
+        setWeightInMeasureArray(KG);
+        setHeightInMeasureArray(CM);
+        setAgeArray();
 
         registerPerson = findViewById(R.id.registerPerson);
         registerPerson.setOnClickListener(this);
@@ -103,15 +69,15 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         et_address = findViewById(R.id.et_address);
 
         et_age = findViewById(R.id.et_age);
-        ArrayAdapter<Integer> age_adapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, AGE_ARRAY);
+        ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, AGE_ARRAY);
         et_age.setAdapter(age_adapter);
 
         et_height = findViewById(R.id.et_height);
-        ArrayAdapter<Integer> height_adapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, HEIGHT_IN_CM_ARRAY);
+        ArrayAdapter<String> height_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, HEIGHT_ARRAY);
         et_height.setAdapter(height_adapter);
 
         et_weight = findViewById(R.id.et_weight);
-        ArrayAdapter<Integer> weight_adapter = new ArrayAdapter<Integer>(this, android.R.layout.simple_list_item_1, WEIGHT_IN_KG_ARRAY);
+        ArrayAdapter<String> weight_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, WEIGHT_ARRAY);
         et_weight.setAdapter(weight_adapter);
 
         et_eyeColor = findViewById(R.id.et_eyeColor);
@@ -131,7 +97,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         et_acts.setAdapter(acts_adapter);
 
         et_status = findViewById(R.id.et_status);
-        ArrayAdapter<String> status_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.status));
+        ArrayAdapter<String> status_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.status_of_person));
         et_status.setAdapter(status_adapter);
 
         firebaseAuth = FirebaseAuth.getInstance();
@@ -139,6 +105,27 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         storageReference = FirebaseStorage.getInstance().getReference();
         progressBar = findViewById(R.id.progressBar);
 
+    }
+
+    private void setWeightInMeasureArray(String measure) {
+        WEIGHT_ARRAY = new String[201];
+        for(int i=0; i<201; i++) {
+            WEIGHT_ARRAY[i] = i+" "+measure;
+        }
+    }
+
+    private void setHeightInMeasureArray(String measure) {
+        HEIGHT_ARRAY = new String[273];
+        for(int i=0; i<273; i++) {
+            HEIGHT_ARRAY[i] = i+" "+measure;
+        }
+    }
+
+    private void setAgeArray() {
+        AGE_ARRAY = new String[121];
+        for(int i=0; i<121; i++) {
+            AGE_ARRAY[i] = i+" "+getApplicationContext().getText(R.string.age);
+        }
     }
 
     @Override

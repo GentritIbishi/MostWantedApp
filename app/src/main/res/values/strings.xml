@@ -353,7 +353,7 @@
         <item>E</item>
     </string>
 
-    <string-array name="status">
+    <string-array name="status_of_person">
         <item>WANTED PERSON</item>
         <item>FOUND PERSON</item>
     </string-array>
@@ -412,6 +412,7 @@
     <string name="please_be_real_in_giving_information_next_time">please be real in giving information next time.</string>
     <string name="you_earn">you earn</string>
     <string name="thank_you">thank you</string>
+    <string name="age">AGE</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
