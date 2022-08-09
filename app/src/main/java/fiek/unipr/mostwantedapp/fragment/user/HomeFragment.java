@@ -59,6 +59,7 @@ import fiek.unipr.mostwantedapp.models.Report;
 
 public class HomeFragment extends Fragment {
 
+    private static final String HOME_USER_PREF = "HOME_USER_PREF";
     private View home_fragment_view;
     private ListView lvPersons;
     private PersonListAdapter personListAdapter;
@@ -215,7 +216,7 @@ public class HomeFragment extends Fragment {
                                     notificationBuilder.setSound(modified_defaultSoundUri);
                                     notificationBuilder.setAutoCancel(true);
 
-                                    SharedPreferences prefs = getActivity().getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
+                                    SharedPreferences prefs = getActivity().getSharedPreferences(HOME_USER_PREF, Context.MODE_PRIVATE);
                                     int notificationReportStatusModified = prefs.getInt("notificationReportStatusModified", 1);
 
                                     NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);

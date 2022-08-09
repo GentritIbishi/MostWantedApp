@@ -416,6 +416,7 @@
     <string name="phone_number_kosovo">+38344XXXXXX</string>
     <string name="no_more_than_ten_digits">No more than 10 digits!</string>
     <string name="info_number_personal_is_ten_digit">Information: Personal Number is ten digits!</string>
+    <string name="balance">BALANCE</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
