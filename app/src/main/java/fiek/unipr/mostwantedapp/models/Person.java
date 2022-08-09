@@ -1,13 +1,13 @@
 package fiek.unipr.mostwantedapp.models;
 
 public class Person {
-    String firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status;
-    Integer age, height, weight;
-    Double longitude, latitude;
+    private String firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status, prize, registration_date;
+    private Integer age, height, weight;
+    private Double longitude, latitude;
 
     public Person() {}
 
-    public Person(String firstName, String lastName, String parentName, String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, Integer age, Integer height, Integer weight, Double longitude, Double latitude) {
+    public Person(String firstName, String lastName, String parentName, String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, String prize, String registration_date, Integer age, Integer height, Integer weight, Double longitude, Double latitude) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.parentName = parentName;
@@ -19,6 +19,8 @@ public class Person {
         this.acts = acts;
         this.urlOfProfile = urlOfProfile;
         this.status = status;
+        this.prize = prize;
+        this.registration_date = registration_date;
         this.age = age;
         this.height = height;
         this.weight = weight;
@@ -112,6 +114,22 @@ public class Person {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getPrize() {
+        return prize;
+    }
+
+    public void setPrize(String prize) {
+        this.prize = prize;
+    }
+
+    public String getRegistration_date() {
+        return registration_date;
+    }
+
+    public void setRegistration_date(String registration_date) {
+        this.registration_date = registration_date;
     }
 
     public Integer getAge() {

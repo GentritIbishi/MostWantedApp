@@ -417,6 +417,13 @@
     <string name="no_more_than_ten_digits">No more than 10 digits!</string>
     <string name="info_number_personal_is_ten_digit">Information: Personal Number is ten digits!</string>
     <string name="balance">BALANCE</string>
+    <string name="take_order">take_order</string>
+    <string name="amount">amount</string>
+    <string name="coins">Coins</string>
+    <string name="select_the_prize">Select the prize</string>
+    <string name="error_prize_required">Error prize is required!</string>
+    <string name="latest">LATEST</string>
+    <string name="top_four_latest_person_wanted">TOP 4 LATEST PERSON WANTED</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

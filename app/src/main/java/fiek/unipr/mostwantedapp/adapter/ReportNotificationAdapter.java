@@ -135,6 +135,7 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
                 Bundle viewBundle = new Bundle();
                 viewBundle.putString("date_time", report.getDate_time());
                 viewBundle.putString("title", report.getTitle());
+                viewBundle.putString("docId", report.getDocId());
                 viewBundle.putString("description", report.getDescription());
                 viewBundle.putString("informer_person", report.getInformer_person());
                 viewBundle.putString("status", report.getStatus().toString());

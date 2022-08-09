@@ -79,7 +79,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
     private FirebaseStorage firebaseStorage;
     private UploadTask uploadTask;
 
-    private String date_time, title, description, informer_person, status, uID, wanted_person, urlOfProfile;
+    private String date_time, title, docId, description, informer_person, status, uID, wanted_person, urlOfProfile;
     private Double latitude, longitude;
     private int totalImages;
     private String[] images;
@@ -171,7 +171,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
         data.put("status", value);
 
         firebaseFirestore.collection("locations_reports")
-                .document(date_time)
+                .document(docId)
                 .set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -216,6 +216,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
             longitude = bundle.getDouble("longitude");
             status = bundle.getString("status");
             uID = bundle.getString("uID");
+            docId = bundle.getString("docId");
             wanted_person = bundle.getString("wanted_person");
             totalImages = bundle.getInt("totalImages");
             images = bundle.getStringArray("images");

@@ -97,6 +97,7 @@ public class PersonListAdapter extends ArrayAdapter<Person> {
                 viewBundle.putInt("height", person.getHeight());
                 viewBundle.putString("phy_appearance", person.getPhy_appearance());
                 viewBundle.putString("status", person.getStatus());
+                viewBundle.putString("prize", person.getPrize());
                 viewBundle.putString("urlOfProfile", person.getUrlOfProfile());
                 viewBundle.putInt("weight", person.getWeight());
                 intent.putExtras(viewBundle);

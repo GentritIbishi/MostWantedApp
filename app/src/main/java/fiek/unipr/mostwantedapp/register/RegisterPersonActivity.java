@@ -25,6 +25,10 @@ import com.google.firebase.storage.StorageReference;
 
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import fiek.unipr.mostwantedapp.helpers.PersonImage;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.models.Person;
@@ -34,19 +38,21 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
     public static final String KG = "KG";
     public static final String CM = "CM";
     public static final String AGE = "AGE";
+    public static final String EURO = "EURO";
     public static final Double LATITUDE_DEFAULT = 0.00000;
     public static final Double LONGITUDE_DEFAULT = 0.00000;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     private StorageReference storageReference;
-    private MaterialAutoCompleteTextView et_age, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts, et_status;
+    private MaterialAutoCompleteTextView et_age, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts, et_status, et_prize;
     private EditText et_firstName, et_lastName, et_address, et_parentName;
     private Button registerPerson;
     private ProgressBar progressBar;
     private String[] WEIGHT_ARRAY = null;
     private String[] HEIGHT_ARRAY = null;
     private String[] AGE_ARRAY = null;
+    private String[] PRIZE_ARRAY = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         setWeightInMeasureArray(KG);
         setHeightInMeasureArray(CM);
         setAgeArray();
+        setPrizeInYourCurrency(EURO);
 
         registerPerson = findViewById(R.id.registerPerson);
         registerPerson.setOnClickListener(this);
@@ -71,6 +78,10 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         et_age = findViewById(R.id.et_age);
         ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, AGE_ARRAY);
         et_age.setAdapter(age_adapter);
+
+        et_prize = findViewById(R.id.et_prize);
+        ArrayAdapter<String> prize_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, PRIZE_ARRAY);
+        et_prize.setAdapter(prize_adapter);
 
         et_height = findViewById(R.id.et_height);
         ArrayAdapter<String> height_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, HEIGHT_ARRAY);
@@ -105,6 +116,13 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         storageReference = FirebaseStorage.getInstance().getReference();
         progressBar = findViewById(R.id.progressBar);
 
+    }
+
+    private void setPrizeInYourCurrency(String euro) {
+        PRIZE_ARRAY = new String[2001];
+        for(int i=500; i<1000000; i=i+500) {
+            PRIZE_ARRAY[i] = i+" "+euro;
+        }
     }
 
     private void setWeightInMeasureArray(String measure) {
@@ -170,6 +188,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         String phy_appearance = et_phy_appearance.getText().toString().trim();
         String acts = et_acts.getText().toString().trim();
         String status = et_status.getText().toString().trim();
+        String prize = et_prize.getText().toString().trim();
 
 
         if (firstName.isEmpty()) {
@@ -242,11 +261,16 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
             et_status.setError(getText(R.string.error_status_required));
             et_status.requestFocus();
             return;
-        } else {
+        }
+        if (prize.isEmpty()) {
+            et_prize.setError(getText(R.string.error_prize_required));
+            et_prize.requestFocus();
+            return;
+        }else {
 
             progressBar.setVisibility(View.VISIBLE);
 
-            Person person = new Person(firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance, acts, null, status, age, height, weight, LONGITUDE_DEFAULT, LATITUDE_DEFAULT);
+            Person person = new Person(firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance, acts, null, status, prize, getTimeDate(), age, height, weight, LONGITUDE_DEFAULT, LATITUDE_DEFAULT);
 
             firebaseFirestore.collection("wanted_persons").document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -281,6 +305,16 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
                 }
             });
 
+        }
+    }
+
+    public static String getTimeDate() { // without parameter argument
+        try{
+            Date netDate = new Date(); // current time from here
+            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            return sfd.format(netDate);
+        } catch(Exception e) {
+            return "date";
         }
     }
 

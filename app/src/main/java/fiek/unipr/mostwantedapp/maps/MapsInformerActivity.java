@@ -32,6 +32,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -75,7 +76,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private StorageReference storageReference;
     private DocumentReference documentReference;
 
-    private String wanted_person, acts, address, eyeColor, hairColor, phy_appearance, status, urlOfProfile, informer_person_urlOfProfile;
+    private String wanted_person, acts, address, eyeColor, hairColor, phy_appearance, status, prize, urlOfProfile, informer_person_urlOfProfile;
     private String dateNtime;
     private Integer age, height, weight;
     private Double latitude, longitude;
@@ -178,6 +179,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             height = bundle.getInt("height");
             phy_appearance = bundle.getString("phy_appearance");
             status = bundle.getString("status");
+            prize = bundle.getString("prize");
             urlOfProfile = bundle.getString("urlOfProfile");
             weight = bundle.getInt("weight");
 
@@ -394,10 +396,10 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         }
     }
 
-    private void storeLink (String dateNtime, Uri uri, Integer count) {
+    private void storeLink (String docId, Uri uri, Integer count) {
         imageListMap.put("image"+ count, uri.toString());
         firebaseFirestore.collection("locations_reports")
-                .document(dateNtime)
+                .document(docId)
                         .update("images", imageListMap).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -408,17 +410,20 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     }
 
     private void save(String informer_person, String wanted_person, Double longitude, Double latitude, String dateNtime) {
+        CollectionReference collRef = firebaseFirestore.collection("locations_reports");
+        String docId = collRef.document().getId();
             if(informer_person.equals(ANONYMOUS))
             {
                 DocumentReference docRef = firebaseFirestore
                         .collection("locations_reports")
-                        .document(dateNtime);
-                Report report = new Report(binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
+                        .document(docId);
+                Report report = new Report(docId, binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
                         dateNtime,
                         firebaseAuth.getCurrentUser().getUid(),
                         informer_person,
                         wanted_person,
                         ANONYMOUS,
+                        prize,
                         ReportStatus.UNVERIFIED,
                         longitude,
                         latitude,
@@ -441,7 +446,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                             fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                 @Override
                                                 public void onSuccess(Uri uri) {
-                                                    storeLink(dateNtime, uri, finalI);
+                                                    storeLink(docId, uri, finalI);
                                                 }
                                             });
                                         }
@@ -474,13 +479,14 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             {
                 DocumentReference docRef = firebaseFirestore
                         .collection("locations_reports")
-                        .document(dateNtime);
-                Report report = new Report(binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
+                        .document(docId);
+                Report report = new Report(docId, binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
                         dateNtime,
                         firebaseAuth.getCurrentUser().getUid(),
                         informer_person,
                         wanted_person,
                         PHONE_USER,
+                        prize,
                         ReportStatus.UNVERIFIED,
                         longitude,
                         latitude,
@@ -502,7 +508,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                             fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                 @Override
                                                 public void onSuccess(Uri uri) {
-                                                    storeLink(dateNtime, uri, finalI);
+                                                    storeLink(docId, uri, finalI);
                                                 }
                                             });
                                         }
@@ -546,13 +552,14 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
                                     DocumentReference docRef = firebaseFirestore
                                             .collection("locations_reports")
-                                            .document(dateNtime);
-                                    Report report = new Report(binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
+                                            .document(docId);
+                                    Report report = new Report(docId, binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
                                             dateNtime,
                                             firebaseAuth.getCurrentUser().getUid(),
                                             informer_person,
                                             wanted_person,
                                             informer_person_urlOfProfile,
+                                            prize,
                                             ReportStatus.UNVERIFIED,
                                             longitude,
                                             latitude,
@@ -574,7 +581,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                                                 fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                                                     @Override
                                                                     public void onSuccess(Uri uri) {
-                                                                        storeLink(dateNtime, uri, finalI);
+                                                                        storeLink(docId, uri, finalI);
                                                                     }
                                                                 });
                                                             }

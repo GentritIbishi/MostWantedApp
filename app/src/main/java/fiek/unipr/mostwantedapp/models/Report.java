@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Report {
-    private String Title, Description, Date_time, uID, informer_person, wanted_person, informer_person_urlOfProfile;
+    private String docId, Title, Description, Date_time, uID, informer_person, wanted_person, informer_person_urlOfProfile, prizeToWin;
     private ReportStatus status = ReportStatus.UNVERIFIED;
     private Double longitude, latitude;
     private Map<String, Object> images = new HashMap<>();
@@ -15,7 +15,8 @@ public class Report {
     public Report() {
     }
 
-    public Report(String title, String description, String date_time, String uID, String informer_person, String wanted_person, String informer_person_urlOfProfile, ReportStatus status, Double longitude, Double latitude, Map<String, Object> images) {
+    public Report(String docId, String title, String description, String date_time, String uID, String informer_person, String wanted_person, String informer_person_urlOfProfile, String prizeToWin, ReportStatus status, Double longitude, Double latitude, Map<String, Object> images) {
+        this.docId = docId;
         Title = title;
         Description = description;
         Date_time = date_time;
@@ -23,10 +24,19 @@ public class Report {
         this.informer_person = informer_person;
         this.wanted_person = wanted_person;
         this.informer_person_urlOfProfile = informer_person_urlOfProfile;
+        this.prizeToWin = prizeToWin;
         this.status = status;
         this.longitude = longitude;
         this.latitude = latitude;
         this.images = images;
+    }
+
+    public String getDocId() {
+        return docId;
+    }
+
+    public void setDocId(String docId) {
+        this.docId = docId;
     }
 
     public String getTitle() {
@@ -83,6 +93,14 @@ public class Report {
 
     public void setInformer_person_urlOfProfile(String informer_person_urlOfProfile) {
         this.informer_person_urlOfProfile = informer_person_urlOfProfile;
+    }
+
+    public String getPrizeToWin() {
+        return prizeToWin;
+    }
+
+    public void setPrizeToWin(String prizeToWin) {
+        this.prizeToWin = prizeToWin;
     }
 
     public ReportStatus getStatus() {
