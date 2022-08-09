@@ -22,6 +22,7 @@
         tools:layout_editor_absoluteY="-17dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -33,54 +34,79 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="32dp"
                 android:src="@drawable/ic_app"
-                app:layout_constraintBottom_toTopOf="@+id/etEmailToRecovery"
+                app:layout_constraintBottom_toTopOf="@+id/etEmailLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/etEmailToRecovery"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etEmailLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/input_bg"
-                android:drawableLeft="@drawable/ic_baseline_email_24"
-                android:drawablePadding="10dp"
-                android:ems="10"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:paddingLeft="20dp"
-                android:paddingTop="13dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="13dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
+                android:hint="@string/email"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                app:boxBackgroundColor="@color/white"
+                app:helperTextTextColor="@color/verydark"
+                app:boxStrokeColor="@color/verydark"
+                android:elevation="6dp"
+                app:hintTextColor="@color/verydark"
+                app:startIconDrawable="@drawable/ic_baseline_email_24"
+                app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/textView" >
 
-            <EditText
-                android:id="@+id/etPassword"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textColor="@color/verydark"
+                    android:ems="10"
+                    android:textColorHint="@color/verydark"
+                    android:inputType="textEmailAddress"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/etPasswordLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@drawable/input_bg"
-                android:drawableLeft="@drawable/ic_baseline_security_24"
-                android:drawablePadding="10dp"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:paddingLeft="20dp"
-                android:paddingTop="13dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="13dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/white"
-                app:layout_constraintEnd_toEndOf="@+id/etEmailToRecovery"
-                app:layout_constraintStart_toStartOf="@+id/etEmailToRecovery"
-                app:layout_constraintTop_toBottomOf="@+id/etEmailToRecovery" />
+                android:hint="@string/password"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                app:boxBackgroundColor="@color/white"
+                app:helperTextTextColor="@color/verydark"
+                app:boxStrokeColor="@color/verydark"
+                android:elevation="6dp"
+                app:hintTextColor="@color/verydark"
+                app:startIconDrawable="@drawable/ic_baseline_security_24"
+                app:endIconMode="password_toggle"
+                app:layout_constraintEnd_toEndOf="@+id/etEmailLayout"
+                app:layout_constraintStart_toStartOf="@+id/etEmailLayout"
+                app:layout_constraintTop_toBottomOf="@+id/etEmailLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textColor="@color/verydark"
+                    android:ems="10"
+                    android:textColorHint="@color/verydark"
+                    android:inputType="textPassword"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/forgotPassword"
@@ -90,8 +116,8 @@
                 android:text="@string/forgot_pass"
                 android:textColor="@color/text_color"
                 android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="@+id/etPassword"
-                app:layout_constraintTop_toBottomOf="@+id/etPassword" />
+                app:layout_constraintEnd_toEndOf="@+id/etPasswordLayout"
+                app:layout_constraintTop_toBottomOf="@+id/etPasswordLayout" />
 
             <Button
                 android:id="@+id/bt_Login"
@@ -104,7 +130,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@+id/forgotPassword"
-                app:layout_constraintStart_toStartOf="@+id/etPassword"
+                app:layout_constraintStart_toStartOf="@+id/etPasswordLayout"
                 app:layout_constraintTop_toBottomOf="@+id/forgotPassword" />
 
             <TextView

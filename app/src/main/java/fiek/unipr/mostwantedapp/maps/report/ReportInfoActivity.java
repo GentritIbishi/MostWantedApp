@@ -1,28 +1,28 @@
 package fiek.unipr.mostwantedapp.maps.report;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.CustomizedGalleryAdapter;
 
 public class ReportInfoActivity extends AppCompatActivity {
 
     private Bundle reportInfoBundle;
     private String notificationReportDateTime, notificationReportBody, notificationReportTitle, notificationReportType,
             notificationReportStatusChangedTo, notificationReportUID, notificationDateTimeChanged;
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firebaseFirestore;
 
     private TextView report_info_title, report_info_description;
 
@@ -31,17 +31,42 @@ public class ReportInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_info);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
         report_info_title = findViewById(R.id.report_info_title);
         report_info_description = findViewById(R.id.report_info_description);
 
         reportInfoBundle = new Bundle();
         getFromBundle(reportInfoBundle);
 
-        report_info_title.setText(getApplicationContext().getText(R.string.hello_dear)+" "+notificationReportUID);
+        if(firebaseAuth.getCurrentUser().getPhoneNumber() == null || empty(firebaseAuth.getCurrentUser().getPhoneNumber())){
+            setReportTitleFromFirebase(notificationReportUID);
+        }else {
+            report_info_title.setText(getApplicationContext().getText(R.string.hello_dear)+" "+firebaseAuth.getCurrentUser().getPhoneNumber());
+        }
 
-        report_info_description.setText(getApplicationContext().getText(R.string.your_report_with)+" "+
+        report_info_description.setText(getApplicationContext().getText(R.string.your_report_in_datetime)+" "+
                 notificationReportDateTime+ " "+ getApplicationContext().getText(R.string.and_with_title)+" "+notificationReportTitle+" "+getApplicationContext().getText(R.string.has_new_status_right_now)+" "
         + getApplicationContext().getText(R.string.update_status_of_report_with)+" "+notificationReportDateTime+" "+getApplicationContext().getText(R.string.has_been_changed_to)+" "+notificationReportStatusChangedTo);
+    }
+
+    private void setReportTitleFromFirebase(String notificationReportUID) {
+        firebaseFirestore.collection("users")
+                .document(notificationReportUID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String fullName = documentSnapshot.getString("fullName");
+                        report_info_title.setText(getApplicationContext().getText(R.string.hello_dear)+" "+fullName);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ReportInfoActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void getFromBundle(Bundle bundle) {
@@ -58,6 +83,11 @@ public class ReportInfoActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.getMessage();
         }
+    }
+
+    public static boolean empty( final String s ) {
+        // Null-safe, short-circuit evaluation.
+        return s == null || s.trim().isEmpty();
     }
 
 }

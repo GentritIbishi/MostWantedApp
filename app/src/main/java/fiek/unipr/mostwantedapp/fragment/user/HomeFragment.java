@@ -197,6 +197,7 @@ public class HomeFragment extends Fragment {
         NotificationReportUser objNotificationReportUser = new NotificationReportUser(notificationReportDateTime, notificationReportBody, notificationReportTitle, notificationReportType, notificationReportStatusChangedTo, notificationReportUID, notificationDateTimeChanged);
         firebaseFirestore.collection("notifications_user")
                 .whereEqualTo("notificationReportTitle", notificationReportTitle)
+                .whereNotEqualTo("status", notificationReportStatusChangedTo)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -231,6 +232,8 @@ public class HomeFragment extends Fragment {
                                     Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
+                        }else if(task.getResult().size() == 1){
+                            //
                         }
                     }
                 });

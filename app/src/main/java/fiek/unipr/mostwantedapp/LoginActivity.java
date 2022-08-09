@@ -23,6 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,7 +51,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseUser firebaseUser;
     private DocumentReference documentReference;
     private TextView forgotPassword, tv_createNewAccount;
-    private EditText etEmail, etPassword;
+    private TextInputEditText etEmail, etPassword;
     private Button bt_Login, btnPhone, btnAnonymous;
     private ProgressBar login_progressBar, phone_progressBar, anonymous_progressBar;
 
@@ -78,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnPhone = findViewById(R.id.btnPhone);
         btnPhone.setOnClickListener(this);
 
-        etEmail = findViewById(R.id.etEmailToRecovery);
+        etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
 
         forgotPassword = findViewById(R.id.forgotPassword);

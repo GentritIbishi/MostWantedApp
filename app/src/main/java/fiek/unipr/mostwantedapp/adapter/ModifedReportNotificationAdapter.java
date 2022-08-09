@@ -2,7 +2,6 @@ package fiek.unipr.mostwantedapp.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,26 +12,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.maps.report.ReportInfoActivity;
-import fiek.unipr.mostwantedapp.maps.report.SingleReportActivity;
 import fiek.unipr.mostwantedapp.models.NotificationReportUser;
-import fiek.unipr.mostwantedapp.models.Report;
 
 public class ModifedReportNotificationAdapter extends ArrayAdapter<NotificationReportUser> {
 
@@ -70,7 +59,7 @@ public class ModifedReportNotificationAdapter extends ArrayAdapter<NotificationR
             // after initializing our items we are
             // setting data to our view.
             // below line is use to set data to our text view.
-            user_report_modified_name.setText(getContext().getText(R.string.your_report_with)+" "+report.getNotificationReportDateTime()+" "+getContext().getText(R.string.and_with_title)+" "+report.getNotificationReportTitle()+" "+getContext().getText(R.string.has_new_status_right_now));
+            user_report_modified_name.setText(getContext().getText(R.string.your_report_in_datetime)+" "+report.getNotificationReportDateTime()+" "+getContext().getText(R.string.has_new_status_right_now));
 
             String verified = getContext().getText(R.string.status_of_report_has_changed_to)+" "+
                     report.getNotificationReportStatusChangedTo()+ " \n"+ getContext().getText(R.string.you_earn)+20+" "+ "coins\n"+getContext().getText(R.string.thank_you_for_collaboration);
@@ -80,9 +69,9 @@ public class ModifedReportNotificationAdapter extends ArrayAdapter<NotificationR
                     getContext().getText(R.string.thank_you);
 
             if(report.getNotificationReportStatusChangedTo().equals(FAKE)){
-                user_report_modified_description.setText(fake);
+                user_report_modified_description.setText(fake.substring(0,36)+"...");
             }else if(report.getNotificationReportStatusChangedTo().equals(VERIFIED)){
-                user_report_modified_description.setText(verified);
+                user_report_modified_description.setText(verified.substring(0,36)+"...");
             }
 
             //Your report with date: and title: and decription has been changed to

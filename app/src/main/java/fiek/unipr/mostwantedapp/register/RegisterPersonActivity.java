@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -25,6 +24,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+
 import fiek.unipr.mostwantedapp.helpers.PersonImage;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.models.Person;
@@ -39,7 +40,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
     private FirebaseFirestore firebaseFirestore;
     DocumentReference documentReference;
     private StorageReference storageReference;
-    private AutoCompleteTextView et_age, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts, et_status;
+    private MaterialAutoCompleteTextView et_age, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts, et_status;
     private EditText et_firstName, et_lastName, et_address, et_parentName;
     private Button registerPerson;
     private ProgressBar progressBar;

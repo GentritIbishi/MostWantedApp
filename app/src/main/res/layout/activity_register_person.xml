@@ -15,6 +15,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
@@ -36,237 +37,406 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/et_firstName"
-                style="@android:style/Widget.EditText"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_firstNameLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/et_register_persons"
                 android:hint="@string/register_person_first_name"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                app:boxBackgroundColor="@color/white"
+                app:helperTextTextColor="@color/verydark"
+                app:boxStrokeColor="@color/verydark"
+                android:elevation="6dp"
+                app:hintTextColor="@color/verydark"
+                app:startIconDrawable="@drawable/ic_baseline_person_24"
+                app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_regPerson" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_regPerson" >
 
-            <EditText
-                android:id="@+id/et_lastName"
-                style="@android:style/Widget.EditText"
-                android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_firstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textColor="@color/verydark"
+                    android:imeOptions="actionNext"
+                    android:ems="10"
+                    android:textColorHint="@color/verydark"
+                    android:inputType="textCapSentences"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_lastNameLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/et_register_persons"
                 android:hint="@string/register_person_last_name"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                app:boxBackgroundColor="@color/white"
+                app:helperTextTextColor="@color/verydark"
+                app:boxStrokeColor="@color/verydark"
+                android:elevation="6dp"
+                app:hintTextColor="@color/verydark"
+                app:startIconDrawable="@drawable/ic_baseline_person_24"
+                app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_firstName" />
+                app:layout_constraintTop_toBottomOf="@+id/et_firstNameLayout" >
 
-            <EditText
-                android:id="@+id/et_parentName"
-                style="@android:style/Widget.EditText"
-                android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_lastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textColor="@color/verydark"
+                    android:imeOptions="actionNext"
+                    android:ems="10"
+                    android:textColorHint="@color/verydark"
+                    android:inputType="textCapSentences"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_parentNameLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/et_register_persons"
                 android:hint="@string/parent_name"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                app:boxBackgroundColor="@color/white"
+                app:helperTextTextColor="@color/verydark"
+                app:boxStrokeColor="@color/verydark"
+                android:elevation="6dp"
+                app:hintTextColor="@color/verydark"
+                app:startIconDrawable="@drawable/ic_baseline_person_24"
+                app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_lastName" />
+                app:layout_constraintTop_toBottomOf="@+id/et_lastNameLayout" >
 
-            <EditText
-                android:id="@+id/et_address"
-                android:layout_width="match_parent"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_parentName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textColor="@color/verydark"
+                    android:imeOptions="actionNext"
+                    android:ems="10"
+                    android:textColorHint="@color/verydark"
+                    android:inputType="textCapSentences"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_addressLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/et_register_persons"
                 android:hint="@string/address"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                app:boxBackgroundColor="@color/white"
+                app:helperTextTextColor="@color/verydark"
+                app:boxStrokeColor="@color/verydark"
+                android:elevation="6dp"
+                app:hintTextColor="@color/verydark"
+                app:startIconDrawable="@drawable/ic_baseline_map_24"
+                app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_parentName" />
+                app:layout_constraintTop_toBottomOf="@+id/et_parentNameLayout" >
 
-            <AutoCompleteTextView
-                android:id="@+id/et_age"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textColor="@color/verydark"
+                    android:imeOptions="actionNext"
+                    android:ems="10"
+                    android:textColorHint="@color/verydark"
+                    android:inputType="textCapSentences"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/autocomplete_et_age_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/et_register_persons"
-                android:completionThreshold="1"
                 android:hint="@string/select_a_age"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                android:textStyle="bold"
+                app:boxBackgroundColor="@color/light_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_address" />
+                app:layout_constraintTop_toBottomOf="@+id/et_addressLayout">
 
-            <AutoCompleteTextView
-                android:id="@+id/et_height"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/et_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/verydark"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/autocomplete_et_height_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/et_register_persons"
-                android:completionThreshold="1"
                 android:hint="@string/select_a_height"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                android:textStyle="bold"
+                app:boxBackgroundColor="@color/light_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_age" />
+                app:layout_constraintTop_toBottomOf="@+id/autocomplete_et_age_layout">
 
-            <AutoCompleteTextView
-                android:id="@+id/et_weight"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/et_height"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/verydark"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/autocomplete_et_weight_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/et_register_persons"
-                android:completionThreshold="1"
                 android:hint="@string/select_a_weight"
-                android:imeOptions="actionNext"
-                android:inputType="number"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                android:textStyle="bold"
+                app:boxBackgroundColor="@color/light_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_height" />
+                app:layout_constraintTop_toBottomOf="@+id/autocomplete_et_height_layout">
 
-            <AutoCompleteTextView
-                android:id="@+id/et_eyeColor"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/et_weight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/verydark"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/autocomplete_et_eyeColor_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:background="@drawable/et_register_persons"
-                android:completionThreshold="1"
                 android:hint="@string/select_a_eye_color"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                android:textStyle="bold"
+                app:boxBackgroundColor="@color/light_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_weight" />
+                app:layout_constraintTop_toBottomOf="@+id/autocomplete_et_weight_layout">
 
-            <AutoCompleteTextView
-                android:id="@+id/et_hairColor"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/et_eyeColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/verydark"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/autocomplete_et_hairColor_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:completionThreshold="1"
-                android:background="@drawable/et_register_persons"
                 android:hint="@string/select_a_hair_color"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                android:textStyle="bold"
+                app:boxBackgroundColor="@color/light_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_eyeColor"/>
+                app:layout_constraintTop_toBottomOf="@+id/autocomplete_et_eyeColor_layout">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/et_hairColor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/verydark"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
 
-            <AutoCompleteTextView
-                android:id="@+id/et_phy_appearance"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/autocomplete_et_phy_appearance_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:completionThreshold="1"
-                android:background="@drawable/et_register_persons"
                 android:hint="@string/select_a_physical_appearance"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                android:textStyle="bold"
+                app:boxBackgroundColor="@color/light_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_hairColor"/>
+                app:layout_constraintTop_toBottomOf="@+id/autocomplete_et_hairColor_layout">
 
-            <AutoCompleteTextView
-                android:id="@+id/et_acts"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/et_phy_appearance"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/verydark"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/autocomplete_et_acts_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:completionThreshold="1"
-                android:background="@drawable/et_register_persons"
                 android:hint="@string/select_a_type_of_crime"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                android:textStyle="bold"
+                app:boxBackgroundColor="@color/light_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_phy_appearance"/>
+                app:layout_constraintTop_toBottomOf="@+id/autocomplete_et_phy_appearance_layout">
 
-            <AutoCompleteTextView
-                android:id="@+id/et_status"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/et_acts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/verydark"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/autocomplete_et_status_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:completionThreshold="1"
-                android:background="@drawable/et_register_persons"
                 android:hint="@string/select_the_status"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                android:textStyle="bold"
+                app:boxBackgroundColor="@color/light_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_acts"/>
+                app:layout_constraintTop_toBottomOf="@+id/autocomplete_et_acts_layout">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/et_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/verydark"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/registerPerson"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="64dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginEnd="64dp"
                 android:background="@drawable/button"
                 android:text="@string/register"
                 android:textColor="#FFFFFF"
-                android:textSize="22sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_status"/>
+                app:layout_constraintTop_toBottomOf="@+id/autocomplete_et_status_layout"/>
 
             <ProgressBar
                 android:id="@+id/progressBar"

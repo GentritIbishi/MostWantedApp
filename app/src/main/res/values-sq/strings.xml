@@ -404,7 +404,7 @@
     <string name="if_loading_takes_too_long_please_press_the_button_again">If loading takes too long please press \"Report\" again!</string>
     <string name="update_status_of_report_with">Update status of report with</string>
     <string name="has_been_changed_to">has been changed to</string>
-    <string name="your_report_with">Your report with: </string>
+    <string name="your_report_in_datetime">Your report in datetime:</string>
     <string name="and_with_title">and with title: </string>
     <string name="has_new_status_right_now">has new status right now!</string>
     <string name="hello_dear">Hello, dear</string>
