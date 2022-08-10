@@ -422,8 +422,9 @@
     <string name="coins">Coins</string>
     <string name="select_the_prize">Select the prize</string>
     <string name="error_prize_required">Error prize is required!</string>
-    <string name="latest">LATEST</string>
+    <string name="latest">Latest</string>
     <string name="top_four_latest_person_wanted">TOP 4 LATEST PERSON WANTED</string>
+    <string name="your_account_statistics">Your account statistics</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
