@@ -93,6 +93,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 String grade = "E";
                 String role = "Informer";
                 Integer balance = 0;
+                Integer coins = 0;
                 Uri photoURL = null;
 
                 if(TextUtils.isEmpty(fullName)){
@@ -143,7 +144,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
                                 String userID = authResult.getUser().getUid();
                                 String register_date_time = getTimeDate();
-                                registerUser(balance, userID, name, lastName, fullName, address, email, parentName, role, phone, numPersonal, register_date_time, grade, password, photoURL);
+                                registerUser(balance, coins, userID, name, lastName, fullName, address, email, parentName, role, phone, numPersonal, register_date_time, grade, password, photoURL);
                                 firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
@@ -213,10 +214,10 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser(Integer balance, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
+    private void registerUser(Integer balance, Integer coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
         if(checkConnection()){
             documentReference = firebaseFirestore.collection("users").document(userID);
-            User user = new User(balance, userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, null, false);
+            User user = new User(balance, coins, userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, null, false);
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {

@@ -109,7 +109,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
         binding.btnSaveReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                save(binding.autoCompleteReportStatus.getText().toString());
+                save(binding.autoCompleteReportStatus.getText().toString(), docId);
             }
         });
 
@@ -166,13 +166,13 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
 
     }
 
-    private void save(String value) {
+    private void save(String value, String docId) {
         Map<String, Object> data = new HashMap<>();
         data.put("status", value);
 
         firebaseFirestore.collection("locations_reports")
                 .document(docId)
-                .set(data, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                .update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(SingleReportActivity.this, getApplicationContext().getText(R.string.saved_successfully), Toast.LENGTH_SHORT).show();

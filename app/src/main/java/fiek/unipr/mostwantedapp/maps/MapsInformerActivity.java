@@ -112,8 +112,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         mapsInformerBundle = new Bundle();
         getFromBundle(mapsInformerBundle);
 
-        getLocationPermission();
-
         binding.btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -193,7 +191,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     public void onStart() {
         super.onStart();
         if (firebaseAuth != null) {
-
+            getLocationPermission();
             if (firebaseAuth.getCurrentUser().isAnonymous()) {
                 loadInfoAnonymousFirebase();
             } else if (!empty(firebaseAuth.getCurrentUser().getPhoneNumber())) {
@@ -229,9 +227,13 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                         public void onComplete(@NonNull Task task) {
                             if (task.isSuccessful()) {
                                 Location currentLocation = (Location) task.getResult();
-                                latitude = currentLocation.getLatitude();
-                                longitude = currentLocation.getLongitude();
-                                setMarkerLocation(latitude, longitude);
+                                if(currentLocation != null){
+                                    latitude = currentLocation.getLatitude();
+                                    longitude = currentLocation.getLongitude();
+                                    setMarkerLocation(latitude, longitude);
+                                }else {
+                                    setMarkerLocation(default_latitude, default_longitude);
+                                }
                                 mMap.setMyLocationEnabled(true);
                             } else {
                                 Toast.makeText(MapsInformerActivity.this, getApplicationContext().getText(R.string.no_location_found_tap_on_map_for_manual_location), Toast.LENGTH_SHORT).show();
@@ -239,28 +241,28 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                         }
                     });
                 } else {
-                    Toast.makeText(this, R.string.please_turn_on_location_on_your_phone, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.please_turn_on_location_on_your_phone, Toast.LENGTH_LONG).show();
                     setMarkerLocation(default_latitude, default_longitude);
                 }
             } else {
                 setMarkerLocation(default_latitude, default_longitude);
             }
         } catch (SecurityException e) {
-            Toast.makeText(this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "MAPS INFORMER EXCEPTION: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
     }
 
     private void setMarkerLocation(Double latitude, Double longitude) {
-        moveCamera(new LatLng(default_latitude, default_longitude),
+        moveCamera(new LatLng(latitude, longitude),
                 DEFAULT_ZOOM);
-        markerOptionsDefault = new MarkerOptions().position(new LatLng(default_latitude, default_longitude))
+        markerOptionsDefault = new MarkerOptions().position(new LatLng(latitude, latitude))
                 .title(wanted_person + " " + getApplicationContext().getText(R.string.position)).icon(BitmapDescriptorFactory.defaultMarker());
         mMap.addMarker(markerOptionsDefault);
     }
 
     private void getLocationPermission() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION};
         if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             if(ContextCompat.checkSelfPermission(this.getApplicationContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                 locationPermissionGranted = true;

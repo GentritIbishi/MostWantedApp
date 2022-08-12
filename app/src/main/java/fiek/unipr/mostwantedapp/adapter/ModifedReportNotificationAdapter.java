@@ -8,16 +8,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.maps.report.ReportInfoActivity;
@@ -27,6 +34,8 @@ public class ModifedReportNotificationAdapter extends ArrayAdapter<NotificationR
 
     private static String FAKE = "FAKE";
     private static String VERIFIED = "VERIFIED";
+    private static String UNVERIFIED = "UNVERIFIED";
+    private static String SEEN = "SEEN";
     private String urlOfProfile, user_report_time_elapsed, informer_person;
     private List<NotificationReportUser> modifiedReportList = null;
     private ArrayList<NotificationReportUser> arraylist;
@@ -62,23 +71,29 @@ public class ModifedReportNotificationAdapter extends ArrayAdapter<NotificationR
             user_report_modified_name.setText(getContext().getText(R.string.your_report_in_datetime)+" "+report.getNotificationReportDateTime()+" "+getContext().getText(R.string.has_new_status_right_now));
 
             String verified = getContext().getText(R.string.status_of_report_has_changed_to)+" "+
-                    report.getNotificationReportStatusChangedTo()+ " \n"+ getContext().getText(R.string.you_earn)+20+" "+ "coins\n"+getContext().getText(R.string.thank_you_for_collaboration);
+                    report.getNotificationReportNewStatus()+ " \n"+ getContext().getText(R.string.you_earn)+20+" "+ "coins\n"+getContext().getText(R.string.thank_you_for_collaboration);
 
             String fake = getContext().getText(R.string.status_of_report_has_changed_to)+" "+
-                    report.getNotificationReportStatusChangedTo()+ " \n"+ getContext().getText(R.string.please_be_real_in_giving_information_next_time)+", "+
+                    report.getNotificationReportNewStatus()+ " \n"+ getContext().getText(R.string.please_be_real_in_giving_information_next_time)+", "+
                     getContext().getText(R.string.thank_you);
 
-            if(report.getNotificationReportStatusChangedTo().equals(FAKE)){
+            String unverified = getContext().getText(R.string.status_of_report_has_changed_to)+" "+
+                    report.getNotificationReportNewStatus()+ " \n"+ getContext().getText(R.string.still_under_review)+", "+
+                    getContext().getText(R.string.thank_you);
+
+            if(report.getNotificationReportNewStatus().equals(FAKE)){
                 user_report_modified_description.setText(fake.substring(0,36)+"...");
-            }else if(report.getNotificationReportStatusChangedTo().equals(VERIFIED)){
+            }else if(report.getNotificationReportNewStatus().equals(VERIFIED)){
                 user_report_modified_description.setText(verified.substring(0,36)+"...");
+            }else if(report.getNotificationReportNewStatus().equals(UNVERIFIED)){
+                user_report_modified_description.setText(unverified.substring(0,36)+"...");
             }
 
             //Your report with date: and title: and decription has been changed to
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-            Date start_date = simpleDateFormat.parse(report.getNotificationDateTimeChanged());
+            Date start_date = simpleDateFormat.parse(report.getNotificationDateTime());
             Date end_date = simpleDateFormat.parse(getTimeDate());
             printDifference(start_date, end_date);
 
@@ -104,12 +119,13 @@ public class ModifedReportNotificationAdapter extends ArrayAdapter<NotificationR
                 Bundle viewBundle = new Bundle();
 
                 viewBundle.putString("notificationReportDateTime", report.getNotificationReportDateTime());
-                viewBundle.putString("notificationReportType", report.getNotificationReportType());
+                viewBundle.putString("notificationReportType", report.getNotificationType());
                 viewBundle.putString("notificationReportTitle", report.getNotificationReportTitle());
-                viewBundle.putString("notificationReportStatusChangedTo", report.getNotificationReportStatusChangedTo());
-                viewBundle.putString("notificationDateTimeChanged", report.getNotificationDateTimeChanged());
-                viewBundle.putString("notificationReportBody", report.getNotificationReportBody());
-                viewBundle.putString("notificationReportUID", report.getNotificationReportUID());
+                viewBundle.putString("notificationReportStatusChangedTo", report.getNotificationReportNewStatus());
+                viewBundle.putString("notificationDateTimeChanged", report.getNotificationDateTime());
+                viewBundle.putString("notificationReportBody", report.getNotificationReportDescription());
+                viewBundle.putString("notificationReportUID", report.getNotificationReportUid());
+                setSeenNotification(SEEN, report.getNotificationId());
 
 
                 intent.putExtras(viewBundle);
@@ -117,6 +133,26 @@ public class ModifedReportNotificationAdapter extends ArrayAdapter<NotificationR
             }
         });
         return listitemView;
+    }
+
+    private void setSeenNotification(String status, String notificationReportId) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("notificationStatus", status);
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseFirestore.collection("notifications_user")
+                .document(notificationReportId)
+                .update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getContext(), getContext().getText(R.string.saved_successfully)+"", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), getContext().getText(R.string.failed_to_save)+" ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 
     public void printDifference(Date startDate, Date endDate) {

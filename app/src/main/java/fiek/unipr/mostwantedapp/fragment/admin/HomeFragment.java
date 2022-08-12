@@ -20,8 +20,10 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,12 +74,14 @@ import fiek.unipr.mostwantedapp.register.RegisterUsersActivity;
 
 public class HomeFragment extends Fragment {
 
+    private SharedPreferences sharedPreferences;
     private PieChart admin_home_pieChart;
     private TextView admin_home_tv_num_report_verified, admin_home_tv_num_report_unverified, admin_home_tv_num_report_fake, admin_home_tv_gradeOfUser;
     public static final String VERIFIED = "VERIFIED";
     public static final String UNVERIFIED = "UNVERIFIED";
     public static final String FAKE = "FAKE";
     public static final String ANONYMOUS = "ANONYMOUS";
+    public static int IMPORTANCE = NotificationManager.IMPORTANCE_DEFAULT;
 
     private String uID;
 
@@ -103,6 +107,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -229,8 +234,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        checkNotificationPermission();
-        realTimeCheckForNewReportNotification();
+        Handler handler = new Handler();
+
+        final Runnable r = new Runnable() {
+            public void run() {
+                realTimeCheckForNewReportNotification();
+                handler.postDelayed(this, 1000);
+            }
+        };
+
+        handler.postDelayed(r, 1000);
 
 
         return admin_dashboard_view;
@@ -443,6 +456,9 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if(firebaseAuth != null){
+            createNotificationChannelAdded();
+            createNotificationChannelModified();
+            createNotificationChannelRemoved();
             loadInfoAndSayHiFromFirebase(firebaseAuth);
             loadInfoAnonymousFirebase();
             loadInfoFromFirebase(firebaseAuth);
@@ -516,20 +532,21 @@ public class HomeFragment extends Fragment {
                                public void onSuccess(Void aVoid) {
                                    //not exist make notification and save for next time
                                    Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                   NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), notificationTitle);
+                                   NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), "NEW_REPORT_ADDED");
                                    notificationBuilder.setContentTitle(notificationTitle);
                                    notificationBuilder.setContentText(notificationBody);
                                    notificationBuilder.setSmallIcon(R.drawable.ic_app);
+                                   notificationBuilder.setPriority(IMPORTANCE);
                                    notificationBuilder.setSound(new_defaultSoundUri);
                                    notificationBuilder.setAutoCancel(true);
 
-                                   SharedPreferences prefs = getActivity().getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
-                                   int notificationNumber1 = prefs.getInt("notificationNumber1", 1);
+                                   sharedPreferences = getActivity().getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
+                                   int notificationNumber1 = sharedPreferences.getInt("notificationNumber1", 1);
 
                                    NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
                                    notificationManager.notify(notificationNumber1, notificationBuilder.build());
 
-                                   SharedPreferences.Editor editor = prefs.edit();
+                                   SharedPreferences.Editor editor = sharedPreferences.edit();
                                    notificationNumber1++;
                                    editor.putInt("notificationNumber1", notificationNumber1);
                                    editor.commit();
@@ -560,20 +577,21 @@ public class HomeFragment extends Fragment {
                                 public void onSuccess(Void aVoid) {
                                     //not exist make notification and save for next time
                                     Uri modified_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), notificationTitle);
+                                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), "NEW_REPORT_MODIFIED");
                                     notificationBuilder.setContentTitle(notificationTitle);
                                     notificationBuilder.setContentText(notificationBody);
                                     notificationBuilder.setSmallIcon(R.drawable.ic_app);
+                                    notificationBuilder.setPriority(IMPORTANCE);
                                     notificationBuilder.setSound(modified_defaultSoundUri);
                                     notificationBuilder.setAutoCancel(true);
 
-                                    SharedPreferences prefs = getActivity().getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
-                                    int notificationNumber2 = prefs.getInt("notificationNumber2", 2);
+                                    sharedPreferences = getActivity().getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
+                                    int notificationNumber2 = sharedPreferences.getInt("notificationNumber2", 2);
 
                                     NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
                                     notificationManager.notify(notificationNumber2, notificationBuilder.build());
 
-                                    SharedPreferences.Editor editor = prefs.edit();
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
                                     notificationNumber2++;
                                     editor.putInt("notificationNumber2", notificationNumber2);
                                     editor.commit();
@@ -604,20 +622,21 @@ public class HomeFragment extends Fragment {
                                 public void onSuccess(Void aVoid) {
                                     //not exist make notification and save for next time
                                     Uri removed_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), notificationTitle);
+                                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), "NEW_REPORT_REMOVED");
                                     notificationBuilder.setContentTitle(notificationTitle);
                                     notificationBuilder.setContentText(notificationBody);
                                     notificationBuilder.setSmallIcon(R.drawable.ic_app);
+                                    notificationBuilder.setPriority(IMPORTANCE);
                                     notificationBuilder.setSound(removed_defaultSoundUri);
                                     notificationBuilder.setAutoCancel(true);
 
-                                    SharedPreferences prefs = getActivity().getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
-                                    int notificationNumber3 = prefs.getInt("notificationNumber3", 3);
+                                    sharedPreferences = getActivity().getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
+                                    int notificationNumber3 = sharedPreferences.getInt("notificationNumber3", 3);
 
                                     NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
                                     notificationManager.notify(notificationNumber3, notificationBuilder.build());
 
-                                    SharedPreferences.Editor editor = prefs.edit();
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
                                     notificationNumber3++;
                                     editor.putInt("notificationNumber3", notificationNumber3);
                                     editor.commit();
@@ -635,19 +654,54 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void checkNotificationPermission() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel NEW_REPORT_ADDED_CHANNEL = new NotificationChannel("NEW_REPORT_ADDED", "NEW_REPORT_ADDED", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager NEW_REPORT_ADDED_MANAGER = getActivity().getSystemService(NotificationManager.class);
-            NEW_REPORT_ADDED_MANAGER.createNotificationChannel(NEW_REPORT_ADDED_CHANNEL);
+    private void createNotificationChannelAdded() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String CHANNEL_ID = "NEW_REPORT_ADDED";
+            CharSequence name = "ADMIN NEW REPORT ADDED NOTIFICATION";
+            String description = "This channel is for admin, that send notification when new report added in database!";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
-            NotificationChannel NEW_REPORT_MODIFIED_CHANNEL = new NotificationChannel("NEW_REPORT_MODIFIED", "NEW_REPORT_MODIFIED", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager NEW_REPORT_MODIFIED_MANAGER = getActivity().getSystemService(NotificationManager.class);
-            NEW_REPORT_MODIFIED_MANAGER.createNotificationChannel(NEW_REPORT_MODIFIED_CHANNEL);
+    private void createNotificationChannelModified() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String CHANNEL_ID = "NEW_REPORT_MODIFIED";
+            CharSequence name = "ADMIN REPORT MODIFIED NOTIFICATION";
+            String description = "This channel is for admin, that send notification when one report modified in database!";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
 
-            NotificationChannel NEW_REPORT_REMOVED_CHANNEL = new NotificationChannel("NEW_REPORT_REMOVED", "NEW_REPORT_REMOVED", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager NEW_REPORT_REMOVED_MANAGER = getActivity().getSystemService(NotificationManager.class);
-            NEW_REPORT_REMOVED_MANAGER.createNotificationChannel(NEW_REPORT_REMOVED_CHANNEL);
+    private void createNotificationChannelRemoved() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String CHANNEL_ID = "NEW_REPORT_REMOVED";
+            CharSequence name = "ADMIN REPORT REMOVED NOTIFICATION";
+            String description = "This channel is for admin, that send notification when one report removed from database!";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 

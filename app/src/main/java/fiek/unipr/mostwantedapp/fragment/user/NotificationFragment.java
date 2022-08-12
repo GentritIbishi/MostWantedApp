@@ -1,18 +1,14 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,26 +18,17 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.ModifedReportNotificationAdapter;
-import fiek.unipr.mostwantedapp.adapter.ReportNotificationAdapter;
-import fiek.unipr.mostwantedapp.models.NotificationAdminState;
 import fiek.unipr.mostwantedapp.models.NotificationReportUser;
-import fiek.unipr.mostwantedapp.models.Report;
-import fiek.unipr.mostwantedapp.models.ReportStatus;
 
 public class NotificationFragment extends Fragment {
 
@@ -51,11 +38,6 @@ public class NotificationFragment extends Fragment {
     private ArrayList<NotificationReportUser> reportArrayList;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
-    private String notificationReportDateTime, notificationReportBody, notificationReportTitle, notificationReportType,
-            notificationReportStatusChangedTo, notificationDateTimeChanged;
-    private Map<String, Object> images = new HashMap<>();
-    private ReportStatus status = ReportStatus.UNVERIFIED;
-    private Double longitude, latitude;
 
     public NotificationFragment() {}
 
@@ -64,7 +46,6 @@ public class NotificationFragment extends Fragment {
         super.onCreate(savedInstanceState);
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
-        checkNotificationPermission();
     }
 
     @Override
@@ -102,14 +83,12 @@ public class NotificationFragment extends Fragment {
         // below line is use to get data from Firebase
         // firestore using collection in android.
         firebaseFirestore.collection("notifications_user")
-                .whereEqualTo("notificationReportUID", notificationReportUID)
+                .whereEqualTo("notificationReportUid", firebaseAuth.getUid())
+                .orderBy("notificationDateTime", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        // after getting the data we are calling on success method
-                        // and inside this method we are checking if the received
-                        // query snapshot is empty or not.
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
@@ -118,14 +97,6 @@ public class NotificationFragment extends Fragment {
                                 // after getting this list we are passing
                                 // that list to our object class.
                                 NotificationReportUser report = d.toObject(NotificationReportUser.class);
-
-                                notificationReportDateTime = report.getNotificationReportDateTime();
-                                notificationReportType = report.getNotificationReportType();
-                                notificationReportBody = report.getNotificationReportBody();
-                                notificationReportTitle = report.getNotificationReportTitle();
-                                notificationReportStatusChangedTo = report.getNotificationReportStatusChangedTo();
-                                notificationDateTimeChanged = report.getNotificationDateTimeChanged();
-
 
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
@@ -141,19 +112,10 @@ public class NotificationFragment extends Fragment {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // we are displaying a toast message
-                        // when we get any error from Firebase.
-                        Toast.makeText(getActivity().getApplicationContext(), "Fail to load data..", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Error_"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        System.out.println("Error"+e.getMessage());
                     }
                 });
-    }
-
-    private void checkNotificationPermission() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("My Notification", "My Notification", NotificationManager.IMPORTANCE_DEFAULT);
-            NotificationManager manager = getActivity().getSystemService(NotificationManager.class);
-            manager.createNotificationChannel(channel);
-        }
     }
 
 }

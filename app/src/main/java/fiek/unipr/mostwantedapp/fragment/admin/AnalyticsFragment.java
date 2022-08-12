@@ -85,7 +85,7 @@ public class AnalyticsFragment extends Fragment {
 
         admin_pieChart = admin_profile_dashboard_view.findViewById(R.id.admin_pieChart);
         tv_num_report_verified = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_verified);
-        tv_num_report_unverified = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_unverified);
+        tv_num_report_unverified = admin_profile_dashboard_view.findViewById(R.id.user_tv_balance);
         tv_num_report_fake = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_fake);
         tv_gradeOfUser = admin_profile_dashboard_view.findViewById(R.id.tv_gradeOfUser);
 

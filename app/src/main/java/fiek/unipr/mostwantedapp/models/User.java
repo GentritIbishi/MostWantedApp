@@ -2,7 +2,7 @@ package fiek.unipr.mostwantedapp.models;
 
 public class User {
 
-    Integer balance;
+    Integer balance, coins;
     String userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, urlOfProfile;
     Boolean isEmailVerified = false;
 
@@ -16,8 +16,9 @@ public class User {
         this.password = password;
     }
 
-    public User(Integer balance, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, String urlOfProfile, Boolean isEmailVerified) {
+    public User(Integer balance, Integer coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, String urlOfProfile, Boolean isEmailVerified) {
         this.balance = balance;
+        this.coins = coins;
         this.userID = userID;
         this.name = name;
         this.lastname = lastname;
@@ -41,6 +42,14 @@ public class User {
 
     public void setBalance(Integer balance) {
         this.balance = balance;
+    }
+
+    public Integer getCoins() {
+        return coins;
+    }
+
+    public void setCoins(Integer coins) {
+        this.coins = coins;
     }
 
     public String getUserID() {

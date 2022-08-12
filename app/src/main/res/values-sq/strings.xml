@@ -425,6 +425,8 @@
     <string name="latest">Latest</string>
     <string name="top_four_latest_person_wanted">TOP 4 LATEST PERSON WANTED</string>
     <string name="your_account_statistics">Your account statistics</string>
+    <string name="you_have_earn">You have earn</string>
+    <string name="still_under_review">Still under review</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

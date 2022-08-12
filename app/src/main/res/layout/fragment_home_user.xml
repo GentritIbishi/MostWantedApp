@@ -92,7 +92,7 @@
                                 android:layout_marginStart="8dp"
                                 android:layout_marginEnd="8dp"
                                 android:clickable="true"
-                                android:background="@color/pie_red"
+                                android:background="@android:color/transparent"
                                 android:divider="@android:color/transparent"
                                 android:dividerHeight="5.0sp"
                                 android:elevation="6dp"
@@ -143,7 +143,7 @@
                                               app:layout_constraintTop_toTopOf="parent" />
 
                                           <TextView
-                                              android:id="@+id/tv_num_report_unverified"
+                                              android:id="@+id/user_tv_balance"
                                               android:layout_width="wrap_content"
                                               android:layout_height="wrap_content"
                                               android:layout_marginTop="16dp"
@@ -165,8 +165,8 @@
                                               android:textColor="@color/verydark"
                                               android:textSize="15sp"
                                               app:layout_constraintBottom_toBottomOf="parent"
-                                              app:layout_constraintEnd_toEndOf="@+id/tv_num_report_unverified"
-                                              app:layout_constraintStart_toStartOf="@+id/tv_num_report_unverified" />
+                                              app:layout_constraintEnd_toEndOf="@+id/user_tv_balance"
+                                              app:layout_constraintStart_toStartOf="@+id/user_tv_balance" />
 
                                    </androidx.constraintlayout.widget.ConstraintLayout>
 

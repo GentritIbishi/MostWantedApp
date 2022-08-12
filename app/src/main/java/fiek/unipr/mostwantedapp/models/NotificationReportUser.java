@@ -1,20 +1,75 @@
 package fiek.unipr.mostwantedapp.models;
 
 public class NotificationReportUser {
-    String notificationReportDateTime, notificationReportBody, notificationReportTitle, notificationReportType,
-            notificationReportStatusChangedTo, notificationReportUID, notificationDateTimeChanged;
+    String  notificationId,
+            notificationDateTime,
+            notificationType,
+            notificationReportId,
+            notificationReportUid,
+            notificationReportDateTime,
+            notificationReportTitle,
+            notificationReportDescription,
+            notificationReportInformerPerson,
+            notificationReportWantedPerson,
+            notificationReportPrizeToWin,
+            notificationReportNewStatus;
 
     public NotificationReportUser() {
     }
 
-    public NotificationReportUser(String notificationReportDateTime, String notificationReportBody, String notificationReportTitle, String notificationReportType, String notificationReportStatusChangedTo, String notificationReportUID, String notificationDateTimeChanged) {
+    public NotificationReportUser(String notificationId, String notificationDateTime, String notificationType, String notificationReportId, String notificationReportUid, String notificationReportDateTime, String notificationReportTitle, String notificationReportDescription, String notificationReportInformerPerson, String notificationReportWantedPerson, String notificationReportPrizeToWin, String notificationReportNewStatus) {
+        this.notificationId = notificationId;
+        this.notificationDateTime = notificationDateTime;
+        this.notificationType = notificationType;
+        this.notificationReportId = notificationReportId;
+        this.notificationReportUid = notificationReportUid;
         this.notificationReportDateTime = notificationReportDateTime;
-        this.notificationReportBody = notificationReportBody;
         this.notificationReportTitle = notificationReportTitle;
-        this.notificationReportType = notificationReportType;
-        this.notificationReportStatusChangedTo = notificationReportStatusChangedTo;
-        this.notificationReportUID = notificationReportUID;
-        this.notificationDateTimeChanged = notificationDateTimeChanged;
+        this.notificationReportDescription = notificationReportDescription;
+        this.notificationReportInformerPerson = notificationReportInformerPerson;
+        this.notificationReportWantedPerson = notificationReportWantedPerson;
+        this.notificationReportPrizeToWin = notificationReportPrizeToWin;
+        this.notificationReportNewStatus = notificationReportNewStatus;
+    }
+
+    public String getNotificationId() {
+        return notificationId;
+    }
+
+    public void setNotificationId(String notificationId) {
+        this.notificationId = notificationId;
+    }
+
+    public String getNotificationDateTime() {
+        return notificationDateTime;
+    }
+
+    public void setNotificationDateTime(String notificationDateTime) {
+        this.notificationDateTime = notificationDateTime;
+    }
+
+    public String getNotificationType() {
+        return notificationType;
+    }
+
+    public void setNotificationType(String notificationType) {
+        this.notificationType = notificationType;
+    }
+
+    public String getNotificationReportId() {
+        return notificationReportId;
+    }
+
+    public void setNotificationReportId(String notificationReportId) {
+        this.notificationReportId = notificationReportId;
+    }
+
+    public String getNotificationReportUid() {
+        return notificationReportUid;
+    }
+
+    public void setNotificationReportUid(String notificationReportUid) {
+        this.notificationReportUid = notificationReportUid;
     }
 
     public String getNotificationReportDateTime() {
@@ -25,14 +80,6 @@ public class NotificationReportUser {
         this.notificationReportDateTime = notificationReportDateTime;
     }
 
-    public String getNotificationReportBody() {
-        return notificationReportBody;
-    }
-
-    public void setNotificationReportBody(String notificationReportBody) {
-        this.notificationReportBody = notificationReportBody;
-    }
-
     public String getNotificationReportTitle() {
         return notificationReportTitle;
     }
@@ -41,35 +88,43 @@ public class NotificationReportUser {
         this.notificationReportTitle = notificationReportTitle;
     }
 
-    public String getNotificationReportType() {
-        return notificationReportType;
+    public String getNotificationReportDescription() {
+        return notificationReportDescription;
     }
 
-    public void setNotificationReportType(String notificationReportType) {
-        this.notificationReportType = notificationReportType;
+    public void setNotificationReportDescription(String notificationReportDescription) {
+        this.notificationReportDescription = notificationReportDescription;
     }
 
-    public String getNotificationReportStatusChangedTo() {
-        return notificationReportStatusChangedTo;
+    public String getNotificationReportInformerPerson() {
+        return notificationReportInformerPerson;
     }
 
-    public void setNotificationReportStatusChangedTo(String notificationReportStatusChangedTo) {
-        this.notificationReportStatusChangedTo = notificationReportStatusChangedTo;
+    public void setNotificationReportInformerPerson(String notificationReportInformerPerson) {
+        this.notificationReportInformerPerson = notificationReportInformerPerson;
     }
 
-    public String getNotificationReportUID() {
-        return notificationReportUID;
+    public String getNotificationReportWantedPerson() {
+        return notificationReportWantedPerson;
     }
 
-    public void setNotificationReportUID(String notificationReportUID) {
-        this.notificationReportUID = notificationReportUID;
+    public void setNotificationReportWantedPerson(String notificationReportWantedPerson) {
+        this.notificationReportWantedPerson = notificationReportWantedPerson;
     }
 
-    public String getNotificationDateTimeChanged() {
-        return notificationDateTimeChanged;
+    public String getNotificationReportPrizeToWin() {
+        return notificationReportPrizeToWin;
     }
 
-    public void setNotificationDateTimeChanged(String notificationDateTimeChanged) {
-        this.notificationDateTimeChanged = notificationDateTimeChanged;
+    public void setNotificationReportPrizeToWin(String notificationReportPrizeToWin) {
+        this.notificationReportPrizeToWin = notificationReportPrizeToWin;
+    }
+
+    public String getNotificationReportNewStatus() {
+        return notificationReportNewStatus;
+    }
+
+    public void setNotificationReportNewStatus(String notificationReportNewStatus) {
+        this.notificationReportNewStatus = notificationReportNewStatus;
     }
 }

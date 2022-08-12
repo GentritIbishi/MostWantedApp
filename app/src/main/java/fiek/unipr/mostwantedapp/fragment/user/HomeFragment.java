@@ -1,7 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
 import android.Manifest;
-import android.app.Activity;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,8 +19,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,15 +41,13 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -62,26 +63,29 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.PersonListAdapter;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
-import fiek.unipr.mostwantedapp.maps.MapsInformerActivity;
-import fiek.unipr.mostwantedapp.models.NotificationAdmin;
 import fiek.unipr.mostwantedapp.models.NotificationAdminState;
 import fiek.unipr.mostwantedapp.models.NotificationReportUser;
 import fiek.unipr.mostwantedapp.models.Person;
-import fiek.unipr.mostwantedapp.models.Report;
 
 public class HomeFragment extends Fragment {
 
+    private SharedPreferences sharedPreferences;
     private static final String HOME_USER_PREF = "HOME_USER_PREF";
     public static final String VERIFIED = "VERIFIED";
     public static final String UNVERIFIED = "UNVERIFIED";
     public static final String ANONYMOUS = "ANONYMOUS";
+    public String YOUR_REPORT_IN_DATETIME_TRANSLATEABLE;
+    public String HAS_NEW_STATUS_RIGHT_NOW;
+    public String STATUS_OF_REPORT_HAS_CHANGED_TO;
     public static final String FAKE = "FAKE";
     private View home_fragment_view;
     private ListView lvPersons;
@@ -98,10 +102,10 @@ public class HomeFragment extends Fragment {
 
     private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
     private Uri photoURL;
-    private Integer balance;
+    private Double balance;
 
     private TextView user_home_tv_num_report_verified, user_home_tv_num_report_unverified, user_home_tv_num_report_fake, user_home_tv_gradeOfUser;
-    private TextView user_rightNowDateTime, user_hiDashboard;
+    private TextView user_rightNowDateTime, user_hiDashboard, user_tv_balance;
     private CircleImageView user_imageOfDashboard;
     private PieChart user_home_pieChart;
 
@@ -111,6 +115,7 @@ public class HomeFragment extends Fragment {
     private FusedLocationProviderClient mfusedLocationProviderClient;
     private boolean locationPermissionGranted = false;
     private Double latitude, longitude;
+    private String notificationTitle;
 
     public HomeFragment() {
     }
@@ -118,18 +123,22 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
-        realTimeCheckReportStatus(firebaseAuth.getUid());
+        YOUR_REPORT_IN_DATETIME_TRANSLATEABLE = String.valueOf(getContext().getText(R.string.your_report_in_datetime));
+        HAS_NEW_STATUS_RIGHT_NOW = String.valueOf(getContext().getText(R.string.has_new_status_right_now));
+        STATUS_OF_REPORT_HAS_CHANGED_TO = String.valueOf(getContext().getText(R.string.status_of_report_has_changed_to));
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        createNotificationChannel();
         if(firebaseAuth != null){
-            getLocationPermission();
+            //getLocationPermission();
             loadInfoFromFirebase(firebaseAuth);
             loadInfoAnonymousFirebase();
             loadInfoPhoneFirebase();
@@ -165,10 +174,13 @@ public class HomeFragment extends Fragment {
 
                 setupPieChart();
                 setPieChart();
+                checkingForNewReport(firebaseAuth.getUid());
 
                 user_home_pullToRefreshProfileDashboard.setRefreshing(false);
             }
         });
+
+        realTimeCheckingForNewReport();
 
         user_rightNowDateTime.setText(getDate());
         getGrade(firebaseAuth);
@@ -176,6 +188,17 @@ public class HomeFragment extends Fragment {
         setPieChart();
 
         return home_fragment_view;
+    }
+
+    private void realTimeCheckingForNewReport() {
+        Handler handler = new Handler();
+        final Runnable r = new Runnable() {
+            public void run() {
+                checkingForNewReport(firebaseAuth.getUid());
+                handler.postDelayed(this, 1000);
+            }
+        };
+        handler.postDelayed(r, 1000);
     }
 
     private void InitializeFields() {
@@ -191,6 +214,7 @@ public class HomeFragment extends Fragment {
         user_home_tv_num_report_fake = home_fragment_view.findViewById(R.id.user_home_tv_num_report_fake);
         user_home_tv_gradeOfUser = home_fragment_view.findViewById(R.id.user_home_tv_gradeOfUser);
         user_home_pieChart = home_fragment_view.findViewById(R.id.user_home_pieChart);
+        user_tv_balance = home_fragment_view.findViewById(R.id.user_tv_balance);
     }
 
     private void getGrade(FirebaseAuth firebaseAuth) {
@@ -255,7 +279,7 @@ public class HomeFragment extends Fragment {
                 });
     }
 
-    private void realTimeCheckReportStatus(String uID) {
+    private void checkingForNewReport(String uID) {
         firebaseFirestore.collection("locations_reports")
                 .whereEqualTo("uID", uID)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -267,15 +291,31 @@ public class HomeFragment extends Fragment {
                         }
 
                         for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                            String notificationReportId = dc.getDocument().getString("docId");
+                            String notificationReportUid = dc.getDocument().getString("uID");
                             String notificationReportDateTime = dc.getDocument().getString("date_time");
-                            String notificationReportBody = dc.getDocument().getString("description");
                             String notificationReportTitle = dc.getDocument().getString("title");
-                            String notificationReportStatusChangedTo = dc.getDocument().getString("status");
+                            String notificationReportDescription = dc.getDocument().getString("description");
+                            String notificationReportInformerPerson = dc.getDocument().getString("informer_person");
+                            String notificationReportWantedPerson = dc.getDocument().getString("wanted_person");
+                            String notificationReportPrizeToWin = dc.getDocument().getString("prizeToWin");
+                            String notificationReportNewStatus = dc.getDocument().getString("status");
+                            String notificationType = String.valueOf(NotificationAdminState.MODIFIED);
 
                             switch (dc.getType()) {
                                 case MODIFIED:
-                                    saveNotificationInFirestoreModified(uID, notificationReportDateTime, notificationReportBody, notificationReportTitle
-                                    , String.valueOf(NotificationAdminState.MODIFIED), notificationReportStatusChangedTo, getDateTime());
+                                    saveNotificationInFirestoreModified(getDateTime(),
+                                            notificationType,
+                                            notificationReportId,
+                                            notificationReportUid,
+                                            notificationReportDateTime,
+                                            notificationReportTitle,
+                                            notificationReportDescription,
+                                            notificationReportInformerPerson,
+                                            notificationReportWantedPerson,
+                                            notificationReportPrizeToWin,
+                                            notificationReportNewStatus
+                                            );
                                     break;
                             }
                         }
@@ -284,61 +324,108 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void saveNotificationInFirestoreModified(String notificationReportUID, String notificationReportDateTime, String notificationReportBody, String notificationReportTitle, String notificationReportType,
-                                                     String notificationReportStatusChangedTo, String notificationDateTimeChanged) {
-        NotificationReportUser objNotificationReportUser = new NotificationReportUser(notificationReportDateTime, notificationReportBody, notificationReportTitle, notificationReportType, notificationReportStatusChangedTo, notificationReportUID, notificationDateTimeChanged);
+    private void saveNotificationInFirestoreModified
+            (
+            String notificationDateTime,
+            String notificationType,
+            String notificationReportId,
+            String notificationReportUid,
+            String notificationReportDateTime,
+            String notificationReportTitle,
+            String notificationReportDescription,
+            String notificationReportInformerPerson,
+            String notificationReportWantedPerson,
+            String notificationReportPrizeToWin,
+            String notificationReportNewStatus
+            )
+    {
+
+        CollectionReference collRef = firebaseFirestore.collection("notifications_user");
+        String notificationId = collRef.document().getId();
+        NotificationReportUser objNotificationReportUser = new NotificationReportUser
+                (
+                notificationId,
+                notificationDateTime,
+                notificationType,
+                notificationReportId,
+                notificationReportUid,
+                notificationReportDateTime,
+                notificationReportTitle,
+                notificationReportDescription,
+                notificationReportInformerPerson,
+                notificationReportWantedPerson,
+                notificationReportPrizeToWin,
+                notificationReportNewStatus
+                );
+
         firebaseFirestore.collection("notifications_user")
-                .whereEqualTo("notificationReportTitle", notificationReportTitle)
-                .whereNotEqualTo("status", notificationReportStatusChangedTo)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.getResult().size() == 0){
-                            firebaseFirestore.collection("notifications_user").document(notificationDateTimeChanged).set(objNotificationReportUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    //not exist make notification and save for next time
-                                    Uri modified_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), notificationReportTitle);
-                                    notificationBuilder.setContentTitle(getContext().getText(R.string.your_report_in_datetime)+" "+notificationReportDateTime+" "+getContext().getText(R.string.has_new_status_right_now));
-                                    notificationBuilder.setContentText(getContext().getText(R.string.status_of_report_has_changed_to)+" "+
-                                            notificationReportStatusChangedTo);
-                                    notificationBuilder.setSmallIcon(R.drawable.ic_app);
-                                    notificationBuilder.setSound(modified_defaultSoundUri);
-                                    notificationBuilder.setAutoCancel(true);
+                .document(notificationId)
+                .set(objNotificationReportUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Uri modified_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                    int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), "ID_MODIFIED_REPORT");
+                    notificationBuilder.setContentTitle(YOUR_REPORT_IN_DATETIME_TRANSLATEABLE+" "+notificationReportDateTime+" "+HAS_NEW_STATUS_RIGHT_NOW);
+                    notificationBuilder.setContentText(STATUS_OF_REPORT_HAS_CHANGED_TO+" "+
+                            notificationReportNewStatus);
+                    notificationBuilder.setSmallIcon(R.drawable.ic_app);
+                    notificationBuilder.setSound(modified_defaultSoundUri);
+                    notificationBuilder.setPriority(importance);
+                    notificationBuilder.setAutoCancel(true);
 
-                                    if(notificationReportStatusChangedTo.equals(VERIFIED)) {
-                                        // balance =+ 20coins;
-                                    }
+                    int notificationReportStatusModified = sharedPreferences.getInt("notificationReportStatusModified", 1);
 
-                                    SharedPreferences prefs = getActivity().getSharedPreferences(HOME_USER_PREF, Context.MODE_PRIVATE);
-                                    int notificationReportStatusModified = prefs.getInt("notificationReportStatusModified", 1);
+                    NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                    notificationManager.notify(notificationReportStatusModified, notificationBuilder.build());
 
-                                    NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                                    notificationManager.notify(notificationReportStatusModified, notificationBuilder.build());
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    notificationReportStatusModified++;
+                    editor.putInt("notificationReportStatusModified", notificationReportStatusModified);
+                    editor.commit();
 
-                                    SharedPreferences.Editor editor = prefs.edit();
-                                    notificationReportStatusModified++;
-                                    editor.putInt("notificationReportStatusModified", notificationReportStatusModified);
-                                    editor.commit();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }else if(task.getResult().size() == 1){
-                            //
-                        }
-                    }
-                });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
     }
 
+    private void test(String statusStateChange, String prizeToWin) {
+        if(statusStateChange.equals(VERIFIED)) {
+            if(prizeToWin != null) {
+                String[] segments = prizeToWin.split(" ");
+                String firstSegment = segments[0];
+                Integer prize = Integer.valueOf(firstSegment.trim());
+                setCoinsToUser(firebaseAuth.getUid(),prize);
+            }
+        }
+    }
+
+    private void setCoinsToUser(String uid, Integer balance) {
+        Map<String, Object> data = new HashMap<>();
+        data.put("balance", balance);
+        data.put("coins", balance);
+        firebaseFirestore.collection("users")
+                .document(uid)
+                .update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getContext(), getContext().getText(R.string.you_have_earn)+": "+balance+" "+"coins", Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        user_tv_balance.setText(balance);
+                    }
+                });
+    }
+
     private void getLocationPermission() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION};
         if(ContextCompat.checkSelfPermission(getContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             if(ContextCompat.checkSelfPermission(getContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                 locationPermissionGranted = true;
@@ -561,6 +648,14 @@ public class HomeFragment extends Fragment {
                     {
                         fullName = task.getResult().getString("fullName");
                         urlOfProfile = task.getResult().getString("urlOfProfile");
+                        balance = task.getResult().getDouble("balance");
+                        if(balance != null){
+                            int balanceInt = (int) Math.round(balance);
+                                user_tv_balance.setText(String.valueOf(balanceInt));
+                        }else {
+                            user_tv_balance.setText("N/A");
+                        }
+
                         //set Image, verified if is email verified, name
                         //setVerifiedBadge(firebaseAuth.getCurrentUser());
                         if(urlOfProfile != null){
@@ -610,6 +705,23 @@ public class HomeFragment extends Fragment {
             return false;
         }else {
             return true;
+        }
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String CHANNEL_ID = "ID_MODIFIED_REPORT";
+            CharSequence name = "NotificationReportUser";
+            String description = "This channel is for user, that send notification when status of report change in database!";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getActivity().getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
     }
 
