@@ -52,6 +52,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
 import com.google.firebase.dynamiclinks.ShortDynamicLink;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -93,6 +94,7 @@ import java.util.Locale;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsBinding;
 import fiek.unipr.mostwantedapp.models.ReportAssigned;
+import fiek.unipr.mostwantedapp.models.ReportAssignedUser;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -198,11 +200,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 else {
                     try {
-                        assignedReport(getApplicationContext(), last_seen_latitude, last_seen_longitude,
+
+                        CollectionReference collRef = firebaseFirestore.collection("assigned_reports");
+                        String reportAssigned_id = collRef.document().getId();
+
+                        assignedReport(getApplicationContext(), reportAssigned_id, last_seen_latitude, last_seen_longitude,
                                 lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4, first_investigator, second_investigator, fullName);
 
                         //create pdf file and upload in firestore and add link option for share
-                        generatePDF(first_investigator, second_investigator, last_seen_address, first_address,
+                        generatePDF(reportAssigned_id, first_investigator, second_investigator, last_seen_address, first_address,
                                 second_address, third_address, forth_address);
 
                         binding.generateReportProgressBar.setVisibility(View.INVISIBLE);
@@ -510,27 +516,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .icon(BitmapFromVector(getApplicationContext(), R.drawable.ic_police_google)));
     }
 
-    private void getImageOfWantedPerson(String fullName) {
-        firebaseFirestore.collection("wanted_persons")
-                .whereEqualTo("fullName", fullName)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(queryDocumentSnapshots != null){
-                            DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(0);
-                            urlOfProfile = doc.getString("urlOfProfile");
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
     private void assignedReport(Context ctx,
+                                String reportAssigned_id,
                                 double lat1, double lon1,
                                 double lat2, double lon2,
                                 double lat3, double lon3,
@@ -546,10 +533,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         forth_address = getAddress(ctx, lat5, lon5);
         date = getTimeDate();
 
-        ReportAssigned reportAssigned = new ReportAssigned(first_investigator, second_investigator, fullNameOfWantedPerson
+        ReportAssigned reportAssigned = new ReportAssigned(reportAssigned_id, first_investigator, second_investigator, fullNameOfWantedPerson
                 ,last_seen_address, first_address, second_address, third_address, forth_address, date);
 
-        firebaseFirestore.collection("assigned_reports").document(date).set(reportAssigned).addOnSuccessListener(new OnSuccessListener<Void>() {
+
+        firebaseFirestore.collection("assigned_reports").document(reportAssigned_id).set(reportAssigned).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(ctx, R.string.report_assigned_successfully, Toast.LENGTH_SHORT).show();
@@ -590,9 +578,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void uploadPDFtoFirebase(Uri pdfUri) {
+    private void uploadPDFtoFirebase(Uri pdfUri, String reportAssigned_id) {
         //upload image to storage in firebase
-        StorageReference profRef = storageReference.child("assigned_reports/"+firebaseAuth.getCurrentUser().getUid()+"/"+getTimeDate()+"/"+fullName+"/assign_report.pdf");
+        StorageReference profRef = storageReference.child("assigned_reports/"+firebaseAuth.getCurrentUser().getUid()+"/"+fullName+"/"+reportAssigned_id+"/assign_report.pdf");
         profRef.putFile(pdfUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -602,8 +590,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         //save uri of pdf uploaded file
                         urlOfPdfUploaded = uri.toString();
                         setShortUrl(uri);
-                        saveReportUrlToUserCollection(documentReference, firebaseFirestore, urlOfPdfUploaded, USER_COLLECTION);
-                        saveReportUrlToReportCollection(assigned_report_doc, firebaseFirestore, urlOfPdfUploaded, ASSIGNED_REPORTS_COLLECTION);
+                        saveReportUrlToUserCollection(reportAssigned_id, urlOfPdfUploaded);
+                        saveReportUrlToReportCollection(reportAssigned_id, assigned_report_doc, firebaseFirestore, urlOfPdfUploaded, ASSIGNED_REPORTS_COLLECTION);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -637,10 +625,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void saveReportUrlToReportCollection(DocumentReference documentReference, FirebaseFirestore firebaseFirestore, String urlOfPdfUploaded,
+    private void saveReportUrlToReportCollection(String reportAssigned_id, DocumentReference documentReference, FirebaseFirestore firebaseFirestore, String urlOfPdfUploaded,
                                                  String collection) {
         if(date!=null) {
-            documentReference = firebaseFirestore.collection(collection).document(date);
+            documentReference = firebaseFirestore.collection(collection).document(reportAssigned_id);
             documentReference.update("assigned_report_url", urlOfPdfUploaded).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
@@ -654,19 +642,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    private void saveReportUrlToUserCollection(DocumentReference documentReference, FirebaseFirestore firebaseFirestore, String urlOfPdfUploaded,
-                                               String collection) {
-        documentReference = firebaseFirestore.collection(collection).document(firebaseAuth.getCurrentUser().getUid());
-        documentReference.update("latest_assigned_report_url", urlOfPdfUploaded).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if(task != null && task.isSuccessful()) {
-                    Toast.makeText(MapsActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(MapsActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+    private void saveReportUrlToUserCollection(String reportAssigned_id, String urlOfPdfUploaded) {
+        ReportAssignedUser reportAssignedUser = new ReportAssignedUser(reportAssigned_id, urlOfPdfUploaded);
+
+        firebaseFirestore.collection("users")
+                        .document(firebaseAuth.getUid())
+                                .collection("reports_assigned")
+                                        .document(reportAssigned_id)
+                                                .set(reportAssignedUser)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(MapsActivity.this, getApplicationContext().getText(R.string.successfully), Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private boolean checkPermissionForPDF() {
@@ -682,7 +676,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, MANAGE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 
-    private void generatePDF(String first_investigator, String second_investigator,
+    private void generatePDF(String reportAssigned_id, String first_investigator, String second_investigator,
                              String last_seen_address, String first_address,
                              String second_address, String third_address,
                              String forth_address) throws FileNotFoundException {
@@ -852,7 +846,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         document.close();
 
         Uri uri = Uri.fromFile(file);
-        uploadPDFtoFirebase(uri);
+        uploadPDFtoFirebase(uri, reportAssigned_id);
 
         Toast.makeText(this, R.string.pdf_file_generated_successfully, Toast.LENGTH_SHORT).show();
     }
