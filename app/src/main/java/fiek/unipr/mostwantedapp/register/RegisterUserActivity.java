@@ -34,7 +34,7 @@ import java.util.Locale;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
-import fiek.unipr.mostwantedapp.helpers.SetImageActivity;
+import fiek.unipr.mostwantedapp.profile.SetProfileUsersActivity;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterUserActivity extends AppCompatActivity {
@@ -252,7 +252,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     }
 
     private void goToSetProfilePicture() {
-        Intent intent = new Intent(RegisterUserActivity.this, SetImageActivity.class);
+        Intent intent = new Intent(RegisterUserActivity.this, SetProfileUsersActivity.class);
         startActivity(intent);
         finish();
     }

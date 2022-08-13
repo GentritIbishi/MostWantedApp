@@ -54,11 +54,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="13dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:background="@drawable/item_persistent_state"
         android:clickable="true"
         android:elevation="3dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintPU">
@@ -83,6 +81,45 @@
             app:layout_constraintEnd_toEndOf="@+id/wantedPersonImage"
             app:layout_constraintStart_toStartOf="@+id/wantedPersonImage"
             app:layout_constraintTop_toBottomOf="@+id/wantedPersonImage" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintInv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/item_persistent_state"
+        android:clickable="true"
+        android:elevation="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintWP">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/investigatorImage"
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="29dp"
+            android:src="@drawable/ic_user_secret_solid"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/investigator_person"
+            android:textColor="@color/verydark"
+            android:textSize="17sp"
+            app:layout_constraintEnd_toEndOf="@+id/investigatorImage"
+            app:layout_constraintStart_toStartOf="@+id/investigatorImage"
+            app:layout_constraintTop_toBottomOf="@+id/investigatorImage" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

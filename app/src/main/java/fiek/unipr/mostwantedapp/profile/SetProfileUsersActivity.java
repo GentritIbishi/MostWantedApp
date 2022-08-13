@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.helpers;
+package fiek.unipr.mostwantedapp.profile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,8 +31,9 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
+import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 
-public class SetImageActivity extends AppCompatActivity implements View.OnClickListener {
+public class SetProfileUsersActivity extends AppCompatActivity implements View.OnClickListener {
 
     private CircleImageView circle_profile_picture;
     private Button btn_skip, btn_setProfile;
@@ -93,7 +94,7 @@ public class SetImageActivity extends AppCompatActivity implements View.OnClickL
 
     private void goToInformerDashboard() {
         skip_progressBar.setVisibility(View.VISIBLE);
-        Intent intent = new Intent(SetImageActivity.this, UserDashboardActivity.class);
+        Intent intent = new Intent(SetProfileUsersActivity.this, UserDashboardActivity.class);
         startActivity(intent);
         skip_progressBar.setVisibility(View.INVISIBLE);
         finish();
@@ -131,7 +132,7 @@ public class SetImageActivity extends AppCompatActivity implements View.OnClickL
                                     }, 3000);
                                     goToInformerDashboard();
                                 }else {
-                                    Toast.makeText(SetImageActivity.this, "No upload image!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(SetProfileUsersActivity.this, "No upload image!", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -140,7 +141,7 @@ public class SetImageActivity extends AppCompatActivity implements View.OnClickL
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SetImageActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SetProfileUsersActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
                         setprofile_progressBar1.setVisibility(View.INVISIBLE);
                         setprofile_progressBar2.setVisibility(View.INVISIBLE);
                     }
@@ -159,7 +160,7 @@ public class SetImageActivity extends AppCompatActivity implements View.OnClickL
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(SetImageActivity.this, R.string.image_not_set, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SetProfileUsersActivity.this, R.string.image_not_set, Toast.LENGTH_SHORT).show();
             }
         });
     }

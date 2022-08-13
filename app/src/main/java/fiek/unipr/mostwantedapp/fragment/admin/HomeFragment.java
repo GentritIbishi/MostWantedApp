@@ -69,6 +69,7 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.NotificationAdmin;
 import fiek.unipr.mostwantedapp.models.NotificationAdminState;
+import fiek.unipr.mostwantedapp.register.RegisterInvestigatorActivity;
 import fiek.unipr.mostwantedapp.register.RegisterPersonActivity;
 import fiek.unipr.mostwantedapp.register.RegisterUsersActivity;
 
@@ -176,6 +177,7 @@ public class HomeFragment extends Fragment {
 
         final ConstraintLayout constraintPU = registerUsers.findViewById(R.id.constraintPU);
         final ConstraintLayout constraintWP = registerUsers.findViewById(R.id.constraintWP);
+        final ConstraintLayout constraintInv = registerUsers.findViewById(R.id.constraintInv);
         final ConstraintLayout cons_dashboard_top = admin_dashboard_view.findViewById(R.id.cons_dashboard_top);
         final ConstraintLayout cons_analytics = admin_dashboard_view.findViewById(R.id.cons_analytics);
 
@@ -192,6 +194,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), RegisterPersonActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        constraintInv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), RegisterInvestigatorActivity.class);
                 startActivity(intent);
             }
         });

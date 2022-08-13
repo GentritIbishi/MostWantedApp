@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -16,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import fiek.unipr.mostwantedapp.helpers.PersonImage;
+import fiek.unipr.mostwantedapp.profile.SetProfilePersonActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.models.Person;
 
@@ -46,7 +46,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
     private FirebaseFirestore firebaseFirestore;
     private StorageReference storageReference;
     private MaterialAutoCompleteTextView et_age, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts, et_status, et_prize;
-    private EditText et_firstName, et_lastName, et_address, et_parentName;
+    private TextInputEditText et_firstName, et_lastName, et_address, et_parentName;
     private Button registerPerson;
     private ProgressBar progressBar;
     private String[] WEIGHT_ARRAY = null;
@@ -61,6 +61,9 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         setWeightInMeasureArray(KG);
         setHeightInMeasureArray(CM);
@@ -111,9 +114,6 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         ArrayAdapter<String> status_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.status_of_person));
         et_status.setAdapter(status_adapter);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        storageReference = FirebaseStorage.getInstance().getReference();
         progressBar = findViewById(R.id.progressBar);
 
     }
@@ -284,7 +284,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(RegisterPersonActivity.this, RegisterPersonActivity.this.getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterPersonActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
-                                Intent setImageOfPerson = new Intent(RegisterPersonActivity.this, PersonImage.class);
+                                Intent setImageOfPerson = new Intent(RegisterPersonActivity.this, SetProfilePersonActivity.class);
                                 Bundle personBundle = new Bundle();
                                 personBundle.putString("personFullName", fullName);
                                 setImageOfPerson.putExtras(personBundle);

@@ -9,13 +9,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
     <uses-permission android:name="android.permission.CALL_PHONE" />
-
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -30,6 +27,12 @@
         android:roundIcon="@drawable/ic_app"
         android:supportsRtl="true"
         android:theme="@style/Theme.MostWantedApp">
+        <activity
+            android:name=".profile.SetProfileInvestigatorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".register.RegisterInvestigatorActivity"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -59,7 +62,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".helpers.SetImageActivity"
+            android:name=".profile.SetProfileUsersActivity"
             android:exported="false" />
         <activity
             android:name=".auth.ForgotPasswordActivity"
@@ -98,7 +101,7 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".lists.UserActivity" />
         <activity android:name=".lists.PersonActivity" />
-        <activity android:name=".helpers.PersonImage" />
+        <activity android:name=".profile.SetProfilePersonActivity" />
         <activity android:name=".update.UpdateUser" />
         <activity android:name=".models.Profile" />
         <activity android:name=".dashboard.AdminUserDashboardActivity" />

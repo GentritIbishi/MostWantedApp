@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.helpers;
+package fiek.unipr.mostwantedapp.profile;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,33 +29,36 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 
-public class PersonImage extends AppCompatActivity {
+public class SetProfilePersonActivity extends AppCompatActivity {
 
     private String fullName;
-    private StorageReference storageReference;
+
     private CircleImageView personProfileView;
     private ImageView setNewProfile;
     private TextView tv_addprofile;
     private ProgressBar progressBarPerson;
+
+    private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
-    private FirebaseFirestore firebaseFirestore;
+    private StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_image);
 
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
         personProfileView = findViewById(R.id.personProfileView);
         setNewProfile = findViewById(R.id.setNewProfile);
         tv_addprofile = findViewById(R.id.tv_addprofile);
         progressBarPerson = findViewById(R.id.progressBarPerson);
-        storageReference = FirebaseStorage.getInstance().getReference();
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        storageReference = FirebaseStorage.getInstance().getReference();
-        firebaseFirestore = FirebaseFirestore.getInstance();
 
         Bundle personImage = getIntent().getExtras();
         if(personImage != null)
@@ -129,7 +131,7 @@ public class PersonImage extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(PersonImage.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SetProfilePersonActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
                     progressBarPerson.setVisibility(View.GONE);
                 }
             });

@@ -48,7 +48,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/generateConstraint"
-            android:visibility="visible"
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -62,41 +63,66 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <AutoCompleteTextView
-                android:id="@+id/the_first_investigator"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/autocomplete_the_first_investigator_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/et_register_persons"
-                android:completionThreshold="1"
-                android:hint="@string/the_first_investigator"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:hint="@string/select_first_investigator"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                android:textStyle="bold"
+                app:boxBackgroundColor="@color/light_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <AutoCompleteTextView
-                android:id="@+id/the_second_investigator"
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/the_first_investigator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/verydark"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/autocomplete_the_second_investigator_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:background="@drawable/et_register_persons"
-                android:completionThreshold="1"
-                android:hint="@string/the_second_investigator"
-                android:imeOptions="actionNext"
-                android:inputType="textCapSentences"
-                android:padding="10dp"
-                android:textSize="16sp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:hint="@string/select_second_investigator"
+                android:textColorHint="@color/verydark"
+                android:textDirection="firstStrong"
+                android:textStyle="bold"
+                app:boxBackgroundColor="@color/light_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/the_first_investigator" />
+                app:layout_constraintTop_toBottomOf="@+id/autocomplete_the_first_investigator_layout">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/the_second_investigator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/verydark"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Button
                 android:id="@+id/btnGenerateReport"
@@ -112,7 +138,7 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/the_second_investigator" />
+                app:layout_constraintTop_toBottomOf="@+id/autocomplete_the_second_investigator_layout" />
 
             <ProgressBar
                 android:id="@+id/generateReportProgressBar"

@@ -219,8 +219,8 @@
     <string name="choose_an_email_client">Choose an Email client :</string>
     <string name="grade_name">Grade</string>
     <string name="assign_police_investigators">Assign police investigators</string>
-    <string name="the_first_investigator">The first investigator</string>
-    <string name="the_second_investigator">The second investigator</string>
+    <string name="select_first_investigator">Select First Investigator</string>
+    <string name="select_second_investigator">Select Second Investigator</string>
     <string name="generate_the_report">Generate the report</string>
     <string name="report_assigned_successfully">Report assigned successfully!</string>
     <string name="report_failed_to_assign">Report failed to assign!</string>
@@ -427,6 +427,10 @@
     <string name="your_account_statistics">Your account statistics</string>
     <string name="you_have_earn">You have earn</string>
     <string name="still_under_review">Still under review</string>
+    <string name="register_investigator">Register Investigator</string>
+    <string name="this_investigator_with_name">This investigator with name:</string>
+    <string name="investigator_failed_to_register">Investigator failed to register!</string>
+    <string name="investigator_person">Investigator</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
