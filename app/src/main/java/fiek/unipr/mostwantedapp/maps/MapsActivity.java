@@ -123,6 +123,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private UploadTask uploadTask;
     private String urlLongEncoded;
     private String[] INVESTIGATOR_ARRAY;
+    private Bundle mapsBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,24 +138,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         storageReference = FirebaseStorage.getInstance().getReference();
         uID = firebaseUser.getUid();
 
+        mapsBundle = new Bundle();
+        getFromBundle(mapsBundle);
+
         initMap();
 
         // below code is used for
         // checking our permissions.
         if (!checkPermissionForPDF()) {
             requestPermissionForPDF();
-        }
-
-        try {
-            Intent in = getIntent();
-            if(in != null)
-            {
-                fullName = in.getStringExtra("fullName");
-                status = in.getStringExtra("status");
-                urlOfProfile = in.getStringExtra("urlOfProfile");
-            }
-        }catch (Exception e) {
-            e.getMessage();
         }
 
         binding.btnAssignInvestigator.setOnClickListener(new View.OnClickListener() {
@@ -222,6 +214,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         setInvestigatorInArray();
+
+    }
+
+    private void getFromBundle(Bundle bundle) {
+
+        try {
+            bundle = getIntent().getExtras();
+
+            fullName = bundle.getString("fullName");
+            status = bundle.getString("status");
+            urlOfProfile = bundle.getString("urlOfProfile");
+        } catch (Exception e) {
+            e.getMessage();
+        }
 
     }
 

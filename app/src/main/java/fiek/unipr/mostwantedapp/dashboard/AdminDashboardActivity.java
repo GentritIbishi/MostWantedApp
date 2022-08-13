@@ -37,6 +37,7 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.fragment.admin.AboutFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.LocationReportsFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.HelpFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
@@ -195,13 +196,13 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     setSearchSelected();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
-                            .replace(R.id.admin_fragmentContainer, SearchFragment.class, null)
+                            .replace(R.id.admin_fragmentContainer, LocationReportsFragment.class, null)
                             .commit();
                 }
                 if(selectedTab == 2){
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
-                            .replace(R.id.admin_fragmentContainer, SearchFragment.class, null)
+                            .replace(R.id.admin_fragmentContainer, LocationReportsFragment.class, null)
                             .commit();
                 }
             }
