@@ -172,41 +172,6 @@ public class HomeFragment extends Fragment {
         loadInfoPhoneFirebase();
 
         final LinearLayout l_admin_myAccount = admin_dashboard_view.findViewById(R.id.l_admin_myAccount);
-        final GridLayout gridLayout = admin_dashboard_view.findViewById(R.id.gridLayout);
-        final View registerUsers = admin_dashboard_view.findViewById(R.id.registerUsers);
-
-        final ConstraintLayout constraintPU = registerUsers.findViewById(R.id.constraintPU);
-        final ConstraintLayout constraintWP = registerUsers.findViewById(R.id.constraintWP);
-        final ConstraintLayout constraintInv = registerUsers.findViewById(R.id.constraintInv);
-        final ConstraintLayout cons_dashboard_top = admin_dashboard_view.findViewById(R.id.cons_dashboard_top);
-        final ConstraintLayout cons_analytics = admin_dashboard_view.findViewById(R.id.cons_analytics);
-
-        constraintPU.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // ni regjister te ri mas miri, me role Super-Admin, Admin, User(informer)
-                Intent intent = new Intent(getContext(), RegisterUsersActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        constraintWP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), RegisterPersonActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        constraintInv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), RegisterInvestigatorActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
         l_admin_myAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,10 +184,8 @@ public class HomeFragment extends Fragment {
         l_admin_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                gridLayout.setVisibility(View.GONE);
-                registerUsers.setVisibility(View.VISIBLE);
-                cons_dashboard_top.setVisibility(View.GONE);
-                cons_analytics.setVisibility(View.GONE);
+                Fragment fragment = new RegisterFragment();
+                loadFragment(fragment);
             }
         });
 

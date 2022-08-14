@@ -206,12 +206,6 @@
 
                 </GridLayout>
 
-                <include
-                    android:id="@+id/registerUsers"
-                    android:visibility="gone"
-                    android:layout_gravity="center"
-                    layout="@layout/persistent_add_user_or_person"/>
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cons_analytics"
                     android:layout_width="match_parent"
