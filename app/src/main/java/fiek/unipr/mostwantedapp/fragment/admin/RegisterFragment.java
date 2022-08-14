@@ -36,7 +36,6 @@ public class RegisterFragment extends Fragment {
         constraintPU.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // ni regjister te ri mas miri, me role Super-Admin, Admin, User(informer)
                 Intent intent = new Intent(getContext(), RegisterUsersActivity.class);
                 startActivity(intent);
             }
