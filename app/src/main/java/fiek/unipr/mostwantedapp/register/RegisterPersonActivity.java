@@ -18,6 +18,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -45,7 +46,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     private StorageReference storageReference;
-    private MaterialAutoCompleteTextView et_age, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts, et_status, et_prize;
+    private MaterialAutoCompleteTextView et_age, et_gender, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts, et_status, et_prize;
     private TextInputEditText et_firstName, et_lastName, et_address, et_parentName;
     private Button registerPerson;
     private ProgressBar progressBar;
@@ -81,6 +82,10 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         et_age = findViewById(R.id.et_age);
         ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, AGE_ARRAY);
         et_age.setAdapter(age_adapter);
+
+        et_gender = findViewById(R.id.et_gender);
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        et_gender.setAdapter(gender_adapter);
 
         et_prize = findViewById(R.id.et_prize);
         ArrayAdapter<String> prize_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, PRIZE_ARRAY);
@@ -120,8 +125,8 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
 
     private void setPrizeInYourCurrency(String euro) {
         PRIZE_ARRAY = new String[2001];
-        for(int i=500; i<1000000; i=i+500) {
-            PRIZE_ARRAY[i] = i+" "+euro;
+        for(int i=0; i<2001; i++) {
+            PRIZE_ARRAY[i] = i*500+" "+euro;
         }
     }
 
@@ -164,6 +169,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         et_parentName.setText("");
         et_address.setText("");
         et_age.setText("");
+        et_gender.setText("");
         et_height.setText("");
         et_weight.setText("");
         et_eyeColor.setText("");
@@ -180,9 +186,10 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         String parentName = et_parentName.getText().toString().trim();
         String fullName = firstName+" ("+parentName+") "+lastName;
         String address = et_address.getText().toString().trim();
-        Integer age = Integer.parseInt(et_age.getText().toString().trim());
-        Integer height = Integer.parseInt(et_height.getText().toString().trim());
-        Integer weight = Integer.parseInt(et_weight.getText().toString().trim());
+        String age = et_age.getText().toString().trim();
+        String gender = et_gender.getText().toString().trim();
+        String height = et_height.getText().toString().trim();
+        String weight = et_weight.getText().toString().trim();
         String eyeColor = et_eyeColor.getText().toString().trim();
         String hairColor = et_hairColor.getText().toString().trim();
         String phy_appearance = et_phy_appearance.getText().toString().trim();
@@ -218,6 +225,12 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         if (age.equals(checkNull)) {
             et_age.setError(getText(R.string.error_age_required));
             et_age.requestFocus();
+            return;
+        }
+
+        if (gender.equals(checkNull)) {
+            et_gender.setError(getText(R.string.error_gender_required));
+            et_gender.requestFocus();
             return;
         }
 
@@ -270,7 +283,16 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
 
             progressBar.setVisibility(View.VISIBLE);
 
-            Person person = new Person(firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance, acts, null, status, prize, getTimeDate(), age, height, weight, LONGITUDE_DEFAULT, LATITUDE_DEFAULT);
+            CollectionReference collRef = firebaseFirestore.collection("wanted_persons");
+            String personId = collRef.document().getId();
+
+            Person person = new Person(personId,
+                    firstName, lastName, parentName,
+                    fullName, address, eyeColor,
+                    hairColor, phy_appearance, acts,
+                    null, status, prize,
+                    getTimeDate(), age, gender,
+                    height, weight, LONGITUDE_DEFAULT, LATITUDE_DEFAULT);
 
             firebaseFirestore.collection("wanted_persons").document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -280,13 +302,14 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
                         progressBar.setVisibility(View.GONE);
                         registerPerson.setEnabled(true);
                     } else {
-                        firebaseFirestore.collection("wanted_persons").document(fullName).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        firebaseFirestore.collection("wanted_persons").document(personId).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(RegisterPersonActivity.this, RegisterPersonActivity.this.getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterPersonActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
                                 Intent setImageOfPerson = new Intent(RegisterPersonActivity.this, SetProfilePersonActivity.class);
                                 Bundle personBundle = new Bundle();
-                                personBundle.putString("personFullName", fullName);
+                                personBundle.putString("personId", personId);
+                                personBundle.putString("fullName", fullName);
                                 setImageOfPerson.putExtras(personBundle);
                                 registerPerson.setEnabled(true);
                                 progressBar.setVisibility(View.INVISIBLE);

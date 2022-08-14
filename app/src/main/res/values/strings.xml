@@ -334,6 +334,11 @@
         <item>Weak</item>
     </string-array>
 
+    <string-array name="gender_array">
+        <item>MALE</item>
+        <item>FEMALE</item>
+    </string-array>
+
     <string-array name="acts">
         <item>Serious theft</item>
         <item>Easy theft</item>
@@ -431,6 +436,8 @@
     <string name="this_investigator_with_name">This investigator with name:</string>
     <string name="investigator_failed_to_register">Investigator failed to register!</string>
     <string name="investigator_person">Investigator</string>
+    <string name="select_the_gender">Select the gender</string>
+    <string name="error_gender_required">Gender is required!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

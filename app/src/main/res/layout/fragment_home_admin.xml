@@ -220,11 +220,13 @@
 
                     <TextView
                         android:id="@+id/admin_home_tvReports"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="32dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
-                        android:layout_marginEnd="32dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/bg_headtitle"
+                        android:elevation="6dp"
                         android:fontFamily="@font/open_sans"
                         android:padding="10dp"
                         android:text="Total reports"

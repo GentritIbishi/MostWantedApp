@@ -1,13 +1,13 @@
 package fiek.unipr.mostwantedapp.models;
 
 public class Person {
-    private String firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status, prize, registration_date;
-    private Integer age, height, weight;
+    private String personId, firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status, prize, registration_date, age, gender, height, weight;
     private Double longitude, latitude;
 
     public Person() {}
 
-    public Person(String firstName, String lastName, String parentName, String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, String prize, String registration_date, Integer age, Integer height, Integer weight, Double longitude, Double latitude) {
+    public Person(String personId, String firstName, String lastName, String parentName, String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, String prize, String registration_date, String age, String gender, String height, String weight, Double longitude, Double latitude) {
+        this.personId = personId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.parentName = parentName;
@@ -22,10 +22,19 @@ public class Person {
         this.prize = prize;
         this.registration_date = registration_date;
         this.age = age;
+        this.gender = gender;
         this.height = height;
         this.weight = weight;
         this.longitude = longitude;
         this.latitude = latitude;
+    }
+
+    public String getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(String personId) {
+        this.personId = personId;
     }
 
     public String getFirstName() {
@@ -132,27 +141,35 @@ public class Person {
         this.registration_date = registration_date;
     }
 
-    public Integer getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(Integer age) {
+    public void setAge(String age) {
         this.age = age;
     }
 
-    public Integer getHeight() {
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getHeight() {
         return height;
     }
 
-    public void setHeight(Integer height) {
+    public void setHeight(String height) {
         this.height = height;
     }
 
-    public Integer getWeight() {
+    public String getWeight() {
         return weight;
     }
 
-    public void setWeight(Integer weight) {
+    public void setWeight(String weight) {
         this.weight = weight;
     }
 

@@ -34,6 +34,7 @@ import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 public class SetProfilePersonActivity extends AppCompatActivity {
 
     private String fullName;
+    private String personId;
 
     private CircleImageView personProfileView;
     private ImageView setNewProfile;
@@ -63,14 +64,16 @@ public class SetProfilePersonActivity extends AppCompatActivity {
         Bundle personImage = getIntent().getExtras();
         if(personImage != null)
         {
-            fullName = personImage.get("personFullName").toString();
+            fullName = personImage.get("fullName").toString();
+            personId = personImage.get("personId").toString();
         }
         else
         {
             fullName = null;
+            personId = null;
         }
 
-        StorageReference profileRef = storageReference.child("persons/"+fullName+"/profile.jpg");
+        StorageReference profileRef = storageReference.child("persons/"+ personId +"/"+fullName +"/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -109,7 +112,7 @@ public class SetProfilePersonActivity extends AppCompatActivity {
     private void uploadImageToFirebase(Uri imageUri) {
 
             //upload image to storage in firebase
-            StorageReference fileRef = storageReference.child("persons/"+fullName+"/profile.jpg");
+            StorageReference fileRef = storageReference.child("persons/"+ personId +"/"+fullName +"/profile.jpg");
             fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -117,7 +120,7 @@ public class SetProfilePersonActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             Picasso.get().load(uri).transform(new CircleTransform()).into(personProfileView);
-                            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(fullName);
+                            DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(personId);
                             docRef.update("urlOfProfile", uri.toString());
                             tv_addprofile.setText(R.string.profile_picture_added);
                             new Handler().postDelayed(new Runnable() {

@@ -31,7 +31,6 @@ import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.profile.SetProfileInvestigatorActivity;
-import fiek.unipr.mostwantedapp.profile.SetProfilePersonActivity;
 import fiek.unipr.mostwantedapp.models.Investigator;
 
 public class RegisterInvestigatorActivity extends AppCompatActivity implements View.OnClickListener {
@@ -44,7 +43,7 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     private StorageReference storageReference;
-    private MaterialAutoCompleteTextView investigator_et_age,
+    private MaterialAutoCompleteTextView investigator_et_age, investigator_et_gender,
             investigator_et_height, investigator_et_weight,
             investigator_et_eyeColor, investigator_et_hairColor,
             investigator_et_phy_appearance, investigator_et_acts,
@@ -83,6 +82,10 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
         investigator_et_age = findViewById(R.id.investigator_et_age);
         ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, AGE_ARRAY);
         investigator_et_age.setAdapter(age_adapter);
+
+        investigator_et_gender = findViewById(R.id.investigator_et_gender);
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        investigator_et_gender.setAdapter(gender_adapter);
 
         investigator_et_height = findViewById(R.id.investigator_et_height);
         ArrayAdapter<String> height_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, HEIGHT_ARRAY);
@@ -146,6 +149,7 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
         investigator_et_parentName.setText("");
         investigator_et_address.setText("");
         investigator_et_age.setText("");
+        investigator_et_gender.setText("");
         investigator_et_height.setText("");
         investigator_et_weight.setText("");
         investigator_et_eyeColor.setText("");
@@ -161,6 +165,7 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
         String fullName = firstName+" ("+parentName+") "+lastName;
         String address = investigator_et_address.getText().toString().trim();
         String age = investigator_et_age.getText().toString().trim();
+        String gender = investigator_et_gender.getText().toString().trim();
         String height = investigator_et_height.getText().toString().trim();
         String weight = investigator_et_weight.getText().toString().trim();
         String eyeColor = investigator_et_eyeColor.getText().toString().trim();
@@ -194,6 +199,12 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
         if (age.equals(checkNull)) {
             investigator_et_age.setError(getText(R.string.error_age_required));
             investigator_et_age.requestFocus();
+            return;
+        }
+
+        if (gender.equals(checkNull)) {
+            investigator_et_gender.setError(getText(R.string.error_gender_required));
+            investigator_et_gender.requestFocus();
             return;
         }
 
@@ -234,7 +245,7 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
             String investigator_id = collectionReference.document().getId();
 
             Investigator investigator = new Investigator(investigator_id, firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance,
-                    null, getTimeDate(), age, height, weight);
+                    null, getTimeDate(), age, gender, height, weight);
 
 
             firebaseFirestore.collection("investigators").document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -252,6 +263,7 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
                                 Intent setImageOfInvestigator = new Intent(RegisterInvestigatorActivity.this, SetProfileInvestigatorActivity.class);
                                 Bundle registerInvestigatorBundle = new Bundle();
                                 registerInvestigatorBundle.putString("investigator_id", investigator_id);
+                                registerInvestigatorBundle.putString("fullName", fullName);
                                 setImageOfInvestigator.putExtras(registerInvestigatorBundle);
                                 registerInvestigator.setEnabled(true);
                                 investigator_progressBar.setVisibility(View.INVISIBLE);

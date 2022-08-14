@@ -89,14 +89,14 @@ public class LimitPersonAdapter extends ArrayAdapter<Person> {
                 viewBundle.putString("fullName", person.getFullName());
                 viewBundle.putString("acts", person.getActs());
                 viewBundle.putString("address", person.getAddress());
-                viewBundle.putInt("age", person.getAge());
+                viewBundle.putString("age", person.getAge());
                 viewBundle.putString("eyeColor", person.getEyeColor());
                 viewBundle.putString("hairColor", person.getHairColor());
-                viewBundle.putInt("height", person.getHeight());
+                viewBundle.putString("height", person.getHeight());
                 viewBundle.putString("phy_appearance", person.getPhy_appearance());
                 viewBundle.putString("status", person.getStatus());
                 viewBundle.putString("urlOfProfile", person.getUrlOfProfile());
-                viewBundle.putInt("weight", person.getWeight());
+                viewBundle.putString("weight", person.getWeight());
                 intent.putExtras(viewBundle);
                 v.getContext().startActivity(intent);
             }

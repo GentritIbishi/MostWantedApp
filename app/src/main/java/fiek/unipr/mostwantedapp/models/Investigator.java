@@ -1,9 +1,9 @@
 package fiek.unipr.mostwantedapp.models;
 
 public class Investigator {
-    private String investigator_id, firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance, urlOfProfile, registration_date, age, height, weight;
+    private String investigator_id, firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance, urlOfProfile, registration_date, age, gender, height, weight;
 
-    public Investigator(String investigator_id, String firstName, String lastName, String parentName, String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String urlOfProfile, String registration_date, String age, String height, String weight) {
+    public Investigator(String investigator_id, String firstName, String lastName, String parentName, String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String urlOfProfile, String registration_date, String age, String gender, String height, String weight) {
         this.investigator_id = investigator_id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -16,6 +16,7 @@ public class Investigator {
         this.urlOfProfile = urlOfProfile;
         this.registration_date = registration_date;
         this.age = age;
+        this.gender = gender;
         this.height = height;
         this.weight = weight;
     }
@@ -114,6 +115,14 @@ public class Investigator {
 
     public void setAge(String age) {
         this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getHeight() {

@@ -33,7 +33,7 @@ import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 
 public class SetProfileInvestigatorActivity extends AppCompatActivity {
 
-    private String investigator_id;
+    private String investigator_id, fullName;
 
     private CircleImageView investigator_ProfileView;
     private ImageView investigator_setNewProfile;
@@ -64,7 +64,7 @@ public class SetProfileInvestigatorActivity extends AppCompatActivity {
 
         getFromBundle(bundle);
 
-        StorageReference profileRef = storageReference.child("investigators/"+investigator_id+"/profile.jpg");
+        StorageReference profileRef = storageReference.child("investigators/"+ investigator_id +"/"+fullName +"/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -87,10 +87,12 @@ public class SetProfileInvestigatorActivity extends AppCompatActivity {
         if(bundle != null)
         {
             investigator_id = bundle.get("investigator_id").toString();
+            fullName = bundle.get("fullName").toString();
         }
         else
         {
             investigator_id = null;
+            fullName = null;
         }
     }
 
@@ -115,7 +117,7 @@ public class SetProfileInvestigatorActivity extends AppCompatActivity {
     private void uploadImageToFirebase(Uri imageUri) {
 
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child("investigators/"+investigator_id+"/profile.jpg");
+        StorageReference fileRef = storageReference.child("investigators/"+ investigator_id +"/"+fullName +"/profile.jpg");
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
