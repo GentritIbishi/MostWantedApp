@@ -282,7 +282,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         c.drawBitmap(resource, 4, 4, p);
         p.setXfermode(null);
         p.setStyle(Paint.Style.STROKE);
-        p.setColor(ContextCompat.getColor(context, R.color.verydark));
+        p.setColor(ContextCompat.getColor(context, R.color.gray));
         p.setStrokeWidth(10);
         c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
         return output;

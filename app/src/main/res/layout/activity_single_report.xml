@@ -44,7 +44,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginEnd="32dp"
                             android:hint="@string/report_uid"
-                            android:textColorHint="@color/verydark"
+                            android:textColorHint="@color/gray"
                             android:textDirection="firstStrong"
                             android:textStyle="bold"
                             app:boxBackgroundColor="@color/light_gray"
@@ -59,7 +59,7 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:fontFamily="@font/open_sans_bold"
-                                    android:textColor="@color/verydark"
+                                    android:textColor="@color/gray"
                                     android:textStyle="bold" />
 
                         </com.google.android.material.textfield.TextInputLayout>
@@ -73,7 +73,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
-                            android:textColorHint="@color/verydark"
+                            android:textColorHint="@color/gray"
                             app:counterOverflowTextColor="@color/white"
                             app:helperTextTextColor="@color/white"
                             android:textDirection="firstStrong"
@@ -86,7 +86,7 @@
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/et_report_informer"
-                                    android:textColor="@color/verydark"
+                                    android:textColor="@color/gray"
                                     android:textStyle="bold"
                                     android:fontFamily="@font/open_sans_bold"
                                     android:layout_width="match_parent"
@@ -102,7 +102,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
-                            android:textColorHint="@color/verydark"
+                            android:textColorHint="@color/gray"
                             app:counterOverflowTextColor="@color/white"
                             app:helperTextTextColor="@color/white"
                             android:textDirection="firstStrong"
@@ -115,7 +115,7 @@
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/et_report_date_time"
-                                    android:textColor="@color/verydark"
+                                    android:textColor="@color/gray"
                                     android:textStyle="bold"
                                     android:fontFamily="@font/open_sans_bold"
                                     android:layout_width="match_parent"
@@ -131,7 +131,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
-                            android:textColorHint="@color/verydark"
+                            android:textColorHint="@color/gray"
                             app:counterOverflowTextColor="@color/white"
                             app:helperTextTextColor="@color/white"
                             android:textDirection="firstStrong"
@@ -144,7 +144,7 @@
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/et_report_title"
-                                    android:textColor="@color/verydark"
+                                    android:textColor="@color/gray"
                                     android:textStyle="bold"
                                     android:fontFamily="@font/open_sans_bold"
                                     android:layout_width="match_parent"
@@ -160,7 +160,7 @@
                             android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
-                            android:textColorHint="@color/verydark"
+                            android:textColorHint="@color/gray"
                             app:counterOverflowTextColor="@color/white"
                             app:helperTextTextColor="@color/white"
                             android:textDirection="firstStrong"
@@ -173,7 +173,7 @@
 
                                 <com.google.android.material.textfield.TextInputEditText
                                     android:id="@+id/et_report_description"
-                                    android:textColor="@color/verydark"
+                                    android:textColor="@color/gray"
                                     android:textStyle="bold"
                                     android:fontFamily="@font/open_sans_bold"
                                     android:layout_width="match_parent"
@@ -219,7 +219,7 @@
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="32dp"
                             android:hint="@string/report_status"
-                            android:textColorHint="@color/verydark"
+                            android:textColorHint="@color/gray"
                             android:textDirection="firstStrong"
                             android:textStyle="bold"
                             app:boxBackgroundColor="@color/light_gray"
@@ -236,7 +236,7 @@
                                     android:paddingTop="16dp"
                                     android:paddingBottom="16dp"
                                     android:text="test"
-                                    android:textColor="@color/verydark"
+                                    android:textColor="@color/gray"
                                     android:textStyle="bold" />
 
                         </com.google.android.material.textfield.TextInputLayout>

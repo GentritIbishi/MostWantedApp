@@ -32,7 +32,7 @@
             android:layout_marginTop="16dp"
             android:textAlignment="center"
             android:text="@string/full_name"
-            android:textColor="@color/verydark"
+            android:textColor="@color/gray"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

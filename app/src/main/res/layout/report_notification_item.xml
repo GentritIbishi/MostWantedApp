@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:text="Informer_person"
             android:layout_marginStart="5dp"
-            android:textColor="@color/verydark"
+            android:textColor="@color/gray"
             android:textSize="16sp"
             android:textStyle="bold" />
 

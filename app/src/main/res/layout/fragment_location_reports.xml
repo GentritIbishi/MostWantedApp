@@ -24,8 +24,8 @@
             android:textAlignment="center"
             android:inputType="textCapSentences"
             android:padding="16dp"
-            android:textColor="@color/verydark"
-            android:textColorHint="@color/verydark" />
+            android:textColor="@color/gray"
+            android:textColorHint="@color/gray" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/location_pullToRefreshInSearch"

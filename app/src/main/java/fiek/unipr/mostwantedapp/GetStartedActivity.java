@@ -35,7 +35,7 @@ public class GetStartedActivity extends AppCompatActivity {
 
         if(firstTime.equals("Yes")){
             //If application was opened for the first time
-            Intent intent = new Intent(GetStartedActivity.this, LoginActivity.class);
+            Intent intent = new Intent(GetStartedActivity.this, SplashActivity.class);
             startActivity(intent);
             finish();
         }else {
@@ -49,7 +49,7 @@ public class GetStartedActivity extends AppCompatActivity {
         bt_getStarted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(GetStartedActivity.this, LoginActivity.class);
+                Intent intent = new Intent(GetStartedActivity.this, SplashActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);

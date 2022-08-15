@@ -24,10 +24,10 @@
         <item name="fontFamily">@font/open_sans_light</item>
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/verydark</item>
+        <item name="android:textColor">@color/gray</item>
     </style>
     <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@color/verydark</item>
+        <item name="color">@color/gray</item>
         <item name="android:width">80dp</item>
         <item name="android:height">80dp</item>
     </style>

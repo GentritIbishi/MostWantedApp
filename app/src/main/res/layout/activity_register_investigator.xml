@@ -37,7 +37,7 @@
                 android:text="@string/register_investigator"
                 android:textAlignment="center"
                 android:fontFamily="@font/open_sans_bold"
-                android:textColor="@color/verydark"
+                android:textColor="@color/gray"
                 android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -52,13 +52,13 @@
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/register_person_first_name"
-                android:textColorHint="@color/verydark"
+                android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/verydark"
-                app:boxStrokeColor="@color/verydark"
+                app:helperTextTextColor="@color/gray"
+                app:boxStrokeColor="@color/gray"
                 android:elevation="6dp"
-                app:hintTextColor="@color/verydark"
+                app:hintTextColor="@color/gray"
                 app:startIconDrawable="@drawable/ic_baseline_person_24"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -70,10 +70,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:imeOptions="actionNext"
                     android:ems="10"
-                    android:textColorHint="@color/verydark"
+                    android:textColorHint="@color/gray"
                     android:inputType="textCapSentences"
                     android:textStyle="bold" />
 
@@ -88,13 +88,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/register_person_last_name"
-                android:textColorHint="@color/verydark"
+                android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/verydark"
-                app:boxStrokeColor="@color/verydark"
+                app:helperTextTextColor="@color/gray"
+                app:boxStrokeColor="@color/gray"
                 android:elevation="6dp"
-                app:hintTextColor="@color/verydark"
+                app:hintTextColor="@color/gray"
                 app:startIconDrawable="@drawable/ic_baseline_person_24"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -106,10 +106,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:imeOptions="actionNext"
                     android:ems="10"
-                    android:textColorHint="@color/verydark"
+                    android:textColorHint="@color/gray"
                     android:inputType="textCapSentences"
                     android:textStyle="bold" />
 
@@ -124,13 +124,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/parent_name"
-                android:textColorHint="@color/verydark"
+                android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/verydark"
-                app:boxStrokeColor="@color/verydark"
+                app:helperTextTextColor="@color/gray"
+                app:boxStrokeColor="@color/gray"
                 android:elevation="6dp"
-                app:hintTextColor="@color/verydark"
+                app:hintTextColor="@color/gray"
                 app:startIconDrawable="@drawable/ic_baseline_person_24"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -142,10 +142,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:imeOptions="actionNext"
                     android:ems="10"
-                    android:textColorHint="@color/verydark"
+                    android:textColorHint="@color/gray"
                     android:inputType="textCapSentences"
                     android:textStyle="bold" />
 
@@ -160,13 +160,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/address"
-                android:textColorHint="@color/verydark"
+                android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/verydark"
-                app:boxStrokeColor="@color/verydark"
+                app:helperTextTextColor="@color/gray"
+                app:boxStrokeColor="@color/gray"
                 android:elevation="6dp"
-                app:hintTextColor="@color/verydark"
+                app:hintTextColor="@color/gray"
                 app:startIconDrawable="@drawable/ic_baseline_map_24"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -178,10 +178,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:imeOptions="actionNext"
                     android:ems="10"
-                    android:textColorHint="@color/verydark"
+                    android:textColorHint="@color/gray"
                     android:inputType="textCapSentences"
                     android:textStyle="bold" />
 
@@ -196,7 +196,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_age"
-                android:textColorHint="@color/verydark"
+                android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
                 app:boxBackgroundColor="@color/light_gray"
@@ -212,7 +212,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -226,7 +226,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_the_gender"
-                android:textColorHint="@color/verydark"
+                android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
                 app:boxBackgroundColor="@color/light_gray"
@@ -242,7 +242,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -256,7 +256,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_height"
-                android:textColorHint="@color/verydark"
+                android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
                 app:boxBackgroundColor="@color/light_gray"
@@ -272,7 +272,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -286,7 +286,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_weight"
-                android:textColorHint="@color/verydark"
+                android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
                 app:boxBackgroundColor="@color/light_gray"
@@ -302,7 +302,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -316,7 +316,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_eye_color"
-                android:textColorHint="@color/verydark"
+                android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
                 app:boxBackgroundColor="@color/light_gray"
@@ -332,7 +332,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -346,7 +346,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_hair_color"
-                android:textColorHint="@color/verydark"
+                android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
                 app:boxBackgroundColor="@color/light_gray"
@@ -362,7 +362,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -377,7 +377,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_physical_appearance"
-                android:textColorHint="@color/verydark"
+                android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
                 app:boxBackgroundColor="@color/light_gray"
@@ -393,7 +393,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>

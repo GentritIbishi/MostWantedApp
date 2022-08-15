@@ -18,8 +18,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -35,33 +33,27 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.CustomizedGalleryAdapter;
 import fiek.unipr.mostwantedapp.databinding.ActivitySingleReportBinding;
-import fiek.unipr.mostwantedapp.maps.MapsActivity;
 
 public class SingleReportActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -148,11 +140,11 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
         binding.autoCompleteReportStatus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                binding.autocompleteReportStatusLayout.setHintTextColor(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.verydark)));
-                binding.autocompleteReportStatusLayout.setBoxStrokeColor(getApplicationContext().getResources().getColor(R.color.verydark));
-                binding.autocompleteReportStatusLayout.setBoxStrokeColorStateList(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.verydark)));
-                binding.autocompleteReportStatusLayout.setCounterTextColor(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.verydark)));
-                binding.autocompleteReportStatusLayout.setEndIconTintList(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.verydark)));
+                binding.autocompleteReportStatusLayout.setHintTextColor(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.gray)));
+                binding.autocompleteReportStatusLayout.setBoxStrokeColor(getApplicationContext().getResources().getColor(R.color.gray));
+                binding.autocompleteReportStatusLayout.setBoxStrokeColorStateList(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.gray)));
+                binding.autocompleteReportStatusLayout.setCounterTextColor(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.gray)));
+                binding.autocompleteReportStatusLayout.setEndIconTintList(ColorStateList.valueOf(getApplicationContext().getResources().getColor(R.color.gray)));
 
                 String status_new = binding.autoCompleteReportStatus.getText().toString();
 
@@ -362,7 +354,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
         c.drawBitmap(resource, 4, 4, p);
         p.setXfermode(null);
         p.setStyle(Paint.Style.STROKE);
-        p.setColor(ContextCompat.getColor(context, R.color.verydark));
+        p.setColor(ContextCompat.getColor(context, R.color.gray));
         p.setStrokeWidth(10);
         c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
         return output;

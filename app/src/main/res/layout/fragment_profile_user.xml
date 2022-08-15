@@ -37,7 +37,7 @@
                     android:layout_toRightOf="@id/user_nav_header_image_view"
                     android:fontFamily="@font/open_sans_light"
                     android:text="@string/your_name"
-                    android:textColor="@color/verydark"
+                    android:textColor="@color/gray"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="@+id/user_nav_header_image_view"
