@@ -93,16 +93,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStart() {
         super.onStart();
-//        if(firebaseUser != null)
-//        {
-//            if(firebaseUser.isAnonymous()){
-//                signInAnonymouslyInformer();
-//            }else if(firebaseUser.isEmailVerified()){
-//                checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid());
-//            }else if(firebaseUser.getPhoneNumber() != null){
-//                goToInformerDashboard();
-//            }
-//        }
+        if(firebaseUser != null)
+        {
+            if(firebaseUser.isAnonymous()){
+                signInAnonymouslyInformer();
+            }else if(firebaseUser.isEmailVerified()){
+                checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid());
+            }else if(firebaseUser.getPhoneNumber() != null){
+                goToInformerDashboard();
+            }
+        }
     }
 
     @Override
