@@ -16,8 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -37,6 +41,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
@@ -46,12 +51,16 @@ public class AnalyticsFragment extends Fragment {
 
     private View admin_profile_dashboard_view;
     private PieChart admin_pieChart;
+    private BarChart barChartGender;
+    private ArrayList barArraylist;
     private TextView tv_num_report_verified, tv_num_report_unverified, tv_num_report_fake, tv_gradeOfUser;
 
     public static final String VERIFIED = "VERIFIED";
     public static final String UNVERIFIED = "UNVERIFIED";
     public static final String FAKE = "FAKE";
     public static final String ANONYMOUS = "ANONYMOUS";
+    public static final String MALE = "MALE";
+    public static final String FEMALE = "FEMALE";
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -88,6 +97,7 @@ public class AnalyticsFragment extends Fragment {
         tv_num_report_unverified = admin_profile_dashboard_view.findViewById(R.id.user_tv_balance);
         tv_num_report_fake = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_fake);
         tv_gradeOfUser = admin_profile_dashboard_view.findViewById(R.id.tv_gradeOfUser);
+        barChartGender = admin_profile_dashboard_view.findViewById(R.id.barChartGender);
 
         final SwipeRefreshLayout pullToRefreshInSearch = admin_profile_dashboard_view.findViewById(R.id.admin_pullToRefreshProfileDashboard);
 
@@ -101,6 +111,8 @@ public class AnalyticsFragment extends Fragment {
         setupPieChart();
         setPieChart();
 
+        funAnalyticsGenderForWantedPerson();
+
         pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -111,6 +123,7 @@ public class AnalyticsFragment extends Fragment {
 
                 setupPieChart();
                 setPieChart();
+                funAnalyticsGenderForWantedPerson();
 
                 pullToRefreshInSearch.setRefreshing(false);
             }
@@ -278,6 +291,53 @@ public class AnalyticsFragment extends Fragment {
     public static boolean empty( final String s ) {
         // Null-safe, short-circuit evaluation.
         return s == null || s.trim().isEmpty();
+    }
+
+    private void funAnalyticsGenderForWantedPerson() {
+        firebaseFirestore.collection("wanted_persons")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int counterForMale = 0;
+                        int counterForFemale = 0;
+
+                        for (int i=0; i<queryDocumentSnapshots.size();i++){
+                            DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(i);
+                            String gender = doc.getString("gender");
+
+                            if(gender.equals(MALE)){
+                                counterForMale++;
+                            }else if(gender.equals(FEMALE)){
+                                counterForFemale++;
+                            }
+                        }
+
+                        barArraylist = new ArrayList();
+                        barArraylist.add(new BarEntry(2f, counterForMale));
+                        barArraylist.add(new BarEntry(3f, counterForFemale));
+
+                        //anychart here
+                        BarDataSet barDataSet = new BarDataSet(barArraylist, getContext().getString(R.string.gender_for_wanted_person_statistic));
+                        BarData barData = new BarData(barDataSet);
+                        barChartGender.setData(barData);
+                        //color bar data set
+                        barDataSet.setColors(R.color.red, R.color.black);
+                        //text color
+                        barDataSet.setValueTextColor(Color.BLACK);
+                        //settings text size
+                        barDataSet.setValueTextSize(16f);
+                        barChartGender.getDescription().setEnabled(true);
+
+
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "GenderAnalyticsError: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 }

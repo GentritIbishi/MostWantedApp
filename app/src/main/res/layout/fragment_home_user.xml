@@ -215,8 +215,8 @@
                                                      app:layout_constraintTop_toTopOf="parent" />
 
                                                  <TextView
-                                                     android:layout_width="90dp"
-                                                     android:layout_height="38dp"
+                                                     android:layout_width="wrap_content"
+                                                     android:layout_height="wrap_content"
                                                      android:layout_marginBottom="3dp"
                                                      android:text="@string/reports_verified"
                                                      android:textAlignment="center"
@@ -265,8 +265,8 @@
                                                      app:layout_constraintTop_toTopOf="parent" />
 
                                                  <TextView
-                                                     android:layout_width="90dp"
-                                                     android:layout_height="38dp"
+                                                     android:layout_width="wrap_content"
+                                                     android:layout_height="wrap_content"
                                                      android:layout_marginBottom="3dp"
                                                      android:text="@string/reports_unverified"
                                                      android:textAlignment="center"
@@ -315,8 +315,8 @@
                                                      app:layout_constraintTop_toTopOf="parent" />
 
                                                  <TextView
-                                                     android:layout_width="90dp"
-                                                     android:layout_height="38dp"
+                                                     android:layout_width="wrap_content"
+                                                     android:layout_height="wrap_content"
                                                      android:layout_marginBottom="3dp"
                                                      android:text="@string/reports_fake"
                                                      android:textAlignment="center"
@@ -365,8 +365,8 @@
                                                      app:layout_constraintTop_toTopOf="parent" />
 
                                                  <TextView
-                                                     android:layout_width="90dp"
-                                                     android:layout_height="38dp"
+                                                     android:layout_width="wrap_content"
+                                                     android:layout_height="wrap_content"
                                                      android:layout_marginBottom="3dp"
                                                      android:text="@string/grade_name"
                                                      android:textAlignment="center"

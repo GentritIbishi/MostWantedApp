@@ -438,6 +438,9 @@
     <string name="investigator_person">Investigator</string>
     <string name="select_the_gender">Select the gender</string>
     <string name="error_gender_required">Gender is required!</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="gender_for_wanted_person_statistic">Wanted Person Gender Statistics</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
