@@ -207,6 +207,15 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        final LinearLayout l_admin_manage_reports = admin_dashboard_view.findViewById(R.id.l_admin_manage_reports);
+        l_admin_manage_reports.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new ManageLocationReportsFragment();
+                loadFragment(fragment);
+            }
+        });
+
         Handler handler = new Handler();
 
         final Runnable r = new Runnable() {

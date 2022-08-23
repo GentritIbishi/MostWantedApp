@@ -441,6 +441,7 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="gender_for_wanted_person_statistic">Wanted Person Gender Statistics</string>
+    <string name="manage_location_reports">Manage Reports</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
