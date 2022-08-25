@@ -3,6 +3,7 @@ package fiek.unipr.mostwantedapp.dashboard;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -12,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -255,10 +257,12 @@ public class AdminDashboardActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         admin_toolbar.setTitle("");
         admin_toolbar.setSubtitle("");
+        admin_toolbar.setBackgroundColor(getResources().getColor(R.color.perfect_blue));
 
         admin_toggle = new ActionBarDrawerToggle(AdminDashboardActivity.this, admin_drawerLayout_real, admin_toolbar, R.string.open, R.string.close);
         admin_drawerLayout_real.addDrawerListener(admin_toggle);
         admin_toggle.syncState();
+        admin_toggle.getDrawerArrowDrawable().setColor(Color.WHITE);
 
         //set home fragment by default
         // admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
@@ -273,6 +277,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void setHomeSelected() {
+        admin_toggle.getDrawerArrowDrawable().setColor(Color.WHITE);
+        admin_toolbar.setBackgroundColor(getResources().getColor(R.color.perfect_blue));
         admin_homeImage.setImageResource(R.drawable.ic_home_selected);
         admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
         admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
@@ -281,6 +287,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void setSearchSelected() {
+        admin_toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.gray));
+        admin_toolbar.setBackgroundColor(Color.WHITE);
         admin_searchImage.setImageResource(R.drawable.ic_search_selected);
         admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
         admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
@@ -289,6 +297,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void setProfileSelected() {
+        admin_toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.gray));
+        admin_toolbar.setBackgroundColor(Color.WHITE);
         admin_profileImage.setImageResource(R.drawable.ic_profile_selected);
         admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
         admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
@@ -297,6 +307,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void setNotificationSelected() {
+        admin_toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.gray));
+        admin_toolbar.setBackgroundColor(Color.WHITE);
         admin_notificationImage.setImageResource(R.drawable.ic_notification_selected);
         admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
         admin_searchImage.setImageResource(R.drawable.ic_search_unselected);

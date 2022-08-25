@@ -22,12 +22,12 @@
     <style name="Theme.MostWantedApp.popUpOverlay" parent="Theme.AppCompat.Light"/>
     <style name="TextViewStyle" parent="android:Widget.TextView">
         <item name="fontFamily">@font/open_sans_light</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColor">@color/white</item>
     </style>
     <style name="DrawerIcon" parent="Widget.AppCompat.DrawerArrowToggle">
-        <item name="color">@color/gray</item>
+        <item name="color">@color/white</item>
         <item name="android:width">80dp</item>
         <item name="android:height">80dp</item>
     </style>

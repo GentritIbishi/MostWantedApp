@@ -24,7 +24,7 @@
         android:layout_toRightOf="@id/nav_header_image_view"
         android:fontFamily="@font/open_sans_light"
         android:text="@string/your_name"
-        android:textColor="@color/gray"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold" />
 

@@ -185,7 +185,7 @@
     <string name="reports_verified">VERIFIED</string>
     <string name="reports_unverified">UNVERIFIED</string>
     <string name="reports_fake">FAKE</string>
-    <string name="real_time_statistics">Real Time Statistics</string>
+    <string name="real_time_statistics">Real-time Statistics</string>
     <string name="no_firebase_authentication">No Firebase Authentication</string>
     <string name="image_deleted_successfully">Image deleted successfully!</string>
     <string name="images_uploaded_successfully">Images uploaded successfully!</string>
