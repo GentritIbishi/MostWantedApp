@@ -33,7 +33,7 @@
                 android:elevation="0dp"
                 android:gravity="center"
                 app:titleTextColor="@color/gray"
-                android:background="@color/white"
+                android:background="@color/light_gray"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay">
 
@@ -63,7 +63,7 @@
             android:theme="@style/NavigationTheme"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/perfect_blue"
+            android:background="@color/white"
             android:layout_gravity="start"
             android:layout_marginBottom="3dp"
             android:elevation="6dp"
@@ -73,7 +73,7 @@
             app:itemTextColor="@color/color_text_state"
             app:itemBackground="@drawable/menu_back_state"
             app:itemTextAppearance="@style/TextViewStyle"
-            app:itemIconTint="@color/white">
+            app:itemIconTint="@color/menu_color_text_state">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

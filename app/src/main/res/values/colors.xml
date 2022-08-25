@@ -18,11 +18,15 @@
     <color name="pink_light">#6579ea</color>
     <color name="light_gray">#F2F2F2</color>
     <color name="red">#eb4034</color>
+    <color name="neon_red">#FF0000</color>
+    <color name="neon_blue">#34568B</color>
     <color name="darkblack">#999999</color>
     <color name="gray">#808080</color>
     <color name="plus_color">#AE000000</color>
     <color name="plus_color_pressed">#cccaca</color>
     <color name="green">#7CFC00</color>
+    <color name="neon_green">#0FFF50</color>
+    <color name="orange">#FFD732</color>
     <color name="graylight">#c9ccd1</color>
     <color name="lighter_75">#bfbfbf</color>
     <color name="lighter_90">#eeeeee</color>

@@ -37,7 +37,7 @@
                         android:layout_marginTop="24dp"
                         android:fontFamily="@font/open_sans"
                         android:text="Mon, 01 Jan 2022"
-                        android:textColor="@color/white"
+                        android:textColor="@color/gray"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toTopOf="@+id/hiDashboard"
@@ -52,7 +52,7 @@
                         android:layout_marginStart="32dp"
                         android:layout_marginBottom="24dp"
                         android:text="@string/dashboard"
-                        android:textColor="@color/white"
+                        android:textColor="@color/gray"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -254,7 +254,7 @@
                         android:layout_marginEnd="16dp"
                         android:background="@drawable/bg_headtitle"
                         android:elevation="6dp"
-                        android:textColor="@color/white"
+                        android:textColor="@color/gray"
                         android:padding="10dp"
                         android:text="@string/real_time_statistics"
                         android:textAlignment="center"
@@ -282,7 +282,7 @@
                             android:layout_marginStart="48dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="8dp"
-                            android:background="@drawable/bg_counters"
+                            android:background="@drawable/bg_counters_verified"
                             android:elevation="6dp"
                             app:layout_constraintEnd_toStartOf="@+id/admin_home_unverified_report"
                             app:layout_constraintStart_toStartOf="parent"
@@ -291,7 +291,7 @@
                             <ImageView
                                 android:layout_width="27dp"
                                 android:layout_height="27dp"
-                                android:src="@drawable/ic_analytics_gray_light"
+                                android:src="@drawable/ic_analytics_white"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -331,7 +331,7 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="48dp"
-                            android:background="@drawable/bg_counters"
+                            android:background="@drawable/bg_counters_unverified"
                             android:elevation="6dp"
                             app:layout_constraintBottom_toTopOf="@+id/admin_home_fake_report"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -342,7 +342,7 @@
                             <ImageView
                                 android:layout_width="27dp"
                                 android:layout_height="27dp"
-                                android:src="@drawable/ic_analytics_gray_light"
+                                android:src="@drawable/ic_analytics_white"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -383,7 +383,7 @@
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_counters"
+                            android:background="@drawable/bg_counters_fake"
                             android:elevation="6dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toStartOf="@+id/admin_home_gradeSector"
@@ -393,7 +393,7 @@
                             <ImageView
                                 android:layout_width="27dp"
                                 android:layout_height="27dp"
-                                android:src="@drawable/ic_analytics_gray_light"
+                                android:src="@drawable/ic_analytics_white"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -434,7 +434,7 @@
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="48dp"
                             android:layout_marginBottom="16dp"
-                            android:background="@drawable/bg_counters"
+                            android:background="@drawable/bg_counters_grade"
                             android:elevation="6dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
