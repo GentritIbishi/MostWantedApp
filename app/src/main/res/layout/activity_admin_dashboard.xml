@@ -5,7 +5,7 @@
     android:id="@+id/admin_drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/light_gray"
     tools:context=".dashboard.AdminDashboardActivity">
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -119,11 +119,12 @@
 
     <LinearLayout
         android:id="@+id/admin_bottomBar"
-        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@drawable/bg_navigation_bottom"
         android:elevation="15dp"
         android:gravity="center"
@@ -132,6 +133,7 @@
         android:paddingTop="15dp"
         android:paddingEnd="20dp"
         android:paddingBottom="15dp"
+        android:visibility="visible"
         android:weightSum="4"
         tools:targetApi="lollipop">
 
