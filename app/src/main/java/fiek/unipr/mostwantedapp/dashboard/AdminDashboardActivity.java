@@ -276,6 +276,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_nav_view.getMenu().getItem(0).setChecked(true);
     }
 
+    private void setToolbarDefault() {
+        admin_toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.gray));
+        admin_toolbar.setBackgroundColor(Color.WHITE);
+    }
+
     private void setHomeSelected() {
         admin_toggle.getDrawerArrowDrawable().setColor(Color.WHITE);
         admin_toolbar.setBackgroundColor(getResources().getColor(R.color.perfect_blue));
@@ -287,8 +292,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void setSearchSelected() {
-        admin_toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.gray));
-        admin_toolbar.setBackgroundColor(Color.WHITE);
+        setToolbarDefault();
         admin_searchImage.setImageResource(R.drawable.ic_search_selected);
         admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
         admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
@@ -297,8 +301,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void setProfileSelected() {
-        admin_toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.gray));
-        admin_toolbar.setBackgroundColor(Color.WHITE);
+        setToolbarDefault();
         admin_profileImage.setImageResource(R.drawable.ic_profile_selected);
         admin_notificationImage.setImageResource(R.drawable.ic_notification_unselected);
         admin_searchImage.setImageResource(R.drawable.ic_search_unselected);
@@ -307,8 +310,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void setNotificationSelected() {
-        admin_toggle.getDrawerArrowDrawable().setColor(getResources().getColor(R.color.gray));
-        admin_toolbar.setBackgroundColor(Color.WHITE);
+        setToolbarDefault();
         admin_notificationImage.setImageResource(R.drawable.ic_notification_selected);
         admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
         admin_searchImage.setImageResource(R.drawable.ic_search_unselected);

@@ -67,13 +67,13 @@
             android:layout_gravity="start"
             android:layout_marginBottom="3dp"
             android:elevation="6dp"
-            app:drawerLayoutCornerSize="50dp"
+            app:drawerLayoutCornerSize="15dp"
             app:headerLayout="@layout/nav_header"
             app:menu="@menu/admin_nav_menu"
             app:itemTextColor="@color/color_text_state"
             app:itemBackground="@drawable/menu_back_state"
             app:itemTextAppearance="@style/TextViewStyle"
-            app:itemIconTint="@color/secondary_color">
+            app:itemIconTint="@color/white">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -119,11 +119,10 @@
 
     <LinearLayout
         android:id="@+id/admin_bottomBar"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
         android:background="@drawable/bg_navigation_bottom"
         android:elevation="15dp"
