@@ -37,11 +37,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
@@ -49,6 +55,8 @@ import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 
 public class AnalyticsFragment extends Fragment {
 
+    private static String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm:ss";
+    private static String DATE_FORMAT = "dd-MM-yyyy";
     private View admin_profile_dashboard_view;
     private PieChart admin_pieChart;
     private BarChart barChartGender;
@@ -365,5 +373,67 @@ public class AnalyticsFragment extends Fragment {
                        }
                     }
                 });
+    }
+
+    private void getAndSetTotalReportFor24H() {
+        String date = getTimeDate();
+        String start = date +"00:00:00";
+        String end = date + "23:59:59";
+        firebaseFirestore.collection("locations_reports")
+                .whereGreaterThan("date_time", start)
+                .whereLessThan("date_time", end)
+                .orderBy("date_time", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            //ki me bo set per 24h sa reporte ne dite jan bo
+                        }
+                    }
+                });
+    }
+
+    private void getAndSetTotalReportForOneWeek() {
+        String date = getTimeDate();
+        String start = date +"00:00:00";
+        String end = getCalculatedDate(date, DATE_FORMAT, 7)+ "23:59:59";
+        firebaseFirestore.collection("locations_reports")
+                .whereGreaterThan("date_time", start)
+                .whereLessThan("date_time", end)
+                .orderBy("date_time", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            //ki me bo set per 7days sa reporte ne dite jan bo
+                        }
+                    }
+                });
+    }
+
+    public static String getTimeDate() { // without parameter argument
+        try{
+            Date netDate = new Date(); // current time from here
+            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            return sfd.format(netDate);
+        } catch(Exception e) {
+            return "date";
+        }
+    }
+
+    public static String getCalculatedDate(String date,String dateFormat, int days) {
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat s = new SimpleDateFormat(dateFormat);
+        if (!date.isEmpty()) {
+            try {
+                cal.setTime(s.parse(date));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+        cal.add(Calendar.DAY_OF_YEAR, days);
+        return s.format(new Date(cal.getTimeInMillis()));
     }
 }

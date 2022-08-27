@@ -447,6 +447,8 @@
     <string name="num_total_person">PERSON</string>
     <string name="num_total_investigators">INVESTIGATORS</string>
     <string name="total_reports">TOTAL REPORTS</string>
+    <string name="today">Today</string>
+    <string name="weekly">Weekly</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
