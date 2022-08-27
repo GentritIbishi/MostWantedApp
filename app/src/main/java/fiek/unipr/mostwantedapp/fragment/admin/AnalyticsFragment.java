@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
@@ -53,7 +53,8 @@ public class AnalyticsFragment extends Fragment {
     private PieChart admin_pieChart;
     private BarChart barChartGender;
     private ArrayList barArraylist;
-    private TextView tv_num_report_verified, tv_num_report_unverified, tv_num_report_fake, tv_gradeOfUser;
+    private TextView tv_num_report_verified, tv_num_report_unverified, tv_num_report_fake, tv_gradeOfUser,
+            tv_num_total_investigators, tv_num_total_person, tv_num_total_users, tv_num_location_reports;
 
     public static final String VERIFIED = "VERIFIED";
     public static final String UNVERIFIED = "UNVERIFIED";
@@ -96,6 +97,10 @@ public class AnalyticsFragment extends Fragment {
         tv_num_report_verified = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_verified);
         tv_num_report_unverified = admin_profile_dashboard_view.findViewById(R.id.user_tv_balance);
         tv_num_report_fake = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_fake);
+        tv_num_total_investigators = admin_profile_dashboard_view.findViewById(R.id.tv_num_total_investigators);
+        tv_num_total_person = admin_profile_dashboard_view.findViewById(R.id.tv_num_total_person);
+        tv_num_total_users = admin_profile_dashboard_view.findViewById(R.id.tv_num_total_users);
+        tv_num_location_reports = admin_profile_dashboard_view.findViewById(R.id.tv_num_location_reports);
         tv_gradeOfUser = admin_profile_dashboard_view.findViewById(R.id.tv_gradeOfUser);
         barChartGender = admin_profile_dashboard_view.findViewById(R.id.barChartGender);
 
@@ -121,6 +126,7 @@ public class AnalyticsFragment extends Fragment {
                     loadInfoFromFirebase(firebaseAuth);
                 }
 
+                setNumberOfLocationsReports();
                 setupPieChart();
                 setPieChart();
                 funAnalyticsGenderForWantedPerson();
@@ -128,6 +134,13 @@ public class AnalyticsFragment extends Fragment {
                 pullToRefreshInSearch.setRefreshing(false);
             }
         });
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                setNumberOfLocationsReports();
+            }
+        }, 200);
 
         return admin_profile_dashboard_view;
     }
@@ -340,4 +353,17 @@ public class AnalyticsFragment extends Fragment {
                 });
     }
 
+    private void setNumberOfLocationsReports() {
+        firebaseFirestore.collection("locations_reports")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                       if(task.isSuccessful() && task.getResult() != null){
+                           Integer total_number_of_report_rn = task.getResult().size();
+                           tv_num_location_reports.setText(total_number_of_report_rn+"");
+                       }
+                    }
+                });
+    }
 }
