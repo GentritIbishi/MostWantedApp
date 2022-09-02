@@ -72,6 +72,7 @@
     <string name="dashboard">Dashboard</string>
     <string name="logout">Log out</string>
     <string name="profile">Profile</string>
+    <string name="profile_label">PROFILE</string>
     <string name="your_name">Your Name</string>
     <string name="change_profile_image">Change Profile Image</string>
     <string name="delete_user">Delete User</string>
@@ -92,7 +93,7 @@
     <string name="see_users">See Users</string>
     <string name="see_persons">See Persons</string>
     <string name="location_reports">Location Reports</string>
-    <string name="analytics">Analytics</string>
+    <string name="analytics">ANALYTICS</string>
     <string name="four_items">4 Items</string>
     <string name="six_items">6 Items</string>
     <string name="thank_location">The location was taken thanks for the cooperation</string>
@@ -101,6 +102,7 @@
     <string name="person_delete_failed"> failed to delete!</string>
     <string name="let_get_started">Let\'s get started</string>
     <string name="register">Register</string>
+    <string name="register_label">REGISTER</string>
     <string name="login">Login</string>
     <string name="welcome_back">Welcome back  </string>
     <string name="exist_in_database"> Exists in database!</string>
@@ -183,7 +185,7 @@
     <string name="total_cases_reported_verified">Total Cases Reported VERIFIED</string>
     <string name="total_cases_reported_unverified">Total Cases Reported UNVERIFIED</string>
     <string name="reports_verified">VERIFIED</string>
-    <string name="reports_unverified">UNVERIFIED</string>
+    <string name="reports_pending">PENDING</string>
     <string name="reports_fake">FAKE</string>
     <string name="real_time_statistics">Real-time Statistics</string>
     <string name="no_firebase_authentication">No Firebase Authentication</string>
@@ -195,7 +197,7 @@
     <string name="settings">Settings</string>
     <string name="privileged_user">Privileged User</string>
     <string name="wanted_person">Wanted Person</string>
-    <string name="locations">Locations</string>
+    <string name="locations">LOCATIONS</string>
     <string name="total_reported">Total Reported</string>
     <string name="location_update_successfully">Last Location is updated successfully!</string>
     <string name="location_update_failed">Last Location failed to update!</string>
@@ -449,6 +451,11 @@
     <string name="total_reports">TOTAL REPORTS</string>
     <string name="today">Today</string>
     <string name="weekly">Weekly</string>
+    <string name="vs_yesterday">vs. yesterday</string>
+    <string name="vs_weekly">vs. last week</string>
+    <string name="summary_report">Summary Report</string>
+    <string name="update">UPDATE</string>
+    <string name="manage">MANAGE</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

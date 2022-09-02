@@ -573,7 +573,7 @@ public class HomeFragment extends Fragment {
 
         try {
             String reports_verified = String.valueOf(getContext().getText(R.string.reports_verified));
-            String reports_unverified = String.valueOf(getContext().getText(R.string.reports_unverified));
+            String reports_unverified = String.valueOf(getContext().getText(R.string.reports_pending));
             String reports_fake = String.valueOf(getContext().getText(R.string.reports_fake));
 
             entries.add(new PieEntry((float) newCountVERIFIED, reports_verified));
