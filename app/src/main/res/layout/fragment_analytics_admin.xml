@@ -489,51 +489,31 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/admin_cardViewGraph"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_below="@+id/all_constrain"
-                    android:layout_marginStart="32dp"
-                    android:layout_marginEnd="32dp"
-                    android:elevation="10dp"
-                    app:cardCornerRadius="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/all_constrain">
-
-                    <!--Linear layout to display pie chart -->
-                    <!-- and details of pie chart-->
-
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/admin_pieChartConstrain"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:elevation="6dp">
-
-                        <!--Pie chart to display the data-->
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/all_constrain">
 
                         <com.github.mikephil.charting.charts.PieChart
                             android:id="@+id/admin_pieChart"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginStart="16dp"
+                            android:layout_height="350dp"
+                            android:layout_marginStart="32dp"
                             android:layout_marginTop="16dp"
-                            android:layout_marginEnd="16dp"
+                            android:layout_marginEnd="32dp"
                             android:layout_marginBottom="16dp"
                             android:layout_weight="1"
                             android:elevation="6dp"
                             android:padding="6dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="1.0" />
+                            app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </androidx.cardview.widget.CardView>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/half_constrain"
@@ -543,7 +523,7 @@
                     android:layout_marginTop="16dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/admin_cardViewGraph">
+                    app:layout_constraintTop_toBottomOf="@+id/admin_pieChartConstrain">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/total_persons"
@@ -692,20 +672,101 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <com.github.mikephil.charting.charts.BarChart
-                    android:id="@+id/barChartGender"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/con_analytics"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/half_constrain">
+
+                    <TextView
+                        android:id="@+id/tv_gender_wp_statistic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/bg_headtitle"
+                        android:elevation="6dp"
+                        android:padding="10dp"
+                        android:text="@string/gender_for_wanted_person_statistic"
+                        android:textAllCaps="true"
+                        android:textAlignment="center"
+                        android:textColor="@color/gray"
+                        android:textSize="13sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/wp_gender_statistic_pieChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="350dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:elevation="6dp"
+                        android:padding="6dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_gender_wp_statistic" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/con_investigators_analytics"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/half_constrain" />
+                    app:layout_constraintTop_toBottomOf="@+id/con_analytics">
+
+                    <TextView
+                        android:id="@+id/tv_gender_inv_statistic"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/bg_headtitle"
+                        android:elevation="6dp"
+                        android:padding="10dp"
+                        android:text="@string/gender_for_investigator_statistics"
+                        android:textAllCaps="true"
+                        android:textAlignment="center"
+                        android:textColor="@color/gray"
+                        android:textSize="14sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:id="@+id/inv_gender_statistic_pieChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="350dp"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_weight="1"
+                        android:elevation="6dp"
+                        android:padding="6dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tv_gender_inv_statistic" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </ScrollView>
 

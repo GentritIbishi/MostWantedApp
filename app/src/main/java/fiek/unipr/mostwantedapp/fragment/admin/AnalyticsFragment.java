@@ -2,6 +2,7 @@ package fiek.unipr.mostwantedapp.fragment.admin;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +22,7 @@ import android.widget.Toast;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -48,9 +51,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
@@ -65,6 +70,7 @@ public class AnalyticsFragment extends Fragment {
     private PieChart admin_pieChart;
     private BarChart barChartGender;
     private ArrayList barArraylist;
+    private PieChart wp_gender_statistic_pieChart, inv_gender_statistic_pieChart;
     private TextView tv_num_report_verified, tv_num_report_unverified, tv_num_report_fake, tv_gradeOfUser,
             tv_num_total_investigators, tv_num_total_person, tv_num_total_users, tv_num_location_reports,
             tv_percent_today, tv_analytic_today, tv_percent_weekly, tv_analytic_weekly;
@@ -86,6 +92,7 @@ public class AnalyticsFragment extends Fragment {
 
     private String uID;
     private String fullName, grade;
+    private String[] gender = {"MALE", "FEMALE"};
 
     public AnalyticsFragment() {
         // Required empty public constructor
@@ -116,7 +123,8 @@ public class AnalyticsFragment extends Fragment {
         tv_num_total_users = admin_profile_dashboard_view.findViewById(R.id.tv_num_total_users);
         tv_num_location_reports = admin_profile_dashboard_view.findViewById(R.id.tv_num_location_reports);
         tv_gradeOfUser = admin_profile_dashboard_view.findViewById(R.id.tv_gradeOfUser);
-        barChartGender = admin_profile_dashboard_view.findViewById(R.id.barChartGender);
+        wp_gender_statistic_pieChart = admin_profile_dashboard_view.findViewById(R.id.wp_gender_statistic_pieChart);
+        inv_gender_statistic_pieChart = admin_profile_dashboard_view.findViewById(R.id.inv_gender_statistic_pieChart);
 
         imageTrendToday = admin_profile_dashboard_view.findViewById(R.id.imageTrendToday);
         tv_percent_today = admin_profile_dashboard_view.findViewById(R.id.tv_percent_today);
@@ -137,6 +145,7 @@ public class AnalyticsFragment extends Fragment {
         setupPieChart();
         setPieChart();
         funAnalyticsGenderForWantedPerson();
+        funAnalyticsGenderForInvestigators();
         getAndSetTotalInvestigators();
         getAndSetTotalUsers();
         getAndSetTotalPerson();
@@ -229,18 +238,19 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void setupPieChart() {
-        admin_pieChart.setDrawHoleEnabled(true);
+        admin_pieChart.setDrawHoleEnabled(false);
         admin_pieChart.setUsePercentValues(true);
-        admin_pieChart.setEntryLabelTextSize(12);
-        admin_pieChart.setEntryLabelColor(Color.BLACK);
-        admin_pieChart.setCenterText(getText(R.string.report));
-        admin_pieChart.setCenterTextSize(16f);
+        admin_pieChart.setEntryLabelTextSize(14);
+        admin_pieChart.setEntryLabelColor(Color.WHITE);
         admin_pieChart.getDescription().setEnabled(false);
+        admin_pieChart.setExtraOffsets(5, 10, 5, 5);
+        admin_pieChart.setDragDecelerationFrictionCoef(0.15f);
+        admin_pieChart.setTransparentCircleRadius(61f);
 
         Legend l = admin_pieChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
         l.setEnabled(true);
     }
@@ -262,13 +272,17 @@ public class AnalyticsFragment extends Fragment {
         }
 
         PieDataSet dataSet = new PieDataSet(entries, null);
+        dataSet.setSliceSpace(5f);
+        dataSet.setSelectionShift(1f);
+        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueTextSize(22f);
         dataSet.setColors(colors);
 
         PieData data = new PieData(dataSet);
         data.setDrawValues(true);
         data.setValueFormatter(new PercentFormatter(admin_pieChart));
         data.setValueTextSize(12f);
-        data.setValueTextColor(Color.BLACK);
+        data.setValueTextColor(Color.WHITE);
 
         admin_pieChart.setData(data);
         admin_pieChart.invalidate();
@@ -506,7 +520,6 @@ public class AnalyticsFragment extends Fragment {
         }
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -557,25 +570,46 @@ public class AnalyticsFragment extends Fragment {
                                 counterForFemale++;
                             }
                         }
+                        //we can use counterForFemale we can use counterForMale
 
-                        barArraylist = new ArrayList();
-                        barArraylist.add(new BarEntry(2f, counterForMale, R.drawable.bt_edit_data));
-                        barArraylist.add(new BarEntry(3f, counterForFemale, R.drawable.ic_phone_login));
+                        wp_gender_statistic_pieChart.setDrawHoleEnabled(false);
+                        wp_gender_statistic_pieChart.setUsePercentValues(true);
+                        wp_gender_statistic_pieChart.setEntryLabelTextSize(14);
+                        wp_gender_statistic_pieChart.setHoleColor(Color.WHITE);
+                        wp_gender_statistic_pieChart.setExtraOffsets(5, 10, 5, 5);
+                        wp_gender_statistic_pieChart.setEntryLabelColor(Color.WHITE);
+                        wp_gender_statistic_pieChart.getDescription().setEnabled(false);
+                        wp_gender_statistic_pieChart.setDragDecelerationFrictionCoef(0.95f);
+                        wp_gender_statistic_pieChart.setTransparentCircleRadius(61f);
 
-                        //anychart here
-                        BarDataSet barDataSet = new BarDataSet(barArraylist, getContext().getString(R.string.gender_for_wanted_person_statistic));
-                        BarData barData = new BarData(barDataSet);
-                        barChartGender.setData(barData);
-                        //color bar data set
-                        barDataSet.setColors(R.color.red, R.color.black);
-                        //text color
-                        barDataSet.setValueTextColor(Color.BLACK);
-                        //settings text size
-                        barDataSet.setValueTextSize(16f);
-                        barChartGender.getDescription().setEnabled(true);
+                        Legend l = wp_gender_statistic_pieChart.getLegend();
+                        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+                        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+                        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+                        l.setDrawInside(false);
+                        l.setEnabled(true);
 
+                        ArrayList<PieEntry> yValues = new ArrayList<>();
+                        ArrayList<String> sValues = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.gender_array)));
 
+                        yValues.add(new PieEntry(counterForMale, sValues.get(0)));
+                        yValues.add(new PieEntry(counterForFemale, sValues.get(1)));
 
+                        PieDataSet dataSet = new PieDataSet(yValues, "\n"+getContext().getString(R.string.gender_for_wanted_person_statistic));
+                        dataSet.setSliceSpace(5f);
+                        dataSet.setSelectionShift(1f);
+                        dataSet.setValueTextColor(Color.WHITE);
+                        dataSet.setValueTextSize(40f);
+                        dataSet.setColors(getResources().getColor(R.color.graph_color_1),
+                                getResources().getColor(R.color.graph_color_2));
+
+                        PieData data = new PieData(dataSet);
+                        data.setValueTextSize(15f);
+                        data.setValueFormatter(new PercentFormatter(wp_gender_statistic_pieChart));
+                        data.setValueTextColor(Color.WHITE);
+
+                        wp_gender_statistic_pieChart.setData(data);
+                        wp_gender_statistic_pieChart.invalidate();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -583,6 +617,76 @@ public class AnalyticsFragment extends Fragment {
                         Toast.makeText(getContext(), "GenderAnalyticsError: "+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+
+    }
+
+    private void funAnalyticsGenderForInvestigators() {
+        firebaseFirestore.collection("investigators")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int counterForMale = 0;
+                        int counterForFemale = 0;
+
+                        for (int i=0; i<queryDocumentSnapshots.size();i++){
+                            DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(i);
+                            String gender = doc.getString("gender");
+
+                            if(gender.equals(MALE)){
+                                counterForMale++;
+                            }else if(gender.equals(FEMALE)){
+                                counterForFemale++;
+                            }
+                        }
+                        //we can use counterForFemale we can use counterForMale
+
+                        inv_gender_statistic_pieChart.setDrawHoleEnabled(false);
+                        inv_gender_statistic_pieChart.setUsePercentValues(true);
+                        inv_gender_statistic_pieChart.setEntryLabelTextSize(14);
+                        inv_gender_statistic_pieChart.setHoleColor(Color.WHITE);
+                        inv_gender_statistic_pieChart.setExtraOffsets(5, 10, 5, 5);
+                        inv_gender_statistic_pieChart.setEntryLabelColor(Color.WHITE);
+                        inv_gender_statistic_pieChart.getDescription().setEnabled(false);
+                        inv_gender_statistic_pieChart.setDragDecelerationFrictionCoef(0.95f);
+                        inv_gender_statistic_pieChart.setTransparentCircleRadius(61f);
+
+                        Legend l = inv_gender_statistic_pieChart.getLegend();
+                        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+                        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+                        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+                        l.setDrawInside(false);
+                        l.setEnabled(true);
+
+                        ArrayList<PieEntry> yValues = new ArrayList<>();
+                        ArrayList<String> sValues = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.gender_array)));
+
+                        yValues.add(new PieEntry(counterForMale, sValues.get(0)));
+                        yValues.add(new PieEntry(counterForFemale, sValues.get(1)));
+
+                        PieDataSet dataSet = new PieDataSet(yValues, "\n"+getContext().getString(R.string.gender_for_investigator_statistics));
+                        dataSet.setSliceSpace(5f);
+                        dataSet.setSelectionShift(1f);
+                        dataSet.setValueTextColor(Color.WHITE);
+                        dataSet.setValueTextSize(40f);
+                        dataSet.setColors(getResources().getColor(R.color.graph_color_1),
+                                getResources().getColor(R.color.graph_color_2));
+
+                        PieData data = new PieData(dataSet);
+                        data.setValueTextSize(15f);
+                        data.setValueFormatter(new PercentFormatter(inv_gender_statistic_pieChart));
+                        data.setValueTextColor(Color.WHITE);
+
+                        inv_gender_statistic_pieChart.setData(data);
+                        inv_gender_statistic_pieChart.invalidate();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "GenderAnalyticsError: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
     }
 
     private void setNumberOfLocationsReports() {

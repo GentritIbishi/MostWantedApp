@@ -36,6 +36,8 @@
     <color name="gray_light_d3">#d3d3d3</color>
     <color name="red_light">#FFCCCB</color>
     <color name="bluelight">#00BFFF</color>
+    <color name="graph_color_1">#336699</color>
+    <color name="graph_color_2">#a3b5de</color>
 
     <color name="home">#1194AA</color>
     <color name="search">#C9379d</color>
