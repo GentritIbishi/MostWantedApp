@@ -714,7 +714,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void getAndSetTotalReportFor24H() {
-        String date = getTimeDate();
+        String date = getDateRighNow();
         String start = date+" "+"00:00:00";
         String end = date+" "+"23:59:59";
         firebaseFirestore.collection("locations_reports")
@@ -733,7 +733,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void vsYesterday() {
-        String today = getTimeDate();
+        String today = getDateRighNow();
         String start_today = today+" "+"00:00:00";
         String end_today = today+" "+"23:59:59";
 
@@ -880,7 +880,7 @@ public class HomeFragment extends Fragment {
         return c;
     }
 
-    public static String getTimeDate() { // without parameter argument
+    public static String getDateRighNow() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
             SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());

@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
     android:elevation="6dp"
     android:fitsSystemWindows="true"
     tools:context=".fragment.admin.AnalyticsFragment">
@@ -20,6 +19,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:background="@drawable/bg_analytics"
+                android:fitsSystemWindows="true"
                 android:elevation="6dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -54,16 +54,194 @@
                     app:layout_constraintTop_toTopOf="@+id/admin_tvReports" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/admin_tvReports">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/analytics_home_total_report_today"
+                        android:layout_width="160dp"
+                        android:layout_height="200dp"
+                        android:layout_below="@+id/analytics_home_tvReports"
+                        android:layout_marginStart="32dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_counters_white"
+                        android:elevation="6dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/analytics_home_total_report_week"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:id="@+id/tv_analytics_today_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/today"
+                            android:textColor="@color/gray"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_analytic_today"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="32dp"
+                            android:fontFamily="@font/open_sans"
+                            android:text="0"
+                            android:textAlignment="center"
+                            android:textColor="@color/gray"
+                            android:textSize="35sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_analytics_today_label" />
+
+                        <ImageView
+                            android:id="@+id/imageTrendToday"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="24dp"
+                            android:src="@drawable/ic_baseline_trending_flat_24"
+                            app:layout_constraintBottom_toTopOf="@+id/textView13"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_analytic_today"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_analytic_today" />
+
+                        <TextView
+                            android:id="@+id/tv_percent_today"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="50dp"
+                            android:layout_marginBottom="4dp"
+                            android:text="0.0%"
+                            android:textColor="@color/neon_blue"
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/imageTrendToday"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/tv_analytic_today"
+                            app:layout_constraintTop_toTopOf="@+id/imageTrendToday"
+                            app:layout_constraintVertical_bias="1.0" />
+
+                        <TextView
+                            android:id="@+id/textView13"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:fontFamily="@font/open_sans"
+                            android:text="@string/vs_yesterday"
+                            android:textColor="@color/gray"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/analytics_home_total_report_week"
+                        android:layout_width="160dp"
+                        android:layout_height="200dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="32dp"
+                        android:layout_marginBottom="16dp"
+                        android:background="@drawable/bg_counters_white"
+                        android:elevation="6dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/analytics_home_total_report_today"
+                        app:layout_constraintTop_toTopOf="@+id/analytics_home_total_report_today">
+
+                        <TextView
+                            android:id="@+id/tv_analytics_weekly_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:text="@string/weekly"
+                            android:textColor="@color/gray"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/tv_analytic_weekly"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="32dp"
+                            android:fontFamily="@font/open_sans"
+                            android:text="0"
+                            android:textAlignment="center"
+                            android:textColor="@color/gray"
+                            android:textSize="35sp"
+                            android:textStyle="bold"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_analytics_weekly_label" />
+
+                        <ImageView
+                            android:id="@+id/imageTrendWeekly"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="24dp"
+                            android:src="@drawable/ic_baseline_trending_flat_24"
+                            app:layout_constraintBottom_toTopOf="@+id/tv_vs_weekly"
+                            app:layout_constraintEnd_toStartOf="@+id/tv_analytic_weekly"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_analytic_weekly" />
+
+                        <TextView
+                            android:id="@+id/tv_percent_weekly"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="50dp"
+                            android:layout_marginBottom="4dp"
+                            android:text="0.0%"
+                            android:textColor="@color/neon_blue"
+                            android:textSize="12sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/imageTrendWeekly"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toEndOf="@+id/tv_analytic_weekly"
+                            app:layout_constraintTop_toTopOf="@+id/imageTrendWeekly"
+                            app:layout_constraintVertical_bias="1.0" />
+
+                        <TextView
+                            android:id="@+id/tv_vs_weekly"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:fontFamily="@font/open_sans"
+                            android:text="@string/vs_weekly"
+                            android:textColor="@color/gray"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/locations_reports"
                     android:layout_width="316dp"
                     android:layout_height="130dp"
                     android:layout_below="@+id/admin_tvReports"
-                    android:layout_marginTop="24dp"
                     android:background="@drawable/bg_counters"
                     android:elevation="6dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/admin_tvReports">
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
 
                     <ImageView
                         android:layout_width="27dp"

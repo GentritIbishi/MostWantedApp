@@ -50,6 +50,7 @@ import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
@@ -66,8 +67,8 @@ public class AnalyticsFragment extends Fragment {
     private ArrayList barArraylist;
     private TextView tv_num_report_verified, tv_num_report_unverified, tv_num_report_fake, tv_gradeOfUser,
             tv_num_total_investigators, tv_num_total_person, tv_num_total_users, tv_num_location_reports,
-            tv_percentage_today, tv_percentage_weekly;
-    private ImageView imageTrendingToday, imageTrendingWeekly;
+            tv_percent_today, tv_analytic_today, tv_percent_weekly, tv_analytic_weekly;
+    private ImageView imageTrendToday, imageTrendWeekly;
 
     public static final String VERIFIED = "VERIFIED";
     public static final String UNVERIFIED = "UNVERIFIED";
@@ -116,10 +117,13 @@ public class AnalyticsFragment extends Fragment {
         tv_num_location_reports = admin_profile_dashboard_view.findViewById(R.id.tv_num_location_reports);
         tv_gradeOfUser = admin_profile_dashboard_view.findViewById(R.id.tv_gradeOfUser);
         barChartGender = admin_profile_dashboard_view.findViewById(R.id.barChartGender);
-        imageTrendingToday = admin_profile_dashboard_view.findViewById(R.id.imageTrendingToday);
-        imageTrendingWeekly = admin_profile_dashboard_view.findViewById(R.id.imageTrendingWeekly);
-        tv_percentage_today = admin_profile_dashboard_view.findViewById(R.id.tv_percentage_today);
-        tv_percentage_weekly = admin_profile_dashboard_view.findViewById(R.id.tv_percentage_weekly);
+
+        imageTrendToday = admin_profile_dashboard_view.findViewById(R.id.imageTrendToday);
+        tv_percent_today = admin_profile_dashboard_view.findViewById(R.id.tv_percent_today);
+        tv_analytic_today = admin_profile_dashboard_view.findViewById(R.id.tv_analytic_today);
+        imageTrendWeekly = admin_profile_dashboard_view.findViewById(R.id.imageTrendWeekly);
+        tv_percent_weekly = admin_profile_dashboard_view.findViewById(R.id.tv_percent_weekly);
+        tv_analytic_weekly = admin_profile_dashboard_view.findViewById(R.id.tv_analytic_weekly);
 
         final SwipeRefreshLayout pullToRefreshInSearch = admin_profile_dashboard_view.findViewById(R.id.admin_pullToRefreshProfileDashboard);
 
@@ -137,6 +141,11 @@ public class AnalyticsFragment extends Fragment {
         getAndSetTotalUsers();
         getAndSetTotalPerson();
 
+        getAndSetTotalReportFor24H();
+        vsYesterday();
+        getAndSetTotalReportForOneWeek();
+        vsWeek();
+
         pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -152,6 +161,11 @@ public class AnalyticsFragment extends Fragment {
                 getAndSetTotalInvestigators();
                 getAndSetTotalUsers();
                 getAndSetTotalPerson();
+
+                getAndSetTotalReportFor24H();
+                vsYesterday();
+                getAndSetTotalReportForOneWeek();
+                vsWeek();
 
                 pullToRefreshInSearch.setRefreshing(false);
             }
@@ -279,6 +293,202 @@ public class AnalyticsFragment extends Fragment {
         }
     }
 
+    private void getAndSetTotalReportFor24H() {
+        String date = getDate();
+        String start = date+" "+"00:00:00";
+        String end = date+" "+"23:59:59";
+        firebaseFirestore.collection("locations_reports")
+                .whereGreaterThan("date_time", start)
+                .whereLessThan("date_time", end)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            int num_of_reports_today = task.getResult().size();
+                            tv_analytic_today.setText(num_of_reports_today+"");
+                        }
+                    }
+                });
+    }
+
+    private void vsYesterday() {
+        String today = getDate();
+        String start_today = today+" "+"00:00:00";
+        String end_today = today+" "+"23:59:59";
+
+        String yesterday = getYesterday();
+        String start = yesterday+" "+"00:00:00";
+        String end = yesterday+" "+"23:59:59";
+        firebaseFirestore.collection("locations_reports")
+                .whereGreaterThan("date_time", start)
+                .whereLessThan("date_time", end)
+                .orderBy("date_time", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            //sa reporte kan qen yesterday edhe me krahasu me today edhe me qit perqindjen
+                            int yesterdayReports = task.getResult().size();
+
+                            firebaseFirestore.collection("locations_reports")
+                                    .whereGreaterThan("date_time", start_today)
+                                    .whereLessThan("date_time", end_today)
+                                    .orderBy("date_time", Query.Direction.DESCENDING)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                //ki me bo set per 24h sa reporte ne dite jan bo
+                                                int todayReports = task.getResult().size();
+                                                double num = (double) yesterdayReports/todayReports;
+                                                double percentage = (double) num * 100;
+
+                                                if(percentage > 0) {
+                                                    imageTrendToday.setImageResource(R.drawable.ic_baseline_trending_up_24);
+                                                    tv_percent_today.setText(percentage+"%");
+                                                    tv_percent_today.setTextColor(getResources().getColor(R.color.neon_green));
+                                                }else if(percentage < 0) {
+                                                    imageTrendToday.setImageResource(R.drawable.ic_baseline_trending_down_24);
+                                                    tv_percent_today.setText(percentage+"%");
+                                                    tv_percent_today.setTextColor(getResources().getColor(R.color.neon_red));
+                                                }else if(percentage == 0) {
+                                                    imageTrendToday.setImageResource(R.drawable.ic_baseline_trending_flat_24);
+                                                    tv_percent_today.setText(percentage+"%");
+                                                    tv_percent_today.setTextColor(getResources().getColor(R.color.bluelight));
+                                                }
+                                            }else {
+                                                System.out.println("ERROR INSIDE VS YESTERDAY: "+task.getException());
+                                            }
+                                        }
+                                    });
+                        }else {
+                            System.out.println("ERROR OUTSIDE VS YESTERDAY: "+task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void getAndSetTotalReportForOneWeek() {
+        String start_thisWeek = getFirstDayOfThisWeek()+" "+"00:00:00";
+
+        firebaseFirestore.collection("locations_reports")
+                .whereGreaterThanOrEqualTo("date_time", start_thisWeek)
+                .orderBy("date_time")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int num_of_reports = queryDocumentSnapshots.size();
+                        tv_analytic_weekly.setText(num_of_reports+"");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void vsWeek() {
+        String start_lastWeek = getFirstDayOfLastWeek()+" "+"00:00:00";
+        String start_thisWeek = getFirstDayOfThisWeek()+" "+"00:00:00";
+
+        firebaseFirestore.collection("locations_reports")
+                .whereGreaterThanOrEqualTo("date_time", start_lastWeek)
+                .orderBy("date_time", Query.Direction.DESCENDING)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            int lastWeekReports = task.getResult().size();
+                            firebaseFirestore.collection("locations_reports")
+                                    .whereGreaterThanOrEqualTo("date_time", start_thisWeek)
+                                    .orderBy("date_time", Query.Direction.DESCENDING)
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            if(task.isSuccessful()){
+                                                //ki me bo set per 24h sa reporte ne dite jan bo
+                                                int thisWeekReport = task.getResult().size();
+                                                double num = (double) lastWeekReports/thisWeekReport;
+                                                double percentage = (double) num * 100;
+
+                                                if(percentage > 0) {
+                                                    imageTrendWeekly.setImageResource(R.drawable.ic_baseline_trending_up_24);
+                                                    tv_percent_weekly.setText(percentage+"%");
+                                                    tv_percent_weekly.setTextColor(getResources().getColor(R.color.neon_green));
+                                                }else if(percentage < 0) {
+                                                    imageTrendWeekly.setImageResource(R.drawable.ic_baseline_trending_down_24);
+                                                    tv_percent_weekly.setText(percentage+"%");
+                                                    tv_percent_weekly.setTextColor(getResources().getColor(R.color.neon_red));
+                                                }else if(percentage == 0) {
+                                                    imageTrendWeekly.setImageResource(R.drawable.ic_baseline_trending_flat_24);
+                                                    tv_percent_weekly.setText(percentage+"%");
+                                                    tv_percent_weekly.setTextColor(getResources().getColor(R.color.bluelight));
+                                                }
+                                            }else {
+                                                System.out.println("ERROR INSIDE VS WEEK: "+task.getException());
+                                            }
+                                        }
+                                    });
+                        }else {
+                            System.out.println("ERROR OUTSIDE VS WEEK: "+task.getException());
+                        }
+                    }
+                });
+    }
+
+    private static String getFirstDayOfLastWeek() {
+        try{
+            Calendar calendar = Calendar.getInstance();
+            calendar = firstDayOfLastWeek(calendar);
+            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
+            sfd.setTimeZone(calendar.getTimeZone());
+            return sfd.format(calendar.getTime());
+        } catch(Exception e) {
+            return "date";
+        }
+    }
+
+    public static Calendar firstDayOfLastWeek(Calendar c)
+    {
+        c = (Calendar) c.clone();
+        // last week
+        c.add(Calendar.WEEK_OF_YEAR, -1);
+        // first day
+        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
+        return c;
+    }
+
+    private static String getFirstDayOfThisWeek() {
+        try{
+            Calendar calendar = new GregorianCalendar();
+            Date date = new Date();
+            calendar.clear();
+            calendar.setTime(firstDayOfWeek(date));
+            int year = calendar.get(Calendar.YEAR);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH)+1;
+            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
+            sfd.setTimeZone(calendar.getTimeZone());
+            return sfd.format(calendar.getTime());
+        } catch(Exception e) {
+            return "date"+e.getMessage();
+        }
+    }
+
+    private static Date firstDayOfWeek(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.DAY_OF_WEEK, 1);
+        return calendar.getTime();
+    }
+
     private void getGrade(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
             firebaseFirestore.collection("users")
@@ -389,175 +599,6 @@ public class AnalyticsFragment extends Fragment {
                 });
     }
 
-    private void getAndSetTotalReportFor24H() {
-        String date = getTimeDate();
-        String start = date +"00:00:00";
-        String end = date + "23:59:59";
-        firebaseFirestore.collection("locations_reports")
-                .whereGreaterThan("date_time", start)
-                .whereLessThan("date_time", end)
-                .orderBy("date_time", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            //ki me bo set per 24h sa reporte ne dite jan bo
-                        }
-                    }
-                });
-    }
-
-    private void vsYesterday() {
-        String today = getTimeDate();
-        String start_today = today +"00:00:00";
-        String end_today = today + "23:59:59";
-
-        String yesterday = getYesterday();
-        String start = yesterday +"00:00:00";
-        String end = yesterday + "23:59:59";
-        firebaseFirestore.collection("locations_reports")
-                .whereGreaterThan("date_time", start)
-                .whereLessThan("date_time", end)
-                .orderBy("date_time", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            //sa reporte kan qen yesterday edhe me krahasu me today edhe me qit perqindjen
-                            int yesterdayReports = task.getResult().size();
-
-                            firebaseFirestore.collection("locations_reports")
-                                    .whereGreaterThan("date_time", start_today)
-                                    .whereLessThan("date_time", end_today)
-                                    .orderBy("date_time", Query.Direction.DESCENDING)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                //ki me bo set per 24h sa reporte ne dite jan bo
-                                                int todayReports = task.getResult().size();
-                                                double percentage = (todayReports/yesterdayReports) * 100;
-                                                tv_percentage_today.setText(percentage+"%");
-                                            }else {
-                                                System.out.println("ERROR INSIDE VS YESTERDAY: "+task.getException());
-                                            }
-                                        }
-                                    });
-                        }else {
-                            System.out.println("ERROR OUTSIDE VS YESTERDAY: "+task.getException());
-                        }
-                    }
-                });
-    }
-
-    private void vsWeek() {
-        String start_lastWeek = getFirstDayOfLastWeek() +"00:00:00";
-        String end_lastWeek = getLastDayOfLastWeek() + "23:59:59";
-
-        String start_thisWeek = getFirstDayOfThisWeek() +"00:00:00";
-        String end_thisWeek = "23:59:59";
-
-        firebaseFirestore.collection("locations_reports")
-                .whereGreaterThan("date_time", start_lastWeek)
-                .whereLessThan("date_time", end_lastWeek)
-                .orderBy("date_time", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            //sa reporte kan qen yesterday edhe me krahasu me today edhe me qit perqindjen
-                            int lastMonthReports = task.getResult().size();
-
-                            firebaseFirestore.collection("locations_reports")
-                                    .whereGreaterThan("date_time", start_thisWeek)
-                                    .whereLessThan("date_time", end_thisWeek)
-                                    .orderBy("date_time", Query.Direction.DESCENDING)
-                                    .get()
-                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                            if(task.isSuccessful()){
-                                                //ki me bo set per 24h sa reporte ne dite jan bo
-                                                int thisMonthReports = task.getResult().size();
-                                                double percentage = (thisMonthReports/lastMonthReports) * 100;
-                                                if(percentage > 0){
-                                                    tv_percentage_today.setText(percentage+"%");
-                                                    imageTrendingWeekly.setImageResource(R.drawable.ic_baseline_trending_up_24);
-                                                }else if(percentage < 0) {
-                                                    tv_percentage_today.setText(percentage+"%");
-                                                    imageTrendingWeekly.setImageResource(R.drawable.ic_baseline_trending_down_24);
-                                                }
-                                            }else {
-                                                System.out.println("ERROR OUTSIDE VS Last Month: "+task.getException());
-                                            }
-                                        }
-                                    });
-                        }else {
-                            System.out.println("ERROR OUTSIDE VS Last Month: "+task.getException());
-                        }
-                    }
-                });
-    }
-
-    private void getAndSetTotalReportForOneWeek() {
-        String date = getTimeDate();
-        String start = date +"00:00:00";
-        String end = getCalculatedDate(date, DATE_FORMAT, 7)+ "23:59:59";
-        firebaseFirestore.collection("locations_reports")
-                .whereGreaterThan("date_time", start)
-                .whereLessThan("date_time", end)
-                .orderBy("date_time", Query.Direction.DESCENDING)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            //ki me bo set per 7days sa reporte ne dite jan bo
-                        }
-                    }
-                });
-    }
-
-    private static int getCurrentWeek() {
-        LocalDate date = LocalDate.now();
-        WeekFields weekFields = WeekFields.of(Locale.getDefault());
-        return date.get(weekFields.weekOfWeekBasedYear());
-    }
-
-    public static Calendar firstDayOfThisWeek(Calendar c)
-    {
-        c = (Calendar) c.clone();
-        //current week
-        c.add(Calendar.WEEK_OF_YEAR, getCurrentWeek());
-        // first day
-        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
-        return c;
-    }
-
-    public static Calendar firstDayOfLastWeek(Calendar c)
-    {
-        c = (Calendar) c.clone();
-        // last week
-        c.add(Calendar.WEEK_OF_YEAR, -1);
-        // first day
-        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
-        return c;
-    }
-
-    public static Calendar lastDayOfLastWeek(Calendar c)
-    {
-        c = (Calendar) c.clone();
-        // first day of this week
-        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
-        // last day of previous week
-        c.add(Calendar.DAY_OF_MONTH, -1);
-        return c;
-    }
-
     public static String getTimeDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
@@ -568,37 +609,11 @@ public class AnalyticsFragment extends Fragment {
         }
     }
 
-    private static String getFirstDayOfLastWeek() {
+    public static String getDate() { // without parameter argument
         try{
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            String firstDayOfLastWeek = firstDayOfLastWeek(calendar).toString();
+            Date netDate = new Date(); // current time from here
             SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-            return sfd.format(firstDayOfLastWeek);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    private static String getLastDayOfLastWeek() {
-        try{
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            String lastDayOfLastWeek = lastDayOfLastWeek(calendar).toString();
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-            return sfd.format(lastDayOfLastWeek);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    private static String getFirstDayOfThisWeek() {
-        try{
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            String firstDayOfThisWeek = firstDayOfThisWeek(calendar).toString();
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-            return sfd.format(firstDayOfThisWeek);
+            return sfd.format(netDate);
         } catch(Exception e) {
             return "date";
         }
