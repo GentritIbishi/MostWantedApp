@@ -155,6 +155,36 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/autocomplete_et_gender_user_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/select_the_gender"
+                android:textColorHint="@color/gray"
+                android:textDirection="firstStrong"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:textStyle="bold"
+                app:boxBackgroundColor="@color/light_gray"
+                app:layout_constraintEnd_toEndOf="@+id/etParentNameLayout"
+                app:layout_constraintStart_toStartOf="@+id/etParentNameLayout"
+                app:layout_constraintTop_toBottomOf="@+id/etParentNameLayout">
+
+                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    android:id="@+id/et_gender_user"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:inputType="none"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="16dp"
+                    android:textColor="@color/gray"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/etPhoneLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
@@ -170,9 +200,9 @@
                 app:hintTextColor="@color/gray"
                 app:startIconDrawable="@drawable/ic_baseline_phone_android_24"
                 app:endIconMode="clear_text"
-                app:layout_constraintEnd_toEndOf="@+id/etParentNameLayout"
-                app:layout_constraintStart_toStartOf="@+id/etParentNameLayout"
-                app:layout_constraintTop_toBottomOf="@+id/etParentNameLayout">
+                app:layout_constraintEnd_toEndOf="@+id/autocomplete_et_gender_user_layout"
+                app:layout_constraintStart_toStartOf="@+id/autocomplete_et_gender_user_layout"
+                app:layout_constraintTop_toBottomOf="@+id/autocomplete_et_gender_user_layout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPhone"

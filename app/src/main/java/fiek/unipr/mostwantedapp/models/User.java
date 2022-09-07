@@ -3,7 +3,7 @@ package fiek.unipr.mostwantedapp.models;
 public class User {
 
     Integer balance, coins;
-    String userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, urlOfProfile;
+    String userID, name, lastname, fullName, address, email, parentName, gender, role, phone, personal_number, register_date_time, grade, password, urlOfProfile;
     Boolean isEmailVerified = false;
 
     public User() {
@@ -16,7 +16,7 @@ public class User {
         this.password = password;
     }
 
-    public User(Integer balance, Integer coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, String urlOfProfile, Boolean isEmailVerified) {
+    public User(Integer balance, Integer coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, String urlOfProfile, Boolean isEmailVerified) {
         this.balance = balance;
         this.coins = coins;
         this.userID = userID;
@@ -26,6 +26,7 @@ public class User {
         this.address = address;
         this.email = email;
         this.parentName = parentName;
+        this.gender = gender;
         this.role = role;
         this.phone = phone;
         this.personal_number = personal_number;
@@ -106,6 +107,14 @@ public class User {
 
     public void setParentName(String parentName) {
         this.parentName = parentName;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
     public String getRole() {

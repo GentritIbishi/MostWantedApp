@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -228,7 +229,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
             return;
         }
 
-        if (gender.equals(checkNull)) {
+        if (TextUtils.isEmpty(gender)) {
             et_gender.setError(getText(R.string.error_gender_required));
             et_gender.requestFocus();
             return;

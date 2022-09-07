@@ -442,7 +442,7 @@
     <string name="error_gender_required">Gender is required!</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    <string name="gender_for_wanted_person_statistic">Statistics for the gender of the wanted persons</string>
+    <string name="gender_for_wanted_person_statistic">Gender of the wanted persons</string>
     <string name="manage_location_reports">Manage Reports</string>
     <string name="users">USERS</string>
     <string name="num_total_users">USERS</string>
@@ -456,7 +456,13 @@
     <string name="summary_report">Summary Report</string>
     <string name="update">UPDATE</string>
     <string name="manage">MANAGE</string>
-    <string name="gender_for_investigator_statistics">Statistics for the gender of investigators</string>
+    <string name="gender_for_investigator_statistics">Gender of investigators</string>
+    <string name="gender_for_user_statistics">Gender for users</string>
+    <string name="chart_analysis">Chart Analysis</string>
+    <string name="balance_field">Balance</string>
+    <string name="error_balance_required">Balance is required!</string>
+    <string name="error_coins_required">Coins is required!</string>
+    <string name="error_grade_required">Grade is required!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

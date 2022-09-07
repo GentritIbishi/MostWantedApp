@@ -457,6 +457,12 @@
     <string name="update">UPDATE</string>
     <string name="manage">MANAGE</string>
     <string name="gender_for_investigator_statistics">Statistics for the gender of investigators</string>
+    <string name="gender_for_user_statistics">Gender for users</string>
+    <string name="chart_analysis">Chart Analysis</string>
+    <string name="balance_field">Balance</string>
+    <string name="error_balance_required">Balance is required!</string>
+    <string name="error_coins_required">Coins is required!</string>
+    <string name="error_grade_required">Grade is required!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

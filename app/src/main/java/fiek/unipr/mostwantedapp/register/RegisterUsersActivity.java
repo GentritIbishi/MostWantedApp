@@ -55,7 +55,7 @@ public class RegisterUsersActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private ProgressBar admin_ri_progressBar;
     private SpinnerAdapter spAdapter;
-    private MaterialAutoCompleteTextView et_role_autocomplete;
+    private MaterialAutoCompleteTextView et_role_autocomplete, et_gender_users;
 
 
     @Override
@@ -74,10 +74,13 @@ public class RegisterUsersActivity extends AppCompatActivity {
         admin_etEmailToUser = findViewById(R.id.admin_etEmailToUser);
         admin_etPasswordToUser = findViewById(R.id.admin_etPasswordToUser);
         admin_etConfirmPassword = findViewById(R.id.admin_etConfirmPassword);
-
+        et_gender_users = findViewById(R.id.et_gender_users);
         admin_ri_progressBar = findViewById(R.id.admin_ri_progressBar);
-
         admin_bt_Register = findViewById(R.id.admin_bt_Register);
+
+        et_gender_users = findViewById(R.id.et_gender_users);
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        et_gender_users.setAdapter(gender_adapter);
 
         et_role_autocomplete = findViewById(R.id.et_role_autocomplete);
         ArrayAdapter<String> role_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.roles));
@@ -98,6 +101,7 @@ public class RegisterUsersActivity extends AppCompatActivity {
                 String address = admin_etAddress.getText().toString().trim();
                 String numPersonal = admin_etNumPersonal.getText().toString().trim();
                 String parentName = admin_etParentName.getText().toString().trim();
+                String gender = et_gender_users.getText().toString().trim();
                 String email = admin_etEmailToUser.getText().toString().trim();
                 String password = admin_etPasswordToUser.getText().toString();
                 String confirm_password = admin_etConfirmPassword.getText().toString();
@@ -150,6 +154,10 @@ public class RegisterUsersActivity extends AppCompatActivity {
                 }else if(!password.matches(confirm_password)){
                     admin_etPasswordToUser.setError(getText(R.string.error_password_not_same));
                     admin_etPasswordToUser.requestFocus();
+                }else if (TextUtils.isEmpty(gender)) {
+                    et_gender_users.setError(getText(R.string.error_gender_required));
+                    et_gender_users.requestFocus();
+                    return;
                 }else {
 
                     admin_ri_progressBar.setVisibility(View.VISIBLE);
@@ -160,23 +168,9 @@ public class RegisterUsersActivity extends AppCompatActivity {
                         firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                             @Override
                             public void onSuccess(AuthResult authResult) {
-
                                 String userID = authResult.getUser().getUid();
                                 String register_date_time = getTimeDate();
-                                registerUser(balance, coins,userID, name, lastName, fullName, address, email, parentName, role, phone, numPersonal, register_date_time, finalGrade, password, photoURL);
-                                firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Toast.makeText(RegisterUsersActivity.this, RegisterUsersActivity.this.getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterUsersActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
-                                        Toast.makeText(RegisterUsersActivity.this, RegisterUsersActivity.this.getText(R.string.login_info), Toast.LENGTH_LONG).show();
-                                        Toast.makeText(RegisterUsersActivity.this, R.string.verification_email_sent_to + firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(RegisterUsersActivity.this, R.string.failed_to_send_verification_email, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                                registerUser(balance, coins,userID, name, lastName, fullName, address, email, parentName, gender, role, phone, numPersonal, register_date_time, finalGrade, password, photoURL);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -226,16 +220,17 @@ public class RegisterUsersActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser(Integer balance, Integer coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
+    private void registerUser(Integer balance, Integer coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
         if(checkConnection()){
             documentReference = firebaseFirestore.collection("users").document(userID);
-            User user = new User(balance, coins, userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, null, false);
+            User user = new User(balance, coins, userID, name, lastname, fullName, address, email, parentName, gender, role, phone, personal_number, register_date_time, grade, password, null, false);
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
                     admin_ri_progressBar.setVisibility(View.INVISIBLE);
                     admin_bt_Register.setEnabled(true);
                     Toast.makeText(RegisterUsersActivity.this, RegisterUsersActivity.this.getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterUsersActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                    firebaseAuth.signOut();
                     setEmptyFields();
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -280,6 +275,7 @@ public class RegisterUsersActivity extends AppCompatActivity {
         admin_etEmailToUser.setText("");
         admin_etPasswordToUser.setText("");
         admin_etConfirmPassword.setText("");
+        et_gender_users.setText("");
     }
 
 }

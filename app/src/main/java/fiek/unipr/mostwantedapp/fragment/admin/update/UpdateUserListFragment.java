@@ -1,12 +1,16 @@
-package fiek.unipr.mostwantedapp.lists;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+package fiek.unipr.mostwantedapp.fragment.admin.update;
 
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,37 +29,43 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.UpdateUserListAdapter;
 import fiek.unipr.mostwantedapp.models.User;
 
-public class UserActivity extends AppCompatActivity {
+public class UpdateUserListFragment extends Fragment {
 
-    // creating a variable for our list view,
-    // arraylist and firebase Firestore.
+    private View update_user_fragment;
     private ListView lvUsers;
     private ArrayList<User> userArrayList;
     private UpdateUserListAdapter userListAdapter;
     private FirebaseFirestore firebaseFirestore;
     private TextInputEditText update_et_user_search_filter;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user);
+    public UpdateUserListFragment() {}
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        firebaseFirestore = FirebaseFirestore.getInstance();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        update_user_fragment = inflater.inflate(R.layout.fragment_update_user_list, container, false);
         // initializing our variable for firebase
         // firestore and getting its instance.
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         // below line is use to initialize our variables
-        lvUsers = findViewById(R.id.lvUsers);
-        update_et_user_search_filter = findViewById(R.id.update_et_user_search_filter);
+        lvUsers = update_user_fragment.findViewById(R.id.lvUsers);
+        update_et_user_search_filter = update_user_fragment.findViewById(R.id.update_et_user_search_filter);
         userArrayList = new ArrayList<>();
-        userListAdapter = new UpdateUserListAdapter(getApplicationContext(), userArrayList);
+        userListAdapter = new UpdateUserListAdapter(getContext(), userArrayList);
         lvUsers.setAdapter(userListAdapter);
 
         // here we are calling a method
         // to load data in our list view.
         loadDatainListview();
 
-        final SwipeRefreshLayout update_user_pullToRefreshInSearch = findViewById(R.id.update_user_pullToRefreshInSearch);
+        final SwipeRefreshLayout update_user_pullToRefreshInSearch = update_user_fragment.findViewById(R.id.update_user_pullToRefreshInSearch);
         update_user_pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -81,6 +91,8 @@ public class UserActivity extends AppCompatActivity {
             public void afterTextChanged(Editable editable) {
             }
         });
+
+        return update_user_fragment;
     }
 
     private void loadDatainListview() {
@@ -111,17 +123,17 @@ public class UserActivity extends AppCompatActivity {
                             userListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(UserActivity.this, "No data found in Database", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // we are displaying a toast message
-                // when we get any error from Firebase.
-                Toast.makeText(UserActivity.this, "Fail to load data..", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // we are displaying a toast message
+                        // when we get any error from Firebase.
+                        Toast.makeText(getContext(), "Fail to load data..", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     public void filter(String s) {
@@ -153,7 +165,7 @@ public class UserActivity extends AppCompatActivity {
                             userListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getApplicationContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -161,9 +173,10 @@ public class UserActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         // we are displaying a toast message
                         // when we get any error from Firebase.
-                        Toast.makeText(getApplicationContext(), R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
                     }
                 });
 
     }
+
 }

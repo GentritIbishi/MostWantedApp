@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".lists.UserActivity">
+    tools:context=".fragment.admin.update.UpdateUserFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/update_user_pullToRefreshInSearch"

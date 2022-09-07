@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
@@ -41,6 +43,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     private TextInputEditText etName, etLastName, etParentName, etPhone, etAddress, etNumPersonal,
             etEmailToInformer, etPasswordToInformer, etConfirmPassword;
+    private MaterialAutoCompleteTextView et_gender_user;
     private TextInputLayout etNumPersonalLayout;
     private Button bt_Register;
     private TextView tv_alreadyHaveAccount;
@@ -69,6 +72,10 @@ public class RegisterUserActivity extends AppCompatActivity {
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
         ri_progressBar = findViewById(R.id.ri_progressBar);
 
+        et_gender_user = findViewById(R.id.et_gender_user);
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        et_gender_user.setAdapter(gender_adapter);
+
         bt_Register = findViewById(R.id.bt_Register);
         tv_alreadyHaveAccount = findViewById(R.id.tv_alreadyHaveAccount);
 
@@ -86,6 +93,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 String phone = etPhone.getText().toString().trim();
                 String address = etAddress.getText().toString().trim();
                 String numPersonal = etNumPersonal.getText().toString().trim();
+                String gender = et_gender_user.getText().toString().trim();
                 String parentName = etParentName.getText().toString().trim();
                 String email = etEmailToInformer.getText().toString().trim();
                 String password = etPasswordToInformer.getText().toString();
@@ -132,6 +140,10 @@ public class RegisterUserActivity extends AppCompatActivity {
                 }else if(!password.matches(confirm_password)){
                     etPasswordToInformer.setError(getText(R.string.error_password_not_same));
                     etPasswordToInformer.requestFocus();
+                }else if (TextUtils.isEmpty(gender)) {
+                    et_gender_user.setError(getText(R.string.error_gender_required));
+                    et_gender_user.requestFocus();
+                    return;
                 }else {
 
                     ri_progressBar.setVisibility(View.VISIBLE);
@@ -144,7 +156,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
                                 String userID = authResult.getUser().getUid();
                                 String register_date_time = getTimeDate();
-                                registerUser(balance, coins, userID, name, lastName, fullName, address, email, parentName, role, phone, numPersonal, register_date_time, grade, password, photoURL);
+                                registerUser(balance, coins, userID, name, lastName, fullName, address, email, parentName, gender, role, phone, numPersonal, register_date_time, grade, password, photoURL);
                                 firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
@@ -214,10 +226,18 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser(Integer balance, Integer coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
+    private void registerUser(Integer balance, Integer coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
         if(checkConnection()){
             documentReference = firebaseFirestore.collection("users").document(userID);
-            User user = new User(balance, coins, userID, name, lastname, fullName, address, email, parentName, role, phone, personal_number, register_date_time, grade, password, null, false);
+            User user = new User(balance,
+                    coins, userID, name,
+                    lastname, fullName,
+                    address, email,
+                    parentName, gender,
+                    role, phone,
+                    personal_number, register_date_time,
+                    grade, password,
+                    null, false);
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
@@ -249,6 +269,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         etEmailToInformer.setText("");
         etPasswordToInformer.setText("");
         etConfirmPassword.setText("");
+        et_gender_user.setText("");
     }
 
     private void goToSetProfilePicture() {

@@ -70,7 +70,7 @@ public class AnalyticsFragment extends Fragment {
     private PieChart admin_pieChart;
     private BarChart barChartGender;
     private ArrayList barArraylist;
-    private PieChart wp_gender_statistic_pieChart, inv_gender_statistic_pieChart;
+    private PieChart wp_gender_statistic_pieChart, inv_gender_statistic_pieChart, user_gender_statistic_pieChart;
     private TextView tv_num_report_verified, tv_num_report_unverified, tv_num_report_fake, tv_gradeOfUser,
             tv_num_total_investigators, tv_num_total_person, tv_num_total_users, tv_num_location_reports,
             tv_percent_today, tv_analytic_today, tv_percent_weekly, tv_analytic_weekly;
@@ -125,6 +125,7 @@ public class AnalyticsFragment extends Fragment {
         tv_gradeOfUser = admin_profile_dashboard_view.findViewById(R.id.tv_gradeOfUser);
         wp_gender_statistic_pieChart = admin_profile_dashboard_view.findViewById(R.id.wp_gender_statistic_pieChart);
         inv_gender_statistic_pieChart = admin_profile_dashboard_view.findViewById(R.id.inv_gender_statistic_pieChart);
+        user_gender_statistic_pieChart = admin_profile_dashboard_view.findViewById(R.id.user_gender_statistic_pieChart);
 
         imageTrendToday = admin_profile_dashboard_view.findViewById(R.id.imageTrendToday);
         tv_percent_today = admin_profile_dashboard_view.findViewById(R.id.tv_percent_today);
@@ -146,6 +147,7 @@ public class AnalyticsFragment extends Fragment {
         setPieChart();
         funAnalyticsGenderForWantedPerson();
         funAnalyticsGenderForInvestigators();
+        funAnalyticsGenderForUsers();
         getAndSetTotalInvestigators();
         getAndSetTotalUsers();
         getAndSetTotalPerson();
@@ -167,6 +169,8 @@ public class AnalyticsFragment extends Fragment {
                 setupPieChart();
                 setPieChart();
                 funAnalyticsGenderForWantedPerson();
+                funAnalyticsGenderForInvestigators();
+                funAnalyticsGenderForUsers();
                 getAndSetTotalInvestigators();
                 getAndSetTotalUsers();
                 getAndSetTotalPerson();
@@ -595,7 +599,7 @@ public class AnalyticsFragment extends Fragment {
                         yValues.add(new PieEntry(counterForMale, sValues.get(0)));
                         yValues.add(new PieEntry(counterForFemale, sValues.get(1)));
 
-                        PieDataSet dataSet = new PieDataSet(yValues, "\n"+getContext().getString(R.string.gender_for_wanted_person_statistic));
+                        PieDataSet dataSet = new PieDataSet(yValues, "");
                         dataSet.setSliceSpace(5f);
                         dataSet.setSelectionShift(1f);
                         dataSet.setValueTextColor(Color.WHITE);
@@ -664,7 +668,7 @@ public class AnalyticsFragment extends Fragment {
                         yValues.add(new PieEntry(counterForMale, sValues.get(0)));
                         yValues.add(new PieEntry(counterForFemale, sValues.get(1)));
 
-                        PieDataSet dataSet = new PieDataSet(yValues, "\n"+getContext().getString(R.string.gender_for_investigator_statistics));
+                        PieDataSet dataSet = new PieDataSet(yValues, "");
                         dataSet.setSliceSpace(5f);
                         dataSet.setSelectionShift(1f);
                         dataSet.setValueTextColor(Color.WHITE);
@@ -679,6 +683,75 @@ public class AnalyticsFragment extends Fragment {
 
                         inv_gender_statistic_pieChart.setData(data);
                         inv_gender_statistic_pieChart.invalidate();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "GenderAnalyticsError: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
+    private void funAnalyticsGenderForUsers() {
+        firebaseFirestore.collection("users")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int counterForMale = 0;
+                        int counterForFemale = 0;
+
+                        for (int i=0; i<queryDocumentSnapshots.size();i++){
+                            DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(i);
+                            String gender = doc.getString("gender");
+
+                            if(gender.equals(MALE)){
+                                counterForMale++;
+                            }else if(gender.equals(FEMALE)){
+                                counterForFemale++;
+                            }
+                        }
+                        //we can use counterForFemale we can use counterForMale
+
+                        user_gender_statistic_pieChart.setDrawHoleEnabled(false);
+                        user_gender_statistic_pieChart.setUsePercentValues(true);
+                        user_gender_statistic_pieChart.setEntryLabelTextSize(14);
+                        user_gender_statistic_pieChart.setHoleColor(Color.WHITE);
+                        user_gender_statistic_pieChart.setExtraOffsets(5, 10, 5, 5);
+                        user_gender_statistic_pieChart.setEntryLabelColor(Color.WHITE);
+                        user_gender_statistic_pieChart.getDescription().setEnabled(false);
+                        user_gender_statistic_pieChart.setDragDecelerationFrictionCoef(0.95f);
+                        user_gender_statistic_pieChart.setTransparentCircleRadius(61f);
+
+                        Legend l = user_gender_statistic_pieChart.getLegend();
+                        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+                        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+                        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+                        l.setDrawInside(false);
+                        l.setEnabled(true);
+
+                        ArrayList<PieEntry> yValues = new ArrayList<>();
+                        ArrayList<String> sValues = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.gender_array)));
+
+                        yValues.add(new PieEntry(counterForMale, sValues.get(0)));
+                        yValues.add(new PieEntry(counterForFemale, sValues.get(1)));
+
+                        PieDataSet dataSet = new PieDataSet(yValues, "");
+                        dataSet.setSliceSpace(5f);
+                        dataSet.setSelectionShift(1f);
+                        dataSet.setValueTextColor(Color.WHITE);
+                        dataSet.setValueTextSize(40f);
+                        dataSet.setColors(getResources().getColor(R.color.graph_color_1),
+                                getResources().getColor(R.color.graph_color_2));
+
+                        PieData data = new PieData(dataSet);
+                        data.setValueTextSize(15f);
+                        data.setValueFormatter(new PercentFormatter(user_gender_statistic_pieChart));
+                        data.setValueTextColor(Color.WHITE);
+
+                        user_gender_statistic_pieChart.setData(data);
+                        user_gender_statistic_pieChart.invalidate();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

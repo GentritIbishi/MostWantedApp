@@ -129,7 +129,7 @@
                         android:layout_marginBottom="0dp"
                         android:background="@drawable/input_bg_white"
                         android:inputType="textPersonName"
-                        android:padding="16dp"/>
+                        android:padding="16dp" />
 
                     <TextView
                         android:id="@+id/admin_tvParentName"
@@ -298,7 +298,7 @@
                         android:layout_marginBottom="0dp"
                         android:background="@drawable/input_bg_white"
                         android:inputType="textEmailAddress"
-                        android:padding="16dp"/>
+                        android:padding="16dp" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
