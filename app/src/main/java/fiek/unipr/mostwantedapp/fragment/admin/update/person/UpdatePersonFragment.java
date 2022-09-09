@@ -233,7 +233,6 @@ public class UpdatePersonFragment extends Fragment {
         List<String> new_acts = Arrays.asList(array);
         String new_prize = update_person_et_prize_autocomplete.getText().toString();
         String new_status = update_person_et_status_autocomplete.getText().toString();
-        String new_registration_date = update_person_etDateRegistration.getText().toString();
 
         Person person = new Person(
                 personId,

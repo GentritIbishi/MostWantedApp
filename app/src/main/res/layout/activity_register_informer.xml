@@ -234,7 +234,7 @@
                 app:hintTextColor="@color/gray"
                 app:startIconDrawable="@drawable/ic_baseline_map_24"
                 app:endIconMode="clear_text"
-                app:layout_constraintBottom_toTopOf="@+id/etNumPersonalLayout"
+                app:layout_constraintBottom_toTopOf="@+id/etPersonalNumberLayout"
                 app:layout_constraintEnd_toEndOf="@+id/etPhoneLayout"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/etPhoneLayout"
@@ -256,7 +256,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/etNumPersonalLayout"
+                android:id="@+id/etPersonalNumberLayout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -308,10 +308,10 @@
                 app:hintTextColor="@color/gray"
                 app:startIconDrawable="@drawable/ic_baseline_email_24"
                 app:endIconMode="clear_text"
-                app:layout_constraintEnd_toEndOf="@+id/etNumPersonalLayout"
+                app:layout_constraintEnd_toEndOf="@+id/etPersonalNumberLayout"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/etNumPersonalLayout"
-                app:layout_constraintTop_toBottomOf="@+id/etNumPersonalLayout">
+                app:layout_constraintStart_toStartOf="@+id/etPersonalNumberLayout"
+                app:layout_constraintTop_toBottomOf="@+id/etPersonalNumberLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etEmailToInformer"

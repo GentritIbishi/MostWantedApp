@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -41,10 +40,10 @@ import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterUserActivity extends AppCompatActivity {
 
-    private TextInputEditText etName, etLastName, etParentName, etPhone, etAddress, etNumPersonal,
+    private TextInputEditText etName, etLastName, etParentName, etPhone, etAddress, etPersonalNumber,
             etEmailToInformer, etPasswordToInformer, etConfirmPassword;
     private MaterialAutoCompleteTextView et_gender_user;
-    private TextInputLayout etNumPersonalLayout;
+    private TextInputLayout etPersonalNumberLayout;
     private Button bt_Register;
     private TextView tv_alreadyHaveAccount;
     private FirebaseAuth firebaseAuth;
@@ -65,8 +64,8 @@ public class RegisterUserActivity extends AppCompatActivity {
         etParentName = findViewById(R.id.etParentName);
         etPhone = findViewById(R.id.etPhone);
         etAddress = findViewById(R.id.etAddress);
-        etNumPersonal = findViewById(R.id.etNumPersonal);
-        etNumPersonalLayout = findViewById(R.id.etNumPersonalLayout);
+        etPersonalNumber = findViewById(R.id.etNumPersonal);
+        etPersonalNumberLayout = findViewById(R.id.etPersonalNumberLayout);
         etEmailToInformer = findViewById(R.id.etEmailToInformer);
         etPasswordToInformer = findViewById(R.id.etPasswordToInformer);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
@@ -92,7 +91,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 String fullName = name + " "+lastName;
                 String phone = etPhone.getText().toString().trim();
                 String address = etAddress.getText().toString().trim();
-                String numPersonal = etNumPersonal.getText().toString().trim();
+                String personal_number = etPersonalNumber.getText().toString().trim();
                 String gender = et_gender_user.getText().toString().trim();
                 String parentName = etParentName.getText().toString().trim();
                 String email = etEmailToInformer.getText().toString().trim();
@@ -102,20 +101,21 @@ public class RegisterUserActivity extends AppCompatActivity {
                 String role = "Informer";
                 String balance = "0 EURO";
                 String coins = "0 COINS";
-                Uri photoURL = null;
+                String urlOfProfile = null;
+                Boolean isEmailVerified = false;
 
                 if(TextUtils.isEmpty(fullName)){
                     etName.setError(getText(R.string.error_fullname_required));
                     etName.requestFocus();
-                } else if(TextUtils.isEmpty(numPersonal)){
-                    etNumPersonal.setError(getText(R.string.error_number_personal_required));
-                    etNumPersonal.requestFocus();
-                }else if(numPersonal.length()>10){
-                    etNumPersonal.setError(getText(R.string.error_number_personal_is_ten_digit));
-                    etNumPersonal.requestFocus();
-                }else if(numPersonal.length()<10){
-                    etNumPersonal.setError(getText(R.string.error_number_personal_less_than_ten_digits));
-                    etNumPersonal.requestFocus();
+                } else if(TextUtils.isEmpty(personal_number)){
+                    etPersonalNumber.setError(getText(R.string.error_number_personal_required));
+                    etPersonalNumber.requestFocus();
+                }else if(personal_number.length()>10){
+                    etPersonalNumber.setError(getText(R.string.error_number_personal_is_ten_digit));
+                    etPersonalNumber.requestFocus();
+                }else if(personal_number.length()<10){
+                    etPersonalNumber.setError(getText(R.string.error_number_personal_less_than_ten_digits));
+                    etPersonalNumber.requestFocus();
                 }else if(TextUtils.isEmpty(phone)){
                     etPhone.setError(getText(R.string.error_phone_required));
                     etPhone.requestFocus();
@@ -156,7 +156,26 @@ public class RegisterUserActivity extends AppCompatActivity {
 
                                 String userID = authResult.getUser().getUid();
                                 String register_date_time = getTimeDate();
-                                registerUser(balance, coins, userID, name, lastName, fullName, address, email, parentName, gender, role, phone, numPersonal, register_date_time, grade, password, photoURL);
+                                registerUser(
+                                        userID,
+                                        name,
+                                        lastName,
+                                        fullName,
+                                        address,
+                                        email,
+                                        parentName,
+                                        gender,
+                                        role,
+                                        phone,
+                                        personal_number,
+                                        register_date_time,
+                                        grade,
+                                        password,
+                                        urlOfProfile,
+                                        balance,
+                                        coins,
+                                        isEmailVerified
+                                );
                                 firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
@@ -194,14 +213,14 @@ public class RegisterUserActivity extends AppCompatActivity {
             }
         });
 
-        etNumPersonalLayout.setEndIconOnClickListener(new View.OnClickListener() {
+        etPersonalNumberLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(RegisterUserActivity.this, getApplicationContext().getText(R.string.info_number_personal_is_ten_digit), Toast.LENGTH_SHORT).show();
             }
         });
 
-        etNumPersonal.addTextChangedListener(new TextWatcher() {
+        etPersonalNumber.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -210,11 +229,11 @@ public class RegisterUserActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(charSequence.length()>10){
-                    etNumPersonalLayout.setError(getApplicationContext().getText(R.string.no_more_than_ten_digits));
+                    etPersonalNumberLayout.setError(getApplicationContext().getText(R.string.no_more_than_ten_digits));
                 }else if(charSequence.length() < 10) {
-                    etNumPersonalLayout.setError(null);
+                    etPersonalNumberLayout.setError(null);
                 }else if(charSequence.length() == 10){
-                    etNumPersonalLayout.setError(null);
+                    etPersonalNumberLayout.setError(null);
                 }
             }
 
@@ -226,18 +245,46 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser(String balance, String coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
+    private void registerUser(String userID,
+                              String name,
+                              String lastname, 
+                              String fullName, 
+                              String address, 
+                              String email, 
+                              String parentName, 
+                              String gender, 
+                              String role, 
+                              String phone, 
+                              String personal_number, 
+                              String register_date_time, 
+                              String grade, 
+                              String password, 
+                              String urlOfProfile,
+                              String balance,
+                              String coins,
+                              Boolean isEmailVerified) {
         if(checkConnection()){
             documentReference = firebaseFirestore.collection("users").document(userID);
-            User user = new User(balance,
-                    coins, userID, name,
-                    lastname, fullName,
-                    address, email,
-                    parentName, gender,
-                    role, phone,
-                    personal_number, register_date_time,
-                    grade, password,
-                    null, false);
+            User user = new User(
+                    userID,
+                    name,
+                    lastname,
+                    fullName,
+                    address,
+                    email,
+                    parentName,
+                    gender,
+                    role,
+                    phone,
+                    personal_number,
+                    register_date_time,
+                    grade,
+                    password,
+                    urlOfProfile,
+                    balance,
+                    coins,
+                    isEmailVerified
+            );
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
@@ -265,7 +312,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         etName.setText("");
         etPhone.setText("");
         etAddress.setText("");
-        etNumPersonal.setText("");
+        etPersonalNumber.setText("");
         etEmailToInformer.setText("");
         etPasswordToInformer.setText("");
         etConfirmPassword.setText("");

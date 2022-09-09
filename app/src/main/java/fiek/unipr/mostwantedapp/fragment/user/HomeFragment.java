@@ -100,9 +100,8 @@ public class HomeFragment extends Fragment {
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
 
-    private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
+    private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number, balance;
     private Uri photoURL;
-    private Double balance;
 
     private TextView user_home_tv_num_report_verified, user_home_tv_num_report_unverified, user_home_tv_num_report_fake, user_home_tv_gradeOfUser;
     private TextView user_rightNowDateTime, user_hiDashboard, user_tv_balance;
@@ -648,10 +647,9 @@ public class HomeFragment extends Fragment {
                     {
                         fullName = task.getResult().getString("fullName");
                         urlOfProfile = task.getResult().getString("urlOfProfile");
-                        balance = task.getResult().getDouble("balance");
+                        balance = task.getResult().getString("balance");
                         if(balance != null){
-                            int balanceInt = (int) Math.round(balance);
-                                user_tv_balance.setText(String.valueOf(balanceInt));
+                                user_tv_balance.setText(balance);
                         }else {
                             user_tv_balance.setText("N/A");
                         }
