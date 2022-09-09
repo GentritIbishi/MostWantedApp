@@ -75,7 +75,6 @@ public class UpdateUserFragment extends Fragment {
     private String[] BALANCE_ARRAY = null;
     private String[] COINS_ARRAY = null;
     private Bundle bundle;
-    private Map<String, Object> update = new HashMap<>();
 
     public UpdateUserFragment() {}
 

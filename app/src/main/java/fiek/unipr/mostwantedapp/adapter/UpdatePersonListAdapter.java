@@ -97,18 +97,27 @@ public class UpdatePersonListAdapter extends ArrayAdapter<Person> {
                 // on the item click on our list view.
                 // we are displaying a toast message.
                 Bundle viewBundle = new Bundle();
+                viewBundle.putString("personId", person.getPersonId());
+                viewBundle.putString("firstName", person.getFirstName());
+                viewBundle.putString("lastName", person.getLastName());
+                viewBundle.putString("parentName", person.getParentName());
                 viewBundle.putString("fullName", person.getFullName());
-                viewBundle.putString("acts", person.getActs());
+                viewBundle.putString("birthday", person.getBirthday());
+                viewBundle.putString("gender", person.getGender());
                 viewBundle.putString("address", person.getAddress());
                 viewBundle.putString("age", person.getAge());
                 viewBundle.putString("eyeColor", person.getEyeColor());
                 viewBundle.putString("hairColor", person.getHairColor());
                 viewBundle.putString("height", person.getHeight());
-                viewBundle.putString("phy_appearance", person.getPhy_appearance());
-                viewBundle.putString("status", person.getStatus());
-                viewBundle.putString("prize", person.getPrize());
-                viewBundle.putString("urlOfProfile", person.getUrlOfProfile());
                 viewBundle.putString("weight", person.getWeight());
+                viewBundle.putString("phy_appearance", person.getPhy_appearance());
+                viewBundle.putStringArrayList("acts", (ArrayList<String>) person.getActs());
+                viewBundle.putDouble("latitude", person.getLatitude());
+                viewBundle.putDouble("longitude", person.getLongitude());
+                viewBundle.putString("prize", person.getPrize());
+                viewBundle.putString("status", person.getStatus());
+                viewBundle.putString("registration_date", person.getRegistration_date());
+                viewBundle.putString("urlOfProfile", person.getUrlOfProfile());
                 UpdatePersonFragment updatePersonFragment = new UpdatePersonFragment();
                 updatePersonFragment.setArguments(viewBundle);
                 loadFragment(updatePersonFragment);

@@ -64,7 +64,7 @@ public class SetProfileInvestigatorActivity extends AppCompatActivity {
 
         getFromBundle(bundle);
 
-        StorageReference profileRef = storageReference.child("investigators/"+ investigator_id +"/"+fullName +"/profile.jpg");
+        StorageReference profileRef = storageReference.child("investigators/"+ investigator_id +"/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -117,7 +117,7 @@ public class SetProfileInvestigatorActivity extends AppCompatActivity {
     private void uploadImageToFirebase(Uri imageUri) {
 
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child("investigators/"+ investigator_id +"/"+fullName +"/profile.jpg");
+        StorageReference fileRef = storageReference.child("investigators/"+ investigator_id +"/profile.jpg");
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

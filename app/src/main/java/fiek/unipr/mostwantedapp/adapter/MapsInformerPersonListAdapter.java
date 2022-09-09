@@ -89,7 +89,7 @@ public class MapsInformerPersonListAdapter extends ArrayAdapter<Person> {
                 Intent intent=new Intent(v.getContext(), MapsInformerActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 Bundle viewBundle = new Bundle();
                 viewBundle.putString("fullName", person.getFullName());
-                viewBundle.putString("acts", person.getActs());
+                viewBundle.putStringArrayList("acts", (ArrayList<String>) person.getActs());
                 viewBundle.putString("address", person.getAddress());
                 viewBundle.putString("age", person.getAge());
                 viewBundle.putString("eyeColor", person.getEyeColor());

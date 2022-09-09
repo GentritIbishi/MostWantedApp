@@ -31,8 +31,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.helpers.DateInputMask;
@@ -157,7 +159,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
     private void setAgeArray() {
         AGE_ARRAY = new String[121];
         for(int i=0; i<121; i++) {
-            AGE_ARRAY[i] = i+" "+getApplicationContext().getText(R.string.age);
+            AGE_ARRAY[i] = i+" "+AGE;
         }
     }
 
@@ -206,9 +208,10 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         String eyeColor = et_eyeColor.getText().toString().trim();
         String hairColor = et_hairColor.getText().toString().trim();
         String phy_appearance = et_phy_appearance.getText().toString().trim();
-        String a = et_acts.getText().toString().trim();
+        String act = et_acts.getText().toString().trim();
         // Trafficking in human beings, Narcotics trafficking, Narcotics trafficking, Robbery,
-        String[] acts = a.split(",");
+        String[] array = act.split(",");
+        List<String> acts = Arrays.asList(array);
         String status = et_status.getText().toString().trim();
         String prize = et_prize.getText().toString().trim();
 
@@ -285,7 +288,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
             return;
         }
 
-        if (acts.isEmpty()) {
+        if (TextUtils.isEmpty(act)) {
             et_acts.setError(getText(R.string.error_acts_required));
             et_acts.requestFocus();
             return;
@@ -310,10 +313,10 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
             Person person = new Person(personId,
                     firstName, lastName, parentName,
                     fullName, birthday, address, eyeColor,
-                    hairColor, phy_appearance, acts,
+                    hairColor, phy_appearance,
                     null, status, prize,
                     getTimeDate(), age, gender,
-                    height, weight, LONGITUDE_DEFAULT, LATITUDE_DEFAULT);
+                    height, weight, acts, LONGITUDE_DEFAULT, LATITUDE_DEFAULT);
 
             firebaseFirestore.collection("wanted_persons").document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override

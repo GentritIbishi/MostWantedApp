@@ -1,12 +1,15 @@
 package fiek.unipr.mostwantedapp.models;
 
+import java.util.List;
+
 public class Person {
-    private String personId, firstName, lastName, parentName, fullName, birthday, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status, prize, registration_date, age, gender, height, weight;
+    private String personId, firstName, lastName, parentName, fullName, birthday, address, eyeColor, hairColor, phy_appearance, urlOfProfile, status, prize, registration_date, age, gender, height, weight;
+    private List<String> acts;
     private Double longitude, latitude;
 
     public Person() {}
 
-    public Person(String personId, String firstName, String lastName, String parentName, String fullName, String birthday, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, String prize, String registration_date, String age, String gender, String height, String weight, Double longitude, Double latitude) {
+    public Person(String personId, String firstName, String lastName, String parentName, String fullName, String birthday, String address, String eyeColor, String hairColor, String phy_appearance, String urlOfProfile, String status, String prize, String registration_date, String age, String gender, String height, String weight, List<String> acts, Double longitude, Double latitude) {
         this.personId = personId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -17,7 +20,6 @@ public class Person {
         this.eyeColor = eyeColor;
         this.hairColor = hairColor;
         this.phy_appearance = phy_appearance;
-        this.acts = acts;
         this.urlOfProfile = urlOfProfile;
         this.status = status;
         this.prize = prize;
@@ -26,6 +28,7 @@ public class Person {
         this.gender = gender;
         this.height = height;
         this.weight = weight;
+        this.acts = acts;
         this.longitude = longitude;
         this.latitude = latitude;
     }
@@ -110,14 +113,6 @@ public class Person {
         this.phy_appearance = phy_appearance;
     }
 
-    public String getActs() {
-        return acts;
-    }
-
-    public void setActs(String acts) {
-        this.acts = acts;
-    }
-
     public String getUrlOfProfile() {
         return urlOfProfile;
     }
@@ -180,6 +175,14 @@ public class Person {
 
     public void setWeight(String weight) {
         this.weight = weight;
+    }
+
+    public List<String> getActs() {
+        return acts;
+    }
+
+    public void setActs(List<String> acts) {
+        this.acts = acts;
     }
 
     public Double getLongitude() {

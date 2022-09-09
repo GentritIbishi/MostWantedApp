@@ -73,7 +73,7 @@ public class SetProfilePersonActivity extends AppCompatActivity {
             personId = null;
         }
 
-        StorageReference profileRef = storageReference.child("persons/"+ personId +"/"+fullName +"/profile.jpg");
+        StorageReference profileRef = storageReference.child("persons/"+ personId +"/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -112,7 +112,7 @@ public class SetProfilePersonActivity extends AppCompatActivity {
     private void uploadImageToFirebase(Uri imageUri) {
 
             //upload image to storage in firebase
-            StorageReference fileRef = storageReference.child("persons/"+ personId +"/"+fullName +"/profile.jpg");
+            StorageReference fileRef = storageReference.child("persons/"+ personId +"/profile.jpg");
             fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
