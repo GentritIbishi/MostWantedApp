@@ -215,6 +215,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_bold"
                     android:textColor="@color/gray"
+                    android:text="DD-MM-YYYY"
                     android:imeOptions="actionNext"
                     android:ems="10"
                     android:textColorHint="@color/gray"
@@ -442,7 +443,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:hint="@string/select_a_type_of_crime"
+                android:hint="@string/select_the_acts"
                 android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
@@ -451,7 +452,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/autocomplete_et_phy_appearance_layout">
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                <MultiAutoCompleteTextView
                     android:id="@+id/et_acts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

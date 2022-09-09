@@ -5,10 +5,13 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.ProgressBar;
@@ -22,9 +25,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Calendar;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListFragment;
+import fiek.unipr.mostwantedapp.helpers.DateInputMask;
 
 public class UpdatePersonFragment extends Fragment {
 
@@ -34,7 +40,7 @@ public class UpdatePersonFragment extends Fragment {
     private ProgressBar update_person_uploadProgressBar, update_person_saveChangesProgressBar;
     private TextInputEditText update_person_et_firstName, update_person_et_lastName, update_person_et_parentName,
             update_person_et_fullName, update_person_etAddress, update_person_etLatitude,
-            update_person_etLongitude, update_person_etDateRegistration;
+            update_person_etLongitude, update_person_etDateRegistration, update_person_et_birthday;
     private MaterialAutoCompleteTextView update_person_et_age_autocomplete, update_person_et_eye_color_autocomplete,
             update_person_et_hair_color_autocomplete, update_person_et_height_autocomplete,
             update_person_et_weight_autocomplete, update_person_et_phy_appearance_autocomplete,
@@ -78,6 +84,8 @@ public class UpdatePersonFragment extends Fragment {
         update_person_et_lastName = update_person_view.findViewById(R.id.update_person_et_lastName);
         update_person_et_parentName = update_person_view.findViewById(R.id.update_person_et_parentName);
         update_person_et_fullName = update_person_view.findViewById(R.id.update_person_et_fullName);
+        update_person_et_birthday = update_person_view.findViewById(R.id.update_person_et_birthday);
+        new DateInputMask(update_person_et_birthday);
         update_person_et_gender_autocomplete = update_person_view.findViewById(R.id.update_person_et_gender_autocomplete);
         update_person_etAddress = update_person_view.findViewById(R.id.update_person_etAddress);
         update_person_etLatitude = update_person_view.findViewById(R.id.update_person_etLatitude);
@@ -93,6 +101,9 @@ public class UpdatePersonFragment extends Fragment {
         update_person_et_status_autocomplete = update_person_view.findViewById(R.id.update_person_et_status_autocomplete);
         update_person_et_acts_multiAutocomplete = update_person_view.findViewById(R.id.update_person_et_acts_multiAutocomplete);
 
+        ArrayAdapter<String> acts_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.acts));
+        update_person_et_acts_multiAutocomplete.setAdapter(acts_adapter);
+        update_person_et_acts_multiAutocomplete.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
         onBackPressed();
         return update_person_view;
