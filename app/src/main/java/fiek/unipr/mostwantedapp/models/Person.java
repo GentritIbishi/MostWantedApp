@@ -1,17 +1,18 @@
 package fiek.unipr.mostwantedapp.models;
 
 public class Person {
-    private String personId, firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status, prize, registration_date, age, gender, height, weight;
+    private String personId, firstName, lastName, parentName, fullName, birthday, address, eyeColor, hairColor, phy_appearance, acts, urlOfProfile, status, prize, registration_date, age, gender, height, weight;
     private Double longitude, latitude;
 
     public Person() {}
 
-    public Person(String personId, String firstName, String lastName, String parentName, String fullName, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, String prize, String registration_date, String age, String gender, String height, String weight, Double longitude, Double latitude) {
+    public Person(String personId, String firstName, String lastName, String parentName, String fullName, String birthday, String address, String eyeColor, String hairColor, String phy_appearance, String acts, String urlOfProfile, String status, String prize, String registration_date, String age, String gender, String height, String weight, Double longitude, Double latitude) {
         this.personId = personId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.parentName = parentName;
         this.fullName = fullName;
+        this.birthday = birthday;
         this.address = address;
         this.eyeColor = eyeColor;
         this.hairColor = hairColor;
@@ -67,6 +68,14 @@ public class Person {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 
     public String getAddress() {

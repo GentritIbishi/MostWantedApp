@@ -1,6 +1,5 @@
 package fiek.unipr.mostwantedapp.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,14 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.squareup.picasso.Picasso;
 
@@ -27,20 +25,22 @@ import java.util.Date;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.fragment.admin.update.person.UpdatePersonFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserFragment;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.maps.MapsInformerActivity;
+import fiek.unipr.mostwantedapp.models.Person;
 import fiek.unipr.mostwantedapp.models.User;
-import fiek.unipr.mostwantedapp.update.UpdateMultipleUsers;
 
-public class UpdateUserListAdapter extends ArrayAdapter<User> {
+public class UpdatePersonListAdapter extends ArrayAdapter<Person> {
 
-    private TextView update_user_time_joined, update_user_role, update_user_name;
-    private ImageView update_user_image;
-    private String user_time_elapsed;
+    private TextView update_person_time_joined, update_person_name;
+    private ImageView update_person_image;
+    private String person_time_elapsed;
 
     // constructor for our list view adapter.
-    public UpdateUserListAdapter(@NonNull Context context, ArrayList<User> locationArrayList) {
-        super(context, 0, locationArrayList);
+    public UpdatePersonListAdapter(@NonNull Context context, ArrayList<Person> personArrayList) {
+        super(context, 0, personArrayList);
     }
 
     @NonNull
@@ -50,79 +50,68 @@ public class UpdateUserListAdapter extends ArrayAdapter<User> {
         // layout for our item of list view.
         View listitemView = convertView;
         if (listitemView == null) {
-            listitemView = LayoutInflater.from(getContext()).inflate(R.layout.user_item_single, parent, false);
+            listitemView = LayoutInflater.from(getContext()).inflate(R.layout.update_person_item_single, parent, false);
         }
 
         // after inflating an item of listview item
         // we are getting data from array list inside
         // our modal class.
-        User user = getItem(position);
+        Person person = getItem(position);
 
         // initializing our UI components of list view item.
-        update_user_name = listitemView.findViewById(R.id.update_user_name);
-        update_user_role = listitemView.findViewById(R.id.update_user_role);
-        update_user_time_joined = listitemView.findViewById(R.id.update_user_time_joined);
-        update_user_image = listitemView.findViewById(R.id.update_user_image);
-
+        update_person_name = listitemView.findViewById(R.id.update_person_name);
+        update_person_time_joined = listitemView.findViewById(R.id.update_person_time_joined);
+        update_person_image = listitemView.findViewById(R.id.update_person_image);
 
         try {
             // after initializing our items we are
             // setting data to our view.
             // below line is use to set data to our text view.
-            update_user_name.setText(user.getFullName());
-            update_user_role.setText(user.getRole());
+            update_person_name.setText(person.getFullName());
 
             // in below line we are using Picasso to
             // load image from URL in our Image VIew.
-            if (user.getUrlOfProfile() != null && !user.getUrlOfProfile().isEmpty()) {
-                Picasso.get().load(user.getUrlOfProfile()).transform(new CircleTransform()).into(update_user_image);
+            if (person.getUrlOfProfile() != null && !person.getUrlOfProfile().isEmpty()) {
+                Picasso.get().load(person.getUrlOfProfile()).transform(new CircleTransform()).into(update_person_image);
             }
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-            Date start_date = simpleDateFormat.parse(user.getRegister_date_time());
+            Date start_date = simpleDateFormat.parse(person.getRegistration_date());
             Date end_date = simpleDateFormat.parse(getTimeDate());
             printDifference(start_date, end_date);
 
-            if (user_time_elapsed != null) {
-                update_user_time_joined.setText(user_time_elapsed);
+            if (person_time_elapsed != null) {
+                update_person_time_joined.setText(person_time_elapsed);
             }
         }catch (ParseException e) {
             e.printStackTrace();
         }
+
         // below line is use to add item click listener
         // for our item of list view.
+        listitemView.setClickable(true);
         listitemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // on the item click on our list view.
+                // we are displaying a toast message.
                 Bundle viewBundle = new Bundle();
-                viewBundle.putString("address", user.getAddress());
-                viewBundle.putString("balance", user.getBalance());
-                viewBundle.putString("email", user.getEmail());
-                viewBundle.putString("fullName", user.getFullName());
-                viewBundle.putString("gender", user.getGender());
-                viewBundle.putString("lastname", user.getLastname());
-                viewBundle.putString("name", user.getName());
-                viewBundle.putString("parentName", user.getParentName());
-                viewBundle.putString("password", user.getPassword());
-                viewBundle.putString("personal_number", user.getPersonal_number());
-                viewBundle.putString("phone", user.getPhone());
-                viewBundle.putString("register_date_time", user.getRegister_date_time());
-                viewBundle.putString("role", user.getRole());
-                viewBundle.putString("userID", user.getUserID());
-                viewBundle.putString("grade", user.getGrade());
-                viewBundle.putString("coins", user.getCoins());
-                viewBundle.putString("balance", user.getBalance());
-                viewBundle.putBoolean("emailVerified", user.getEmailVerified());
-                if(user.getUrlOfProfile() != null) {
-                    viewBundle.putString("urlOfProfile", user.getUrlOfProfile());
-                }
-                else {
-                    viewBundle.putString("urlOfProfile", "noSetURL");
-                }
-                UpdateUserFragment updateUserFragment = new UpdateUserFragment();
-                updateUserFragment.setArguments(viewBundle);
-                loadFragment(updateUserFragment);
+                viewBundle.putString("fullName", person.getFullName());
+                viewBundle.putString("acts", person.getActs());
+                viewBundle.putString("address", person.getAddress());
+                viewBundle.putString("age", person.getAge());
+                viewBundle.putString("eyeColor", person.getEyeColor());
+                viewBundle.putString("hairColor", person.getHairColor());
+                viewBundle.putString("height", person.getHeight());
+                viewBundle.putString("phy_appearance", person.getPhy_appearance());
+                viewBundle.putString("status", person.getStatus());
+                viewBundle.putString("prize", person.getPrize());
+                viewBundle.putString("urlOfProfile", person.getUrlOfProfile());
+                viewBundle.putString("weight", person.getWeight());
+                UpdatePersonFragment updatePersonFragment = new UpdatePersonFragment();
+                updatePersonFragment.setArguments(viewBundle);
+                loadFragment(updatePersonFragment);
             }
         });
         return listitemView;
@@ -151,15 +140,15 @@ public class UpdateUserListAdapter extends ArrayAdapter<User> {
         long weeks = elapsedDays/7;
 
         if(weeks != 0){
-            user_time_elapsed = weeks+"w ";
+            person_time_elapsed = weeks+"w ";
         }else if(elapsedDays != 0) {
-            user_time_elapsed = elapsedDays+"d ";
+            person_time_elapsed = elapsedDays+"d ";
         }else if(elapsedHours != 0){
-            user_time_elapsed = elapsedHours+"h ";
+            person_time_elapsed = elapsedHours+"h ";
         }else if(elapsedMinutes != 0){
-            user_time_elapsed = elapsedMinutes+"m ";
+            person_time_elapsed = elapsedMinutes+"m ";
         }else if(elapsedSeconds != 0){
-            user_time_elapsed = elapsedSeconds+"s ";
+            person_time_elapsed = elapsedSeconds+"s ";
         }
 
     }

@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,6 +30,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -48,7 +51,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
     private FirebaseFirestore firebaseFirestore;
     private StorageReference storageReference;
     private MaterialAutoCompleteTextView et_age, et_gender, et_height, et_weight, et_eyeColor, et_hairColor, et_phy_appearance, et_acts, et_status, et_prize;
-    private TextInputEditText et_firstName, et_lastName, et_address, et_parentName;
+    private TextInputEditText et_firstName, et_lastName, et_address, et_parentName, et_birthday;
     private Button registerPerson;
     private ProgressBar progressBar;
     private String[] WEIGHT_ARRAY = null;
@@ -79,6 +82,73 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         et_lastName = findViewById(R.id.et_lastName);
         et_parentName = findViewById(R.id.et_parentName);
         et_address = findViewById(R.id.et_address);
+        et_birthday = findViewById(R.id.et_birthday);
+
+        TextWatcher tw = new TextWatcher() {
+
+            private String current = "";
+            private String ddmmyyyy = "DDMMYYYY";
+            private Calendar cal = Calendar.getInstance();
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!s.toString().equals(current)) {
+                    String clean = s.toString().replaceAll("[^\\d.]|\\.", "");
+                    String cleanC = current.replaceAll("[^\\d.]|\\.", "");
+
+                    int cl = clean.length();
+                    int sel = cl;
+                    for (int i = 2; i <= cl && i < 6; i += 2) {
+                        sel++;
+                    }
+                    //Fix for pressing delete next to a forward slash
+                    if (clean.equals(cleanC)) sel--;
+
+                    if (clean.length() < 8){
+                        clean = clean + ddmmyyyy.substring(clean.length());
+                    }else{
+                        //This part makes sure that when we finish entering numbers
+                        //the date is correct, fixing it otherwise
+                        int day  = Integer.parseInt(clean.substring(0,2));
+                        int mon  = Integer.parseInt(clean.substring(2,4));
+                        int year = Integer.parseInt(clean.substring(4,8));
+
+                        mon = mon < 1 ? 1 : mon > 12 ? 12 : mon;
+                        cal.set(Calendar.MONTH, mon-1);
+                        year = (year<1900)?1900:(year>2100)?2100:year;
+                        cal.set(Calendar.YEAR, year);
+                        // ^ first set year for the line below to work correctly
+                        //with leap years - otherwise, date e.g. 29/02/2012
+                        //would be automatically corrected to 28/02/2012
+
+                        day = (day > cal.getActualMaximum(Calendar.DATE))? cal.getActualMaximum(Calendar.DATE):day;
+                        clean = String.format("%02d%02d%02d",day, mon, year);
+                    }
+
+                    clean = String.format("%s-%s-%s", clean.substring(0, 2),
+                            clean.substring(2, 4),
+                            clean.substring(4, 8));
+
+                    sel = sel < 0 ? 0 : sel;
+                    current = clean;
+                    et_birthday.setText(current);
+                    et_birthday.setSelection(sel < current.length() ? sel : current.length());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        };
+
+        et_birthday.addTextChangedListener(tw);
+
 
         et_age = findViewById(R.id.et_age);
         ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, AGE_ARRAY);
@@ -178,6 +248,8 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         et_phy_appearance.setText("");
         et_acts.setText("");
         et_status.setText("");
+        et_birthday.setText("");
+        et_prize.setText("");
     }
 
     private void registerPerson() {
@@ -186,6 +258,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         String lastName = et_lastName.getText().toString().trim();
         String parentName = et_parentName.getText().toString().trim();
         String fullName = firstName+" ("+parentName+") "+lastName;
+        String birthday = et_birthday.getText().toString();
         String address = et_address.getText().toString().trim();
         String age = et_age.getText().toString().trim();
         String gender = et_gender.getText().toString().trim();
@@ -214,6 +287,12 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         if (parentName.isEmpty()) {
             et_parentName.setError(getText(R.string.error_parent_name_required));
             et_parentName.requestFocus();
+            return;
+        }
+
+        if (birthday.isEmpty()) {
+            et_birthday.setError(getText(R.string.error_birthday_required));
+            et_birthday.requestFocus();
             return;
         }
 
@@ -289,7 +368,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
 
             Person person = new Person(personId,
                     firstName, lastName, parentName,
-                    fullName, address, eyeColor,
+                    fullName, birthday, address, eyeColor,
                     hairColor, phy_appearance, acts,
                     null, status, prize,
                     getTimeDate(), age, gender,
@@ -336,6 +415,16 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         try{
             Date netDate = new Date(); // current time from here
             SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            return sfd.format(netDate);
+        } catch(Exception e) {
+            return "date";
+        }
+    }
+
+    public static String getDate() { // without parameter argument
+        try{
+            Date netDate = new Date(); // current time from here
+            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";

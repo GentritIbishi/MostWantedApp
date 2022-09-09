@@ -70,7 +70,7 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.PersonListAdapter;
+import fiek.unipr.mostwantedapp.adapter.MapsInformerPersonListAdapter;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.NotificationAdminState;
 import fiek.unipr.mostwantedapp.models.NotificationReportUser;
@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment {
     public static final String FAKE = "FAKE";
     private View home_fragment_view;
     private ListView lvPersons;
-    private PersonListAdapter personListAdapter;
+    private MapsInformerPersonListAdapter mapsInformerPersonListAdapter;
     private ArrayList<Person> personArrayList;
 
     private FirebaseAuth firebaseAuth;
@@ -204,8 +204,8 @@ public class HomeFragment extends Fragment {
     private void InitializeFields() {
         lvPersons = home_fragment_view.findViewById(R.id.lvPersons);
         personArrayList = new ArrayList<>();
-        personListAdapter = new PersonListAdapter(getActivity().getApplicationContext(), personArrayList);
-        lvPersons.setAdapter(personListAdapter);
+        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getActivity().getApplicationContext(), personArrayList);
+        lvPersons.setAdapter(mapsInformerPersonListAdapter);
         user_rightNowDateTime = home_fragment_view.findViewById(R.id.user_rightNowDateTime);
         user_hiDashboard = home_fragment_view.findViewById(R.id.user_hiDashboard);
         user_imageOfDashboard = home_fragment_view.findViewById(R.id.user_imageOfDashboard);
@@ -263,7 +263,7 @@ public class HomeFragment extends Fragment {
                                 personArrayList.add(person);
                             }
 
-                            personListAdapter.notifyDataSetChanged();
+                            mapsInformerPersonListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
                             Toast.makeText(getActivity().getApplicationContext(), "No data found in Database", Toast.LENGTH_SHORT).show();

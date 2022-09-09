@@ -28,7 +28,7 @@ import fiek.unipr.mostwantedapp.maps.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 import fiek.unipr.mostwantedapp.update.UpdatePerson;
 
-public class PersonListAdapter extends ArrayAdapter<Person> {
+public class MapsInformerPersonListAdapter extends ArrayAdapter<Person> {
     // constructor for our list view adapter.
 
     FirebaseAuth firebaseAuth;
@@ -36,7 +36,7 @@ public class PersonListAdapter extends ArrayAdapter<Person> {
     private List<Person> personList = null;
     private ArrayList<Person> arraylist;
 
-    public PersonListAdapter(@NonNull Context context, ArrayList<Person> personArrayList) {
+    public MapsInformerPersonListAdapter(@NonNull Context context, ArrayList<Person> personArrayList) {
         super(context, 0, personArrayList);
     }
 

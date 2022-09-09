@@ -25,15 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.LocationListAdapter;
-import fiek.unipr.mostwantedapp.adapter.PersonListAdapter;
+import fiek.unipr.mostwantedapp.adapter.MapsLocationListAdapter;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class LocationReportsFragment extends Fragment {
 
     private View locations_persons_view;
     private ListView lvLocationPersonsFragment;
-    private LocationListAdapter locationListAdapter;
+    private MapsLocationListAdapter mapsLocationListAdapter;
     private ArrayList<Person> locationArrayList;
     private FirebaseFirestore firebaseFirestore;
     private EditText location_search_filter;
@@ -84,8 +83,8 @@ public class LocationReportsFragment extends Fragment {
         lvLocationPersonsFragment = locations_persons_view.findViewById(R.id.lvLocationPersonsFragment);
         location_search_filter = locations_persons_view.findViewById(R.id.location_search_filter);
         locationArrayList = new ArrayList<>();
-        locationListAdapter = new LocationListAdapter(getActivity().getApplicationContext(), locationArrayList);
-        lvLocationPersonsFragment.setAdapter(locationListAdapter);
+        mapsLocationListAdapter = new MapsLocationListAdapter(getActivity().getApplicationContext(), locationArrayList);
+        lvLocationPersonsFragment.setAdapter(mapsLocationListAdapter);
     }
 
     private void loadDatainListview() {
@@ -114,7 +113,7 @@ public class LocationReportsFragment extends Fragment {
                                 locationArrayList.add(person);
                             }
 
-                            locationListAdapter.notifyDataSetChanged();
+                            mapsLocationListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
                             Toast.makeText(getContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
@@ -158,7 +157,7 @@ public class LocationReportsFragment extends Fragment {
                                 // storing that data in our array list
                                 locationArrayList.add(person);
                             }
-                            locationListAdapter.notifyDataSetChanged();
+                            mapsLocationListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
                             Toast.makeText(getActivity().getApplicationContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();

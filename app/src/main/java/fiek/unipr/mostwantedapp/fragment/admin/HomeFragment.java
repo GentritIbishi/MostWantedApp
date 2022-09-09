@@ -436,7 +436,11 @@ public class HomeFragment extends Fragment {
                             {
                                 name = task.getResult().getString("name");
                                 fullName = task.getResult().getString("fullName");
-                                hiDashboard.setText(getActivity().getText(R.string.hi)+" "+name);
+                                if(name != null){
+                                    hiDashboard.setText(getContext().getText(R.string.hi)+" "+name);
+                                }else {
+                                    hiDashboard.setText(getContext().getText(R.string.dashboard));
+                                }
                             }
                         }
                     });
@@ -820,15 +824,15 @@ public class HomeFragment extends Fragment {
                                                 if(percentage > 0) {
                                                     imageTrendingWeekly.setImageResource(R.drawable.ic_baseline_trending_up_24);
                                                     tv_percentage_weekly.setText(percentage+"%");
-                                                    tv_percentage_weekly.setTextColor(getResources().getColor(R.color.neon_green));
+                                                    tv_percentage_weekly.setTextColor(getActivity().getResources().getColor(R.color.neon_green));
                                                 }else if(percentage < 0) {
                                                     imageTrendingWeekly.setImageResource(R.drawable.ic_baseline_trending_down_24);
                                                     tv_percentage_weekly.setText(percentage+"%");
-                                                    tv_percentage_weekly.setTextColor(getResources().getColor(R.color.neon_red));
+                                                    tv_percentage_weekly.setTextColor(getActivity().getResources().getColor(R.color.neon_red));
                                                 }else if(percentage == 0) {
                                                     imageTrendingWeekly.setImageResource(R.drawable.ic_baseline_trending_flat_24);
                                                     tv_percentage_weekly.setText(percentage+"%");
-                                                    tv_percentage_weekly.setTextColor(getResources().getColor(R.color.bluelight));
+                                                    tv_percentage_weekly.setTextColor(getActivity().getResources().getColor(R.color.bluelight));
                                                 }
                                             }else {
                                                 System.out.println("ERROR INSIDE VS WEEK: "+task.getException());

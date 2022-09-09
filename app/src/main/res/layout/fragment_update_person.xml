@@ -4,10 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.admin.update.user.UpdateUserFragment">
+    tools:context=".fragment.admin.update.person.UpdatePersonFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/update_user_swipeUpToRefresh"
+        android:id="@+id/update_person_swipeUpToRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -32,7 +32,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/update_user_tvProfilePictureTxt"
+                        android:id="@+id/update_person_tvProfilePictureTxt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
@@ -46,34 +46,34 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/update_user_tvProfilePictureTxt"
+                        android:layout_below="@id/update_person_tvProfilePictureTxt"
                         android:layout_centerInParent="true"
                         android:layout_marginStart="30dp"
                         android:layout_marginEnd="15dp"
-                        android:layout_toRightOf="@id/update_user_imageOfProfile">
+                        android:layout_toRightOf="@id/update_person_imageOfProfile">
 
                         <Button
-                            android:id="@+id/update_user_btnUploadNewPicture"
+                            android:id="@+id/update_person_btnUploadNewPicture"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@+id/update_user_tvProfilePictureTxt"
+                            android:layout_below="@+id/update_person_tvProfilePictureTxt"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="3dp"
                             android:layout_marginBottom="8dp"
-                            android:layout_toRightOf="@id/update_user_imageOfProfile"
+                            android:layout_toRightOf="@id/update_person_imageOfProfile"
                             android:background="@drawable/button"
                             android:padding="10dp"
                             android:text="@string/upload"
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/update_user_btnDeletePhoto"
+                            app:layout_constraintEnd_toStartOf="@+id/update_person_btnDeletePhoto"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.0" />
 
                         <Button
-                            android:id="@+id/update_user_btnDeletePhoto"
+                            android:id="@+id/update_person_btnDeletePhoto"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="3dp"
@@ -86,13 +86,13 @@
                             android:textColor="@color/white"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toEndOf="@+id/update_user_btnUploadNewPicture"
+                            app:layout_constraintStart_toEndOf="@+id/update_person_btnUploadNewPicture"
                             app:layout_constraintTop_toTopOf="parent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/update_user_imageOfProfile"
+                        android:id="@+id/update_person_imageOfProfile"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
                         android:layout_marginLeft="15dp"
@@ -100,7 +100,7 @@
                         android:src="@drawable/ic_profile_picture_default" />
 
                     <ProgressBar
-                        android:id="@+id/update_user_uploadProgressBar"
+                        android:id="@+id/update_person_uploadProgressBar"
                         style="?android:attr/progressBarStyle"
                         android:layout_width="25dp"
                         android:layout_height="28dp"
@@ -118,7 +118,7 @@
                         android:id="@+id/constraintField"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/update_user_imageOfProfile"
+                        android:layout_below="@+id/update_person_imageOfProfile"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="15dp"
                         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
@@ -126,7 +126,7 @@
                         app:layout_constraintStart_toStartOf="parent">
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/update_user_et_firstNameLayout"
+                            android:id="@+id/update_person_et_firstNameLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -144,11 +144,11 @@
                             app:hintTextColor="@color/gray"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/update_user_imageOfProfile"
+                            app:layout_constraintTop_toBottomOf="@+id/update_person_imageOfProfile"
                             app:startIconDrawable="@drawable/ic_baseline_person_24">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/update_user_et_firstName"
+                                android:id="@+id/update_person_et_firstName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ems="10"
@@ -162,7 +162,7 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/update_user_et_lastNameLayout"
+                            android:id="@+id/update_person_et_lastNameLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -180,11 +180,11 @@
                             app:hintTextColor="@color/gray"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/update_user_et_firstNameLayout"
+                            app:layout_constraintTop_toBottomOf="@+id/update_person_et_firstNameLayout"
                             app:startIconDrawable="@drawable/ic_baseline_person_24">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/update_user_et_lastName"
+                                android:id="@+id/update_person_et_lastName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ems="10"
@@ -198,7 +198,7 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/update_user_et_parentNameLayout"
+                            android:id="@+id/update_person_et_parentNameLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -216,11 +216,11 @@
                             app:hintTextColor="@color/gray"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/update_user_et_lastNameLayout"
+                            app:layout_constraintTop_toBottomOf="@+id/update_person_et_lastNameLayout"
                             app:startIconDrawable="@drawable/ic_baseline_person_24">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/update_user_et_parentName"
+                                android:id="@+id/update_person_et_parentName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ems="10"
@@ -234,7 +234,7 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/update_user_et_fullNameLayout"
+                            android:id="@+id/update_person_et_fullNameLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -252,11 +252,11 @@
                             app:hintTextColor="@color/gray"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/update_user_et_parentNameLayout"
+                            app:layout_constraintTop_toBottomOf="@+id/update_person_et_parentNameLayout"
                             app:startIconDrawable="@drawable/ic_baseline_person_24">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/update_user_et_fullName"
+                                android:id="@+id/update_person_et_fullName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ems="10"
@@ -270,7 +270,43 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/autocomplete_update_user_et_gender_layout"
+                            android:id="@+id/update_person_et_birthdayLayout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:hint="@string/birthday"
+                            android:textColorHint="@color/gray"
+                            android:textDirection="firstStrong"
+                            app:boxBackgroundColor="@color/white"
+                            app:helperTextTextColor="@color/gray"
+                            app:boxStrokeColor="@color/gray"
+                            android:elevation="6dp"
+                            app:hintTextColor="@color/gray"
+                            app:startIconDrawable="@drawable/ic_baseline_date_range_24"
+                            app:endIconMode="clear_text"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/update_person_et_fullNameLayout" >
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/update_person_et_birthday"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/open_sans_bold"
+                                android:textColor="@color/gray"
+                                android:imeOptions="actionNext"
+                                android:ems="10"
+                                android:textColorHint="@color/gray"
+                                android:inputType="date"
+                                android:textStyle="bold" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/autocomplete_update_person_et_gender_layout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -282,12 +318,12 @@
                             android:textDirection="firstStrong"
                             android:textStyle="bold"
                             app:boxBackgroundColor="@color/light_gray"
-                            app:layout_constraintEnd_toEndOf="@+id/update_user_et_fullNameLayout"
-                            app:layout_constraintStart_toStartOf="@+id/update_user_et_fullNameLayout"
-                            app:layout_constraintTop_toBottomOf="@+id/update_user_et_fullNameLayout">
+                            app:layout_constraintEnd_toEndOf="@+id/update_person_et_birthdayLayout"
+                            app:layout_constraintStart_toStartOf="@+id/update_person_et_birthdayLayout"
+                            app:layout_constraintTop_toBottomOf="@+id/update_person_et_birthdayLayout">
 
                             <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                android:id="@+id/update_user_et_gender"
+                                android:id="@+id/update_person_et_gender_autocomplete"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -299,43 +335,8 @@
 
                         </com.google.android.material.textfield.TextInputLayout>
 
-
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/update_user_etPhoneLayout"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:elevation="6dp"
-                            android:hint="@string/phone_number_kosovo"
-                            android:textColorHint="@color/gray"
-                            android:textDirection="firstStrong"
-                            app:boxBackgroundColor="@color/white"
-                            app:boxStrokeColor="@color/gray"
-                            app:endIconMode="clear_text"
-                            app:helperTextTextColor="@color/gray"
-                            app:hintTextColor="@color/gray"
-                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_user_et_gender_layout"
-                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_user_et_gender_layout"
-                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_user_et_gender_layout"
-                            app:startIconDrawable="@drawable/ic_baseline_phone_android_24">
-
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/update_user_etPhone"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:ems="10"
-                                android:fontFamily="@font/open_sans_bold"
-                                android:imeOptions="actionNext"
-                                android:inputType="phone"
-                                android:textColor="@color/gray"
-                                android:textColorHint="@color/gray"
-                                android:textStyle="bold" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/update_user_etAddressLayout"
+                            android:id="@+id/update_person_etAddressLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -349,16 +350,16 @@
                             app:endIconMode="clear_text"
                             app:helperTextTextColor="@color/gray"
                             app:hintTextColor="@color/gray"
-                            app:layout_constraintBottom_toTopOf="@+id/update_user_etNumPersonalLayout"
-                            app:layout_constraintEnd_toEndOf="@+id/update_user_etPhoneLayout"
+                            app:layout_constraintBottom_toTopOf="@+id/autocomplete_update_person_et_gender_layout"
+                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_person_et_gender_layout"
                             app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toStartOf="@+id/update_user_etPhoneLayout"
-                            app:layout_constraintTop_toBottomOf="@+id/update_user_etPhoneLayout"
+                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_person_et_gender_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_person_et_gender_layout"
                             app:layout_constraintVertical_bias="0.0"
                             app:startIconDrawable="@drawable/ic_baseline_map_24">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/update_user_etAddress"
+                                android:id="@+id/update_person_etAddress"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ems="10"
@@ -372,50 +373,223 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/update_user_etNumPersonalLayout"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                            android:layout_width="0dp"
+                            android:id="@+id/autocomplete_update_person_age_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
-                            android:elevation="6dp"
-                            android:hint="@string/personal_number"
+                            android:layout_marginEnd="16dp"
+                            android:hint="@string/select_a_age"
                             android:textColorHint="@color/gray"
                             android:textDirection="firstStrong"
-                            app:boxBackgroundColor="@color/white"
-                            app:boxStrokeColor="@color/gray"
-                            app:endIconDrawable="@drawable/ic_baseline_check_circle_24"
-                            app:endIconMode="custom"
-                            app:errorEnabled="true"
-                            app:errorIconDrawable="@drawable/ic_baseline_error_24"
-                            app:helperTextTextColor="@color/gray"
-                            app:hintTextColor="@color/gray"
-                            app:layout_constraintEnd_toEndOf="@+id/update_user_etAddressLayout"
-                            app:layout_constraintStart_toStartOf="@+id/update_user_etAddressLayout"
-                            app:layout_constraintTop_toBottomOf="@+id/update_user_etAddressLayout"
-                            app:startIconDrawable="@drawable/ic_baseline_credit_card_24">
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
+                            app:layout_constraintEnd_toEndOf="@+id/update_person_etAddressLayout"
+                            app:layout_constraintStart_toStartOf="@+id/update_person_etAddressLayout"
+                            app:layout_constraintTop_toBottomOf="@+id/update_person_etAddressLayout">
 
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/update_user_etNumPersonal"
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/update_person_et_age_autocomplete"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:ems="10"
-                                android:fontFamily="@font/open_sans_bold"
-                                android:imeOptions="actionNext"
-                                android:inputType="number"
+                                android:layout_weight="1"
+                                android:inputType="none"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
                                 android:textColor="@color/gray"
-                                android:textColorHint="@color/gray"
                                 android:textStyle="bold" />
 
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/update_user_etEmailToUserLayout"
+                            android:id="@+id/autocomplete_update_person_eye_color_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:hint="@string/select_a_eye_color"
+                            android:textColorHint="@color/gray"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
+                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_person_age_layout"
+                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_person_age_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_person_age_layout">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/update_person_et_eye_color_autocomplete"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="none"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
+                                android:textColor="@color/gray"
+                                android:textStyle="bold" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/autocomplete_update_person_hair_color_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:hint="@string/select_a_hair_color"
+                            android:textColorHint="@color/gray"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
+                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_person_eye_color_layout"
+                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_person_eye_color_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_person_eye_color_layout">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/update_person_et_hair_color_autocomplete"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="none"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
+                                android:textColor="@color/gray"
+                                android:textStyle="bold" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/autocomplete_update_person_height_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:hint="@string/select_a_height"
+                            android:textColorHint="@color/gray"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
+                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_person_hair_color_layout"
+                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_person_hair_color_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_person_hair_color_layout">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/update_person_et_height_autocomplete"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="none"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
+                                android:textColor="@color/gray"
+                                android:textStyle="bold" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/autocomplete_update_person_weight_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:hint="@string/select_a_weight"
+                            android:textColorHint="@color/gray"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
+                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_person_height_layout"
+                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_person_height_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_person_height_layout">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/update_person_et_weight_autocomplete"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="none"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
+                                android:textColor="@color/gray"
+                                android:textStyle="bold" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/autocomplete_update_person_phy_appearance_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:hint="@string/select_a_physical_appearance"
+                            android:textColorHint="@color/gray"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
+                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_person_weight_layout"
+                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_person_weight_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_person_weight_layout">
+
+                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                                android:id="@+id/update_person_et_phy_appearance_autocomplete"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="none"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
+                                android:textColor="@color/gray"
+                                android:textStyle="bold" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/autocomplete_update_person_acts_layout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
+                            android:hint="@string/select_the_acts"
+                            android:textColorHint="@color/gray"
+                            android:textDirection="firstStrong"
+                            android:textStyle="bold"
+                            app:boxBackgroundColor="@color/light_gray"
+                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_person_phy_appearance_layout"
+                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_person_phy_appearance_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_person_phy_appearance_layout">
+
+                            <MultiAutoCompleteTextView
+                                android:id="@+id/update_person_et_acts_multiAutocomplete"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:inputType="none"
+                                android:paddingTop="16dp"
+                                android:paddingBottom="16dp"
+                                android:textColor="@color/gray"
+                                android:textStyle="bold" />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/update_person_etLatitudeLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:elevation="6dp"
-                            android:hint="@string/email"
+                            android:hint="@string/latitude_cell"
                             android:textColorHint="@color/gray"
                             android:textDirection="firstStrong"
                             app:boxBackgroundColor="@color/white"
@@ -423,19 +597,20 @@
                             app:endIconMode="clear_text"
                             app:helperTextTextColor="@color/gray"
                             app:hintTextColor="@color/gray"
-                            app:layout_constraintEnd_toEndOf="@+id/update_user_etNumPersonalLayout"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toStartOf="@+id/update_user_etNumPersonalLayout"
-                            app:layout_constraintTop_toBottomOf="@+id/update_user_etNumPersonalLayout"
-                            app:startIconDrawable="@drawable/ic_baseline_email_24">
+                            android:enabled="false"
+                            app:startIconDrawable="@drawable/ic_baseline_date_range_24"
+                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_person_acts_layout"
+                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_person_acts_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_person_acts_layout">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/update_user_etEmailToUser"
+                                android:id="@+id/update_person_etLatitude"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ems="10"
                                 android:fontFamily="@font/open_sans_bold"
-                                android:inputType="textEmailAddress"
+                                android:imeOptions="actionNext"
+                                android:inputType="datetime"
                                 android:textColor="@color/gray"
                                 android:textColorHint="@color/gray"
                                 android:textStyle="bold" />
@@ -443,33 +618,34 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/update_user_etPasswordToUserLayout"
+                            android:id="@+id/update_person_etLongitudeLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:elevation="6dp"
-                            android:hint="@string/password"
+                            android:hint="@string/longitude_cell"
                             android:textColorHint="@color/gray"
                             android:textDirection="firstStrong"
                             app:boxBackgroundColor="@color/white"
                             app:boxStrokeColor="@color/gray"
-                            app:endIconMode="password_toggle"
+                            app:endIconMode="clear_text"
                             app:helperTextTextColor="@color/gray"
                             app:hintTextColor="@color/gray"
-                            app:layout_constraintEnd_toEndOf="@+id/update_user_etEmailToUserLayout"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toStartOf="@+id/update_user_etEmailToUserLayout"
-                            app:layout_constraintTop_toBottomOf="@+id/update_user_etEmailToUserLayout"
-                            app:startIconDrawable="@drawable/ic_baseline_security_24">
+                            android:enabled="false"
+                            app:startIconDrawable="@drawable/ic_baseline_date_range_24"
+                            app:layout_constraintEnd_toEndOf="@+id/update_person_etLatitudeLayout"
+                            app:layout_constraintStart_toStartOf="@+id/update_person_etLatitudeLayout"
+                            app:layout_constraintTop_toBottomOf="@+id/update_person_etLatitudeLayout">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/update_user_etPasswordToUser"
+                                android:id="@+id/update_person_etLongitude"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ems="10"
                                 android:fontFamily="@font/open_sans_bold"
-                                android:inputType="textPassword"
+                                android:imeOptions="actionNext"
+                                android:inputType="datetime"
                                 android:textColor="@color/gray"
                                 android:textColorHint="@color/gray"
                                 android:textStyle="bold" />
@@ -477,24 +653,24 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/autocomplete_update_user_role_layout"
+                            android:id="@+id/autocomplete_update_person_prize_layout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="16dp"
-                            android:hint="@string/role"
+                            android:hint="@string/select_a_prize"
                             android:textColorHint="@color/gray"
                             android:textDirection="firstStrong"
                             android:textStyle="bold"
                             app:boxBackgroundColor="@color/light_gray"
-                            app:layout_constraintEnd_toEndOf="@+id/update_user_etPasswordToUserLayout"
-                            app:layout_constraintStart_toStartOf="@+id/update_user_etPasswordToUserLayout"
-                            app:layout_constraintTop_toBottomOf="@+id/update_user_etPasswordToUserLayout">
+                            app:layout_constraintEnd_toEndOf="@+id/update_person_etLongitudeLayout"
+                            app:layout_constraintStart_toStartOf="@+id/update_person_etLongitudeLayout"
+                            app:layout_constraintTop_toBottomOf="@+id/update_person_etLongitudeLayout">
 
                             <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                android:id="@+id/update_user_et_role_autocomplete"
+                                android:id="@+id/update_person_et_prize_autocomplete"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -507,24 +683,24 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/autocomplete_update_user_grade_layout"
+                            android:id="@+id/autocomplete_update_person_status_layout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="16dp"
-                            android:hint="@string/grade_name"
+                            android:hint="@string/select_a_status"
                             android:textColorHint="@color/gray"
                             android:textDirection="firstStrong"
                             android:textStyle="bold"
                             app:boxBackgroundColor="@color/light_gray"
-                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_user_role_layout"
-                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_user_role_layout"
-                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_user_role_layout">
+                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_person_prize_layout"
+                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_person_prize_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_person_prize_layout">
 
                             <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                android:id="@+id/update_user_et_grade_autocomplete"
+                                android:id="@+id/update_person_et_status_autocomplete"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -537,67 +713,7 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/autocomplete_update_user_balance_layout"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:hint="@string/balance_field"
-                            android:textColorHint="@color/gray"
-                            android:textDirection="firstStrong"
-                            android:textStyle="bold"
-                            app:boxBackgroundColor="@color/light_gray"
-                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_user_grade_layout"
-                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_user_grade_layout"
-                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_user_grade_layout">
-
-                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                android:id="@+id/update_user_et_balance_autocomplete"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:inputType="none"
-                                android:paddingTop="16dp"
-                                android:paddingBottom="16dp"
-                                android:textColor="@color/gray"
-                                android:textStyle="bold" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/autocomplete_update_user_coins_layout"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:hint="@string/coins"
-                            android:textColorHint="@color/gray"
-                            android:textDirection="firstStrong"
-                            android:textStyle="bold"
-                            app:boxBackgroundColor="@color/light_gray"
-                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_user_balance_layout"
-                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_user_balance_layout"
-                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_user_balance_layout">
-
-                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                android:id="@+id/update_user_et_coins_autocomplete"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:inputType="none"
-                                android:paddingTop="16dp"
-                                android:paddingBottom="16dp"
-                                android:textColor="@color/gray"
-                                android:textStyle="bold" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/update_user_etDateRegistrationLayout"
+                            android:id="@+id/update_person_etDateRegistrationLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -613,12 +729,12 @@
                             app:hintTextColor="@color/gray"
                             android:enabled="false"
                             app:startIconDrawable="@drawable/ic_baseline_date_range_24"
-                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_user_coins_layout"
-                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_user_coins_layout"
-                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_user_coins_layout">
+                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_update_person_status_layout"
+                            app:layout_constraintStart_toStartOf="@+id/autocomplete_update_person_status_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_update_person_status_layout">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/update_user_etDateRegistration"
+                                android:id="@+id/update_person_etDateRegistration"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:ems="10"
@@ -641,7 +757,7 @@
                         android:layout_marginTop="10dp">
 
                         <Button
-                            android:id="@+id/update_user_btnSaveChanges"
+                            android:id="@+id/update_person_btnSaveChanges"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/admin_et_email_account"
@@ -653,15 +769,15 @@
                             android:textColor="@color/white" />
 
                         <ProgressBar
-                            android:id="@+id/update_user_saveChangesProgressBar"
+                            android:id="@+id/update_person_saveChangesProgressBar"
                             style="?android:attr/progressBarStyle"
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:layout_marginRight="16dp"
                             android:visibility="invisible"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintRight_toRightOf="@+id/update_user_btnSaveChanges"
-                            app:layout_constraintTop_toTopOf="@+id/update_user_btnSaveChanges" />
+                            app:layout_constraintRight_toRightOf="@+id/update_person_btnSaveChanges"
+                            app:layout_constraintTop_toTopOf="@+id/update_person_btnSaveChanges" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </RelativeLayout>

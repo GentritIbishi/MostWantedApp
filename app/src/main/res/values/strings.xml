@@ -89,7 +89,7 @@
     <string name="successfully">Successfully!</string>
     <string name="uri_failed_to_set">Uri failed to set!</string>
     <string name="profile_picture_added">Profile Picture added!</string>
-    <string name="select_the_status">Select the status</string>
+    <string name="select_a_status">Select a status</string>
     <string name="see_users">See Users</string>
     <string name="see_persons">See Persons</string>
     <string name="location_reports">Location Reports</string>
@@ -352,13 +352,13 @@
         <item>Murder</item>
     </string-array>
 
-    <string name="grade">
+    <string-array name="grade">
         <item>A</item>
         <item>B</item>
         <item>C</item>
         <item>D</item>
         <item>E</item>
-    </string>
+    </string-array>
 
     <string-array name="status_of_person">
         <item>WANTED PERSON</item>
@@ -427,7 +427,7 @@
     <string name="take_order">take_order</string>
     <string name="amount">amount</string>
     <string name="coins">Coins</string>
-    <string name="select_the_prize">Select the prize</string>
+    <string name="select_a_prize">Select a prize</string>
     <string name="error_prize_required">Error prize is required!</string>
     <string name="latest">Latest</string>
     <string name="top_four_latest_person_wanted">TOP 4 LATEST PERSON WANTED</string>
@@ -463,6 +463,11 @@
     <string name="error_balance_required">Balance is required!</string>
     <string name="error_coins_required">Coins is required!</string>
     <string name="error_grade_required">Grade is required!</string>
+    <string name="error_role_required">Role is required!</string>
+    <string name="date_time_registration">Date Time Registration</string>
+    <string name="select_the_acts">Select the acts</string>
+    <string name="birthday">Birthday</string>
+    <string name="error_birthday_required">Birthday required!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

@@ -1,9 +1,8 @@
-package fiek.unipr.mostwantedapp.fragment.user;
+package fiek.unipr.mostwantedapp.fragment.admin.update.user;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -12,62 +11,72 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.MapsInformerPersonListAdapter;
-import fiek.unipr.mostwantedapp.models.Person;
+import fiek.unipr.mostwantedapp.adapter.UpdateUserListAdapter;
+import fiek.unipr.mostwantedapp.models.User;
 
-public class SearchFragment extends Fragment {
+public class UpdateUserListFragment extends Fragment {
 
-    private View search_fragment_view;
-    private ListView lvPersons;
-    private MapsInformerPersonListAdapter mapsInformerPersonListAdapter;
-    private ArrayList<Person> personArrayList;
+    private View update_user_fragment;
+    private ListView lvUsers;
+    private ArrayList<User> userArrayList;
+    private UpdateUserListAdapter userListAdapter;
     private FirebaseFirestore firebaseFirestore;
-    private EditText search_filter;
-    private String fullName;
-    
-    public SearchFragment() {}
+    private TextInputEditText update_et_user_search_filter;
+
+    public UpdateUserListFragment() {}
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        search_fragment_view = inflater.inflate(R.layout.fragment_search_user, container, false);
+        update_user_fragment = inflater.inflate(R.layout.fragment_update_user_list, container, false);
+        // initializing our variable for firebase
+        // firestore and getting its instance.
         firebaseFirestore = FirebaseFirestore.getInstance();
-        InitializeFields();
+
+        // below line is use to initialize our variables
+        lvUsers = update_user_fragment.findViewById(R.id.lvUsers);
+        update_et_user_search_filter = update_user_fragment.findViewById(R.id.update_et_user_search_filter);
+        userArrayList = new ArrayList<>();
+        userListAdapter = new UpdateUserListAdapter(getContext(), userArrayList);
+        lvUsers.setAdapter(userListAdapter);
+
+        // here we are calling a method
+        // to load data in our list view.
         loadDatainListview();
 
-        final SwipeRefreshLayout pullToRefreshInSearch = search_fragment_view.findViewById(R.id.pullToRefreshInSearch);
-        pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        final SwipeRefreshLayout update_user_pullToRefreshInSearch = update_user_fragment.findViewById(R.id.update_user_pullToRefreshInSearch);
+        update_user_pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Reload current fragment
-                personArrayList.clear();
+                userArrayList.clear();
                 loadDatainListview();
-                pullToRefreshInSearch.setRefreshing(false);
+                update_user_pullToRefreshInSearch.setRefreshing(false);
             }
         });
 
-        search_filter.requestFocus();
-
-        search_filter.addTextChangedListener(new TextWatcher() {
+        update_et_user_search_filter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -83,21 +92,14 @@ public class SearchFragment extends Fragment {
             }
         });
 
-        return search_fragment_view;
-    }
-
-    private void InitializeFields() {
-        search_filter = search_fragment_view.findViewById(R.id.search_filter);
-        lvPersons = search_fragment_view.findViewById(R.id.lvPersons);
-        personArrayList = new ArrayList<>();
-        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getActivity().getApplicationContext(), personArrayList);
-        lvPersons.setAdapter(mapsInformerPersonListAdapter);
+        return update_user_fragment;
     }
 
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
-        firebaseFirestore.collection("wanted_persons")
+        firebaseFirestore.collection("users")
+                .orderBy("register_date_time", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -112,35 +114,31 @@ public class SearchFragment extends Fragment {
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
                                 // that list to our object class.
-                                Person person = d.toObject(Person.class);
-
-                                fullName = person.getFullName();
+                                User user = d.toObject(User.class);
 
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
-                                personArrayList.add(person);
+                                userArrayList.add(user);
                             }
-
-                            mapsInformerPersonListAdapter.notifyDataSetChanged();
+                            userListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getActivity().getApplicationContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // we are displaying a toast message
-                // when we get any error from Firebase.
-                Toast.makeText(getActivity().getApplicationContext(), "Fail to load data..", Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // we are displaying a toast message
+                        // when we get any error from Firebase.
+                        Toast.makeText(getContext(), "Fail to load data..", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
-
     public void filter(String s) {
-        personArrayList.clear();
-        firebaseFirestore.collection("wanted_persons")
+        userArrayList.clear();
+        firebaseFirestore.collection("users")
                 .orderBy("fullName")
                 .startAt(s)
                 .endAt(s + "\uf8ff")
@@ -158,34 +156,26 @@ public class SearchFragment extends Fragment {
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
                                 // that list to our object class.
-                                Person person = d.toObject(Person.class);
-
-                                fullName = person.getFullName();
+                                User user = d.toObject(User.class);
 
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
-                                personArrayList.add(person);
+                                userArrayList.add(user);
                             }
-//                            // after that we are passing our array list to our adapter class.
-//                            MapsInformerPersonListAdapter adapter = new MapsInformerPersonListAdapter(getContext(), personArrayList);
-//
-//                            // after passing this array list to our adapter
-//                            // class we are setting our adapter to our list view.
-//                            lvPersons.setAdapter(adapter);
-                            mapsInformerPersonListAdapter.notifyDataSetChanged();
+                            userListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getActivity().getApplicationContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // we are displaying a toast message
-                // when we get any error from Firebase.
-                Toast.makeText(getActivity().getApplicationContext(), R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // we are displaying a toast message
+                        // when we get any error from Firebase.
+                        Toast.makeText(getContext(), R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
 

@@ -25,9 +25,9 @@ import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 import fiek.unipr.mostwantedapp.maps.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 
-public class LocationListAdapter extends ArrayAdapter<Person> {
+public class MapsLocationListAdapter extends ArrayAdapter<Person> {
     // constructor for our list view adapter.
-    public LocationListAdapter(@NonNull Context context, ArrayList<Person> locationArrayList) {
+    public MapsLocationListAdapter(@NonNull Context context, ArrayList<Person> locationArrayList) {
         super(context, 0, locationArrayList);
     }
 

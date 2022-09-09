@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.fragment.admin.update;
+package fiek.unipr.mostwantedapp.fragment.admin.update.user;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,43 +8,53 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.provider.MediaStore;
-import android.text.TextUtils;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.models.User;
 
 public class UpdateUserFragment extends Fragment {
 
     private View update_user_view;
+    public static final String EURO = "EURO";
+    public static final String COINS = "COINS";
+    private Boolean emailVerified;
     private String address, email, fullName, gender, lastname, name, parentName, password, personal_number, phone, grade,
-            register_date_time, role, userID, urlOfProfile;
-    private Integer balance, coins;
+            register_date_time, role, userID, urlOfProfile, balance, coins;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -59,14 +69,23 @@ public class UpdateUserFragment extends Fragment {
             update_user_etEmailToUser, update_user_etPasswordToUser, update_user_et_fullName, update_user_etDateRegistration;
     private MaterialAutoCompleteTextView update_user_et_gender, update_user_et_role_autocomplete, update_user_et_coins_autocomplete,
             update_user_et_balance_autocomplete, update_user_et_grade_autocomplete;
+    private TextInputLayout update_user_etNumPersonalLayout;
     private ProgressBar update_user_saveChangesProgressBar, update_user_uploadProgressBar;
     private SwipeRefreshLayout update_user_swipeUpToRefresh;
+    private String[] BALANCE_ARRAY = null;
+    private String[] COINS_ARRAY = null;
+    private Bundle bundle;
+    private Map<String, Object> update = new HashMap<>();
 
     public UpdateUserFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
     }
 
     @Override
@@ -90,6 +109,7 @@ public class UpdateUserFragment extends Fragment {
         update_user_etPhone = update_user_view.findViewById(R.id.update_user_etPhone);
         update_user_etAddress = update_user_view.findViewById(R.id.update_user_etAddress);
         update_user_etNumPersonal = update_user_view.findViewById(R.id.update_user_etNumPersonal);
+        update_user_etNumPersonalLayout = update_user_view.findViewById(R.id.update_user_etNumPersonalLayout);
         update_user_etEmailToUser = update_user_view.findViewById(R.id.update_user_etEmailToUser);
         update_user_etPasswordToUser = update_user_view.findViewById(R.id.update_user_etPasswordToUser);
         update_user_et_gender = update_user_view.findViewById(R.id.update_user_et_gender);
@@ -102,62 +122,26 @@ public class UpdateUserFragment extends Fragment {
         update_user_et_grade_autocomplete = update_user_view.findViewById(R.id.update_user_et_grade_autocomplete);
         update_user_etDateRegistration = update_user_view.findViewById(R.id.update_user_etDateRegistration);
 
-        Bundle bundle = getArguments();
-        if(bundle != null){
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        update_user_et_gender.setAdapter(gender_adapter);
 
-            //no need to change
-            userID = bundle.getString("userID");
-            urlOfProfile = bundle.getString("urlOfProfile");
+        ArrayAdapter<String> role_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.roles));
+        update_user_et_role_autocomplete.setAdapter(role_adapter);
 
-            address = bundle.getString("address");
-            update_user_etAddress.setText(address);
+        ArrayAdapter<String> grade_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.grade));
+        update_user_et_grade_autocomplete.setAdapter(grade_adapter);
 
-            email = bundle.getString("email");
-            update_user_etEmailToUser.setText(email);
+        setBalanceArray(EURO);
+        setCoinsArray(COINS);
 
-            gender = bundle.getString("gender");
-            update_user_et_gender.setText(gender);
+        ArrayAdapter<String> balance_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, BALANCE_ARRAY);
+        update_user_et_balance_autocomplete.setAdapter(balance_adapter);
 
-            lastname = bundle.getString("lastname");
-            update_user_et_lastName.setText(lastname);
+        ArrayAdapter<String> coins_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, COINS_ARRAY);
+        update_user_et_coins_autocomplete.setAdapter(coins_adapter);
 
-            name = bundle.getString("name");
-            update_user_et_firstName.setText(name);
-
-            parentName = bundle.getString("parentName");
-            update_user_et_parentName.setText(parentName);
-
-            password = bundle.getString("password");
-            update_user_etPasswordToUser.setText(password);
-
-            personal_number = bundle.getString("personal_number");
-            update_user_etNumPersonal.setText(personal_number);
-
-            phone = bundle.getString("phone");
-            update_user_etPhone.setText(phone);
-
-            role = bundle.getString("role");
-            update_user_et_role_autocomplete.setText(role);
-
-            balance = bundle.getInt("balance");
-            update_user_et_balance_autocomplete.setText(balance);
-
-            coins = bundle.getInt("coins");
-            update_user_et_coins_autocomplete.setText(coins);
-
-            fullName = bundle.getString("fullName");
-            update_user_et_fullName.setText(fullName);
-
-            grade = bundle.getString("grade");
-            update_user_et_grade_autocomplete.setText(grade);
-
-            //no option for change by default disable
-            register_date_time = bundle.getString("register_date_time");
-            update_user_etDateRegistration.setText(register_date_time);
-            update_user_etDateRegistration.setEnabled(false);
-
-
-        }
+        bundle = getArguments();
+        getAndSetFromBundle(bundle);
 
         loadImage();
 
@@ -194,7 +178,151 @@ public class UpdateUserFragment extends Fragment {
             }
         });
 
+        update_user_etNumPersonalLayout.setEndIconOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), getContext().getText(R.string.info_number_personal_is_ten_digit), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        update_user_etNumPersonal.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.length()>10){
+                    update_user_etNumPersonalLayout.setError(getContext().getText(R.string.no_more_than_ten_digits));
+                }else if(charSequence.length() < 10) {
+                    update_user_etNumPersonalLayout.setError(null);
+                }else if(charSequence.length() == 10){
+                    update_user_etNumPersonalLayout.setError(null);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        //What happen when on back pressed
+        onBackPressed();
+
         return update_user_view;
+    }
+
+    private void onBackPressed() {
+        update_user_view.setFocusableInTouchMode(true);
+        update_user_view.requestFocus();
+        update_user_view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
+                {
+                    Fragment fragment = new UpdateUserListFragment();
+                    loadFragment(fragment);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void getAndSetFromBundle(Bundle bundle) {
+        if(bundle != null){
+
+            //no need to change
+            userID = bundle.getString("userID");
+            urlOfProfile = bundle.getString("urlOfProfile");
+
+            address = bundle.getString("address");
+            update_user_etAddress.setText(address);
+
+            email = bundle.getString("email");
+            update_user_etEmailToUser.setText(email);
+
+            gender = bundle.getString("gender");
+            update_user_et_gender.setText(gender);
+
+            lastname = bundle.getString("lastname");
+            update_user_et_lastName.setText(lastname);
+
+            name = bundle.getString("name");
+            update_user_et_firstName.setText(name);
+
+            parentName = bundle.getString("parentName");
+            update_user_et_parentName.setText(parentName);
+
+            password = bundle.getString("password");
+            update_user_etPasswordToUser.setText(password);
+
+            personal_number = bundle.getString("personal_number");
+            update_user_etNumPersonal.setText(personal_number);
+
+            phone = bundle.getString("phone");
+            update_user_etPhone.setText(phone);
+
+            role = bundle.getString("role");
+            update_user_et_role_autocomplete.setText(role);
+
+            balance = bundle.getString("balance");
+            update_user_et_balance_autocomplete.setText(balance);
+
+            coins = bundle.getString("coins");
+            update_user_et_coins_autocomplete.setText(coins);
+
+            fullName = bundle.getString("fullName");
+            update_user_et_fullName.setText(fullName);
+
+            grade = bundle.getString("grade");
+            update_user_et_grade_autocomplete.setText(grade);
+
+            //no option for change by default disable
+            register_date_time = bundle.getString("register_date_time");
+            update_user_etDateRegistration.setText(register_date_time);
+            update_user_etDateRegistration.setEnabled(false);
+
+            emailVerified = bundle.getBoolean("emailVerified");
+
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        update_user_et_gender.setAdapter(gender_adapter);
+
+        ArrayAdapter<String> role_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.roles));
+        update_user_et_role_autocomplete.setAdapter(role_adapter);
+
+        ArrayAdapter<String> grade_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.grade));
+        update_user_et_grade_autocomplete.setAdapter(grade_adapter);
+
+        ArrayAdapter<String> balance_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, BALANCE_ARRAY);
+        update_user_et_balance_autocomplete.setAdapter(balance_adapter);
+
+        ArrayAdapter<String> coins_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, COINS_ARRAY);
+        update_user_et_coins_autocomplete.setAdapter(coins_adapter);
+
+    }
+
+    private void setBalanceArray(String euro) {
+        BALANCE_ARRAY = new String[1000000];
+        for(int i=0; i<1000000; i++) {
+            BALANCE_ARRAY[i] = i+" "+euro;
+        }
+    }
+
+    private void setCoinsArray(String coin) {
+        COINS_ARRAY = new String[1000000];
+        for(int i=0; i<1000000; i++) {
+            COINS_ARRAY[i] = (i+5)+" "+coin;
+        }
     }
 
     private void deletePhoto() {
@@ -265,238 +393,55 @@ public class UpdateUserFragment extends Fragment {
         });
     }
 
-    private boolean isFirstNameChanged() {
-        if(!name.equals(update_user_et_firstName.getText().toString()))
-        {
-            if(TextUtils.isEmpty(update_user_et_firstName.getText().toString())){
-                update_user_et_firstName.setError(getText(R.string.error_fullname_required));
-                update_user_et_firstName.requestFocus();
-                return false;
-            }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
-                docRef.update("name", update_user_et_firstName.getText().toString());
-                return true;
-            }
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isLastNameChanged() {
-        if(!lastname.equals(update_user_et_lastName.getText().toString()))
-        {
-            if(TextUtils.isEmpty(update_user_et_lastName.getText().toString())){
-                update_user_et_lastName.setError(getText(R.string.error_last_name_required));
-                update_user_et_lastName.requestFocus();
-                return false;
-            }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
-                docRef.update("lastname", update_user_et_lastName.getText().toString());
-                return true;
-            }
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isFullNameChanged() {
-        if(!fullName.equals(update_user_et_fullName.getText().toString()))
-        {
-            if(TextUtils.isEmpty(update_user_et_fullName.getText().toString())){
-                update_user_et_fullName.setError(getText(R.string.error_fullname_required));
-                return false;
-            }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
-                docRef.update("fullName", update_user_et_fullName.getText().toString());
-                return true;
-            }
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isParentNameChanged() {
-        if(!parentName.equals(update_user_et_parentName.getText().toString()))
-        {
-            if(TextUtils.isEmpty(update_user_et_parentName.getText().toString())){
-                update_user_et_parentName.setError(getText(R.string.error_parent_name_required));
-                update_user_et_parentName.requestFocus();
-                return false;
-            }else{
-                DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
-                docRef.update("parentName", update_user_et_parentName.getText().toString());
-                return true;
-            }
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isAddressChanged() {
-        if(!address.equals(update_user_etAddress.getText().toString()))
-        {
-            if(TextUtils.isEmpty(update_user_etAddress.getText().toString())){
-                update_user_etAddress.setError(getText(R.string.error_address_required));
-                update_user_etAddress.requestFocus();
-                return false;
-            }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
-                docRef.update("address", update_user_etAddress.getText().toString());
-                return true;
-            }
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isPersonalNumberChanged() {
-        if(!personal_number.equals(update_user_etNumPersonal.getText().toString()))
-        {
-            if(TextUtils.isEmpty(update_user_etNumPersonal.getText().toString())){
-                update_user_etNumPersonal.setError(getText(R.string.error_number_personal_required));
-                update_user_etNumPersonal.requestFocus();
-                return false;
-            }else if(update_user_etNumPersonal.length()>10){
-                update_user_etNumPersonal.setError(getText(R.string.error_number_personal_is_ten_digit));
-                update_user_etNumPersonal.requestFocus();
-                return false;
-            }else if(update_user_etNumPersonal.length()<10){
-                update_user_etNumPersonal.setError(getText(R.string.error_number_personal_less_than_ten_digits));
-                update_user_etNumPersonal.requestFocus();
-                return false;
-            }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
-                docRef.update("personal_number", update_user_etNumPersonal.getText().toString());
-                return true;
-            }
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isPhoneNumberChanged() {
-        if(!phone.equals(update_user_etPhone.getText().toString()))
-        {
-            if(TextUtils.isEmpty(update_user_etPhone.getText().toString())){
-                update_user_etPhone.setError(getText(R.string.error_phone_required));
-                update_user_etPhone.requestFocus();
-                return false;
-            }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
-                docRef.update("phone", update_user_etPhone.getText().toString());
-                return true;
-            }
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isEmailChanged() {
-        if(!email.equals(update_user_etEmailToUser.getText().toString()))
-        {
-            if(TextUtils.isEmpty(update_user_etEmailToUser.getText().toString())){
-                update_user_etEmailToUser.setError(getText(R.string.error_email_required));
-                update_user_etEmailToUser.requestFocus();
-                return false;
-            }else if(!update_user_etEmailToUser.getText().toString().matches("^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
-                update_user_etEmailToUser.setError(getText(R.string.error_validate_email));
-                update_user_etEmailToUser.requestFocus();
-                return false;
-            }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
-                docRef.update("email", update_user_etEmailToUser.getText().toString());
-                return true;
-            }
-
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isBalanceChanged() {
-        if(!balance.equals(update_user_et_balance_autocomplete.getText().toString()))
-        {
-            if(TextUtils.isEmpty(update_user_et_balance_autocomplete.getText().toString())){
-                update_user_et_balance_autocomplete.setError(getText(R.string.error_balance_required));
-                update_user_et_balance_autocomplete.requestFocus();
-                return false;
-            }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
-                docRef.update("balance", update_user_etPhone.getText().toString());
-                return true;
-            }
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isCoinsChanged() {
-        if(!coins.equals(update_user_et_coins_autocomplete.getText().toString()))
-        {
-            if(TextUtils.isEmpty(update_user_et_coins_autocomplete.getText().toString())){
-                update_user_et_coins_autocomplete.setError(getText(R.string.error_coins_required));
-                update_user_et_coins_autocomplete.requestFocus();
-                return false;
-            }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
-                docRef.update("coins", update_user_et_coins_autocomplete.getText().toString());
-                return true;
-            }
-        }else
-        {
-            return false;
-        }
-    }
-
-    private boolean isGradeChanged() {
-        if(!grade.equals(update_user_et_grade_autocomplete.getText().toString()))
-        {
-            if(TextUtils.isEmpty(update_user_et_grade_autocomplete.getText().toString())){
-                update_user_et_grade_autocomplete.setError(getText(R.string.error_grade_required));
-                update_user_et_grade_autocomplete.requestFocus();
-                return false;
-            }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
-                docRef.update("grade", update_user_et_grade_autocomplete.getText().toString());
-                return true;
-            }
-        }else
-        {
-            return false;
-        }
-    }
-
     private void update() {
-
-        try {
-            if(isFirstNameChanged()
-                    || isLastNameChanged()
-                    || isParentNameChanged()
-                    || isAddressChanged()
-                    || isPersonalNumberChanged()
-                    || isPhoneNumberChanged()
-                    || isEmailChanged()
-                    || isFullNameChanged()
-                    || isBalanceChanged()
-                    || isCoinsChanged()
-                    || isGradeChanged()){
-                update_user_saveChangesProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-                refreshDataFromFirebase();
-            }
-        }catch (Exception e){
-            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
+        String new_name = update_user_et_firstName.getText().toString();
+        String new_lastname = update_user_et_lastName.getText().toString();
+        String new_fullName = update_user_et_fullName.getText().toString();
+        String new_address = update_user_etAddress.getText().toString();
+        String new_email = update_user_etEmailToUser.getText().toString();
+        String new_ParentName = update_user_et_parentName.getText().toString();
+        String new_gender = update_user_et_gender.getText().toString();
+        String new_role = update_user_et_role_autocomplete.getText().toString();
+        String new_phone = update_user_etPhone.getText().toString();
+        String new_personal_number = update_user_etNumPersonal.getText().toString();
+        String new_grade = update_user_et_grade_autocomplete.getText().toString();
+        String new_password = update_user_etPasswordToUser.getText().toString();
+        String new_balance = update_user_et_balance_autocomplete.getText().toString();
+        String new_coins = update_user_et_coins_autocomplete.getText().toString();
+        User user = new User(
+                userID,
+                new_name,
+                new_lastname,
+                new_fullName,
+                new_address,
+                new_email,
+                new_ParentName,
+                new_gender,
+                new_role,
+                new_phone,
+                new_personal_number,
+                register_date_time,
+                new_grade,
+                new_password,
+                urlOfProfile,
+                new_balance,
+                new_coins,
+                emailVerified);
+        firebaseFirestore.collection("users")
+                .document(userID)
+                .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                        Fragment fragment = new UpdateUserListFragment();
+                        loadFragment(fragment);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void refreshDataFromFirebase() {
@@ -519,9 +464,8 @@ public class UpdateUserFragment extends Fragment {
                             fullName = documentSnapshot.getString("fullName");
                             grade = documentSnapshot.getString("grade");
                             register_date_time = documentSnapshot.getString("register_date_time");
-                            balance = Integer.valueOf(documentSnapshot.getString("balance"));
-                            coins = Integer.valueOf(documentSnapshot.getString("coins"));
-
+                            balance = documentSnapshot.getString("balance");
+                            coins = documentSnapshot.getString("coins");
                             update_user_et_firstName.setText(name);
                             update_user_et_parentName.setText(parentName);
                             update_user_et_lastName.setText(lastname);
@@ -545,6 +489,12 @@ public class UpdateUserFragment extends Fragment {
                         Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void loadFragment(Fragment fragment) {
+        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.admin_fragmentContainer, fragment)
+                .commit();
     }
 
 }

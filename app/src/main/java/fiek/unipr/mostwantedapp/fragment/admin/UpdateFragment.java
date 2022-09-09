@@ -12,7 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.fragment.admin.update.UpdateUserListFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.update.person.UpdatePersonListFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListFragment;
 
 public class UpdateFragment extends Fragment {
 
@@ -46,7 +47,8 @@ public class UpdateFragment extends Fragment {
         update_constraintWP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Fragment fragment = new UpdatePersonListFragment();
+                loadFragment(fragment);
             }
         });
 

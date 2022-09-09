@@ -25,14 +25,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.PersonListAdapter;
+import fiek.unipr.mostwantedapp.adapter.MapsInformerPersonListAdapter;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class SearchFragment extends Fragment {
 
     private View search_admin_view;
     private ListView lvPersons;
-    private PersonListAdapter personListAdapter;
+    private MapsInformerPersonListAdapter mapsInformerPersonListAdapter;
     private ArrayList<Person> personArrayList;
     private FirebaseFirestore firebaseFirestore;
     private EditText admin_search_filter;
@@ -83,8 +83,8 @@ public class SearchFragment extends Fragment {
         admin_search_filter = search_admin_view.findViewById(R.id.admin_search_filter);
         lvPersons = search_admin_view.findViewById(R.id.lvPersons);
         personArrayList = new ArrayList<>();
-        personListAdapter = new PersonListAdapter(getActivity().getApplicationContext(), personArrayList);
-        lvPersons.setAdapter(personListAdapter);
+        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getActivity().getApplicationContext(), personArrayList);
+        lvPersons.setAdapter(mapsInformerPersonListAdapter);
     }
 
     private void loadDatainListview() {
@@ -114,7 +114,7 @@ public class SearchFragment extends Fragment {
                                 personArrayList.add(person);
                             }
 
-                            personListAdapter.notifyDataSetChanged();
+                            mapsInformerPersonListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
                             Toast.makeText(getActivity().getApplicationContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
@@ -159,7 +159,7 @@ public class SearchFragment extends Fragment {
                                 // storing that data in our array list
                                 personArrayList.add(person);
                             }
-                            personListAdapter.notifyDataSetChanged();
+                            mapsInformerPersonListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
                             Toast.makeText(getActivity().getApplicationContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();

@@ -2,9 +2,13 @@ package fiek.unipr.mostwantedapp.models;
 
 public class User {
 
-    Integer balance, coins;
-    String userID, name, lastname, fullName, address, email, parentName, gender, role, phone, personal_number, register_date_time, grade, password, urlOfProfile;
-    Boolean isEmailVerified = false;
+    private String userID, name, lastname, fullName,
+            address, email, parentName, gender,
+            role, phone, personal_number, register_date_time,
+            grade, password, urlOfProfile,
+            balance, coins;
+
+    private Boolean isEmailVerified = false;
 
     public User() {
     }
@@ -16,9 +20,7 @@ public class User {
         this.password = password;
     }
 
-    public User(Integer balance, Integer coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, String urlOfProfile, Boolean isEmailVerified) {
-        this.balance = balance;
-        this.coins = coins;
+    public User(String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, String urlOfProfile, String balance, String coins, Boolean isEmailVerified) {
         this.userID = userID;
         this.name = name;
         this.lastname = lastname;
@@ -34,22 +36,25 @@ public class User {
         this.grade = grade;
         this.password = password;
         this.urlOfProfile = urlOfProfile;
+        this.balance = balance;
+        this.coins = coins;
         this.isEmailVerified = isEmailVerified;
     }
 
-    public Integer getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Integer balance) {
+    public User(String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String grade, String password, String balance, String coins) {
+        this.name = name;
+        this.lastname = lastname;
+        this.fullName = fullName;
+        this.address = address;
+        this.email = email;
+        this.parentName = parentName;
+        this.gender = gender;
+        this.role = role;
+        this.phone = phone;
+        this.personal_number = personal_number;
+        this.grade = grade;
+        this.password = password;
         this.balance = balance;
-    }
-
-    public Integer getCoins() {
-        return coins;
-    }
-
-    public void setCoins(Integer coins) {
         this.coins = coins;
     }
 
@@ -171,6 +176,22 @@ public class User {
 
     public void setUrlOfProfile(String urlOfProfile) {
         this.urlOfProfile = urlOfProfile;
+    }
+
+    public String getBalance() {
+        return balance;
+    }
+
+    public void setBalance(String balance) {
+        this.balance = balance;
+    }
+
+    public String getCoins() {
+        return coins;
+    }
+
+    public void setCoins(String coins) {
+        this.coins = coins;
     }
 
     public Boolean getEmailVerified() {

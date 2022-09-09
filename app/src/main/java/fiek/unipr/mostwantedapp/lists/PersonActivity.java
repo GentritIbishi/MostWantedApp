@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.PersonListAdapter;
+import fiek.unipr.mostwantedapp.adapter.MapsInformerPersonListAdapter;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class PersonActivity extends AppCompatActivity {
@@ -71,7 +71,7 @@ public class PersonActivity extends AppCompatActivity {
                                 personArrayList.add(person);
                             }
                             // after that we are passing our array list to our adapter class.
-                            PersonListAdapter adapter = new PersonListAdapter(PersonActivity.this, personArrayList);
+                            MapsInformerPersonListAdapter adapter = new MapsInformerPersonListAdapter(PersonActivity.this, personArrayList);
 
                             // after passing this array list to our adapter
                             // class we are setting our adapter to our list view.

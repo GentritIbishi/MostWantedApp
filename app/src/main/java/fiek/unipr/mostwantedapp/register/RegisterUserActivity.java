@@ -100,8 +100,8 @@ public class RegisterUserActivity extends AppCompatActivity {
                 String confirm_password = etConfirmPassword.getText().toString();
                 String grade = "E";
                 String role = "Informer";
-                Integer balance = 0;
-                Integer coins = 0;
+                String balance = "0 EURO";
+                String coins = "0 COINS";
                 Uri photoURL = null;
 
                 if(TextUtils.isEmpty(fullName)){
@@ -226,7 +226,7 @@ public class RegisterUserActivity extends AppCompatActivity {
 
     }
 
-    private void registerUser(Integer balance, Integer coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
+    private void registerUser(String balance, String coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
         if(checkConnection()){
             documentReference = firebaseFirestore.collection("users").document(userID);
             User user = new User(balance,

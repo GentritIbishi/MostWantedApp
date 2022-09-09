@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.fragment.admin.update;
+package fiek.unipr.mostwantedapp.fragment.admin.update.person;
 
 import android.os.Bundle;
 
@@ -26,19 +26,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.adapter.UpdatePersonListAdapter;
 import fiek.unipr.mostwantedapp.adapter.UpdateUserListAdapter;
+import fiek.unipr.mostwantedapp.models.Person;
 import fiek.unipr.mostwantedapp.models.User;
 
-public class UpdateUserListFragment extends Fragment {
+public class UpdatePersonListFragment extends Fragment {
 
-    private View update_user_fragment;
-    private ListView lvUsers;
-    private ArrayList<User> userArrayList;
-    private UpdateUserListAdapter userListAdapter;
+    private View update_person_view;
+    private ListView lvUpdatePersons;
+    private ArrayList<Person> personArrayList;
+    private UpdatePersonListAdapter updatePersonListAdapter;
     private FirebaseFirestore firebaseFirestore;
-    private TextInputEditText update_et_user_search_filter;
+    private TextInputEditText update_et_person_search_filter;
 
-    public UpdateUserListFragment() {}
+    public UpdatePersonListFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,34 +51,35 @@ public class UpdateUserListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        update_user_fragment = inflater.inflate(R.layout.fragment_update_user_list, container, false);
+        update_person_view = inflater.inflate(R.layout.fragment_update_person_list, container, false);
+
         // initializing our variable for firebase
         // firestore and getting its instance.
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         // below line is use to initialize our variables
-        lvUsers = update_user_fragment.findViewById(R.id.lvUsers);
-        update_et_user_search_filter = update_user_fragment.findViewById(R.id.update_et_user_search_filter);
-        userArrayList = new ArrayList<>();
-        userListAdapter = new UpdateUserListAdapter(getContext(), userArrayList);
-        lvUsers.setAdapter(userListAdapter);
+        lvUpdatePersons = update_person_view.findViewById(R.id.lvUpdatePersons);
+        update_et_person_search_filter = update_person_view.findViewById(R.id.update_et_person_search_filter);
+        personArrayList = new ArrayList<>();
+        updatePersonListAdapter = new UpdatePersonListAdapter(getContext(), personArrayList);
+        lvUpdatePersons.setAdapter(updatePersonListAdapter);
 
         // here we are calling a method
         // to load data in our list view.
         loadDatainListview();
 
-        final SwipeRefreshLayout update_user_pullToRefreshInSearch = update_user_fragment.findViewById(R.id.update_user_pullToRefreshInSearch);
-        update_user_pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        final SwipeRefreshLayout update_person_pullToRefreshInSearch = update_person_view.findViewById(R.id.update_person_pullToRefreshInSearch);
+        update_person_pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Reload current fragment
-                userArrayList.clear();
+                personArrayList.clear();
                 loadDatainListview();
-                update_user_pullToRefreshInSearch.setRefreshing(false);
+                update_person_pullToRefreshInSearch.setRefreshing(false);
             }
         });
 
-        update_et_user_search_filter.addTextChangedListener(new TextWatcher() {
+        update_et_person_search_filter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -92,14 +95,14 @@ public class UpdateUserListFragment extends Fragment {
             }
         });
 
-        return update_user_fragment;
+        return update_person_view;
     }
 
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
-        firebaseFirestore.collection("users")
-                .orderBy("register_date_time", Query.Direction.DESCENDING)
+        firebaseFirestore.collection("wanted_persons")
+                .orderBy("registration_date", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -114,13 +117,13 @@ public class UpdateUserListFragment extends Fragment {
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
                                 // that list to our object class.
-                                User user = d.toObject(User.class);
+                                Person person = d.toObject(Person.class);
 
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
-                                userArrayList.add(user);
+                                personArrayList.add(person);
                             }
-                            userListAdapter.notifyDataSetChanged();
+                            updatePersonListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
                             Toast.makeText(getContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
@@ -137,8 +140,8 @@ public class UpdateUserListFragment extends Fragment {
     }
 
     public void filter(String s) {
-        userArrayList.clear();
-        firebaseFirestore.collection("users")
+        personArrayList.clear();
+        firebaseFirestore.collection("wanted_persons")
                 .orderBy("fullName")
                 .startAt(s)
                 .endAt(s + "\uf8ff")
@@ -156,13 +159,13 @@ public class UpdateUserListFragment extends Fragment {
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
                                 // that list to our object class.
-                                User user = d.toObject(User.class);
+                                Person person = d.toObject(Person.class);
 
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
-                                userArrayList.add(user);
+                                personArrayList.add(person);
                             }
-                            userListAdapter.notifyDataSetChanged();
+                            updatePersonListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
                             Toast.makeText(getContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();

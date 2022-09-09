@@ -188,6 +188,42 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_birthdayLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:hint="@string/birthday"
+                android:textColorHint="@color/gray"
+                android:textDirection="firstStrong"
+                app:boxBackgroundColor="@color/white"
+                app:helperTextTextColor="@color/gray"
+                app:boxStrokeColor="@color/gray"
+                android:elevation="6dp"
+                app:hintTextColor="@color/gray"
+                app:startIconDrawable="@drawable/ic_baseline_date_range_24"
+                app:endIconMode="clear_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/et_addressLayout" >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_birthday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:textColor="@color/gray"
+                    android:imeOptions="actionNext"
+                    android:ems="10"
+                    android:textColorHint="@color/gray"
+                    android:inputType="date"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/autocomplete_et_age_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
@@ -202,7 +238,7 @@
                 app:boxBackgroundColor="@color/light_gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_addressLayout">
+                app:layout_constraintTop_toBottomOf="@+id/et_birthdayLayout">
 
                 <com.google.android.material.textfield.MaterialAutoCompleteTextView
                     android:id="@+id/et_age"
@@ -436,7 +472,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:hint="@string/select_the_status"
+                android:hint="@string/select_a_status"
                 android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
@@ -466,7 +502,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                android:hint="@string/select_the_prize"
+                android:hint="@string/select_a_prize"
                 android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
