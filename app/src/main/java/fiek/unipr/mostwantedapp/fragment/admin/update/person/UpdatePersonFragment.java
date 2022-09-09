@@ -215,7 +215,6 @@ public class UpdatePersonFragment extends Fragment {
     }
 
     private void update() {
-        //personId
         String new_firstName = update_person_et_firstName.getText().toString();
         String new_lastName = update_person_et_lastName.getText().toString();
         String new_parentName = update_person_et_parentName.getText().toString();
@@ -232,12 +231,9 @@ public class UpdatePersonFragment extends Fragment {
         String act = update_person_et_acts_multiAutocomplete.getText().toString();
         String[] array = act.split(",");
         List<String> new_acts = Arrays.asList(array);
-        //latitude
-        //longitude
         String new_prize = update_person_et_prize_autocomplete.getText().toString();
         String new_status = update_person_et_status_autocomplete.getText().toString();
         String new_registration_date = update_person_etDateRegistration.getText().toString();
-        //urlOfProfile
 
         Person person = new Person(
                 personId,
