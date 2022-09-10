@@ -15,16 +15,16 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
-            android:elevation="6dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-            android:background="@drawable/bg_register"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/bg_register"
+            android:elevation="6dp"
             android:fitsSystemWindows="true"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
 
             <TextView
                 android:id="@+id/investigator_tv_regPerson"
@@ -34,9 +34,9 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
+                android:fontFamily="@font/open_sans_bold"
                 android:text="@string/register_investigator"
                 android:textAlignment="center"
-                android:fontFamily="@font/open_sans_bold"
                 android:textColor="@color/gray"
                 android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -51,30 +51,30 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"
+                android:elevation="6dp"
                 android:hint="@string/register_person_first_name"
                 android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/gray"
                 app:boxStrokeColor="@color/gray"
-                android:elevation="6dp"
-                app:hintTextColor="@color/gray"
-                app:startIconDrawable="@drawable/ic_baseline_person_24"
                 app:endIconMode="clear_text"
+                app:helperTextTextColor="@color/gray"
+                app:hintTextColor="@color/gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/investigator_tv_regPerson" >
+                app:layout_constraintTop_toBottomOf="@+id/investigator_tv_regPerson"
+                app:startIconDrawable="@drawable/ic_baseline_person_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/investigator_et_firstName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/gray"
-                    android:imeOptions="actionNext"
                     android:ems="10"
-                    android:textColorHint="@color/gray"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
+                    android:textColor="@color/gray"
+                    android:textColorHint="@color/gray"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -87,30 +87,30 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
+                android:elevation="6dp"
                 android:hint="@string/register_person_last_name"
                 android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/gray"
                 app:boxStrokeColor="@color/gray"
-                android:elevation="6dp"
-                app:hintTextColor="@color/gray"
-                app:startIconDrawable="@drawable/ic_baseline_person_24"
                 app:endIconMode="clear_text"
+                app:helperTextTextColor="@color/gray"
+                app:hintTextColor="@color/gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/investigator_et_firstNameLayout" >
+                app:layout_constraintTop_toBottomOf="@+id/investigator_et_firstNameLayout"
+                app:startIconDrawable="@drawable/ic_baseline_person_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/investigator_et_lastName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/gray"
-                    android:imeOptions="actionNext"
                     android:ems="10"
-                    android:textColorHint="@color/gray"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
+                    android:textColor="@color/gray"
+                    android:textColorHint="@color/gray"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -123,7 +123,43 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
+                android:elevation="6dp"
                 android:hint="@string/parent_name"
+                android:textColorHint="@color/gray"
+                android:textDirection="firstStrong"
+                app:boxBackgroundColor="@color/white"
+                app:boxStrokeColor="@color/gray"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="@color/gray"
+                app:hintTextColor="@color/gray"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/investigator_et_lastNameLayout"
+                app:startIconDrawable="@drawable/ic_baseline_person_24">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/investigator_et_parentName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:imeOptions="actionNext"
+                    android:inputType="textCapSentences"
+                    android:textColor="@color/gray"
+                    android:textColorHint="@color/gray"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/investigator_et_birthdayLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:hint="@string/birthday"
                 android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 app:boxBackgroundColor="@color/white"
@@ -131,22 +167,23 @@
                 app:boxStrokeColor="@color/gray"
                 android:elevation="6dp"
                 app:hintTextColor="@color/gray"
-                app:startIconDrawable="@drawable/ic_baseline_person_24"
+                app:startIconDrawable="@drawable/ic_baseline_date_range_24"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/investigator_et_lastNameLayout" >
+                app:layout_constraintTop_toBottomOf="@+id/investigator_et_parentNameLayout" >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/investigator_et_parentName"
+                    android:id="@+id/investigator_et_birthday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_bold"
                     android:textColor="@color/gray"
+                    android:text="DD-MM-YYYY"
                     android:imeOptions="actionNext"
                     android:ems="10"
                     android:textColorHint="@color/gray"
-                    android:inputType="textCapSentences"
+                    android:inputType="date"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -159,30 +196,30 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
+                android:elevation="6dp"
                 android:hint="@string/address"
                 android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/gray"
                 app:boxStrokeColor="@color/gray"
-                android:elevation="6dp"
-                app:hintTextColor="@color/gray"
-                app:startIconDrawable="@drawable/ic_baseline_map_24"
                 app:endIconMode="clear_text"
+                app:helperTextTextColor="@color/gray"
+                app:hintTextColor="@color/gray"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/investigator_et_parentNameLayout" >
+                app:layout_constraintTop_toBottomOf="@+id/investigator_et_birthdayLayout"
+                app:startIconDrawable="@drawable/ic_baseline_map_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/investigator_et_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/gray"
-                    android:imeOptions="actionNext"
                     android:ems="10"
-                    android:textColorHint="@color/gray"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
+                    android:textColor="@color/gray"
+                    android:textColorHint="@color/gray"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -412,7 +449,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/investigator_autocomplete_et_phy_appearance_layout"/>
+                app:layout_constraintTop_toBottomOf="@+id/investigator_autocomplete_et_phy_appearance_layout" />
 
             <ProgressBar
                 android:id="@+id/investigator_progressBar"

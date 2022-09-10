@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.helpers.DateInputMask;
 import fiek.unipr.mostwantedapp.profile.SetProfileInvestigatorActivity;
 import fiek.unipr.mostwantedapp.models.Investigator;
 
@@ -49,7 +50,7 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
             investigator_et_phy_appearance, investigator_et_acts,
             investigator_et_status, investigator_et_prize;
     private TextInputEditText investigator_et_firstName, investigator_et_lastName,
-            investigator_et_address, investigator_et_parentName;
+            investigator_et_address, investigator_et_parentName, investigator_et_birthday;
     private Button registerInvestigator;
     private ProgressBar investigator_progressBar;
     private String[] WEIGHT_ARRAY = null;
@@ -78,6 +79,8 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
         investigator_et_lastName = findViewById(R.id.investigator_et_lastName);
         investigator_et_parentName = findViewById(R.id.investigator_et_parentName);
         investigator_et_address = findViewById(R.id.investigator_et_address);
+        investigator_et_birthday = findViewById(R.id.investigator_et_birthday);
+        new DateInputMask(investigator_et_birthday);
 
         investigator_et_age = findViewById(R.id.investigator_et_age);
         ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, AGE_ARRAY);
@@ -155,6 +158,7 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
         investigator_et_eyeColor.setText("");
         investigator_et_hairColor.setText("");
         investigator_et_phy_appearance.setText("");
+        investigator_et_birthday.setText("");
     }
 
     private void register() {
@@ -163,6 +167,7 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
         String lastName = investigator_et_lastName.getText().toString().trim();
         String parentName = investigator_et_parentName.getText().toString().trim();
         String fullName = firstName+" ("+parentName+") "+lastName;
+        String birthday = investigator_et_birthday.getText().toString();
         String address = investigator_et_address.getText().toString().trim();
         String age = investigator_et_age.getText().toString().trim();
         String gender = investigator_et_gender.getText().toString().trim();
@@ -193,6 +198,12 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
         if (address.isEmpty()) {
             investigator_et_address.setError(getText(R.string.error_address_required));
             investigator_et_address.requestFocus();
+            return;
+        }
+
+        if (birthday.isEmpty()) {
+            investigator_et_birthday.setError(getText(R.string.error_birthday_required));
+            investigator_et_birthday.requestFocus();
             return;
         }
 
@@ -244,7 +255,7 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
 
             String investigator_id = collectionReference.document().getId();
 
-            Investigator investigator = new Investigator(investigator_id, firstName, lastName, parentName, fullName, address, eyeColor, hairColor, phy_appearance,
+            Investigator investigator = new Investigator(investigator_id, firstName, lastName, parentName, fullName, birthday, address, eyeColor, hairColor, phy_appearance,
                     null, getTimeDate(), age, gender, height, weight);
 
 

@@ -3,7 +3,14 @@ package fiek.unipr.mostwantedapp.models;
 import java.util.List;
 
 public class Person {
-    private String personId, firstName, lastName, parentName, fullName, birthday, address, eyeColor, hairColor, phy_appearance, urlOfProfile, status, prize, registration_date, age, gender, height, weight;
+    private String personId,
+            firstName, lastName,
+            parentName, fullName,
+            birthday, address, eyeColor,
+            hairColor, phy_appearance,
+            urlOfProfile, status, prize,
+            registration_date, age, gender,
+            height, weight;
     private List<String> acts;
     private Double longitude, latitude;
 
