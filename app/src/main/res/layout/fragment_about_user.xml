@@ -15,11 +15,13 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@drawable/bg_counters"
+            android:padding="15dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageHelp"
+                android:id="@+id/user_imageHelp"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/ic_app"
@@ -28,46 +30,50 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_need_some_helps"
+                android:id="@+id/user_tv_need_some_helps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/app_name"
-                android:textColor="@color/gray"
+                android:textColor="@color/white"
                 android:textSize="19sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageHelp" />
+                app:layout_constraintTop_toBottomOf="@+id/user_imageHelp" />
 
             <TextView
-                android:id="@+id/about_header"
+                android:id="@+id/user_about_header"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
                 android:lineSpacingExtra="4sp"
+                android:textColor="@color/white"
                 android:text="@string/about_header"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_need_some_helps" />
+                app:layout_constraintTop_toBottomOf="@+id/user_tv_need_some_helps" />
 
             <TextView
-                android:id="@+id/about_contain"
+                android:id="@+id/user_about_contain"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="32dp"
-                android:textAlignment="center"
-                android:textSize="20sp"
+                android:layout_marginBottom="16dp"
                 android:lineSpacingExtra="4sp"
                 android:text="@string/about_contain"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/about_header" />
+                app:layout_constraintTop_toBottomOf="@+id/user_about_header" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

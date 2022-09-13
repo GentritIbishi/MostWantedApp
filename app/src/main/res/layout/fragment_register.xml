@@ -1,142 +1,166 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
     android:fitsSystemWindows="true"
     tools:context=".fragment.admin.RegisterFragment">
 
     <ScrollView
+        android:id="@+id/scrollRegister"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_analytics_item"
+            android:elevation="6dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintPU"
+            <TextView
+                android:id="@+id/tv_register_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/item_persistent_state"
-                android:clickable="true"
-                android:elevation="3dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.8"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/circleImageView"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:src="@drawable/ic_profile_picture_default"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"
-                    android:text="@string/privileged_user"
-                    android:textColor="@color/gray"
-                    android:textSize="17sp"
-                    app:layout_constraintEnd_toEndOf="@+id/circleImageView"
-                    app:layout_constraintStart_toStartOf="@+id/circleImageView"
-                    app:layout_constraintTop_toBottomOf="@+id/circleImageView" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintWP"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="13dp"
-                android:layout_marginEnd="8dp"
-                android:background="@drawable/item_persistent_state"
-                android:clickable="true"
-                android:elevation="3dp"
+                android:elevation="6dp"
+                android:fontFamily="@font/open_sans"
+                android:gravity="left"
+                android:padding="10dp"
+                android:text="@string/register"
+                android:textColor="@color/gray"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/head_constraint_register"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintPU">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/wantedPersonImage"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:layout_marginTop="29dp"
-                    android:src="@drawable/ic_wanted_personv2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/wanted_person"
-                    android:textColor="@color/gray"
-                    android:textSize="17sp"
-                    app:layout_constraintEnd_toEndOf="@+id/wantedPersonImage"
-                    app:layout_constraintStart_toStartOf="@+id/wantedPersonImage"
-                    app:layout_constraintTop_toBottomOf="@+id/wantedPersonImage" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraintInv"
+                android:id="@+id/head_constraint_register"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="13dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/item_persistent_state"
-                android:clickable="true"
-                android:elevation="3dp"
+                android:layout_gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/constraintWP">
+                app:layout_constraintStart_toStartOf="parent">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/investigatorImage"
-                    android:layout_width="130dp"
-                    android:layout_height="130dp"
-                    android:layout_marginTop="29dp"
-                    android:src="@drawable/ic_user_secret_solid"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
-
-                <TextView
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintPU"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="@string/investigator_person"
-                    android:textColor="@color/gray"
-                    android:textSize="17sp"
-                    app:layout_constraintEnd_toEndOf="@+id/investigatorImage"
-                    app:layout_constraintStart_toStartOf="@+id/investigatorImage"
-                    app:layout_constraintTop_toBottomOf="@+id/investigatorImage" />
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/item_persistent_state"
+                    android:clickable="true"
+                    android:elevation="3dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.8"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/register_imagePU"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:src="@drawable/ic_profile_picture_default"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_pu_register"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/privileged_user"
+                        android:textColor="@color/gray"
+                        android:textSize="17sp"
+                        app:layout_constraintEnd_toEndOf="@+id/register_imagePU"
+                        app:layout_constraintStart_toStartOf="@+id/register_imagePU"
+                        app:layout_constraintTop_toBottomOf="@+id/register_imagePU" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintWP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/item_persistent_state"
+                    android:clickable="true"
+                    android:elevation="3dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintPU">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/wantedPersonImage"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:layout_marginTop="29dp"
+                        android:src="@drawable/ic_wanted_personv2"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/update_textView2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/wanted_person"
+                        android:textColor="@color/gray"
+                        android:textSize="17sp"
+                        app:layout_constraintEnd_toEndOf="@+id/wantedPersonImage"
+                        app:layout_constraintStart_toStartOf="@+id/wantedPersonImage"
+                        app:layout_constraintTop_toBottomOf="@+id/wantedPersonImage" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintInv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/item_persistent_state"
+                    android:clickable="true"
+                    android:elevation="3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintWP">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/investigatorImage"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:layout_marginTop="29dp"
+                        android:src="@drawable/ic_user_secret_solid"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/update_textView2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/investigator_person"
+                        android:textColor="@color/gray"
+                        android:textSize="17sp"
+                        app:layout_constraintEnd_toEndOf="@+id/investigatorImage"
+                        app:layout_constraintStart_toStartOf="@+id/investigatorImage"
+                        app:layout_constraintTop_toBottomOf="@+id/investigatorImage" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -144,5 +168,4 @@
 
     </ScrollView>
 
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.register;
+package fiek.unipr.mostwantedapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,13 +32,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import fiek.unipr.mostwantedapp.LoginActivity;
-import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.profile.SetProfileUsersActivity;
 import fiek.unipr.mostwantedapp.models.User;
 
-public class RegisterUserActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
     private TextInputEditText etName, etLastName, etParentName, etPhone, etAddress, etPersonalNumber,
             etEmailToInformer, etPasswordToInformer, etConfirmPassword;
@@ -179,12 +177,12 @@ public class RegisterUserActivity extends AppCompatActivity {
                                 firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Toast.makeText(RegisterUserActivity.this, R.string.verification_email_sent_to + firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RegisterActivity.this, R.string.verification_email_sent_to + firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(RegisterUserActivity.this, R.string.failed_to_send_verification_email, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RegisterActivity.this, R.string.failed_to_send_verification_email, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
@@ -193,11 +191,11 @@ public class RegisterUserActivity extends AppCompatActivity {
                             public void onFailure(@NonNull Exception e) {
                                 ri_progressBar.setVisibility(View.INVISIBLE);
                                 bt_Register.setEnabled(true);
-                                Toast.makeText(RegisterUserActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }else {
-                        Toast.makeText(RegisterUserActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -208,7 +206,7 @@ public class RegisterUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //Go back to Login
-                Intent intent = new Intent(RegisterUserActivity.this, LoginActivity.class);
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
@@ -216,7 +214,7 @@ public class RegisterUserActivity extends AppCompatActivity {
         etPersonalNumberLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(RegisterUserActivity.this, getApplicationContext().getText(R.string.info_number_personal_is_ten_digit), Toast.LENGTH_SHORT).show();
+                Toast.makeText(RegisterActivity.this, getApplicationContext().getText(R.string.info_number_personal_is_ten_digit), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -290,7 +288,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 public void onSuccess(Void unused) {
                     ri_progressBar.setVisibility(View.INVISIBLE);
                     bt_Register.setEnabled(true);
-                    Toast.makeText(RegisterUserActivity.this, getApplicationContext().getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterUserActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, getApplicationContext().getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
                     setEmptyFields();
                     goToSetProfilePicture();
                 }
@@ -299,7 +297,7 @@ public class RegisterUserActivity extends AppCompatActivity {
                 public void onFailure(@NonNull Exception e) {
                     ri_progressBar.setVisibility(View.INVISIBLE);
                     bt_Register.setEnabled(true);
-                    Toast.makeText(RegisterUserActivity.this, ""+e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(RegisterActivity.this, ""+e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         }else {
@@ -320,7 +318,7 @@ public class RegisterUserActivity extends AppCompatActivity {
     }
 
     private void goToSetProfilePicture() {
-        Intent intent = new Intent(RegisterUserActivity.this, SetProfileUsersActivity.class);
+        Intent intent = new Intent(RegisterActivity.this, SetProfileUsersActivity.class);
         startActivity(intent);
         finish();
     }

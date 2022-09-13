@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -36,7 +37,7 @@ public class SearchFragment extends Fragment {
     private MapsInformerPersonListAdapter mapsInformerPersonListAdapter;
     private ArrayList<Person> personArrayList;
     private FirebaseFirestore firebaseFirestore;
-    private EditText search_filter;
+    private TextInputEditText search_filter;
     private String fullName;
     
     public SearchFragment() {}

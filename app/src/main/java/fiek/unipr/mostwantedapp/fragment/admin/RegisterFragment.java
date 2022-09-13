@@ -5,15 +5,17 @@ import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.register.RegisterInvestigatorActivity;
-import fiek.unipr.mostwantedapp.register.RegisterPersonActivity;
-import fiek.unipr.mostwantedapp.register.RegisterUsersActivity;
+import fiek.unipr.mostwantedapp.fragment.admin.register.investigator.RegisterInvestigatorFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.register.person.RegisterPersonFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.register.users.RegisterUsersFragment;
 
 public class RegisterFragment extends Fragment {
 
@@ -36,24 +38,24 @@ public class RegisterFragment extends Fragment {
         constraintPU.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), RegisterUsersActivity.class);
-                startActivity(intent);
+                Fragment fragment = new RegisterUsersFragment();
+                loadFragment(fragment);
             }
         });
 
         constraintWP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), RegisterPersonActivity.class);
-                startActivity(intent);
+                Fragment fragment = new RegisterPersonFragment();
+                loadFragment(fragment);
             }
         });
 
         constraintInv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), RegisterInvestigatorActivity.class);
-                startActivity(intent);
+                Fragment fragment = new RegisterInvestigatorFragment();
+                loadFragment(fragment);
             }
         });
 
@@ -64,5 +66,13 @@ public class RegisterFragment extends Fragment {
         constraintPU = view_register_fragment.findViewById(R.id.constraintPU);
         constraintWP = view_register_fragment.findViewById(R.id.constraintWP);
         constraintInv = view_register_fragment.findViewById(R.id.constraintInv);
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.admin_fragmentContainer, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 }

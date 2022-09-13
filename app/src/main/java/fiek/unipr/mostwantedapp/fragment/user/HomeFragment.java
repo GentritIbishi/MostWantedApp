@@ -116,8 +116,7 @@ public class HomeFragment extends Fragment {
     private Double latitude, longitude;
     private String notificationTitle;
 
-    public HomeFragment() {
-    }
+    public HomeFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

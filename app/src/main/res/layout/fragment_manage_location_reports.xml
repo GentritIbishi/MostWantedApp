@@ -1,49 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.admin.ManageLocationReportsFragment">
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    tools:context=".fragment.admin.search.SearchManageLocationReportsFragment">
 
-    <RelativeLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/locationReports_pullToRefreshInSearch"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/locationReports_search_filter"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/search_bg"
-            android:hint="@string/search"
-            android:inputType="textCapSentences"
-            android:padding="16dp"
-            android:textAlignment="center"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/gray" />
+        <LinearLayout
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/locationReports_pullToRefreshInSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/locationReports_search_filter">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/locationReports_search_filter_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:text="@string/search"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/search"
+                android:textColorHint="@color/gray"
+                android:textDirection="firstStrong"
+                app:boxBackgroundColor="@color/white"
+                app:helperTextTextColor="@color/gray"
+                app:boxStrokeColor="@android:color/transparent"
+                app:hintTextColor="@color/gray"
+                app:startIconDrawable="@drawable/ic_baseline_person_search_24"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/locationReports_search_filter"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray"
+                    android:imeOptions="actionDone"
+                    android:ems="10"
+                    android:textColorHint="@color/gray"
+                    android:inputType="textCapSentences"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <ListView
                 android:id="@+id/lvLocationReports_manage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:divider="@android:color/transparent"
+                android:elevation="6dp"
+                android:background="@drawable/bg_listview_item"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginTop="5.0sp"
-                android:dividerHeight="5.0sp"
                 android:clickable="true"
-                android:focusable="true"
-                android:elevation="6dp"/>
+                android:divider="@android:color/transparent"
+                android:dividerHeight="2.5sp"
+                android:focusable="true"/>
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </LinearLayout>
 
-    </RelativeLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>

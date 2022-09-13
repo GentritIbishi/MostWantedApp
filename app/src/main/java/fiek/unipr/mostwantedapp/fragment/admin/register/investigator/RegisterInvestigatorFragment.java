@@ -1,11 +1,14 @@
-package fiek.unipr.mostwantedapp.register;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+package fiek.unipr.mostwantedapp.fragment.admin.register.investigator;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -31,11 +34,12 @@ import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.DateInputMask;
-import fiek.unipr.mostwantedapp.profile.SetProfileInvestigatorActivity;
 import fiek.unipr.mostwantedapp.models.Investigator;
+import fiek.unipr.mostwantedapp.profile.SetProfileInvestigatorActivity;
 
-public class RegisterInvestigatorActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterInvestigatorFragment extends Fragment implements View.OnClickListener {
 
+    private View register_investigator_view;
     public static final String KG = "KG";
     public static final String CM = "CM";
     public static final String AGE = "AGE";
@@ -57,10 +61,24 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
     private String[] HEIGHT_ARRAY = null;
     private String[] AGE_ARRAY = null;
 
+    public RegisterInvestigatorFragment() {}
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_investigator);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        register_investigator_view = inflater.inflate(R.layout.fragment_register_investigator, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -72,45 +90,47 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
         setHeightInMeasureArray(CM);
         setAgeArray();
 
-        registerInvestigator = findViewById(R.id.registerInvestigator);
+        registerInvestigator = register_investigator_view.findViewById(R.id.registerInvestigator);
         registerInvestigator.setOnClickListener(this);
 
-        investigator_et_firstName = findViewById(R.id.investigator_et_firstName);
-        investigator_et_lastName = findViewById(R.id.investigator_et_lastName);
-        investigator_et_parentName = findViewById(R.id.investigator_et_parentName);
-        investigator_et_address = findViewById(R.id.investigator_et_address);
-        investigator_et_birthday = findViewById(R.id.investigator_et_birthday);
+        investigator_et_firstName = register_investigator_view.findViewById(R.id.investigator_et_firstName);
+        investigator_et_lastName = register_investigator_view.findViewById(R.id.investigator_et_lastName);
+        investigator_et_parentName = register_investigator_view.findViewById(R.id.investigator_et_parentName);
+        investigator_et_address = register_investigator_view.findViewById(R.id.investigator_et_address);
+        investigator_et_birthday = register_investigator_view.findViewById(R.id.investigator_et_birthday);
         new DateInputMask(investigator_et_birthday);
 
-        investigator_et_age = findViewById(R.id.investigator_et_age);
-        ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, AGE_ARRAY);
+        investigator_et_age = register_investigator_view.findViewById(R.id.investigator_et_age);
+        ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, AGE_ARRAY);
         investigator_et_age.setAdapter(age_adapter);
 
-        investigator_et_gender = findViewById(R.id.investigator_et_gender);
-        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        investigator_et_gender = register_investigator_view.findViewById(R.id.investigator_et_gender);
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
         investigator_et_gender.setAdapter(gender_adapter);
 
-        investigator_et_height = findViewById(R.id.investigator_et_height);
-        ArrayAdapter<String> height_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, HEIGHT_ARRAY);
+        investigator_et_height = register_investigator_view.findViewById(R.id.investigator_et_height);
+        ArrayAdapter<String> height_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, HEIGHT_ARRAY);
         investigator_et_height.setAdapter(height_adapter);
 
-        investigator_et_weight = findViewById(R.id.investigator_et_weight);
-        ArrayAdapter<String> weight_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, WEIGHT_ARRAY);
+        investigator_et_weight = register_investigator_view.findViewById(R.id.investigator_et_weight);
+        ArrayAdapter<String> weight_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, WEIGHT_ARRAY);
         investigator_et_weight.setAdapter(weight_adapter);
 
-        investigator_et_eyeColor = findViewById(R.id.investigator_et_eyeColor);
-        ArrayAdapter<String> eye_color_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.eye_color));
+        investigator_et_eyeColor = register_investigator_view.findViewById(R.id.investigator_et_eyeColor);
+        ArrayAdapter<String> eye_color_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.eye_color));
         investigator_et_eyeColor.setAdapter(eye_color_adapter);
 
-        investigator_et_hairColor = findViewById(R.id.investigator_et_hairColor);
-        ArrayAdapter<String> hair_color_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.hair_color));
+        investigator_et_hairColor = register_investigator_view.findViewById(R.id.investigator_et_hairColor);
+        ArrayAdapter<String> hair_color_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.hair_color));
         investigator_et_hairColor.setAdapter(hair_color_adapter);
 
-        investigator_et_phy_appearance = findViewById(R.id.investigator_et_phy_appearance);
-        ArrayAdapter<String> phy_appearance_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.physical_appearance));
+        investigator_et_phy_appearance = register_investigator_view.findViewById(R.id.investigator_et_phy_appearance);
+        ArrayAdapter<String> phy_appearance_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.physical_appearance));
         investigator_et_phy_appearance.setAdapter(phy_appearance_adapter);
 
-        investigator_progressBar = findViewById(R.id.investigator_progressBar);
+        investigator_progressBar = register_investigator_view.findViewById(R.id.investigator_progressBar);
+
+        return register_investigator_view;
     }
 
     private void setWeightInMeasureArray(String measure) {
@@ -130,7 +150,7 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
     private void setAgeArray() {
         AGE_ARRAY = new String[121];
         for(int i=0; i<121; i++) {
-            AGE_ARRAY[i] = i+" "+getApplicationContext().getText(R.string.age);
+            AGE_ARRAY[i] = i+" "+getContext().getText(R.string.age);
         }
     }
 
@@ -263,15 +283,15 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.getResult().exists()) {
-                        Toast.makeText(RegisterInvestigatorActivity.this, RegisterInvestigatorActivity.this.getText(R.string.this_investigator_with_name) + " " + fullName + " "+ RegisterInvestigatorActivity.this.getText(R.string.exists_in_database_please_add_example), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getContext().getText(R.string.this_investigator_with_name) + " " + fullName + " "+ getContext().getText(R.string.exists_in_database_please_add_example), Toast.LENGTH_LONG).show();
                         investigator_progressBar.setVisibility(View.GONE);
                         registerInvestigator.setEnabled(true);
                     } else {
                         firebaseFirestore.collection("investigators").document(investigator_id).set(investigator).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(RegisterInvestigatorActivity.this, RegisterInvestigatorActivity.this.getText(R.string.this_investigator_with_name) + " " + fullName + " " + RegisterInvestigatorActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
-                                Intent setImageOfInvestigator = new Intent(RegisterInvestigatorActivity.this, SetProfileInvestigatorActivity.class);
+                                Toast.makeText(getContext(), getContext().getText(R.string.this_investigator_with_name) + " " + fullName + " " + getContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                                Intent setImageOfInvestigator = new Intent(getContext(), SetProfileInvestigatorActivity.class);
                                 Bundle registerInvestigatorBundle = new Bundle();
                                 registerInvestigatorBundle.putString("investigator_id", investigator_id);
                                 registerInvestigatorBundle.putString("fullName", fullName);
@@ -284,7 +304,7 @@ public class RegisterInvestigatorActivity extends AppCompatActivity implements V
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(RegisterInvestigatorActivity.this, R.string.investigator_failed_to_register, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), getContext().getText(R.string.investigator_failed_to_register), Toast.LENGTH_LONG).show();
                                 registerInvestigator.setEnabled(true);
                                 investigator_progressBar.setVisibility(View.INVISIBLE);
                             }

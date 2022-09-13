@@ -93,7 +93,7 @@
         android:elevation="14dp"
         android:padding="10dp"
         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

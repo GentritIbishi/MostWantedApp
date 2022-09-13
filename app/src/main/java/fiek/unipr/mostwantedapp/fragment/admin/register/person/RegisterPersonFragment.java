@@ -1,14 +1,15 @@
-package fiek.unipr.mostwantedapp.register;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+package fiek.unipr.mostwantedapp.fragment.admin.register.person;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.MultiAutoCompleteTextView;
@@ -19,6 +20,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,22 +30,20 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
-
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import fiek.unipr.mostwantedapp.helpers.DateInputMask;
-import fiek.unipr.mostwantedapp.profile.SetProfilePersonActivity;
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.helpers.DateInputMask;
 import fiek.unipr.mostwantedapp.models.Person;
+import fiek.unipr.mostwantedapp.profile.SetProfilePersonActivity;
 
-public class RegisterPersonActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegisterPersonFragment extends Fragment implements View.OnClickListener {
 
+    private View register_person_view;
     public static final String KG = "KG";
     public static final String CM = "CM";
     public static final String AGE = "AGE";
@@ -64,10 +64,22 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
     private String[] AGE_ARRAY = null;
     private String[] PRIZE_ARRAY = null;
 
+    public RegisterPersonFragment() {}
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_person);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        storageReference = FirebaseStorage.getInstance().getReference();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        register_person_view = inflater.inflate(R.layout.fragment_register_person, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -80,59 +92,60 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
         setAgeArray();
         setPrizeInYourCurrency(EURO);
 
-        registerPerson = findViewById(R.id.registerPerson);
+        registerPerson = register_person_view.findViewById(R.id.registerPerson);
         registerPerson.setOnClickListener(this);
 
-        et_firstName = findViewById(R.id.et_firstName);
-        et_lastName = findViewById(R.id.et_lastName);
-        et_parentName = findViewById(R.id.et_parentName);
-        et_address = findViewById(R.id.et_address);
-        et_birthday = findViewById(R.id.et_birthday);
+        et_firstName = register_person_view.findViewById(R.id.et_firstName);
+        et_lastName = register_person_view.findViewById(R.id.et_lastName);
+        et_parentName = register_person_view.findViewById(R.id.et_parentName);
+        et_address = register_person_view.findViewById(R.id.et_address);
+        et_birthday = register_person_view.findViewById(R.id.et_birthday);
         new DateInputMask(et_birthday);
 
-        et_age = findViewById(R.id.et_age);
-        ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, AGE_ARRAY);
+        et_age = register_person_view.findViewById(R.id.et_age);
+        ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, AGE_ARRAY);
         et_age.setAdapter(age_adapter);
 
-        et_gender = findViewById(R.id.et_gender);
-        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        et_gender = register_person_view.findViewById(R.id.et_gender);
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
         et_gender.setAdapter(gender_adapter);
 
-        et_prize = findViewById(R.id.et_prize);
-        ArrayAdapter<String> prize_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, PRIZE_ARRAY);
+        et_prize = register_person_view.findViewById(R.id.et_prize);
+        ArrayAdapter<String> prize_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, PRIZE_ARRAY);
         et_prize.setAdapter(prize_adapter);
 
-        et_height = findViewById(R.id.et_height);
-        ArrayAdapter<String> height_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, HEIGHT_ARRAY);
+        et_height = register_person_view.findViewById(R.id.et_height);
+        ArrayAdapter<String> height_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, HEIGHT_ARRAY);
         et_height.setAdapter(height_adapter);
 
-        et_weight = findViewById(R.id.et_weight);
-        ArrayAdapter<String> weight_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, WEIGHT_ARRAY);
+        et_weight = register_person_view.findViewById(R.id.et_weight);
+        ArrayAdapter<String> weight_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, WEIGHT_ARRAY);
         et_weight.setAdapter(weight_adapter);
 
-        et_eyeColor = findViewById(R.id.et_eyeColor);
-        ArrayAdapter<String> eye_color_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.eye_color));
+        et_eyeColor = register_person_view.findViewById(R.id.et_eyeColor);
+        ArrayAdapter<String> eye_color_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.eye_color));
         et_eyeColor.setAdapter(eye_color_adapter);
 
-        et_hairColor = findViewById(R.id.et_hairColor);
-        ArrayAdapter<String> hair_color_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.hair_color));
+        et_hairColor = register_person_view.findViewById(R.id.et_hairColor);
+        ArrayAdapter<String> hair_color_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.hair_color));
         et_hairColor.setAdapter(hair_color_adapter);
 
-        et_phy_appearance = findViewById(R.id.et_phy_appearance);
-        ArrayAdapter<String> phy_appearance_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.physical_appearance));
+        et_phy_appearance = register_person_view.findViewById(R.id.et_phy_appearance);
+        ArrayAdapter<String> phy_appearance_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.physical_appearance));
         et_phy_appearance.setAdapter(phy_appearance_adapter);
 
-        et_acts = findViewById(R.id.et_acts);
-        ArrayAdapter<String> acts_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.acts));
+        et_acts = register_person_view.findViewById(R.id.et_acts);
+        ArrayAdapter<String> acts_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.acts));
         et_acts.setAdapter(acts_adapter);
         et_acts.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
-        et_status = findViewById(R.id.et_status);
-        ArrayAdapter<String> status_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.status_of_person));
+        et_status = register_person_view.findViewById(R.id.et_status);
+        ArrayAdapter<String> status_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.status_of_person));
         et_status.setAdapter(status_adapter);
 
-        progressBar = findViewById(R.id.progressBar);
+        progressBar = register_person_view.findViewById(R.id.progressBar);
 
+        return register_person_view;
     }
 
     private void setPrizeInYourCurrency(String euro) {
@@ -322,15 +335,15 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.getResult().exists()) {
-                        Toast.makeText(RegisterPersonActivity.this, RegisterPersonActivity.this.getText(R.string.this_person_with_this) + " " + fullName + " "+ RegisterPersonActivity.this.getText(R.string.exists_in_database_please_add_example), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), getContext().getText(R.string.this_person_with_this) + " " + fullName + " "+ getContext().getText(R.string.exists_in_database_please_add_example), Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
                         registerPerson.setEnabled(true);
                     } else {
                         firebaseFirestore.collection("wanted_persons").document(personId).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(RegisterPersonActivity.this, RegisterPersonActivity.this.getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterPersonActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
-                                Intent setImageOfPerson = new Intent(RegisterPersonActivity.this, SetProfilePersonActivity.class);
+                                Toast.makeText(getContext(), getContext().getText(R.string.this_person_with_this) + " " + fullName + " " + getContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                                Intent setImageOfPerson = new Intent(getContext(), SetProfilePersonActivity.class);
                                 Bundle personBundle = new Bundle();
                                 personBundle.putString("personId", personId);
                                 personBundle.putString("fullName", fullName);
@@ -343,7 +356,7 @@ public class RegisterPersonActivity extends AppCompatActivity implements View.On
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(RegisterPersonActivity.this, R.string.person_failed_to_register, Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), getContext().getText(R.string.person_failed_to_register), Toast.LENGTH_LONG).show();
                                 registerPerson.setEnabled(true);
                                 progressBar.setVisibility(View.INVISIBLE);
                             }

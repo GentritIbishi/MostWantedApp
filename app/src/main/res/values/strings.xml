@@ -468,6 +468,8 @@
     <string name="select_the_acts">Select the acts</string>
     <string name="birthday">Birthday</string>
     <string name="error_birthday_required">Birthday required!</string>
+    <string name="assign">Assign</string>
+    <string name="assign_report">Assign Report</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

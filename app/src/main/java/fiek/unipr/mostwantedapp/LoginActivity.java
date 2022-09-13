@@ -14,7 +14,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +37,6 @@ import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.AdminUserDashboardActivity;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.User;
-import fiek.unipr.mostwantedapp.register.RegisterUserActivity;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -109,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_remember:
-                startActivity(new Intent(this, RegisterUserActivity.class));
+                startActivity(new Intent(this, RegisterActivity.class));
                 break;
             case R.id.btnPhone:
                 enableProgressBar(phone_progressBar, btnPhone);

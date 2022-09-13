@@ -17,8 +17,15 @@ import androidx.annotation.Nullable;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
+import org.w3c.dom.Text;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.maps.MapsActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
@@ -26,6 +33,10 @@ import fiek.unipr.mostwantedapp.maps.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class MapsLocationListAdapter extends ArrayAdapter<Person> {
+
+    private TextView tv_location_time_elapsed, tv_location_person_fullName;
+    private CircleImageView profile_location_person;
+    private String time_elapsed;
     // constructor for our list view adapter.
     public MapsLocationListAdapter(@NonNull Context context, ArrayList<Person> locationArrayList) {
         super(context, 0, locationArrayList);
@@ -47,19 +58,35 @@ public class MapsLocationListAdapter extends ArrayAdapter<Person> {
         Person person = getItem(position);
 
         // initializing our UI components of list view item.
-        TextView tv_location_person_fullName = listitemView.findViewById(R.id.tv_location_person_fullName);
-        ImageView profile_location_person = listitemView.findViewById(R.id.profile_location_person);
+        tv_location_person_fullName = listitemView.findViewById(R.id.tv_location_person_fullName);
+        tv_location_time_elapsed = listitemView.findViewById(R.id.tv_location_time_elapsed);
+        profile_location_person = listitemView.findViewById(R.id.profile_location_person);
 
-        // after initializing our items we are
-        // setting data to our view.
-        // below line is use to set data to our text view.
-        tv_location_person_fullName.setText(person.getFullName());
+        try {
+            // after initializing our items we are
+            // setting data to our view.
+            // below line is use to set data to our text view.
+            tv_location_person_fullName.setText(person.getFullName());
 
+            // in below line we are using Picasso to
+            // load image from URL in our Image VIew.
+            if (person.getUrlOfProfile() != null && !person.getUrlOfProfile().isEmpty()) {
+                Picasso.get().load(person.getUrlOfProfile()).transform(new CircleTransform()).into(profile_location_person);
+            }
 
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-        // in below line we are using Picasso to
-        // load image from URL in our Image VIew.
-        Picasso.get().load(person.getUrlOfProfile()).transform(new CircleTransform()).into(profile_location_person);
+            Date start_date = simpleDateFormat.parse(person.getRegistration_date());
+            Date end_date = simpleDateFormat.parse(getTimeDate());
+            printDifference(start_date, end_date);
+
+            if (time_elapsed != null) {
+                tv_location_time_elapsed.setText(time_elapsed);
+            }
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         // below line is use to add item click listener
         // for our item of list view.
@@ -79,6 +106,52 @@ public class MapsLocationListAdapter extends ArrayAdapter<Person> {
             }
         });
         return listitemView;
+    }
+
+    public void printDifference(Date startDate, Date endDate) {
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+
+        long weeks = elapsedDays/7;
+
+        if(weeks != 0){
+            time_elapsed = weeks+"w ";
+        }else if(elapsedDays != 0) {
+            time_elapsed = elapsedDays+"d ";
+        }else if(elapsedHours != 0){
+            time_elapsed = elapsedHours+"h ";
+        }else if(elapsedMinutes != 0){
+            time_elapsed = elapsedMinutes+"m ";
+        }else if(elapsedSeconds != 0){
+            time_elapsed = elapsedSeconds+"s ";
+        }
+
+    }
+
+    public static String getTimeDate() { // without parameter argument
+        try{
+            Date netDate = new Date(); // current time from here
+            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            return sfd.format(netDate);
+        } catch(Exception e) {
+            return "date";
+        }
     }
 
 }

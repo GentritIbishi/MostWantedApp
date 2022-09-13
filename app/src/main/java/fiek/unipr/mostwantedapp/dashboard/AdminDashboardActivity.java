@@ -3,7 +3,6 @@ package fiek.unipr.mostwantedapp.dashboard;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.graphics.drawable.DrawerArrowDrawable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -13,7 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -39,14 +37,13 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.fragment.admin.AboutFragment;
-import fiek.unipr.mostwantedapp.fragment.admin.LocationReportsFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.search.SearchLocationReportsFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.HelpFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.NotificationFragment;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.SettingsFragment;
-import fiek.unipr.mostwantedapp.fragment.admin.SearchFragment;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 
 public class AdminDashboardActivity extends AppCompatActivity {
@@ -198,13 +195,13 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     setSearchSelected();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
-                            .replace(R.id.admin_fragmentContainer, LocationReportsFragment.class, null)
+                            .replace(R.id.admin_fragmentContainer, SearchLocationReportsFragment.class, null)
                             .commit();
                 }
                 if(selectedTab == 2){
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
-                            .replace(R.id.admin_fragmentContainer, LocationReportsFragment.class, null)
+                            .replace(R.id.admin_fragmentContainer, SearchLocationReportsFragment.class, null)
                             .commit();
                 }
             }
@@ -213,19 +210,19 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_notificationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    if(selectedTab != 3){
-                        setNotificationSelected();
-                        getSupportFragmentManager().beginTransaction()
-                                .setReorderingAllowed(true)
-                                .replace(R.id.admin_fragmentContainer, NotificationFragment.class, null)
-                                .commit();
-                    }
-                    if(selectedTab == 3){
-                        getSupportFragmentManager().beginTransaction()
-                                .setReorderingAllowed(true)
-                                .replace(R.id.admin_fragmentContainer, NotificationFragment.class, null)
-                                .commit();
-                    }
+                if(selectedTab != 3){
+                    setNotificationSelected();
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.admin_fragmentContainer, NotificationFragment.class, null)
+                            .commit();
+                }
+                if(selectedTab == 3){
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.admin_fragmentContainer, NotificationFragment.class, null)
+                            .commit();
+                }
 
             }
         });
@@ -233,19 +230,19 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_profileLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    if(selectedTab != 4){
-                        setProfileSelected();
-                        getSupportFragmentManager().beginTransaction()
-                                .setReorderingAllowed(true)
-                                .replace(R.id.admin_fragmentContainer, ProfileFragment.class, null)
-                                .commit();
-                    }
-                    if(selectedTab == 4){
-                        getSupportFragmentManager().beginTransaction()
-                                .setReorderingAllowed(true)
-                                .replace(R.id.admin_fragmentContainer, ProfileFragment.class, null)
-                                .commit();
-                    }
+                if(selectedTab != 4){
+                    setProfileSelected();
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.admin_fragmentContainer, ProfileFragment.class, null)
+                            .commit();
+                }
+                if(selectedTab == 4){
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .replace(R.id.admin_fragmentContainer, ProfileFragment.class, null)
+                            .commit();
+                }
             }
         });
 
@@ -255,8 +252,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         setSupportActionBar(admin_toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        admin_toolbar.setTitle("");
-        admin_toolbar.setSubtitle("");
+         admin_toolbar.setTitle("");
+         admin_toolbar.setSubtitle("");
 
         admin_toggle = new ActionBarDrawerToggle(AdminDashboardActivity.this, admin_drawerLayout_real, admin_toolbar, R.string.open, R.string.close);
         admin_drawerLayout_real.addDrawerListener(admin_toggle);

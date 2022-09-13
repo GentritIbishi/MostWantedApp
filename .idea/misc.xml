@@ -29,6 +29,7 @@
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/bg_single_report_image.xml" value="0.183" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/bg_toolbar.xml" value="0.149" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/bg_toolbar_normal.xml" value="0.149" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/bg_top_analytics.xml" value="0.192" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/bgtest.xml" value="0.2415" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/button.xml" value="0.2415" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/drawable/button_normal.xml" value="0.1905" />
@@ -134,8 +135,12 @@
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_profile_dashboard_user.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_profile_user.xml" value="0.30903790087463556" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_register.xml" value="0.22056159420289856" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_register_investigator.xml" value="0.24010416666666667" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_register_person.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_register_users.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_search.xml" value="0.2504528985507246" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_search_admin.xml" value="0.24320652173913043" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_search_location_reports.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_search_user.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_settings.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_settings_admin.xml" value="0.24320652173913043" />

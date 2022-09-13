@@ -32,9 +32,6 @@
         <activity
             android:name=".profile.SetProfileInvestigatorActivity"
             android:exported="false" />
-        <activity
-            android:name=".register.RegisterInvestigatorActivity"
-            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -76,7 +73,7 @@
             android:name=".dashboard.UserDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".register.RegisterUserActivity"
+            android:name=".RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".GetStartedActivity"
@@ -108,8 +105,6 @@
         <activity android:name=".models.Profile" />
         <activity android:name=".dashboard.AdminUserDashboardActivity" />
         <activity android:name=".dashboard.AdminDashboardActivity" />
-        <activity android:name=".register.RegisterUsersActivity" />
-        <activity android:name=".register.RegisterPersonActivity" />
         <activity android:name=".maps.report.ReportInfoActivity" />
         <activity android:name=".LoginActivity" />
         <!--

@@ -7,34 +7,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
-import fiek.unipr.mostwantedapp.maps.MapsActivity;
 import fiek.unipr.mostwantedapp.maps.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.Person;
-import fiek.unipr.mostwantedapp.update.UpdatePerson;
 
 public class MapsInformerPersonListAdapter extends ArrayAdapter<Person> {
-    // constructor for our list view adapter.
 
-    FirebaseAuth firebaseAuth;
-    FirebaseUser firebaseUser;
-    private List<Person> personList = null;
-    private ArrayList<Person> arraylist;
+    private TextView person_search_time_joined, tv_l_fullName, tv_l_status;
+    private CircleImageView profile_person;
+    private ProgressBar lvPerson_progressBar;
+    private String person_time_elapsed;
 
     public MapsInformerPersonListAdapter(@NonNull Context context, ArrayList<Person> personArrayList) {
         super(context, 0, personArrayList);
@@ -56,27 +55,45 @@ public class MapsInformerPersonListAdapter extends ArrayAdapter<Person> {
         Person person = getItem(position);
 
         // initializing our UI components of list view item.
-        TextView tv_l_fullName = listitemView.findViewById(R.id.tv_l_fullName);
-        TextView tv_l_status = listitemView.findViewById(R.id.tv_l_status);
-        ImageView profile_person = listitemView.findViewById(R.id.profile_person);
-        ProgressBar lvPerson_progressBar = listitemView.findViewById(R.id.lvPerson_progressBar);
+        tv_l_fullName = listitemView.findViewById(R.id.tv_l_fullName);
+        tv_l_status = listitemView.findViewById(R.id.tv_l_status);
+        profile_person = listitemView.findViewById(R.id.profile_person);
+        lvPerson_progressBar = listitemView.findViewById(R.id.lvPerson_progressBar);
+        person_search_time_joined = listitemView.findViewById(R.id.person_search_time_joined);
 
-        lvPerson_progressBar.setVisibility(View.VISIBLE);
+        try {
+            lvPerson_progressBar.setVisibility(View.VISIBLE);
+            // after initializing our items we are
+            // setting data to our view.
+            // below line is use to set data to our text view.
+            tv_l_fullName.setText(person.getFullName());
+            tv_l_status.setText(person.getStatus());
 
-        // after initializing our items we are
-        // setting data to our view.
-        // below line is use to set data to our text view.
-        tv_l_fullName.setText(person.getFullName());
-        tv_l_status.setText(person.getStatus());
+            // in below line we are using Picasso to
+            // load image from URL in our Image VIew.
+            if (person.getUrlOfProfile() != null && !person.getUrlOfProfile().isEmpty()) {
+                Picasso.get()
+                        .load(person.getUrlOfProfile())
+                        .transform(new CircleTransform())
+                        .into(profile_person);
+            }else {
+                profile_person.setImageResource(R.drawable.ic_profile_picture_default);
+            }
+            lvPerson_progressBar.setVisibility(View.INVISIBLE);
 
-        // in below line we are using Picasso to
-        // load image from URL in our Image VIew.
-        Picasso.get()
-                .load(person.getUrlOfProfile())
-                .transform(new CircleTransform())
-                .into(profile_person);
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-        lvPerson_progressBar.setVisibility(View.INVISIBLE);
+            Date start_date = simpleDateFormat.parse(person.getRegistration_date());
+            Date end_date = simpleDateFormat.parse(getTimeDate());
+            printDifference(start_date, end_date);
+
+            if (person_time_elapsed != null) {
+                person_search_time_joined.setText(person_time_elapsed);
+            }
+
+        }catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         // below line is use to add item click listener
         // for our item of list view.
@@ -105,6 +122,52 @@ public class MapsInformerPersonListAdapter extends ArrayAdapter<Person> {
             }
         });
         return listitemView;
+    }
+
+    public void printDifference(Date startDate, Date endDate) {
+        //milliseconds
+        long different = endDate.getTime() - startDate.getTime();
+
+        long secondsInMilli = 1000;
+        long minutesInMilli = secondsInMilli * 60;
+        long hoursInMilli = minutesInMilli * 60;
+        long daysInMilli = hoursInMilli * 24;
+
+        long elapsedDays = different / daysInMilli;
+        different = different % daysInMilli;
+
+        long elapsedHours = different / hoursInMilli;
+        different = different % hoursInMilli;
+
+        long elapsedMinutes = different / minutesInMilli;
+        different = different % minutesInMilli;
+
+        long elapsedSeconds = different / secondsInMilli;
+
+        long weeks = elapsedDays/7;
+
+        if(weeks != 0){
+            person_time_elapsed = weeks+"w ";
+        }else if(elapsedDays != 0) {
+            person_time_elapsed = elapsedDays+"d ";
+        }else if(elapsedHours != 0){
+            person_time_elapsed = elapsedHours+"h ";
+        }else if(elapsedMinutes != 0){
+            person_time_elapsed = elapsedMinutes+"m ";
+        }else if(elapsedSeconds != 0){
+            person_time_elapsed = elapsedSeconds+"s ";
+        }
+
+    }
+
+    public static String getTimeDate() { // without parameter argument
+        try{
+            Date netDate = new Date(); // current time from here
+            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            return sfd.format(netDate);
+        } catch(Exception e) {
+            return "date";
+        }
     }
 
 

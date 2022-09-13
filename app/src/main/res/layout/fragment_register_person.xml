@@ -8,7 +8,7 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:background="@color/white"
-    tools:context=".register.RegisterPersonActivity">
+    tools:context=".fragment.admin.register.person.RegisterPersonFragment">
 
     <ScrollView
         android:layout_width="match_parent"

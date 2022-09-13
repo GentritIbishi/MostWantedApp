@@ -1,45 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
-    android:fitsSystemWindows="true"
-    android:background="@color/light_gray"
+    android:padding="5dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginTop="10dp"
+    android:background="@drawable/bg_listview_item"
     android:elevation="10dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_location_person"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/ic_profile_picture_default" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/profile_location_person"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginStart="8dp"
-            android:src="@drawable/ic_profile_picture_default"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="30dp"
+        android:layout_toStartOf="@id/tv_location_time_elapsed"
+        android:layout_toEndOf="@+id/profile_location_person"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tv_location_person_fullName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_marginStart="15dp"
             android:text="@string/full_name"
             android:textColor="@color/gray"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/profile_location_person"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/tv_location_time_elapsed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="25dp"
+        android:text="1h"
+        android:textAlignment="center"
+        android:textSize="14sp" />
+
+</RelativeLayout>

@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".fragment.user.SearchFragment">
+    tools:context=".fragment.admin.search.SearchLocationReportsFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/pullToRefreshInSearch"
+        android:id="@+id/location_pullToRefreshInSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -25,7 +25,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/search_filter_layout"
+                android:id="@+id/location_search_filter_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
@@ -44,7 +44,7 @@
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/search_filter"
+                    android:id="@+id/location_search_filter"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray"
@@ -57,7 +57,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ListView
-                android:id="@+id/lvPersons"
+                android:id="@+id/lvLocationPersonsFragment"
                 android:elevation="6dp"
                 android:background="@drawable/bg_listview_item"
                 android:layout_width="fill_parent"

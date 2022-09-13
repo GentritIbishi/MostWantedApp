@@ -6,55 +6,73 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".fragment.admin.SearchFragment">
+    tools:context=".fragment.admin.search.SearchFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/admin_pullToRefreshInSearch"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
-            android:id="@+id/admin_search_filter"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/search_bg"
-            android:hint="@string/search"
-            android:inputType="textCapSentences"
-            android:padding="16dp"
-            android:textAlignment="center"
-            android:textColor="@color/gray"
-            android:textColorHint="@color/gray"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/admin_pullToRefreshInSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/admin_search_filter"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/admin_search_filter">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/admin_search_filter_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"
+                android:text="@string/search"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:hint="@string/search"
+                android:textColorHint="@color/gray"
+                android:textDirection="firstStrong"
+                app:boxBackgroundColor="@color/white"
+                app:helperTextTextColor="@color/gray"
+                app:boxStrokeColor="@android:color/transparent"
+                app:hintTextColor="@color/gray"
+                app:startIconDrawable="@drawable/ic_baseline_person_search_24"
+                app:endIconMode="clear_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/admin_search_filter"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/gray"
+                    android:imeOptions="actionDone"
+                    android:ems="10"
+                    android:textColorHint="@color/gray"
+                    android:inputType="textCapSentences"
+                    android:textStyle="bold" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <ListView
                 android:id="@+id/lvPersons"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:elevation="6dp"
+                android:background="@drawable/bg_listview_item"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginTop="5.0sp"
                 android:clickable="true"
                 android:divider="@android:color/transparent"
-                android:dividerHeight="5.0sp"
-                android:elevation="6dp"
-                android:focusable="true"
-                android:padding="5dp" />
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                android:dividerHeight="2.5sp"
+                android:focusable="true"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>

@@ -29,7 +29,6 @@ import fiek.unipr.mostwantedapp.lists.LocationActivity;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.lists.PersonActivity;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.register.RegisterPersonActivity;
 import fiek.unipr.mostwantedapp.models.Profile;
 
 public class AdminUserDashboardActivity extends AppCompatActivity implements View.OnClickListener{
@@ -118,7 +117,7 @@ public class AdminUserDashboardActivity extends AppCompatActivity implements Vie
                 startActivity(new Intent(AdminUserDashboardActivity.this, Profile.class));
                 break;
             case R.id.l_registerPerson:
-                startActivity(new Intent(AdminUserDashboardActivity.this, RegisterPersonActivity.class));
+               // startActivity(new Intent(AdminUserDashboardActivity.this, RegisterPersonActivity.class));
                 break;
             case R.id.l_u_personsList:
                 startActivity(new Intent(AdminUserDashboardActivity.this, PersonActivity.class));

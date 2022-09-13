@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:background="@color/white"
     android:padding="5dp"
-    tools:context=".register.RegisterUsersActivity">
+    tools:context=".fragment.admin.register.users.RegisterUsersFragment">
 
     <View
         android:layout_width="match_parent"

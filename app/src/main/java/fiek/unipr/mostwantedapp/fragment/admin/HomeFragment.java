@@ -59,7 +59,6 @@ import com.squareup.picasso.Picasso;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -68,6 +67,8 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.fragment.admin.search.SearchLocationReportsFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.search.SearchManageLocationReportsFragment;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.NotificationAdmin;
 import fiek.unipr.mostwantedapp.models.NotificationAdminState;
@@ -219,7 +220,7 @@ public class HomeFragment extends Fragment {
         l_admin_locationReports.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new LocationReportsFragment();
+                Fragment fragment = new SearchLocationReportsFragment();
                 loadFragment(fragment);
             }
         });
@@ -228,7 +229,7 @@ public class HomeFragment extends Fragment {
         l_admin_manage_reports.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new ManageLocationReportsFragment();
+                Fragment fragment = new SearchManageLocationReportsFragment();
                 loadFragment(fragment);
             }
         });
@@ -367,18 +368,19 @@ public class HomeFragment extends Fragment {
     }
 
     private void setupPieChart() {
-        admin_home_pieChart.setDrawHoleEnabled(true);
+        admin_home_pieChart.setDrawHoleEnabled(false);
         admin_home_pieChart.setUsePercentValues(true);
-        admin_home_pieChart.setEntryLabelTextSize(12);
-        admin_home_pieChart.setEntryLabelColor(Color.BLACK);
-        admin_home_pieChart.setCenterText(getText(R.string.report));
-        admin_home_pieChart.setCenterTextSize(16f);
+        admin_home_pieChart.setEntryLabelTextSize(14);
+        admin_home_pieChart.setEntryLabelColor(Color.WHITE);
         admin_home_pieChart.getDescription().setEnabled(false);
+        admin_home_pieChart.setExtraOffsets(5, 10, 5, 5);
+        admin_home_pieChart.setDragDecelerationFrictionCoef(0.15f);
+        admin_home_pieChart.setTransparentCircleRadius(61f);
 
         Legend l = admin_home_pieChart.getLegend();
-        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
         l.setEnabled(true);
     }

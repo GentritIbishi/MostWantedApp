@@ -172,7 +172,8 @@
                             <TextView
                                 android:layout_marginTop="12dp"
                                 android:textColor="@color/black"
-                                android:text="@string/locations"
+                                android:textAllCaps="true"
+                                android:text="@string/assign"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -477,7 +478,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/admin_home_tvReports"
+                        android:layout_marginStart="16dp"
                         android:layout_marginTop="24dp"
+                        android:layout_marginEnd="16dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/admin_home_tvReports">
@@ -690,50 +693,57 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/admin_home_cardViewGraph"
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/admin_home_pieChartConstrain"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:layout_below="@+id/admin_home_all_constrain"
-                        android:layout_marginStart="32dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="16dp"
-                        android:layout_marginEnd="32dp"
-                        android:layout_marginBottom="16dp"
-                        android:elevation="10dp"
-                        android:padding="10dp"
-                        app:cardCornerRadius="10dp"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:background="@drawable/bg_analytics_item"
+                        android:elevation="6dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/admin_home_all_constrain">
+                        app:layout_constraintTop_toBottomOf="@+id/all_constrain">
 
-                        <!--Linear layout to display pie chart -->
-                        <!-- and details of pie chart-->
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
+                        <TextView
+                            android:id="@+id/tv_home_for_reportStatistics"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:background="@drawable/bg_headtitle"
                             android:elevation="6dp"
-                            android:padding="10dp">
+                            android:padding="10dp"
+                            android:text="@string/chart_analysis"
+                            android:textAlignment="center"
+                            android:textAllCaps="true"
+                            android:textColor="@color/gray"
+                            android:textSize="16sp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
-                            <!--Pie chart to display the data-->
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/admin_home_pieChart"
+                            android:layout_width="match_parent"
+                            android:layout_height="350dp"
+                            android:layout_marginStart="32dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginEnd="32dp"
+                            android:layout_marginBottom="16dp"
+                            android:layout_weight="1"
+                            android:elevation="6dp"
+                            android:padding="6dp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/tv_home_for_reportStatistics" />
 
-                            <com.github.mikephil.charting.charts.PieChart
-                                android:id="@+id/admin_home_pieChart"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:elevation="6dp"
-                                android:padding="6dp"
-                                app:layout_constraintBottom_toBottomOf="parent"
-                                app:layout_constraintEnd_toEndOf="parent"
-                                app:layout_constraintStart_toStartOf="parent"
-                                app:layout_constraintTop_toTopOf="parent" />
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-                    </androidx.cardview.widget.CardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
