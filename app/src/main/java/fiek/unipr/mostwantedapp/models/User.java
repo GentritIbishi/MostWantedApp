@@ -2,10 +2,12 @@ package fiek.unipr.mostwantedapp.models;
 
 public class User {
 
-    private String userID, name, lastname, fullName,
-            address, email, parentName, gender,
-            role, phone, personal_number, register_date_time,
-            grade, password, urlOfProfile,
+    private String userID, name, lastname,
+            fullName, address, email,
+            parentName, gender,
+            role, phone, personal_number,
+            register_date_time, grade,
+            password, urlOfProfile,
             balance, coins;
 
     private Boolean isEmailVerified = false;

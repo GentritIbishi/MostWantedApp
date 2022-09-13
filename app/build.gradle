@@ -113,5 +113,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-dynamic-links'
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
+    implementation 'commons-codec:commons-codec:1.4'
+    // https://mvnrepository.com/artifact/com.lambdaworks/scrypt
+    implementation group: 'com.lambdaworks', name: 'scrypt', version: '1.4.0'
 
 }
