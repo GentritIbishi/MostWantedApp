@@ -300,6 +300,7 @@ public class RegisterUserFragment extends Fragment {
                     Bundle viewBundle = new Bundle();
                     viewBundle.putString("userID", userID);
                     viewBundle.putString("fullName", fullName);
+                    viewBundle.putString("role", role);
                     SetProfileUserFragment setProfileUserFragment = new SetProfileUserFragment();
                     setProfileUserFragment.setArguments(viewBundle);
                     loadFragment(setProfileUserFragment);

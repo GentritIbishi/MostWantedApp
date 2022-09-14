@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.RegisterFragment;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 
 public class SetProfileInvestigatorFragment extends Fragment {
@@ -46,6 +48,7 @@ public class SetProfileInvestigatorFragment extends Fragment {
     private ImageView investigator_setNewProfile;
     private TextView investigator_tv_addprofile;
     private ProgressBar investigator_progressBarPerson;
+    private Button btnSkipSetProfileInvestigator;
 
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
@@ -74,6 +77,7 @@ public class SetProfileInvestigatorFragment extends Fragment {
         investigator_setNewProfile = view.findViewById(R.id.investigator_setNewProfile);
         investigator_tv_addprofile = view.findViewById(R.id.investigator_tv_addprofile);
         investigator_progressBarPerson = view.findViewById(R.id.investigator_progressBarPerson);
+        btnSkipSetProfileInvestigator = view.findViewById(R.id.btnSkipSetProfileInvestigator);
 
         bundle = getArguments();
         getAndSetFromBundle(bundle);
@@ -91,6 +95,14 @@ public class SetProfileInvestigatorFragment extends Fragment {
             public void onClick(View v) {
                 Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(openGalleryIntent, 1000);
+            }
+        });
+
+        btnSkipSetProfileInvestigator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new RegisterFragment();
+                loadFragment(fragment);
             }
         });
 

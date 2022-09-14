@@ -33,7 +33,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
-import fiek.unipr.mostwantedapp.profile.SetProfileUsersActivity;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -318,7 +317,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void goToSetProfilePicture() {
-        Intent intent = new Intent(RegisterActivity.this, SetProfileUsersActivity.class);
+        Intent intent = new Intent(RegisterActivity.this, SetProfileUserActivity.class);
         startActivity(intent);
         finish();
     }

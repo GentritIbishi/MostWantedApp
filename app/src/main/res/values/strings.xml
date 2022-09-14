@@ -85,7 +85,7 @@
     <string name="this_person_with_this">The person with name: </string>
     <string name="was_registered_successfully"> was registered successfully</string>
     <string name="person_failed_to_register">Person failed to register!</string>
-    <string name="add_profile_picture">Add Profile Picture</string>
+    <string name="tap_to_add_profile_picture">Tap to add Profile Picture</string>
     <string name="successfully">Successfully!</string>
     <string name="uri_failed_to_set">Uri failed to set!</string>
     <string name="profile_picture_added">Profile Picture added!</string>
@@ -473,6 +473,7 @@
     <string name="error_you_need_to_add_photo_for_investigator">You must add photos for this registered investigator!</string>
     <string name="error_you_need_to_add_photo_for_person">You must add photo for this registered person!</string>
     <string name="this_user_with_this">This user with this</string>
+    <string name="successfully_login_to_new_user">Successfully user created, login new user!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

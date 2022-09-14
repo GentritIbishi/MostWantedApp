@@ -645,6 +645,7 @@ public class HomeFragment extends Fragment {
                     if(task.isSuccessful() && task.getResult() != null)
                     {
                         fullName = task.getResult().getString("fullName");
+                        name = task.getResult().getString("name");
                         urlOfProfile = task.getResult().getString("urlOfProfile");
                         balance = task.getResult().getString("balance");
                         if(balance != null){
@@ -660,7 +661,7 @@ public class HomeFragment extends Fragment {
                         }
 
                         if(fullName != null){
-                            user_hiDashboard.setText(getActivity().getText(R.string.hi)+" "+fullName);
+                            user_hiDashboard.setText(getActivity().getText(R.string.hi)+" "+name);
                         }
                     }
                 }

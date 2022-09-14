@@ -58,7 +58,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".profile.SetProfileUsersActivity"
+            android:name=".SetProfileUserActivity"
             android:exported="false" />
         <activity
             android:name=".auth.ForgotPasswordActivity"

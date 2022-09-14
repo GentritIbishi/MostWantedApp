@@ -16,6 +16,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -35,6 +36,7 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.RegisterFragment;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 
 public class SetProfilePersonFragment extends Fragment {
@@ -47,6 +49,7 @@ public class SetProfilePersonFragment extends Fragment {
     private ImageView setNewProfile;
     private TextView tv_addprofile;
     private ProgressBar progressBarPerson;
+    private Button btnSkipSetProfilePerson;
 
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
@@ -75,6 +78,7 @@ public class SetProfilePersonFragment extends Fragment {
         setNewProfile = view.findViewById(R.id.setNewProfile);
         tv_addprofile = view.findViewById(R.id.tv_addprofile);
         progressBarPerson = view.findViewById(R.id.progressBarPerson);
+        btnSkipSetProfilePerson = view.findViewById(R.id.btnSkipSetProfilePerson);
 
         bundle = getArguments();
         getAndSetFromBundle(bundle);
@@ -92,6 +96,14 @@ public class SetProfilePersonFragment extends Fragment {
             public void onClick(View v) {
                 Intent openGalleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(openGalleryIntent, 1000);
+            }
+        });
+
+        btnSkipSetProfilePerson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new RegisterFragment();
+                loadFragment(fragment);
             }
         });
 
