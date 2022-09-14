@@ -96,6 +96,7 @@ public class UpdateUserListAdapter extends ArrayAdapter<User> {
             @Override
             public void onClick(View v) {
                 Bundle viewBundle = new Bundle();
+                viewBundle.putString("userID", user.getUserID());
                 viewBundle.putString("address", user.getAddress());
                 viewBundle.putString("balance", user.getBalance());
                 viewBundle.putString("email", user.getEmail());

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:background="@color/white"
-    tools:context=".profile.SetProfilePersonActivity">
+    tools:context=".fragment.admin.register.investigator.SetProfileInvestigatorFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/personProfileView"
+            android:id="@+id/investigator_ProfileView"
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_centerHorizontal="true"
@@ -26,22 +26,22 @@
             android:src="@drawable/ic_profile_picture_default"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></de.hdodenhof.circleimageview.CircleImageView>
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
-            android:id="@+id/setNewProfile"
+            android:id="@+id/investigator_setNewProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/personProfileView"
+            android:layout_below="@id/investigator_ProfileView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="8dp"
             android:src="@drawable/ic_plus_rounded_state"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/personProfileView" />
+            app:layout_constraintTop_toBottomOf="@+id/investigator_ProfileView" />
 
         <TextView
-            android:id="@+id/tv_addprofile"
+            android:id="@+id/investigator_tv_addprofile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -54,10 +54,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/setNewProfile" />
+            app:layout_constraintTop_toBottomOf="@+id/investigator_setNewProfile" />
 
         <ProgressBar
-            android:id="@+id/progressBarPerson"
+            android:id="@+id/investigator_progressBarPerson"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="150dp"
             android:layout_height="150dp"

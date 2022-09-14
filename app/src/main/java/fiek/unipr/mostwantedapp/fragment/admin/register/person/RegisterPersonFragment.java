@@ -1,10 +1,10 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.person;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -39,7 +39,6 @@ import java.util.Locale;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.DateInputMask;
 import fiek.unipr.mostwantedapp.models.Person;
-import fiek.unipr.mostwantedapp.profile.SetProfilePersonActivity;
 
 public class RegisterPersonFragment extends Fragment implements View.OnClickListener {
 
@@ -343,14 +342,14 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getContext(), getContext().getText(R.string.this_person_with_this) + " " + fullName + " " + getContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
-                                Intent setImageOfPerson = new Intent(getContext(), SetProfilePersonActivity.class);
-                                Bundle personBundle = new Bundle();
-                                personBundle.putString("personId", personId);
-                                personBundle.putString("fullName", fullName);
-                                setImageOfPerson.putExtras(personBundle);
+                                Bundle viewBundle = new Bundle();
+                                viewBundle.putString("personId", personId);
+                                viewBundle.putString("fullName", fullName);
+                                SetProfilePersonFragment setProfilePersonFragment = new SetProfilePersonFragment();
+                                setProfilePersonFragment.setArguments(viewBundle);
+                                loadFragment(setProfilePersonFragment);
                                 registerPerson.setEnabled(true);
                                 progressBar.setVisibility(View.INVISIBLE);
-                                startActivity(setImageOfPerson);
                                 setEmptyField();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -386,6 +385,13 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
         } catch(Exception e) {
             return "date";
         }
+    }
+
+    private void loadFragment(Fragment fragment) {
+        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.admin_fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 }

@@ -1,6 +1,5 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -15,7 +14,7 @@ import android.view.ViewGroup;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.register.investigator.RegisterInvestigatorFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.register.person.RegisterPersonFragment;
-import fiek.unipr.mostwantedapp.fragment.admin.register.users.RegisterUsersFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.register.user.RegisterUserFragment;
 
 public class RegisterFragment extends Fragment {
 
@@ -38,7 +37,7 @@ public class RegisterFragment extends Fragment {
         constraintPU.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new RegisterUsersFragment();
+                Fragment fragment = new RegisterUserFragment();
                 loadFragment(fragment);
             }
         });

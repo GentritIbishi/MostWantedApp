@@ -1,10 +1,10 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.investigator;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +35,6 @@ import java.util.Locale;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.DateInputMask;
 import fiek.unipr.mostwantedapp.models.Investigator;
-import fiek.unipr.mostwantedapp.profile.SetProfileInvestigatorActivity;
 
 public class RegisterInvestigatorFragment extends Fragment implements View.OnClickListener {
 
@@ -291,14 +290,14 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getContext(), getContext().getText(R.string.this_investigator_with_name) + " " + fullName + " " + getContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
-                                Intent setImageOfInvestigator = new Intent(getContext(), SetProfileInvestigatorActivity.class);
-                                Bundle registerInvestigatorBundle = new Bundle();
-                                registerInvestigatorBundle.putString("investigator_id", investigator_id);
-                                registerInvestigatorBundle.putString("fullName", fullName);
-                                setImageOfInvestigator.putExtras(registerInvestigatorBundle);
+                                Bundle viewBundle = new Bundle();
+                                viewBundle.putString("investigator_id", investigator_id);
+                                viewBundle.putString("fullName", fullName);
+                                SetProfileInvestigatorFragment setProfileInvestigatorFragment = new SetProfileInvestigatorFragment();
+                                setProfileInvestigatorFragment.setArguments(viewBundle);
+                                loadFragment(setProfileInvestigatorFragment);
                                 registerInvestigator.setEnabled(true);
                                 investigator_progressBar.setVisibility(View.INVISIBLE);
-                                startActivity(setImageOfInvestigator);
                                 setEmptyField();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -324,6 +323,13 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
         } catch(Exception e) {
             return "date";
         }
+    }
+
+    private void loadFragment(Fragment fragment) {
+        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.admin_fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 }

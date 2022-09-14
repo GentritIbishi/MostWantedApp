@@ -294,11 +294,12 @@ public class HomeFragment extends Fragment {
                             {
                                 fullName = task.getResult().getString("fullName");
                                 urlOfProfile = task.getResult().getString("urlOfProfile");
-                                if(urlOfProfile != null){
-                                    if(imageOfAccount != null){
-                                        Picasso.get().load(urlOfProfile).into(imageOfAccount);
-                                    }
+                                if(!urlOfProfile.isEmpty()){
+                                    Picasso.get().load(urlOfProfile).into(imageOfAccount);
                                     Picasso.get().load(urlOfProfile).into(imageOfDashboard);
+                                }else {
+                                    imageOfAccount.setImageResource(R.drawable.ic_profile_picture_default);
+                                    imageOfDashboard.setImageResource(R.drawable.ic_profile_picture_default);
                                 }
                             }
                         }

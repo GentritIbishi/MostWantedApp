@@ -376,7 +376,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
-            documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+            documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -386,9 +386,12 @@ public class AdminDashboardActivity extends AppCompatActivity {
                         urlOfProfile = task.getResult().getString("urlOfProfile");
                         //set Image, verified if is email verified, name
                         setVerifiedBadge(firebaseAuth.getCurrentUser());
-                        if(urlOfProfile != null){
+                        if(!urlOfProfile.isEmpty()){
                             Picasso.get().load(urlOfProfile).into(nav_header_image_view);
                             Picasso.get().load(urlOfProfile).into(topImageProfile);
+                        }else {
+                            nav_header_image_view.setImageResource(R.drawable.ic_profile_picture_default);
+                            topImageProfile.setImageResource(R.drawable.ic_profile_picture_default);
                         }
 
                         if(fullName != null){

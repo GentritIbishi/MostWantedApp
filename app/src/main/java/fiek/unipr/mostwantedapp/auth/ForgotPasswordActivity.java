@@ -14,13 +14,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 
 import fiek.unipr.mostwantedapp.R;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
-    private EditText etEmailToRecovery;
+    private TextInputEditText etEmailToRecovery;
     private Button btnResetPassword;
     private ProgressBar reset_progressBar;
     private TextView tv_remember;

@@ -1,16 +1,21 @@
-package fiek.unipr.mostwantedapp.profile;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
+package fiek.unipr.mostwantedapp.fragment.admin.register.investigator;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -29,10 +34,12 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 
-public class SetProfileInvestigatorActivity extends AppCompatActivity {
+public class SetProfileInvestigatorFragment extends Fragment {
 
+    private View view;
     private String investigator_id, fullName;
 
     private CircleImageView investigator_ProfileView;
@@ -47,22 +54,29 @@ public class SetProfileInvestigatorActivity extends AppCompatActivity {
 
     private Bundle bundle;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_profile_investigator);
+    public SetProfileInvestigatorFragment() {}
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
+    }
 
-        investigator_ProfileView = findViewById(R.id.investigator_ProfileView);
-        investigator_setNewProfile = findViewById(R.id.investigator_setNewProfile);
-        investigator_tv_addprofile = findViewById(R.id.investigator_tv_addprofile);
-        investigator_progressBarPerson = findViewById(R.id.investigator_progressBarPerson);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.fragment_set_profile_investigator, container, false);
 
-        getFromBundle(bundle);
+        investigator_ProfileView = view.findViewById(R.id.investigator_ProfileView);
+        investigator_setNewProfile = view.findViewById(R.id.investigator_setNewProfile);
+        investigator_tv_addprofile = view.findViewById(R.id.investigator_tv_addprofile);
+        investigator_progressBarPerson = view.findViewById(R.id.investigator_progressBarPerson);
+
+        bundle = getArguments();
+        getAndSetFromBundle(bundle);
 
         StorageReference profileRef = storageReference.child("investigators/"+ investigator_id +"/profile.jpg");
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -80,24 +94,20 @@ public class SetProfileInvestigatorActivity extends AppCompatActivity {
             }
         });
 
+        onBackPressed();
+
+        return view;
     }
 
-    private void getFromBundle(Bundle bundle) {
-        bundle = getIntent().getExtras();
-        if(bundle != null)
-        {
-            investigator_id = bundle.get("investigator_id").toString();
-            fullName = bundle.get("fullName").toString();
-        }
-        else
-        {
-            investigator_id = null;
-            fullName = null;
+    private void getAndSetFromBundle(Bundle bundle) {
+        if(bundle != null){
+            investigator_id = bundle.getString("investigator_id");
+            fullName = bundle.getString("fullName");
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == 1000){
             if(resultCode == Activity.RESULT_OK){
@@ -106,12 +116,6 @@ public class SetProfileInvestigatorActivity extends AppCompatActivity {
                 uploadImageToFirebase(imageUri);
             }
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        return;
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
@@ -132,19 +136,42 @@ public class SetProfileInvestigatorActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 investigator_progressBarPerson.setVisibility(View.GONE);
-                                finish();
+                                Fragment fragment = new HomeFragment();
+                                loadFragment(fragment);
                             }
                         }, 5000);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SetProfileInvestigatorActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
                         investigator_progressBarPerson.setVisibility(View.GONE);
                     }
                 });
             }
         });
+    }
+
+    private void onBackPressed() {
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
+                {
+                    Toast.makeText(getContext(), getContext().getText(R.string.error_you_need_to_add_photo_for_investigator), Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void loadFragment(Fragment fragment) {
+        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.admin_fragmentContainer, fragment)
+                .commit();
     }
 
 }

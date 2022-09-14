@@ -29,9 +29,6 @@
         <activity
             android:name=".SplashActivity"
             android:exported="false" />
-        <activity
-            android:name=".profile.SetProfileInvestigatorActivity"
-            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -100,7 +97,6 @@
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".lists.UserActivity" />
         <activity android:name=".lists.PersonActivity" />
-        <activity android:name=".profile.SetProfilePersonActivity" />
         <activity android:name=".update.UpdateUser" />
         <activity android:name=".models.Profile" />
         <activity android:name=".dashboard.AdminUserDashboardActivity" />

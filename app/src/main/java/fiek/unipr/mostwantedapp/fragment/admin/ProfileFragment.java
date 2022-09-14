@@ -313,7 +313,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(admin_imageOfProfile);
-                        DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                        DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
                         docRef.update("urlOfProfile", uri.toString());
                         admin_uploadProgressBar.setVisibility(View.GONE);
                         Toast.makeText(getContext(), R.string.images_uploaded_successfully, Toast.LENGTH_SHORT).show();

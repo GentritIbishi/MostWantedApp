@@ -1,10 +1,11 @@
-package fiek.unipr.mostwantedapp.fragment.admin.register.users;
+package fiek.unipr.mostwantedapp.fragment.admin.register.user;
 
 import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.text.Editable;
 import android.text.TextUtils;
@@ -35,11 +36,12 @@ import java.util.Date;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.fragment.admin.register.person.SetProfilePersonFragment;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.helpers.SpinnerAdapter;
 import fiek.unipr.mostwantedapp.models.User;
 
-public class RegisterUsersFragment extends Fragment {
+public class RegisterUserFragment extends Fragment {
 
     private View register_users_view;
     private TextInputEditText admin_etName, admin_etLastName, admin_etParentName, admin_etPhone, admin_etAddress, admin_etNumPersonal,
@@ -55,7 +57,7 @@ public class RegisterUsersFragment extends Fragment {
     private SpinnerAdapter spAdapter;
     private MaterialAutoCompleteTextView et_role_autocomplete, et_gender_users;
 
-    public RegisterUsersFragment() {}
+    public RegisterUserFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +72,7 @@ public class RegisterUsersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        register_users_view = inflater.inflate(R.layout.fragment_register_users, container, false);
+        register_users_view = inflater.inflate(R.layout.fragment_register_user, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -88,7 +90,6 @@ public class RegisterUsersFragment extends Fragment {
         admin_etEmailToUser = register_users_view.findViewById(R.id.admin_etEmailToUser);
         admin_etPasswordToUser = register_users_view.findViewById(R.id.admin_etPasswordToUser);
         admin_etConfirmPassword = register_users_view.findViewById(R.id.admin_etConfirmPassword);
-        et_gender_users = register_users_view.findViewById(R.id.et_gender_users);
         admin_ri_progressBar = register_users_view.findViewById(R.id.admin_ri_progressBar);
         admin_bt_Register = register_users_view.findViewById(R.id.admin_bt_Register);
 
@@ -146,7 +147,7 @@ public class RegisterUsersFragment extends Fragment {
         String fullName = name + " "+lastName;
         String phone = admin_etPhone.getText().toString().trim();
         String address = admin_etAddress.getText().toString().trim();
-        String numPersonal = admin_etNumPersonal.getText().toString().trim();
+        String personal_number = admin_etNumPersonal.getText().toString().trim();
         String parentName = admin_etParentName.getText().toString().trim();
         String gender = et_gender_users.getText().toString().trim();
         String email = admin_etEmailToUser.getText().toString().trim();
@@ -163,18 +164,19 @@ public class RegisterUsersFragment extends Fragment {
         }
         String balance = "0 EURO";
         String coins = "0 COINS";
-        Uri photoURL = null;
+        String urlOfProfile = "";
+        Boolean isEmailVerified = false;
 
         if(TextUtils.isEmpty(fullName)){
             admin_etName.setError(getText(R.string.error_fullname_required));
             admin_etName.requestFocus();
-        } else if(TextUtils.isEmpty(numPersonal)){
+        } else if(TextUtils.isEmpty(personal_number)){
             admin_etNumPersonal.setError(getText(R.string.error_number_personal_required));
             admin_etNumPersonal.requestFocus();
-        }else if(numPersonal.length()>10){
+        }else if(personal_number.length()>10){
             admin_etNumPersonal.setError(getText(R.string.error_number_personal_is_ten_digit));
             admin_etNumPersonal.requestFocus();
-        }else if(numPersonal.length()<10){
+        }else if(personal_number.length()<10){
             admin_etNumPersonal.setError(getText(R.string.error_number_personal_less_than_ten_digits));
             admin_etNumPersonal.requestFocus();
         }else if(TextUtils.isEmpty(phone)){
@@ -212,12 +214,29 @@ public class RegisterUsersFragment extends Fragment {
 
             if(checkConnection()){
                 String finalGrade = grade;
+
                 firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         String userID = authResult.getUser().getUid();
-                        String register_date_time = getTimeDate();
-                        registerUser(balance, coins,userID, name, lastName, fullName, address, email, parentName, gender, role, phone, numPersonal, register_date_time, finalGrade, password, photoURL);
+                        registerUser(userID,
+                                name,
+                                lastName,
+                                fullName,
+                                address,
+                                email,
+                                parentName,
+                                gender,
+                                role,
+                                phone,
+                                personal_number,
+                                getTimeDate(),
+                                finalGrade,
+                                password,
+                                urlOfProfile,
+                                balance,
+                                coins,
+                                isEmailVerified);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -234,17 +253,58 @@ public class RegisterUsersFragment extends Fragment {
         }
     }
 
-    private void registerUser(String balance, String coins, String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, Uri photoURL) {
+    private void registerUser(String userID,
+                              String name,
+                              String lastname,
+                              String fullName,
+                              String address,
+                              String email,
+                              String parentName,
+                              String gender,
+                              String role,
+                              String phone,
+                              String personal_number,
+                              String register_date_time,
+                              String grade,
+                              String password,
+                              String urlOfProfile,
+                              String balance,
+                              String coins,
+                              Boolean isEmailVerified) {
         if(checkConnection()){
             documentReference = firebaseFirestore.collection("users").document(userID);
-            User user = new User(balance, coins, userID, name, lastname, fullName, address, email, parentName, gender, role, phone, personal_number, register_date_time, grade, password, null, false);
+            User user = new User(
+                    userID,
+                    name,
+                    lastname,
+                    fullName,
+                    address,
+                    email,
+                    parentName,
+                    gender,
+                    role,
+                    phone,
+                    personal_number,
+                    register_date_time,
+                    grade,
+                    password,
+                    urlOfProfile,
+                    balance,
+                    coins,
+                    isEmailVerified
+            );
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
+                    Toast.makeText(getContext(), getContext().getText(R.string.this_user_with_this) + " " + fullName + " " + getContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                    Bundle viewBundle = new Bundle();
+                    viewBundle.putString("userID", userID);
+                    viewBundle.putString("fullName", fullName);
+                    SetProfileUserFragment setProfileUserFragment = new SetProfileUserFragment();
+                    setProfileUserFragment.setArguments(viewBundle);
+                    loadFragment(setProfileUserFragment);
                     admin_ri_progressBar.setVisibility(View.INVISIBLE);
                     admin_bt_Register.setEnabled(true);
-                    Toast.makeText(getContext(), getContext().getText(R.string.this_person_with_this) + " " + fullName + " " + getContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
-                    firebaseAuth.signOut();
                     setEmptyFields();
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -262,7 +322,6 @@ public class RegisterUsersFragment extends Fragment {
     }
 
     private boolean checkConnection() {
-        //Check Internet Connection
         CheckInternet checkInternet = new CheckInternet();
         if(!checkInternet.isConnected(getContext())){
             return false;
@@ -283,13 +342,20 @@ public class RegisterUsersFragment extends Fragment {
 
     public void setEmptyFields() {
         admin_etName.setText("");
-        admin_etPhone.setText("");
+        admin_etLastName.setText("");
+        admin_etParentName.setText("");
         admin_etAddress.setText("");
         admin_etNumPersonal.setText("");
         admin_etEmailToUser.setText("");
         admin_etPasswordToUser.setText("");
         admin_etConfirmPassword.setText("");
-        et_gender_users.setText("");
+    }
+
+    private void loadFragment(Fragment fragment) {
+        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.admin_fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 }
