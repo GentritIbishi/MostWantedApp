@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,9 +27,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
+import fiek.unipr.mostwantedapp.GetStartedActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserFragment;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.helpers.OnSwipeTouchListener;
 import fiek.unipr.mostwantedapp.models.User;
 import fiek.unipr.mostwantedapp.update.UpdateMultipleUsers;
 
@@ -124,6 +127,15 @@ public class UpdateUserListAdapter extends ArrayAdapter<User> {
                 UpdateUserFragment updateUserFragment = new UpdateUserFragment();
                 updateUserFragment.setArguments(viewBundle);
                 loadFragment(updateUserFragment);
+
+                v.setOnTouchListener(new OnSwipeTouchListener(getContext()){
+                    public void onSwipeRight() {
+                        Toast.makeText(getContext(), "SwipeRight", Toast.LENGTH_SHORT).show();
+                    }
+                    public void onSwipeLeft() {
+                        Toast.makeText(getContext(), "SwipeLeft", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         return listitemView;
