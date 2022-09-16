@@ -1,144 +1,79 @@
 package fiek.unipr.mostwantedapp.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
-import fiek.unipr.mostwantedapp.GetStartedActivity;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListViewHolder;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
-import fiek.unipr.mostwantedapp.helpers.OnSwipeTouchListener;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.User;
-import fiek.unipr.mostwantedapp.update.UpdateMultipleUsers;
 
-public class UpdateUserListAdapter extends ArrayAdapter<User> {
+public class UpdateUserListAdapter extends RecyclerView.Adapter<UpdateUserListViewHolder> {
 
-    private TextView update_user_time_joined, update_user_role, update_user_name;
-    private ImageView update_user_image;
+    private final RecyclerViewInterface recyclerViewInterface;
+    private Context context;
+    private List<User> userList;
     private String user_time_elapsed;
 
-    // constructor for our list view adapter.
-    public UpdateUserListAdapter(@NonNull Context context, ArrayList<User> locationArrayList) {
-        super(context, 0, locationArrayList);
+    public UpdateUserListAdapter(Context context, List<User> userList, RecyclerViewInterface recyclerViewInterface) {
+        this.context = context;
+        this.userList = userList;
+        this.recyclerViewInterface = recyclerViewInterface;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        // below line is use to inflate the
-        // layout for our item of list view.
-        View listitemView = convertView;
-        if (listitemView == null) {
-            listitemView = LayoutInflater.from(getContext()).inflate(R.layout.user_item_single, parent, false);
-        }
+    public UpdateUserListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View userView = LayoutInflater.from(context)
+                .inflate(R.layout.user_item_single, parent, false);
+        return new UpdateUserListViewHolder(userView, recyclerViewInterface);
+    }
 
-        // after inflating an item of listview item
-        // we are getting data from array list inside
-        // our modal class.
-        User user = getItem(position);
-
-        // initializing our UI components of list view item.
-        update_user_name = listitemView.findViewById(R.id.update_user_name);
-        update_user_role = listitemView.findViewById(R.id.update_user_role);
-        update_user_time_joined = listitemView.findViewById(R.id.update_user_time_joined);
-        update_user_image = listitemView.findViewById(R.id.update_user_image);
-
-
+    @Override
+    public void onBindViewHolder(@NonNull UpdateUserListViewHolder holder, int position) {
         try {
-            // after initializing our items we are
-            // setting data to our view.
-            // below line is use to set data to our text view.
-            update_user_name.setText(user.getFullName());
-            update_user_role.setText(user.getRole());
+            holder.update_user_name.setText(userList.get(position).getFullName());
+            holder.update_user_role.setText(userList.get(position).getRole());
 
-            // in below line we are using Picasso to
-            // load image from URL in our Image VIew.
-            if (user.getUrlOfProfile() != null && !user.getUrlOfProfile().isEmpty()) {
-                Picasso.get().load(user.getUrlOfProfile()).transform(new CircleTransform()).into(update_user_image);
+            if (userList.get(position).getUrlOfProfile() != null && !userList.get(position).getUrlOfProfile().isEmpty()) {
+                Picasso.get().load(userList.get(position).getUrlOfProfile()).transform(new CircleTransform()).into(holder.update_user_image);
             }
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-            Date start_date = simpleDateFormat.parse(user.getRegister_date_time());
+            Date start_date = simpleDateFormat.parse(userList.get(position).getRegister_date_time());
             Date end_date = simpleDateFormat.parse(getTimeDate());
             printDifference(start_date, end_date);
 
             if (user_time_elapsed != null) {
-                update_user_time_joined.setText(user_time_elapsed);
+                holder.update_user_time_joined.setText(user_time_elapsed);
             }
         }catch (ParseException e) {
             e.printStackTrace();
         }
-        // below line is use to add item click listener
-        // for our item of list view.
-        listitemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle viewBundle = new Bundle();
-                viewBundle.putString("userID", user.getUserID());
-                viewBundle.putString("address", user.getAddress());
-                viewBundle.putString("balance", user.getBalance());
-                viewBundle.putString("email", user.getEmail());
-                viewBundle.putString("fullName", user.getFullName());
-                viewBundle.putString("gender", user.getGender());
-                viewBundle.putString("lastname", user.getLastname());
-                viewBundle.putString("name", user.getName());
-                viewBundle.putString("parentName", user.getParentName());
-                viewBundle.putString("password", user.getPassword());
-                viewBundle.putString("personal_number", user.getPersonal_number());
-                viewBundle.putString("phone", user.getPhone());
-                viewBundle.putString("register_date_time", user.getRegister_date_time());
-                viewBundle.putString("role", user.getRole());
-                viewBundle.putString("userID", user.getUserID());
-                viewBundle.putString("grade", user.getGrade());
-                viewBundle.putString("coins", user.getCoins());
-                viewBundle.putString("balance", user.getBalance());
-                viewBundle.putBoolean("emailVerified", user.getEmailVerified());
-                if(user.getUrlOfProfile() != null) {
-                    viewBundle.putString("urlOfProfile", user.getUrlOfProfile());
-                }
-                else {
-                    viewBundle.putString("urlOfProfile", "noSetURL");
-                }
-                UpdateUserFragment updateUserFragment = new UpdateUserFragment();
-                updateUserFragment.setArguments(viewBundle);
-                loadFragment(updateUserFragment);
+    }
 
-                v.setOnTouchListener(new OnSwipeTouchListener(getContext()){
-                    public void onSwipeRight() {
-                        Toast.makeText(getContext(), "SwipeRight", Toast.LENGTH_SHORT).show();
-                    }
-                    public void onSwipeLeft() {
-                        Toast.makeText(getContext(), "SwipeLeft", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-        return listitemView;
+    @Override
+    public int getItemCount() {
+        return userList.size();
     }
 
     public void printDifference(Date startDate, Date endDate) {
@@ -185,13 +120,6 @@ public class UpdateUserListAdapter extends ArrayAdapter<User> {
         } catch(Exception e) {
             return "date";
         }
-    }
-
-    private void loadFragment(Fragment fragment) {
-        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.admin_fragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit();
     }
 
 }

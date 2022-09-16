@@ -474,6 +474,8 @@
     <string name="error_you_need_to_add_photo_for_person">You must add photo for this registered person!</string>
     <string name="this_user_with_this">This user with this</string>
     <string name="successfully_login_to_new_user">Successfully user created, login new user!</string>
+    <string name="user_is_deleted_successfully">User deleted successfully!</string>
+    <string name="error_user_failed_to_delete">Failed to delete this user!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

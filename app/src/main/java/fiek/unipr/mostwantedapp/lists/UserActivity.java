@@ -2,6 +2,7 @@ package fiek.unipr.mostwantedapp.lists;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
@@ -23,13 +24,14 @@ import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.UpdateUserListAdapter;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.User;
 
-public class UserActivity extends AppCompatActivity {
+public class UserActivity extends AppCompatActivity implements RecyclerViewInterface {
 
     // creating a variable for our list view,
     // arraylist and firebase Firestore.
-    private ListView lvUsers;
+    private RecyclerView lvUsers;
     private ArrayList<User> userArrayList;
     private UpdateUserListAdapter userListAdapter;
     private FirebaseFirestore firebaseFirestore;
@@ -48,7 +50,7 @@ public class UserActivity extends AppCompatActivity {
         lvUsers = findViewById(R.id.lvUsers);
         update_et_user_search_filter = findViewById(R.id.update_et_user_search_filter);
         userArrayList = new ArrayList<>();
-        userListAdapter = new UpdateUserListAdapter(getApplicationContext(), userArrayList);
+        userListAdapter = new UpdateUserListAdapter(getApplicationContext(), userArrayList, this);
         lvUsers.setAdapter(userListAdapter);
 
         // here we are calling a method
@@ -164,6 +166,11 @@ public class UserActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
                     }
                 });
+
+    }
+
+    @Override
+    public void onItemClick(int position) {
 
     }
 }

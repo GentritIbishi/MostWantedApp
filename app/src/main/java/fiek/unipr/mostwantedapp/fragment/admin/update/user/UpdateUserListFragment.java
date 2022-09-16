@@ -1,13 +1,21 @@
 package fiek.unipr.mostwantedapp.fragment.admin.update.user;
 
+import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
+
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,12 +35,15 @@ import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.UpdateUserListAdapter;
+import fiek.unipr.mostwantedapp.helpers.MyButtonClickListener;
+import fiek.unipr.mostwantedapp.helpers.MySwipeHelper;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.User;
 
-public class UpdateUserListFragment extends Fragment {
+public class UpdateUserListFragment extends Fragment implements RecyclerViewInterface {
 
     private View update_user_fragment;
-    private ListView lvUsers;
+    private RecyclerView lvUsers;
     private ArrayList<User> userArrayList;
     private UpdateUserListAdapter userListAdapter;
     private FirebaseFirestore firebaseFirestore;
@@ -58,8 +69,9 @@ public class UpdateUserListFragment extends Fragment {
         lvUsers = update_user_fragment.findViewById(R.id.lvUsers);
         update_et_user_search_filter = update_user_fragment.findViewById(R.id.update_et_user_search_filter);
         userArrayList = new ArrayList<>();
-        userListAdapter = new UpdateUserListAdapter(getContext(), userArrayList);
+        userListAdapter = new UpdateUserListAdapter(getContext(), userArrayList, this);
         lvUsers.setAdapter(userListAdapter);
+        lvUsers.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // here we are calling a method
         // to load data in our list view.
@@ -91,6 +103,42 @@ public class UpdateUserListFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
             }
         });
+
+        MySwipeHelper swipeHelper = new MySwipeHelper(getContext(), lvUsers, 200)
+        {
+
+            @Override
+            public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) {
+                buffer.add(new MyButton(getContext(),
+                        getContext().getString(R.string.delete),
+                        30,
+                        R.drawable.ic_baseline_delete_50,
+                        getResources().getColor(R.color.red_fixed),
+                        new MyButtonClickListener(){
+
+                            @Override
+                            public void onClick(int pos) {
+                                String userIDToDelete = userArrayList.get(pos).getUserID();
+                                firebaseFirestore.collection("users")
+                                        .document(userIDToDelete)
+                                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(getContext(), getContext().getText(R.string.user_is_deleted_successfully), Toast.LENGTH_SHORT).show();
+                                                userArrayList.clear();
+                                                loadDatainListview();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getContext(), getContext().getText(R.string.error_user_failed_to_delete), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }));
+            }
+        };
+
 
         return update_user_fragment;
     }
@@ -179,4 +227,43 @@ public class UpdateUserListFragment extends Fragment {
 
     }
 
+    @Override
+    public void onItemClick(int position) {
+        Bundle viewBundle = new Bundle();
+        viewBundle.putString("userID", userArrayList.get(position).getUserID());
+        viewBundle.putString("address", userArrayList.get(position).getAddress());
+        viewBundle.putString("balance", userArrayList.get(position).getBalance());
+        viewBundle.putString("email", userArrayList.get(position).getEmail());
+        viewBundle.putString("fullName", userArrayList.get(position).getFullName());
+        viewBundle.putString("gender", userArrayList.get(position).getGender());
+        viewBundle.putString("lastname", userArrayList.get(position).getLastname());
+        viewBundle.putString("name", userArrayList.get(position).getName());
+        viewBundle.putString("parentName", userArrayList.get(position).getParentName());
+        viewBundle.putString("password", userArrayList.get(position).getPassword());
+        viewBundle.putString("personal_number", userArrayList.get(position).getPersonal_number());
+        viewBundle.putString("phone", userArrayList.get(position).getPhone());
+        viewBundle.putString("register_date_time", userArrayList.get(position).getRegister_date_time());
+        viewBundle.putString("role", userArrayList.get(position).getRole());
+        viewBundle.putString("userID", userArrayList.get(position).getUserID());
+        viewBundle.putString("grade", userArrayList.get(position).getGrade());
+        viewBundle.putString("coins", userArrayList.get(position).getCoins());
+        viewBundle.putString("balance", userArrayList.get(position).getBalance());
+        viewBundle.putBoolean("emailVerified", userArrayList.get(position).getEmailVerified());
+        if(userArrayList.get(position).getUrlOfProfile() != null) {
+            viewBundle.putString("urlOfProfile", userArrayList.get(position).getUrlOfProfile());
+        }
+        else {
+            viewBundle.putString("urlOfProfile", "noSetURL");
+        }
+        UpdateUserFragment updateUserFragment = new UpdateUserFragment();
+        updateUserFragment.setArguments(viewBundle);
+        loadFragment(updateUserFragment);
+    }
+
+    private void loadFragment(Fragment fragment) {
+        ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.admin_fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
 }
