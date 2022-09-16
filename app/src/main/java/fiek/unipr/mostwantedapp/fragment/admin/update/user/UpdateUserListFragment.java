@@ -111,8 +111,8 @@ public class UpdateUserListFragment extends Fragment implements RecyclerViewInte
             public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) {
                 buffer.add(new MyButton(getContext(),
                         getContext().getString(R.string.delete),
-                        30,
-                        R.drawable.ic_baseline_delete_50,
+                        40,
+                        0,
                         getResources().getColor(R.color.red_fixed),
                         new MyButtonClickListener(){
 

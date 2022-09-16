@@ -9,6 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.GestureDetector;
@@ -237,6 +238,8 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
             p.setColor(Color.WHITE);
             p.setTextSize(textSize);
 
+            p.setTypeface(Typeface.create("Arial",Typeface.BOLD));
+
             Rect r = new Rect();
             float cHeight = rectF.height();
             float cWidth = rectF.width();
@@ -251,7 +254,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
             }else {
                 Drawable d = ContextCompat.getDrawable(context, imageResId);
                 Bitmap bitmap = drawableToBitmap(d);
-                c.drawBitmap(bitmap, (rectF.left+rectF.right)/2, (rectF.top+rectF.bottom)/2,p);
+                c.drawBitmap(bitmap, rectF.left+x, rectF.top+y,p);
             }
             clickRegion = rectF;
             this.pos = pos;
