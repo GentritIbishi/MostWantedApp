@@ -476,6 +476,8 @@
     <string name="successfully_login_to_new_user">Successfully user created, login new user!</string>
     <string name="user_is_deleted_successfully">User deleted successfully!</string>
     <string name="error_user_failed_to_delete">Failed to delete this user!</string>
+    <string name="person_is_deleted_successfully">Person deleted successfully!</string>
+    <string name="error_person_failed_to_delete">Failed to delete this person!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

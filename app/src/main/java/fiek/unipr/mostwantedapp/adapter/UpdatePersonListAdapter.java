@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
@@ -22,108 +23,72 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.update.person.UpdatePersonFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.update.person.UpdatePersonListViewHolder;
 import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListViewHolder;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.maps.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 import fiek.unipr.mostwantedapp.models.User;
 
-public class UpdatePersonListAdapter extends ArrayAdapter<Person> {
+public class UpdatePersonListAdapter extends RecyclerView.Adapter<UpdatePersonListViewHolder> {
 
-    private TextView update_person_time_joined, update_person_name;
-    private ImageView update_person_image;
+    private final RecyclerViewInterface recyclerViewInterface;
+    private Context context;
+    private List<Person> itemList;
     private String person_time_elapsed;
 
-    // constructor for our list view adapter.
-    public UpdatePersonListAdapter(@NonNull Context context, ArrayList<Person> personArrayList) {
-        super(context, 0, personArrayList);
+    public UpdatePersonListAdapter(Context context, List<Person> itemList, RecyclerViewInterface recyclerViewInterface) {
+        this.context = context;
+        this.itemList = itemList;
+        this.recyclerViewInterface = recyclerViewInterface;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        // below line is use to inflate the
-        // layout for our item of list view.
-        View listitemView = convertView;
-        if (listitemView == null) {
-            listitemView = LayoutInflater.from(getContext()).inflate(R.layout.update_person_item_single, parent, false);
-        }
+    public UpdatePersonListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(context)
+                .inflate(R.layout.update_person_item_single, parent, false);
+        return new UpdatePersonListViewHolder(itemView, recyclerViewInterface);
+    }
 
-        // after inflating an item of listview item
-        // we are getting data from array list inside
-        // our modal class.
-        Person person = getItem(position);
-
-        // initializing our UI components of list view item.
-        update_person_name = listitemView.findViewById(R.id.update_person_name);
-        update_person_time_joined = listitemView.findViewById(R.id.update_person_time_joined);
-        update_person_image = listitemView.findViewById(R.id.update_person_image);
-
+    @Override
+    public void onBindViewHolder(@NonNull UpdatePersonListViewHolder holder, int position) {
         try {
             // after initializing our items we are
             // setting data to our view.
             // below line is use to set data to our text view.
-            update_person_name.setText(person.getFullName());
+            holder.update_person_name.setText(itemList.get(position).getFullName());
 
             // in below line we are using Picasso to
             // load image from URL in our Image VIew.
-            if (person.getUrlOfProfile() != null && !person.getUrlOfProfile().isEmpty()) {
-                Picasso.get().load(person.getUrlOfProfile()).transform(new CircleTransform()).into(update_person_image);
+            if (itemList.get(position).getUrlOfProfile() != null && !itemList.get(position).getUrlOfProfile().isEmpty()) {
+                Picasso.get().load(itemList.get(position).getUrlOfProfile()).transform(new CircleTransform()).into(holder.update_person_image);
             }
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-            Date start_date = simpleDateFormat.parse(person.getRegistration_date());
+            Date start_date = simpleDateFormat.parse(itemList.get(position).getRegistration_date());
             Date end_date = simpleDateFormat.parse(getTimeDate());
             printDifference(start_date, end_date);
 
             if (person_time_elapsed != null) {
-                update_person_time_joined.setText(person_time_elapsed);
+                holder.update_person_time_joined.setText(person_time_elapsed);
             }
         }catch (ParseException e) {
             e.printStackTrace();
         }
+    }
 
-        // below line is use to add item click listener
-        // for our item of list view.
-        listitemView.setClickable(true);
-        listitemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // on the item click on our list view.
-                // we are displaying a toast message.
-                Bundle viewBundle = new Bundle();
-                viewBundle.putString("personId", person.getPersonId());
-                viewBundle.putString("firstName", person.getFirstName());
-                viewBundle.putString("lastName", person.getLastName());
-                viewBundle.putString("parentName", person.getParentName());
-                viewBundle.putString("fullName", person.getFullName());
-                viewBundle.putString("birthday", person.getBirthday());
-                viewBundle.putString("gender", person.getGender());
-                viewBundle.putString("address", person.getAddress());
-                viewBundle.putString("age", person.getAge());
-                viewBundle.putString("eyeColor", person.getEyeColor());
-                viewBundle.putString("hairColor", person.getHairColor());
-                viewBundle.putString("height", person.getHeight());
-                viewBundle.putString("weight", person.getWeight());
-                viewBundle.putString("phy_appearance", person.getPhy_appearance());
-                viewBundle.putStringArrayList("acts", (ArrayList<String>) person.getActs());
-                viewBundle.putDouble("latitude", person.getLatitude());
-                viewBundle.putDouble("longitude", person.getLongitude());
-                viewBundle.putString("prize", person.getPrize());
-                viewBundle.putString("status", person.getStatus());
-                viewBundle.putString("registration_date", person.getRegistration_date());
-                viewBundle.putString("urlOfProfile", person.getUrlOfProfile());
-                UpdatePersonFragment updatePersonFragment = new UpdatePersonFragment();
-                updatePersonFragment.setArguments(viewBundle);
-                loadFragment(updatePersonFragment);
-            }
-        });
-        return listitemView;
+    @Override
+    public int getItemCount() {
+        return itemList.size();
     }
 
     public void printDifference(Date startDate, Date endDate) {
@@ -170,13 +135,6 @@ public class UpdatePersonListAdapter extends ArrayAdapter<Person> {
         } catch(Exception e) {
             return "date";
         }
-    }
-
-    private void loadFragment(Fragment fragment) {
-        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.admin_fragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit();
     }
 
 }

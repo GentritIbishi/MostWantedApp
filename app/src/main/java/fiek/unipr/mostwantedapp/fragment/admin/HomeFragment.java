@@ -156,30 +156,35 @@ public class HomeFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
-        getAndSetTotalReportFor24H();
-        vsYesterday();
-        getAndSetTotalReportForOneWeek();
-        vsWeek();
 
-        rightNowDateTime.setText(getDate());
-        getGrade(firebaseAuth);
-        setupPieChart();
-        setPieChart();
+        if(checkContext(getContext()))
+        {
+            getAndSetTotalReportFor24H();
+            vsYesterday();
+            getAndSetTotalReportForOneWeek();
+            vsWeek(getContext());
+            rightNowDateTime.setText(getDate());
+            getGrade(firebaseAuth);
+            setupPieChart();
+            setPieChart();
+        }
 
         pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
 
                 if(firebaseAuth != null){
-                    loadInfoFromFirebase(firebaseAuth);
+                    if(checkContext(getContext()))
+                    {
+                        loadInfoFromFirebase(firebaseAuth);
+                        setupPieChart();
+                        setPieChart();
+                        getAndSetTotalReportFor24H();
+                        vsYesterday();
+                        getAndSetTotalReportForOneWeek();
+                        vsWeek(getContext());
+                    }
                 }
-
-                setupPieChart();
-                setPieChart();
-                getAndSetTotalReportFor24H();
-                vsYesterday();
-                getAndSetTotalReportForOneWeek();
-                vsWeek();
 
                 pullToRefreshInSearch.setRefreshing(false);
             }
@@ -428,7 +433,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void loadInfoAndSayHiFromFirebase(FirebaseAuth firebaseAuth) {
+    private void loadInfoAndSayHiFromFirebase(FirebaseAuth firebaseAuth, Context context) {
         if(checkConnection()){
             firebaseFirestore.collection("users")
                     .document(firebaseAuth.getCurrentUser().getUid())
@@ -440,9 +445,9 @@ public class HomeFragment extends Fragment {
                                 name = task.getResult().getString("name");
                                 fullName = task.getResult().getString("fullName");
                                 if(name != null){
-                                    hiDashboard.setText(getContext().getText(R.string.hi)+" "+name);
+                                    hiDashboard.setText(context.getText(R.string.hi)+" "+name);
                                 }else {
-                                    hiDashboard.setText(getContext().getText(R.string.dashboard));
+                                    hiDashboard.setText(context.getText(R.string.dashboard));
                                 }
                             }
                         }
@@ -471,14 +476,23 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         if(firebaseAuth != null){
-            createNotificationChannelAdded();
-            createNotificationChannelModified();
-            createNotificationChannelRemoved();
-            loadInfoAndSayHiFromFirebase(firebaseAuth);
-            loadInfoAnonymousFirebase();
-            loadInfoFromFirebase(firebaseAuth);
-            loadInfoPhoneFirebase();
+            if(checkContext(getContext())){
+                createNotificationChannelAdded();
+                createNotificationChannelModified();
+                createNotificationChannelRemoved();
+                loadInfoAndSayHiFromFirebase(firebaseAuth, getContext());
+                loadInfoAnonymousFirebase();
+                loadInfoFromFirebase(firebaseAuth);
+                loadInfoPhoneFirebase();
+            }
         }
+    }
+
+    private boolean checkContext(Context context) {
+        if(context != null)
+            return true;
+        else
+            return false;
     }
 
     public static String getDate() { // without parameter argument
@@ -798,7 +812,7 @@ public class HomeFragment extends Fragment {
                 });
     }
 
-    private void vsWeek() {
+    private void vsWeek(Context context) {
         String start_lastWeek = getFirstDayOfLastWeek()+" "+"00:00:00";
         String start_thisWeek = getFirstDayOfThisWeek()+" "+"00:00:00";
 
@@ -827,15 +841,15 @@ public class HomeFragment extends Fragment {
                                                 if(percentage > 0) {
                                                     imageTrendingWeekly.setImageResource(R.drawable.ic_baseline_trending_up_24);
                                                     tv_percentage_weekly.setText(percentage+"%");
-                                                    tv_percentage_weekly.setTextColor(getActivity().getResources().getColor(R.color.neon_green));
+                                                    tv_percentage_weekly.setTextColor(context.getResources().getColor(R.color.neon_green));
                                                 }else if(percentage < 0) {
                                                     imageTrendingWeekly.setImageResource(R.drawable.ic_baseline_trending_down_24);
                                                     tv_percentage_weekly.setText(percentage+"%");
-                                                    tv_percentage_weekly.setTextColor(getActivity().getResources().getColor(R.color.neon_red));
+                                                    tv_percentage_weekly.setTextColor(context.getResources().getColor(R.color.neon_red));
                                                 }else if(percentage == 0) {
                                                     imageTrendingWeekly.setImageResource(R.drawable.ic_baseline_trending_flat_24);
                                                     tv_percentage_weekly.setText(percentage+"%");
-                                                    tv_percentage_weekly.setTextColor(getActivity().getResources().getColor(R.color.bluelight));
+                                                    tv_percentage_weekly.setTextColor(context.getResources().getColor(R.color.bluelight));
                                                 }
                                             }else {
                                                 System.out.println("ERROR INSIDE VS WEEK: "+task.getException());

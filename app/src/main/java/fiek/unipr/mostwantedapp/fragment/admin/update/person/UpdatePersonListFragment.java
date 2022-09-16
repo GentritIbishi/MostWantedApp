@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
@@ -28,13 +31,16 @@ import java.util.List;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.UpdatePersonListAdapter;
 import fiek.unipr.mostwantedapp.adapter.UpdateUserListAdapter;
+import fiek.unipr.mostwantedapp.helpers.MyButtonClickListener;
+import fiek.unipr.mostwantedapp.helpers.MySwipeHelper;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Person;
 import fiek.unipr.mostwantedapp.models.User;
 
-public class UpdatePersonListFragment extends Fragment {
+public class UpdatePersonListFragment extends Fragment implements RecyclerViewInterface {
 
     private View update_person_view;
-    private ListView lvUpdatePersons;
+    private RecyclerView lvUpdatePersons;
     private ArrayList<Person> personArrayList;
     private UpdatePersonListAdapter updatePersonListAdapter;
     private FirebaseFirestore firebaseFirestore;
@@ -61,8 +67,9 @@ public class UpdatePersonListFragment extends Fragment {
         lvUpdatePersons = update_person_view.findViewById(R.id.lvUpdatePersons);
         update_et_person_search_filter = update_person_view.findViewById(R.id.update_et_person_search_filter);
         personArrayList = new ArrayList<>();
-        updatePersonListAdapter = new UpdatePersonListAdapter(getContext(), personArrayList);
+        updatePersonListAdapter = new UpdatePersonListAdapter(getContext(), personArrayList, this);
         lvUpdatePersons.setAdapter(updatePersonListAdapter);
+        lvUpdatePersons.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // here we are calling a method
         // to load data in our list view.
@@ -94,6 +101,41 @@ public class UpdatePersonListFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
             }
         });
+
+        MySwipeHelper swipeHelper = new MySwipeHelper(getContext(), lvUpdatePersons, 200)
+        {
+
+            @Override
+            public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) {
+                buffer.add(new MyButton(getContext(),
+                        getContext().getString(R.string.delete),
+                        40,
+                        0,
+                        getResources().getColor(R.color.red_fixed),
+                        new MyButtonClickListener(){
+
+                            @Override
+                            public void onClick(int pos) {
+                                String personIdToDelete = personArrayList.get(pos).getPersonId();
+                                firebaseFirestore.collection("wanted_persons")
+                                        .document(personIdToDelete)
+                                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(getContext(), getContext().getText(R.string.person_is_deleted_successfully), Toast.LENGTH_SHORT).show();
+                                                personArrayList.clear();
+                                                loadDatainListview();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getContext(), getContext().getText(R.string.error_person_failed_to_delete), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }));
+            }
+        };
 
         return update_person_view;
     }
@@ -180,6 +222,42 @@ public class UpdatePersonListFragment extends Fragment {
                     }
                 });
 
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Bundle viewBundle = new Bundle();
+        viewBundle.putString("personId", personArrayList.get(position).getPersonId());
+        viewBundle.putString("firstName", personArrayList.get(position).getFirstName());
+        viewBundle.putString("lastName", personArrayList.get(position).getLastName());
+        viewBundle.putString("parentName", personArrayList.get(position).getParentName());
+        viewBundle.putString("fullName", personArrayList.get(position).getFullName());
+        viewBundle.putString("birthday", personArrayList.get(position).getBirthday());
+        viewBundle.putString("gender", personArrayList.get(position).getGender());
+        viewBundle.putString("address", personArrayList.get(position).getAddress());
+        viewBundle.putString("age", personArrayList.get(position).getAge());
+        viewBundle.putString("eyeColor", personArrayList.get(position).getEyeColor());
+        viewBundle.putString("hairColor", personArrayList.get(position).getHairColor());
+        viewBundle.putString("height", personArrayList.get(position).getHeight());
+        viewBundle.putString("weight", personArrayList.get(position).getWeight());
+        viewBundle.putString("phy_appearance", personArrayList.get(position).getPhy_appearance());
+        viewBundle.putStringArrayList("acts", (ArrayList<String>) personArrayList.get(position).getActs());
+        viewBundle.putDouble("latitude", personArrayList.get(position).getLatitude());
+        viewBundle.putDouble("longitude", personArrayList.get(position).getLongitude());
+        viewBundle.putString("prize", personArrayList.get(position).getPrize());
+        viewBundle.putString("status", personArrayList.get(position).getStatus());
+        viewBundle.putString("registration_date", personArrayList.get(position).getRegistration_date());
+        viewBundle.putString("urlOfProfile", personArrayList.get(position).getUrlOfProfile());
+        UpdatePersonFragment updatePersonFragment = new UpdatePersonFragment();
+        updatePersonFragment.setArguments(viewBundle);
+        loadFragment(updatePersonFragment);
+    }
+
+    private void loadFragment(Fragment fragment) {
+        ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.admin_fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 }

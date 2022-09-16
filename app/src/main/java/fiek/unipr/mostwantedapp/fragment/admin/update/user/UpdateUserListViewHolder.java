@@ -17,6 +17,7 @@ public class UpdateUserListViewHolder extends RecyclerView.ViewHolder {
 
     public UpdateUserListViewHolder(@NonNull View userView, RecyclerViewInterface recyclerViewInterface) {
         super(userView);
+
         update_user_name = userView.findViewById(R.id.update_user_name);
         update_user_role = userView.findViewById(R.id.update_user_role);
         update_user_time_joined = userView.findViewById(R.id.update_user_time_joined);
