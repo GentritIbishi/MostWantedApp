@@ -234,7 +234,7 @@ public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
             Paint p = new Paint();
             p.setColor(color);
             c.drawRect(rectF, p);
-            //text
+            //text styling
             p.setColor(Color.WHITE);
             p.setTextSize(textSize);
 
