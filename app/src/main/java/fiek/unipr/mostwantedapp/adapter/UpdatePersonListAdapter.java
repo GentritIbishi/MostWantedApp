@@ -1,52 +1,37 @@
 package fiek.unipr.mostwantedapp.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.fragment.admin.update.person.UpdatePersonFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.update.person.UpdatePersonListViewHolder;
-import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserFragment;
-import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListViewHolder;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.maps.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.Person;
-import fiek.unipr.mostwantedapp.models.User;
 
 public class UpdatePersonListAdapter extends RecyclerView.Adapter<UpdatePersonListViewHolder> {
 
     private final RecyclerViewInterface recyclerViewInterface;
     private Context context;
-    private List<Person> itemList;
+    private List<Person> personList;
     private String person_time_elapsed;
 
-    public UpdatePersonListAdapter(Context context, List<Person> itemList, RecyclerViewInterface recyclerViewInterface) {
+    public UpdatePersonListAdapter(Context context, List<Person> personList, RecyclerViewInterface recyclerViewInterface) {
         this.context = context;
-        this.itemList = itemList;
+        this.personList = personList;
         this.recyclerViewInterface = recyclerViewInterface;
     }
 
@@ -64,17 +49,17 @@ public class UpdatePersonListAdapter extends RecyclerView.Adapter<UpdatePersonLi
             // after initializing our items we are
             // setting data to our view.
             // below line is use to set data to our text view.
-            holder.update_person_name.setText(itemList.get(position).getFullName());
+            holder.update_person_name.setText(personList.get(position).getFullName());
 
             // in below line we are using Picasso to
             // load image from URL in our Image VIew.
-            if (itemList.get(position).getUrlOfProfile() != null && !itemList.get(position).getUrlOfProfile().isEmpty()) {
-                Picasso.get().load(itemList.get(position).getUrlOfProfile()).transform(new CircleTransform()).into(holder.update_person_image);
+            if (personList.get(position).getUrlOfProfile() != null && !personList.get(position).getUrlOfProfile().isEmpty()) {
+                Picasso.get().load(personList.get(position).getUrlOfProfile()).transform(new CircleTransform()).into(holder.update_person_image);
             }
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-            Date start_date = simpleDateFormat.parse(itemList.get(position).getRegistration_date());
+            Date start_date = simpleDateFormat.parse(personList.get(position).getRegistration_date());
             Date end_date = simpleDateFormat.parse(getTimeDate());
             printDifference(start_date, end_date);
 
@@ -88,7 +73,7 @@ public class UpdatePersonListAdapter extends RecyclerView.Adapter<UpdatePersonLi
 
     @Override
     public int getItemCount() {
-        return itemList.size();
+        return personList.size();
     }
 
     public void printDifference(Date startDate, Date endDate) {

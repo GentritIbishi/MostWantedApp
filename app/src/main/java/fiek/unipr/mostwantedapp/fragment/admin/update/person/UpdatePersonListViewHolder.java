@@ -15,14 +15,14 @@ public class UpdatePersonListViewHolder extends RecyclerView.ViewHolder{
     public TextView update_person_time_joined, update_person_name;
     public ImageView update_person_image;
 
-    public UpdatePersonListViewHolder(@NonNull View itemView, RecyclerViewInterface recyclerViewInterface) {
-        super(itemView);
+    public UpdatePersonListViewHolder(@NonNull View personView, RecyclerViewInterface recyclerViewInterface) {
+        super(personView);
 
-        update_person_name = itemView.findViewById(R.id.update_person_name);
-        update_person_time_joined = itemView.findViewById(R.id.update_person_time_joined);
-        update_person_image = itemView.findViewById(R.id.update_person_image);
+        update_person_name = personView.findViewById(R.id.update_person_name);
+        update_person_time_joined = personView.findViewById(R.id.update_person_time_joined);
+        update_person_image = personView.findViewById(R.id.update_person_image);
 
-        itemView.setOnClickListener(new View.OnClickListener() {
+        personView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(recyclerViewInterface != null)

@@ -478,6 +478,8 @@
     <string name="error_user_failed_to_delete">Failed to delete this user!</string>
     <string name="person_is_deleted_successfully">Person deleted successfully!</string>
     <string name="error_person_failed_to_delete">Failed to delete this person!</string>
+    <string name="investigator_is_deleted_successfully">Investigator deleted successfully!</string>
+    <string name="error_investigator_failed_to_delete">Failed to delete investigator!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
@@ -11,7 +14,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,14 +29,15 @@ import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.UpdateInvestigatorListAdapter;
-import fiek.unipr.mostwantedapp.adapter.UpdatePersonListAdapter;
+import fiek.unipr.mostwantedapp.helpers.MyButtonClickListener;
+import fiek.unipr.mostwantedapp.helpers.MySwipeHelper;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Investigator;
-import fiek.unipr.mostwantedapp.models.Person;
 
-public class UpdateInvestigatorListFragment extends Fragment {
+public class UpdateInvestigatorListFragment extends Fragment implements RecyclerViewInterface {
 
     private View update_investigator_list_view;
-    private ListView lvUpdateInvestigators;
+    private RecyclerView lvUpdateInvestigators;
     private ArrayList<Investigator> investigatorArrayList;
     private UpdateInvestigatorListAdapter updateInvestigatorListAdapter;
     private FirebaseFirestore firebaseFirestore;
@@ -61,8 +64,9 @@ public class UpdateInvestigatorListFragment extends Fragment {
         lvUpdateInvestigators = update_investigator_list_view.findViewById(R.id.lvUpdateInvestigators);
         update_et_investigator_search_filter = update_investigator_list_view.findViewById(R.id.update_et_investigator_search_filter);
         investigatorArrayList = new ArrayList<>();
-        updateInvestigatorListAdapter = new UpdateInvestigatorListAdapter(getContext(), investigatorArrayList);
+        updateInvestigatorListAdapter = new UpdateInvestigatorListAdapter(getContext(), investigatorArrayList, this);
         lvUpdateInvestigators.setAdapter(updateInvestigatorListAdapter);
+        lvUpdateInvestigators.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // here we are calling a method
         // to load data in our list view.
@@ -94,6 +98,8 @@ public class UpdateInvestigatorListFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
             }
         });
+
+        swipeDeleteOnRecyclerList(lvUpdateInvestigators, investigatorArrayList);
 
         return update_investigator_list_view;
     }
@@ -182,4 +188,71 @@ public class UpdateInvestigatorListFragment extends Fragment {
 
     }
 
+    @Override
+    public void onItemClick(int position) {
+        Bundle viewBundle = new Bundle();
+        viewBundle.putString("investigator_id", investigatorArrayList.get(position).getInvestigator_id());
+        viewBundle.putString("firstName", investigatorArrayList.get(position).getFirstName());
+        viewBundle.putString("lastName", investigatorArrayList.get(position).getLastName());
+        viewBundle.putString("parentName", investigatorArrayList.get(position).getParentName());
+        viewBundle.putString("fullName", investigatorArrayList.get(position).getFullName());
+        viewBundle.putString("birthday", investigatorArrayList.get(position).getBirthday());
+        viewBundle.putString("address", investigatorArrayList.get(position).getAddress());
+        viewBundle.putString("eyeColor", investigatorArrayList.get(position).getEyeColor());
+        viewBundle.putString("hairColor", investigatorArrayList.get(position).getHairColor());
+        viewBundle.putString("phy_appearance", investigatorArrayList.get(position).getPhy_appearance());
+        viewBundle.putString("urlOfProfile", investigatorArrayList.get(position).getUrlOfProfile());
+        viewBundle.putString("registration_date", investigatorArrayList.get(position).getRegistration_date());
+        viewBundle.putString("age", investigatorArrayList.get(position).getAge());
+        viewBundle.putString("gender", investigatorArrayList.get(position).getGender());
+        viewBundle.putString("height", investigatorArrayList.get(position).getHeight());
+        viewBundle.putString("weight", investigatorArrayList.get(position).getWeight());
+        UpdateInvestigatorFragment updateInvestigatorFragment = new UpdateInvestigatorFragment();
+        updateInvestigatorFragment.setArguments(viewBundle);
+        loadFragment(updateInvestigatorFragment);
+    }
+
+    private void swipeDeleteOnRecyclerList(RecyclerView lvUpdateInvestigators, ArrayList<Investigator> investigatorArrayList) {
+        MySwipeHelper swipeHelper = new MySwipeHelper(getContext(), lvUpdateInvestigators, 200)
+        {
+
+            @Override
+            public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) {
+                buffer.add(new MyButton(getContext(),
+                        getContext().getString(R.string.delete),
+                        40,
+                        0,
+                        getResources().getColor(R.color.red_fixed),
+                        new MyButtonClickListener(){
+
+                            @Override
+                            public void onClick(int pos) {
+                                String investigatorIdToDelete = investigatorArrayList.get(pos).getInvestigator_id();
+                                firebaseFirestore.collection("investigators")
+                                        .document(investigatorIdToDelete)
+                                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(getContext(), getContext().getText(R.string.investigator_is_deleted_successfully), Toast.LENGTH_SHORT).show();
+                                                investigatorArrayList.clear();
+                                                loadDatainListview();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getContext(), getContext().getText(R.string.error_investigator_failed_to_delete), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }));
+            }
+        };
+    }
+
+    private void loadFragment(Fragment fragment) {
+        ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.admin_fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
 }

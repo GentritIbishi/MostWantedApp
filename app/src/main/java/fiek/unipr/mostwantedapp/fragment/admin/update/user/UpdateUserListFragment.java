@@ -38,6 +38,7 @@ import fiek.unipr.mostwantedapp.adapter.UpdateUserListAdapter;
 import fiek.unipr.mostwantedapp.helpers.MyButtonClickListener;
 import fiek.unipr.mostwantedapp.helpers.MySwipeHelper;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.models.Person;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class UpdateUserListFragment extends Fragment implements RecyclerViewInterface {
@@ -104,41 +105,7 @@ public class UpdateUserListFragment extends Fragment implements RecyclerViewInte
             }
         });
 
-        MySwipeHelper swipeHelper = new MySwipeHelper(getContext(), lvUsers, 200)
-        {
-
-            @Override
-            public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) {
-                buffer.add(new MyButton(getContext(),
-                        getContext().getString(R.string.delete),
-                        40,
-                        0,
-                        getResources().getColor(R.color.red_fixed),
-                        new MyButtonClickListener(){
-
-                            @Override
-                            public void onClick(int pos) {
-                                String userIDToDelete = userArrayList.get(pos).getUserID();
-                                firebaseFirestore.collection("users")
-                                        .document(userIDToDelete)
-                                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Toast.makeText(getContext(), getContext().getText(R.string.user_is_deleted_successfully), Toast.LENGTH_SHORT).show();
-                                                userArrayList.clear();
-                                                loadDatainListview();
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(getContext(), getContext().getText(R.string.error_user_failed_to_delete), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                            }
-                        }));
-            }
-        };
-
+        swipeDeleteOnRecyclerList(lvUsers, userArrayList);
 
         return update_user_fragment;
     }
@@ -265,5 +232,41 @@ public class UpdateUserListFragment extends Fragment implements RecyclerViewInte
                 .replace(R.id.admin_fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void swipeDeleteOnRecyclerList(RecyclerView lvUsers, ArrayList<User> userArrayList) {
+        MySwipeHelper swipeHelper = new MySwipeHelper(getContext(), lvUsers, 200)
+        {
+            @Override
+            public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MyButton> buffer) {
+                buffer.add(new MyButton(getContext(),
+                        getContext().getString(R.string.delete),
+                        40,
+                        0,
+                        getResources().getColor(R.color.red_fixed),
+                        new MyButtonClickListener(){
+
+                            @Override
+                            public void onClick(int pos) {
+                                String userIDToDelete = userArrayList.get(pos).getUserID();
+                                firebaseFirestore.collection("users")
+                                        .document(userIDToDelete)
+                                        .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(getContext(), getContext().getText(R.string.user_is_deleted_successfully), Toast.LENGTH_SHORT).show();
+                                                userArrayList.clear();
+                                                loadDatainListview();
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(getContext(), getContext().getText(R.string.error_user_failed_to_delete), Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
+                            }
+                        }));
+            }
+        };
     }
 }

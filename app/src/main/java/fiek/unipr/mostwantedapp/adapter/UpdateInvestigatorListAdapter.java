@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
@@ -20,102 +21,72 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.update.investigator.UpdateInvestigatorFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.update.investigator.UpdateInvestigatorListViewHolder;
 import fiek.unipr.mostwantedapp.fragment.admin.update.person.UpdatePersonFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListViewHolder;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Investigator;
 import fiek.unipr.mostwantedapp.models.Person;
+import fiek.unipr.mostwantedapp.models.User;
 
-public class UpdateInvestigatorListAdapter extends ArrayAdapter<Investigator> {
+public class UpdateInvestigatorListAdapter extends RecyclerView.Adapter<UpdateInvestigatorListViewHolder> {
 
-    private TextView update_investigator_time_joined, update_investigator_name;
-    private ImageView update_investigator_image;
+    private final RecyclerViewInterface recyclerViewInterface;
+    private Context context;
+    private List<Investigator> investigatorList;
     private String investigator_time_elapsed;
 
-    // constructor for our list view adapter.
-    public UpdateInvestigatorListAdapter(@NonNull Context context, ArrayList<Investigator> investigatorArrayList) {
-        super(context, 0, investigatorArrayList);
+    public UpdateInvestigatorListAdapter(Context context, List<Investigator> investigatorList, RecyclerViewInterface recyclerViewInterface) {
+        this.context = context;
+        this.investigatorList = investigatorList;
+        this.recyclerViewInterface = recyclerViewInterface;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        // below line is use to inflate the
-        // layout for our item of list view.
-        View listitemView = convertView;
-        if (listitemView == null) {
-            listitemView = LayoutInflater.from(getContext()).inflate(R.layout.update_investigator_item_single, parent, false);
-        }
+    public UpdateInvestigatorListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View userView = LayoutInflater.from(context)
+                .inflate(R.layout.update_investigator_item_single, parent, false);
+        return new UpdateInvestigatorListViewHolder(userView, recyclerViewInterface);
+    }
 
-        // after inflating an item of listview item
-        // we are getting data from array list inside
-        // our modal class.
-        Investigator investigator = getItem(position);
-
-        // initializing our UI components of list view item.
-        update_investigator_name = listitemView.findViewById(R.id.update_investigator_name);
-        update_investigator_time_joined = listitemView.findViewById(R.id.update_investigator_time_joined);
-        update_investigator_image = listitemView.findViewById(R.id.update_investigator_image);
-
+    @Override
+    public void onBindViewHolder(@NonNull UpdateInvestigatorListViewHolder holder, int position) {
         try {
             // after initializing our items we are
             // setting data to our view.
             // below line is use to set data to our text view.
-            update_investigator_name.setText(investigator.getFullName());
+            holder.update_investigator_name.setText(investigatorList.get(position).getFullName());
 
             // in below line we are using Picasso to
             // load image from URL in our Image VIew.
-            if (investigator.getUrlOfProfile() != null && !investigator.getUrlOfProfile().isEmpty()) {
-                Picasso.get().load(investigator.getUrlOfProfile()).transform(new CircleTransform()).into(update_investigator_image);
+            if (investigatorList.get(position).getUrlOfProfile() != null && !investigatorList.get(position).getUrlOfProfile().isEmpty()) {
+                Picasso.get().load(investigatorList.get(position).getUrlOfProfile()).transform(new CircleTransform()).into(holder.update_investigator_image);
             }
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-            Date start_date = simpleDateFormat.parse(investigator.getRegistration_date());
+            Date start_date = simpleDateFormat.parse(investigatorList.get(position).getRegistration_date());
             Date end_date = simpleDateFormat.parse(getTimeDate());
             printDifference(start_date, end_date);
 
             if (investigator_time_elapsed != null) {
-                update_investigator_time_joined.setText(investigator_time_elapsed);
+                holder.update_investigator_time_joined.setText(investigator_time_elapsed);
             }
         }catch (ParseException e) {
             e.printStackTrace();
         }
+    }
 
-        // below line is use to add item click listener
-        // for our item of list view.
-        listitemView.setClickable(true);
-        listitemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // on the item click on our list view.
-                // we are displaying a toast message.
-                Bundle viewBundle = new Bundle();
-                viewBundle.putString("investigator_id", investigator.getInvestigator_id());
-                viewBundle.putString("firstName", investigator.getFirstName());
-                viewBundle.putString("lastName", investigator.getLastName());
-                viewBundle.putString("parentName", investigator.getParentName());
-                viewBundle.putString("fullName", investigator.getFullName());
-                viewBundle.putString("birthday", investigator.getBirthday());
-                viewBundle.putString("address", investigator.getAddress());
-                viewBundle.putString("eyeColor", investigator.getEyeColor());
-                viewBundle.putString("hairColor", investigator.getHairColor());
-                viewBundle.putString("phy_appearance", investigator.getPhy_appearance());
-                viewBundle.putString("urlOfProfile", investigator.getUrlOfProfile());
-                viewBundle.putString("registration_date", investigator.getRegistration_date());
-                viewBundle.putString("age", investigator.getAge());
-                viewBundle.putString("gender", investigator.getGender());
-                viewBundle.putString("height", investigator.getHeight());
-                viewBundle.putString("weight", investigator.getWeight());
-                UpdateInvestigatorFragment updateInvestigatorFragment = new UpdateInvestigatorFragment();
-                updateInvestigatorFragment.setArguments(viewBundle);
-                loadFragment(updateInvestigatorFragment);
-            }
-        });
-        return listitemView;
+    @Override
+    public int getItemCount() {
+        return investigatorList.size();
     }
 
     public void printDifference(Date startDate, Date endDate) {
@@ -164,10 +135,4 @@ public class UpdateInvestigatorListAdapter extends ArrayAdapter<Investigator> {
         }
     }
 
-    private void loadFragment(Fragment fragment) {
-        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.admin_fragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit();
-    }
 }
