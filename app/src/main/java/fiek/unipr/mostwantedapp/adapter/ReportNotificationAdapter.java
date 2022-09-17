@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -31,64 +32,53 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.fragment.admin.notification.NotificationListViewHolder;
+import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListViewHolder;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.maps.report.SingleReportActivity;
+import fiek.unipr.mostwantedapp.models.User;
 
-public class ReportNotificationAdapter extends ArrayAdapter<Report> {
-    // constructor for our list view adapter.
+public class ReportNotificationAdapter extends RecyclerView.Adapter<NotificationListViewHolder> {
 
-    private CircleImageView user_reported_image;
+    private final RecyclerViewInterface recyclerViewInterface;
+    private Context context;
+    private List<Report> reportList;
     private static String ANONYMOUS = "ANONYMOUS";
     private String urlOfProfile, user_report_time_elapsed, informer_person;
-    private List<Report> reportList = null;
-    private ArrayList<Report> arraylist;
 
-    public ReportNotificationAdapter(@NonNull Context context, ArrayList<Report> reportArrayList) {
-        super(context, 0, reportArrayList);
+    public ReportNotificationAdapter(Context context, List<Report> reportList, RecyclerViewInterface recyclerViewInterface) {
+        this.context = context;
+        this.reportList = reportList;
+        this.recyclerViewInterface = recyclerViewInterface;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        // below line is use to inflate the
-        // layout for our item of list view.
-        View listitemView = convertView;
-        if (listitemView == null) {
-            listitemView = LayoutInflater.from(getContext()).inflate(R.layout.report_notification_item, parent, false);
-        }
+    public NotificationListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View notificationItemView = LayoutInflater.from(context)
+                .inflate(R.layout.report_notification_item, parent, false);
+        return new NotificationListViewHolder(notificationItemView, recyclerViewInterface);
+    }
 
-        // after inflating an item of listview item
-        // we are getting data from array list inside
-        // our modal class.
-        Report report = getItem(position);
-
-        // initializing our UI components of list view item.
-        TextView user_report_name = listitemView.findViewById(R.id.user_report_name);
-        TextView user_report_description = listitemView.findViewById(R.id.user_report_description);
-        TextView user_report_time = listitemView.findViewById(R.id.user_report_time);
-        user_reported_image = listitemView.findViewById(R.id.user_reported_image);
-
+    @Override
+    public void onBindViewHolder(@NonNull NotificationListViewHolder holder, int position) {
         try {
-            // after initializing our items we are
-            // setting data to our view.
-            // below line is use to set data to our text view.
-            user_report_name.setText(report.getInformer_person());
+            holder.user_report_name.setText(reportList.get(position).getInformer_person());
 
-            informer_person = user_report_name.getText().toString();
+            informer_person = holder.user_report_name.getText().toString();
 
             if (informer_person != null && informer_person.equals(ANONYMOUS)){
 
-                user_reported_image.setImageResource(R.drawable.ic_anonymous);
+                holder.user_reported_image.setImageResource(R.drawable.ic_anonymous);
 
             }else if(informer_person != null && informer_person.startsWith("+")){
 
-                user_reported_image.setImageResource(R.drawable.ic_phone_login);
+                holder.user_reported_image.setImageResource(R.drawable.ic_phone_login);
 
             }else if(!informer_person.equals(ANONYMOUS) && !informer_person.startsWith("+")){
-                // in below line we are using Picasso to
-                // load image from URL in our Image VIew.
-                Glide.with(getContext())
-                        .load(report.getInformer_person_urlOfProfile())
+                Glide.with(context)
+                        .load(reportList.get(position).getInformer_person_urlOfProfile())
                         .listener(new RequestListener<Drawable>() {
                             @Override
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
@@ -97,7 +87,7 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
 
                             @Override
                             public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                user_reported_image.setImageDrawable(resource);
+                                holder.user_reported_image.setImageDrawable(resource);
                                 return true;
                             }
                         })
@@ -106,70 +96,26 @@ public class ReportNotificationAdapter extends ArrayAdapter<Report> {
             }
 
 
-            user_report_description.setText(report.getDescription());
+            holder.user_report_description.setText(reportList.get(position).getDescription());
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
-                Date start_date = simpleDateFormat.parse(report.getDate_time());
-                Date end_date = simpleDateFormat.parse(getTimeDate());
-                printDifference(start_date, end_date);
+            Date start_date = simpleDateFormat.parse(reportList.get(position).getDate_time());
+            Date end_date = simpleDateFormat.parse(getTimeDate());
+            printDifference(start_date, end_date);
 
-                if(user_report_time_elapsed != null){
-                    user_report_time.setText(user_report_time_elapsed);
-                }
+            if(user_report_time_elapsed != null){
+                holder.user_report_time.setText(user_report_time_elapsed);
+            }
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
 
-
-        // below line is use to add item click listener
-        // for our item of list view.
-        listitemView.setClickable(true);
-        listitemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // on the item click on our list view.
-                // we are displaying a toast message.
-                Intent intent=new Intent(v.getContext(), SingleReportActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                Bundle viewBundle = new Bundle();
-                viewBundle.putString("date_time", report.getDate_time());
-                viewBundle.putString("title", report.getTitle());
-                viewBundle.putString("docId", report.getDocId());
-                viewBundle.putString("description", report.getDescription());
-                viewBundle.putString("informer_person", report.getInformer_person());
-                viewBundle.putString("status", report.getStatus().toString());
-                viewBundle.putString("informer_person_urlOfProfile", report.getInformer_person_urlOfProfile());
-                viewBundle.putDouble("latitude", report.getLatitude());
-                viewBundle.putDouble("longitude", report.getLongitude());
-                viewBundle.putString("uID", report.getuID());
-                viewBundle.putString("wanted_person", report.getWanted_person());
-
-                if(report.getImages() == null || report.getImages().equals(null) || report.getImages().isEmpty()) {
-                    viewBundle.putInt("totalImages", 0);
-                    viewBundle.putStringArray("images", null);
-                }else {
-                    viewBundle.putInt("totalImages", report.getImages().size());
-
-                    int totalImages = report.getImages().size();
-
-                    Map<String, Object> images;
-                    images = (Map<String, Object>) report.getImages();
-
-                    String[] arrImages = new String[totalImages];
-
-                    for(int i = 0; i<totalImages; i++) {
-                        arrImages[i] = images.get("image"+i).toString();
-                    }
-
-                    viewBundle.putStringArray("images", arrImages);
-                }
-
-                intent.putExtras(viewBundle);
-                v.getContext().startActivity(intent);
-            }
-        });
-        return listitemView;
+    @Override
+    public int getItemCount() {
+        return reportList.size();
     }
 
     public void printDifference(Date startDate, Date endDate) {

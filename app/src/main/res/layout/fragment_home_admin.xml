@@ -471,6 +471,7 @@
                     android:id="@+id/cons_analytics"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:elevation="6dp"
                     android:padding="10dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -697,10 +698,11 @@
                         android:id="@+id/admin_home_pieChartConstrain"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginTop="48dp"
+                        android:layout_marginEnd="24dp"
                         android:layout_marginBottom="8dp"
+                        android:paddingTop="5dp"
                         android:background="@drawable/bg_analytics_item"
                         android:elevation="6dp"
                         app:layout_constraintBottom_toBottomOf="parent"

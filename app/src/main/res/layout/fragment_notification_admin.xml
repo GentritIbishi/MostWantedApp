@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".fragment.admin.NotificationFragment">
+    tools:context=".fragment.admin.notification.NotificationFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -43,7 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/bar">
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/lvReportNotification"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
