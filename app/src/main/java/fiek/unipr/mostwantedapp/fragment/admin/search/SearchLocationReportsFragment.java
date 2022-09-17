@@ -1,9 +1,12 @@
 package fiek.unipr.mostwantedapp.fragment.admin.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
@@ -25,13 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.MapsLocationListAdapter;
+import fiek.unipr.mostwantedapp.adapter.maps.MapsLocationListAdapter;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.maps.admin.MapsActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 
-public class SearchLocationReportsFragment extends Fragment {
+public class SearchLocationReportsFragment extends Fragment implements RecyclerViewInterface {
 
     private View locations_persons_view;
-    private ListView lvLocationPersonsFragment;
+    private RecyclerView lvLocationPersonsFragment;
     private MapsLocationListAdapter mapsLocationListAdapter;
     private ArrayList<Person> locationArrayList;
     private FirebaseFirestore firebaseFirestore;
@@ -83,8 +88,9 @@ public class SearchLocationReportsFragment extends Fragment {
         lvLocationPersonsFragment = locations_persons_view.findViewById(R.id.lvLocationPersonsFragment);
         location_search_filter = locations_persons_view.findViewById(R.id.location_search_filter);
         locationArrayList = new ArrayList<>();
-        mapsLocationListAdapter = new MapsLocationListAdapter(getActivity().getApplicationContext(), locationArrayList);
+        mapsLocationListAdapter = new MapsLocationListAdapter(getContext(), locationArrayList, this);
         lvLocationPersonsFragment.setAdapter(mapsLocationListAdapter);
+        lvLocationPersonsFragment.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void loadDatainListview() {
@@ -172,5 +178,18 @@ public class SearchLocationReportsFragment extends Fragment {
                     }
                 });
 
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent intent =new Intent(getContext(), MapsActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle viewBundle = new Bundle();
+        viewBundle.putString("fullName", locationArrayList.get(position).getFullName());
+        viewBundle.putString("status", locationArrayList.get(position).getStatus());
+        viewBundle.putString("urlOfProfile", locationArrayList.get(position).getUrlOfProfile());
+        viewBundle.putString("latitude", locationArrayList.get(position).getLatitude().toString());
+        viewBundle.putString("longitude", locationArrayList.get(position).getLongitude().toString());
+        intent.putExtras(viewBundle);
+        startActivity(intent);
     }
 }

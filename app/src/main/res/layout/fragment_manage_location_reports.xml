@@ -56,7 +56,7 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <ListView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/lvLocationReports_manage"
                 android:elevation="6dp"
                 android:background="@drawable/bg_listview_item"

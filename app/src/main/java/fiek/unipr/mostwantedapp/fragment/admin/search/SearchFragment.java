@@ -1,9 +1,12 @@
 package fiek.unipr.mostwantedapp.fragment.admin.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
@@ -11,8 +14,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -26,13 +27,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.MapsInformerPersonListAdapter;
+import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.maps.admin.MapsActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     private View search_admin_view;
-    private ListView lvPersons;
+    private RecyclerView lvPersons;
     private MapsInformerPersonListAdapter mapsInformerPersonListAdapter;
     private ArrayList<Person> personArrayList;
     private FirebaseFirestore firebaseFirestore;
@@ -84,8 +87,9 @@ public class SearchFragment extends Fragment {
         admin_search_filter = search_admin_view.findViewById(R.id.admin_search_filter);
         lvPersons = search_admin_view.findViewById(R.id.lvPersons);
         personArrayList = new ArrayList<>();
-        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getActivity().getApplicationContext(), personArrayList);
+        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getContext(), personArrayList, this);
         lvPersons.setAdapter(mapsInformerPersonListAdapter);
+        lvPersons.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void loadDatainListview() {
@@ -175,5 +179,25 @@ public class SearchFragment extends Fragment {
                     }
                 });
 
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent intent=new Intent(getContext(), MapsActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle viewBundle = new Bundle();
+        viewBundle.putString("fullName", personArrayList.get(position).getFullName());
+        viewBundle.putStringArrayList("acts", (ArrayList<String>) personArrayList.get(position).getActs());
+        viewBundle.putString("address", personArrayList.get(position).getAddress());
+        viewBundle.putString("age", personArrayList.get(position).getAge());
+        viewBundle.putString("eyeColor", personArrayList.get(position).getEyeColor());
+        viewBundle.putString("hairColor", personArrayList.get(position).getHairColor());
+        viewBundle.putString("height", personArrayList.get(position).getHeight());
+        viewBundle.putString("phy_appearance", personArrayList.get(position).getPhy_appearance());
+        viewBundle.putString("status", personArrayList.get(position).getStatus());
+        viewBundle.putString("prize", personArrayList.get(position).getPrize());
+        viewBundle.putString("urlOfProfile", personArrayList.get(position).getUrlOfProfile());
+        viewBundle.putString("weight", personArrayList.get(position).getWeight());
+        intent.putExtras(viewBundle);
+        startActivity(intent);
     }
 }

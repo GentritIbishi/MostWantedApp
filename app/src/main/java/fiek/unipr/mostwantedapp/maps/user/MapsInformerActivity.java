@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.maps;
+package fiek.unipr.mostwantedapp.maps.user;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,7 +51,6 @@ import java.util.Map;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsInformerBinding;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
-import fiek.unipr.mostwantedapp.models.Image;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.models.ReportStatus;
 

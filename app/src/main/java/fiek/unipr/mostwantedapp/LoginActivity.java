@@ -34,7 +34,6 @@ import fiek.unipr.mostwantedapp.auth.ForgotPasswordActivity;
 import fiek.unipr.mostwantedapp.auth.PhoneSignInActivity;
 import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
-import fiek.unipr.mostwantedapp.dashboard.AdminUserDashboardActivity;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 import fiek.unipr.mostwantedapp.models.User;
 
@@ -315,9 +314,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void goToUserDashboard() {
-        Intent intent = new Intent(LoginActivity.this, AdminUserDashboardActivity.class);
-        startActivity(intent);
-        finish();
+//        Intent intent = new Intent(LoginActivity.this, AdminUserDashboardActivity.class);
+//        startActivity(intent);
+//        finish();
     }
 
     private void sendEmailVerification() {

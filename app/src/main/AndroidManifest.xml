@@ -49,7 +49,7 @@
             android:exported="false"
             android:label="@string/title_activity_single_report" />
         <activity
-            android:name=".maps.MapsInformerActivity"
+            android:name=".maps.user.MapsInformerActivity"
             android:exported="false"
             android:label="@string/title_activity_maps_informer" />
 
@@ -87,19 +87,16 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".maps.MapsActivity"
+            android:name=".maps.admin.MapsActivity"
             android:exported="true"
             android:label="@string/title_activity_maps" />
         <activity android:name=".update.UpdateMultipleUsers" />
-        <activity android:name=".lists.LocationActivity" />
         <activity
             android:name=".update.UpdatePerson"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".lists.UserActivity" />
-        <activity android:name=".lists.PersonActivity" />
         <activity android:name=".update.UpdateUser" />
         <activity android:name=".models.Profile" />
-        <activity android:name=".dashboard.AdminUserDashboardActivity" />
         <activity android:name=".dashboard.AdminDashboardActivity" />
         <activity android:name=".maps.report.ReportInfoActivity" />
         <activity android:name=".LoginActivity" />

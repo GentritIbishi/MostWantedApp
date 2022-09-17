@@ -24,7 +24,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:context=".maps.MapsInformerActivity" />
+            tools:context=".maps.user.MapsInformerActivity" />
 
         <TextView
             android:id="@+id/tvLongTap"

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
@@ -12,8 +14,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,13 +27,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.MapsInformerPersonListAdapter;
+import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Person;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     private View search_fragment_view;
-    private ListView lvPersons;
+    private RecyclerView lvPersons;
     private MapsInformerPersonListAdapter mapsInformerPersonListAdapter;
     private ArrayList<Person> personArrayList;
     private FirebaseFirestore firebaseFirestore;
@@ -91,8 +92,9 @@ public class SearchFragment extends Fragment {
         search_filter = search_fragment_view.findViewById(R.id.search_filter);
         lvPersons = search_fragment_view.findViewById(R.id.lvPersons);
         personArrayList = new ArrayList<>();
-        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getActivity().getApplicationContext(), personArrayList);
+        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getContext(), personArrayList, this);
         lvPersons.setAdapter(mapsInformerPersonListAdapter);
+        lvPersons.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void loadDatainListview() {
@@ -190,4 +192,8 @@ public class SearchFragment extends Fragment {
 
     }
 
+    @Override
+    public void onItemClick(int position) {
+
+    }
 }

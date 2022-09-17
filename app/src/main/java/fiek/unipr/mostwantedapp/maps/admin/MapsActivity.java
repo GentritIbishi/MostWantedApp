@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.maps;
+package fiek.unipr.mostwantedapp.maps.admin;
 
 import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;

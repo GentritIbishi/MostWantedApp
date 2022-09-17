@@ -1,9 +1,12 @@
 package fiek.unipr.mostwantedapp.fragment.admin.search;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
@@ -11,8 +14,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,17 +30,17 @@ import java.util.List;
 import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.ManageLocationReportsAdapter;
-import fiek.unipr.mostwantedapp.adapter.ReportNotificationAdapter;
-import fiek.unipr.mostwantedapp.models.Person;
+import fiek.unipr.mostwantedapp.adapter.manage.ManageLocationReportListAdapter;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.maps.report.SingleReportActivity;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.models.ReportStatus;
 
-public class SearchManageLocationReportsFragment extends Fragment {
+public class SearchManageLocationReportsFragment extends Fragment implements RecyclerViewInterface {
 
     private View location_reports_view;
-    private ListView lvLocationReports_manage;
-    private ManageLocationReportsAdapter manageLocationReportsAdapter;
+    private RecyclerView lvLocationReports_manage;
+    private ManageLocationReportListAdapter manageLocationReportListAdapter;
     private ArrayList<Report> reportArrayList;
     private FirebaseFirestore firebaseFirestore;
     private String Description, Date_time, uID, informer_person, wanted_person, docId;
@@ -99,8 +100,9 @@ public class SearchManageLocationReportsFragment extends Fragment {
         locationReports_search_filter = location_reports_view.findViewById(R.id.locationReports_search_filter);
         lvLocationReports_manage = location_reports_view.findViewById(R.id.lvLocationReports_manage);
         reportArrayList = new ArrayList<>();
-        manageLocationReportsAdapter = new ManageLocationReportsAdapter(getActivity().getApplicationContext(), reportArrayList);
-        lvLocationReports_manage.setAdapter(manageLocationReportsAdapter);
+        manageLocationReportListAdapter = new ManageLocationReportListAdapter(getContext(), reportArrayList, this);
+        lvLocationReports_manage.setAdapter(manageLocationReportListAdapter);
+        lvLocationReports_manage.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void loadDatainListview() {
@@ -141,7 +143,7 @@ public class SearchManageLocationReportsFragment extends Fragment {
                                 reportArrayList.add(report);
                             }
 
-                            manageLocationReportsAdapter.notifyDataSetChanged();
+                            manageLocationReportListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
                             Toast.makeText(getActivity().getApplicationContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
@@ -185,7 +187,7 @@ public class SearchManageLocationReportsFragment extends Fragment {
                                 // storing that data in our array list
                                 reportArrayList.add(report);
                             }
-                            manageLocationReportsAdapter.notifyDataSetChanged();
+                            manageLocationReportListAdapter.notifyDataSetChanged();
                         } else {
                             // if the snapshot is empty we are displaying a toast message.
                             Toast.makeText(getActivity().getApplicationContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();
@@ -200,5 +202,45 @@ public class SearchManageLocationReportsFragment extends Fragment {
                     }
                 });
 
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent intent=new Intent(getContext(), SingleReportActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle viewBundle = new Bundle();
+        viewBundle.putString("date_time", reportArrayList.get(position).getDate_time());
+        viewBundle.putString("title", reportArrayList.get(position).getTitle());
+        viewBundle.putString("docId", reportArrayList.get(position).getDocId());
+        viewBundle.putString("description", reportArrayList.get(position).getDescription());
+        viewBundle.putString("informer_person", reportArrayList.get(position).getInformer_person());
+        viewBundle.putString("status", reportArrayList.get(position).getStatus().toString());
+        viewBundle.putString("informer_person_urlOfProfile", reportArrayList.get(position).getInformer_person_urlOfProfile());
+        viewBundle.putDouble("latitude", reportArrayList.get(position).getLatitude());
+        viewBundle.putDouble("longitude", reportArrayList.get(position).getLongitude());
+        viewBundle.putString("uID", reportArrayList.get(position).getuID());
+        viewBundle.putString("wanted_person", reportArrayList.get(position).getWanted_person());
+
+        if(reportArrayList.get(position).getImages() == null || reportArrayList.get(position).getImages().equals(null) || reportArrayList.get(position).getImages().isEmpty()) {
+            viewBundle.putInt("totalImages", 0);
+            viewBundle.putStringArray("images", null);
+        }else {
+            viewBundle.putInt("totalImages", reportArrayList.get(position).getImages().size());
+
+            int totalImages = reportArrayList.get(position).getImages().size();
+
+            Map<String, Object> images;
+            images = (Map<String, Object>) reportArrayList.get(position).getImages();
+
+            String[] arrImages = new String[totalImages];
+
+            for(int i = 0; i<totalImages; i++) {
+                arrImages[i] = images.get("image"+i).toString();
+            }
+
+            viewBundle.putStringArray("images", arrImages);
+        }
+
+        intent.putExtras(viewBundle);
+        startActivity(intent);
     }
 }

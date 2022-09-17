@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -20,6 +21,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
@@ -27,7 +30,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -70,13 +72,15 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.MapsInformerPersonListAdapter;
+import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
+import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.maps.user.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.NotificationAdminState;
 import fiek.unipr.mostwantedapp.models.NotificationReportUser;
 import fiek.unipr.mostwantedapp.models.Person;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
     private SharedPreferences sharedPreferences;
     private static final String HOME_USER_PREF = "HOME_USER_PREF";
@@ -88,7 +92,7 @@ public class HomeFragment extends Fragment {
     public String STATUS_OF_REPORT_HAS_CHANGED_TO;
     public static final String FAKE = "FAKE";
     private View home_fragment_view;
-    private ListView lvPersons;
+    private RecyclerView lvPersons;
     private MapsInformerPersonListAdapter mapsInformerPersonListAdapter;
     private ArrayList<Person> personArrayList;
 
@@ -202,8 +206,9 @@ public class HomeFragment extends Fragment {
     private void InitializeFields() {
         lvPersons = home_fragment_view.findViewById(R.id.lvPersons);
         personArrayList = new ArrayList<>();
-        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getActivity().getApplicationContext(), personArrayList);
+        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getContext(), personArrayList, this);
         lvPersons.setAdapter(mapsInformerPersonListAdapter);
+        lvPersons.setLayoutManager(new LinearLayoutManager(getContext()));
         user_rightNowDateTime = home_fragment_view.findViewById(R.id.user_rightNowDateTime);
         user_hiDashboard = home_fragment_view.findViewById(R.id.user_hiDashboard);
         user_imageOfDashboard = home_fragment_view.findViewById(R.id.user_imageOfDashboard);
@@ -723,4 +728,23 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onItemClick(int position) {
+        Intent intent=new Intent(getContext(), MapsInformerActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle viewBundle = new Bundle();
+        viewBundle.putString("fullName", personArrayList.get(position).getFullName());
+        viewBundle.putStringArrayList("acts", (ArrayList<String>) personArrayList.get(position).getActs());
+        viewBundle.putString("address", personArrayList.get(position).getAddress());
+        viewBundle.putString("age", personArrayList.get(position).getAge());
+        viewBundle.putString("eyeColor", personArrayList.get(position).getEyeColor());
+        viewBundle.putString("hairColor", personArrayList.get(position).getHairColor());
+        viewBundle.putString("height", personArrayList.get(position).getHeight());
+        viewBundle.putString("phy_appearance", personArrayList.get(position).getPhy_appearance());
+        viewBundle.putString("status", personArrayList.get(position).getStatus());
+        viewBundle.putString("prize", personArrayList.get(position).getPrize());
+        viewBundle.putString("urlOfProfile", personArrayList.get(position).getUrlOfProfile());
+        viewBundle.putString("weight", personArrayList.get(position).getWeight());
+        intent.putExtras(viewBundle);
+        startActivity(intent);
+    }
 }
