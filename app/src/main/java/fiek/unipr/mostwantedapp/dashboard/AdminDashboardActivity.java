@@ -1,5 +1,8 @@
 package fiek.unipr.mostwantedapp.dashboard;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.ADMIN_INFORMER_PREFS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,7 +55,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private Integer balance;
     private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
     private Uri photoURL;
-    public static final String ADMIN_INFORMER_PREFS = "ADMIN_INFORMER_PREFS";
     private String user_anonymousID = null;
 
     private DrawerLayout admin_drawerLayout_real;
@@ -376,7 +378,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
-            documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getUid());
+            documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {

@@ -1,5 +1,15 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.user;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.ADMIN_ROLE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.BALANCE_DEFAULT;
+import static fiek.unipr.mostwantedapp.helpers.Constants.COINS_DEFAULT;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.helpers.Constants.GRADE_A;
+import static fiek.unipr.mostwantedapp.helpers.Constants.GRADE_E;
+import static fiek.unipr.mostwantedapp.helpers.Constants.INFORMER_ROLE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USER_ROLE;
+
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -155,15 +165,13 @@ public class RegisterUserFragment extends Fragment {
         String confirm_password = admin_etConfirmPassword.getText().toString();
         String role = et_role_autocomplete.getText().toString();
         String grade = "";
-        if(role.equals("Admin") || role.equals("User")){
-            grade = "A";
-        }else if(role.equals("Informer")){
-            grade = "E";
+        if(role.equals(ADMIN_ROLE) || role.equals(USER_ROLE)){
+            grade = GRADE_A;
+        }else if(role.equals(INFORMER_ROLE)){
+            grade = GRADE_E;
         }else if(role.isEmpty()){
             grade = "";
         }
-        String balance = "0 EURO";
-        String coins = "0 COINS";
         String urlOfProfile = "";
         Boolean isEmailVerified = false;
 
@@ -234,8 +242,8 @@ public class RegisterUserFragment extends Fragment {
                                 finalGrade,
                                 password,
                                 urlOfProfile,
-                                balance,
-                                coins,
+                                BALANCE_DEFAULT,
+                                COINS_DEFAULT,
                                 isEmailVerified);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -272,7 +280,7 @@ public class RegisterUserFragment extends Fragment {
                               String coins,
                               Boolean isEmailVerified) {
         if(checkConnection()){
-            documentReference = firebaseFirestore.collection("users").document(userID);
+            documentReference = firebaseFirestore.collection(USERS).document(userID);
             User user = new User(
                     userID,
                     name,
@@ -334,7 +342,7 @@ public class RegisterUserFragment extends Fragment {
     public static String getTimeDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";

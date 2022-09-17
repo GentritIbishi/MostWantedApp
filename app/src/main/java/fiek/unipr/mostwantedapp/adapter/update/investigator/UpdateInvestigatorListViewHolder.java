@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.fragment.admin.update.investigator;
+package fiek.unipr.mostwantedapp.adapter.update.investigator;
 
 import android.view.View;
 import android.widget.ImageView;

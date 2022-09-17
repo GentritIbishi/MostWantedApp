@@ -1,5 +1,8 @@
 package fiek.unipr.mostwantedapp.auth;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.MAIN_TAG;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PHONE_INFORMER_PREFS;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -42,8 +45,6 @@ public class PhoneSignInActivity extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken forceResendingToken;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private String mVerificationId; // will hold OTP/Verification code
-    private static final String TAG = "MAIN_TAG";
-    private static final String PHONE_INFORMER_PREFS = "PHONE_INFORMER_PREFS";
     private FirebaseAuth firebaseAuth;
     private ProgressBar register_progressBar, verify_phone_progressBar;
     private int selectedETPosition = 0;
@@ -93,7 +94,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
                 // The SMS verification code has been sent to the provided phone number, we
                 // now need to ask the user to enter the code and then construct a credential
                 // by combining the code with a verification ID.
-                Log.d(TAG, "onCodeSent:" + verificationId);
+                Log.d(MAIN_TAG, "onCodeSent:" + verificationId);
 
                 // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId;

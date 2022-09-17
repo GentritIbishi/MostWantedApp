@@ -1,5 +1,8 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -29,6 +32,7 @@ import java.util.List;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.maps.user.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class SearchFragment extends Fragment implements RecyclerViewInterface {
@@ -100,7 +104,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
-        firebaseFirestore.collection("wanted_persons")
+        firebaseFirestore.collection(WANTED_PERSONS)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -143,7 +147,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     public void filter(String s) {
         personArrayList.clear();
-        firebaseFirestore.collection("wanted_persons")
+        firebaseFirestore.collection(WANTED_PERSONS)
                 .orderBy("fullName")
                 .startAt(s)
                 .endAt(s + "\uf8ff")
@@ -194,6 +198,21 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void onItemClick(int position) {
-
+        Intent intent=new Intent(getContext(), MapsInformerActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Bundle viewBundle = new Bundle();
+        viewBundle.putString("fullName", personArrayList.get(position).getFullName());
+        viewBundle.putStringArrayList("acts", (ArrayList<String>) personArrayList.get(position).getActs());
+        viewBundle.putString("address", personArrayList.get(position).getAddress());
+        viewBundle.putString("age", personArrayList.get(position).getAge());
+        viewBundle.putString("eyeColor", personArrayList.get(position).getEyeColor());
+        viewBundle.putString("hairColor", personArrayList.get(position).getHairColor());
+        viewBundle.putString("height", personArrayList.get(position).getHeight());
+        viewBundle.putString("phy_appearance", personArrayList.get(position).getPhy_appearance());
+        viewBundle.putString("status", personArrayList.get(position).getStatus());
+        viewBundle.putString("prize", personArrayList.get(position).getPrize());
+        viewBundle.putString("urlOfProfile", personArrayList.get(position).getUrlOfProfile());
+        viewBundle.putString("weight", personArrayList.get(position).getWeight());
+        intent.putExtras(viewBundle);
+        getContext().startActivity(intent);
     }
 }

@@ -1,5 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin.search;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -41,7 +43,6 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
     private ArrayList<Person> locationArrayList;
     private FirebaseFirestore firebaseFirestore;
     private TextInputEditText location_search_filter;
-    private String fullName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -96,7 +97,7 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
-        firebaseFirestore.collection("wanted_persons").get()
+        firebaseFirestore.collection(WANTED_PERSONS).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
@@ -111,9 +112,6 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
                                 // after getting this list we are passing
                                 // that list to our object class.
                                 Person person = d.toObject(Person.class);
-
-                                fullName = person.getFullName();
-
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
                                 locationArrayList.add(person);
@@ -137,7 +135,7 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
 
     public void filter(String s) {
         locationArrayList.clear();
-        firebaseFirestore.collection("wanted_persons")
+        firebaseFirestore.collection(WANTED_PERSONS)
                 .orderBy("fullName")
                 .startAt(s)
                 .endAt(s + "\uf8ff")
@@ -156,9 +154,6 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
                                 // after getting this list we are passing
                                 // that list to our object class.
                                 Person person = d.toObject(Person.class);
-
-                                fullName = person.getFullName();
-
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
                                 locationArrayList.add(person);

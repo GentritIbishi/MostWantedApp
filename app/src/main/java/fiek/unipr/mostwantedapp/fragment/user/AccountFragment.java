@@ -1,5 +1,9 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -138,7 +142,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void deletePhoto() {
-        StorageReference fileRef = storageReference.child("users/"+firebaseAuth.getCurrentUser().getUid()+"/profile_picture.jpg");
+        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+PROFILE_PICTURE);
         fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -155,26 +159,10 @@ public class AccountFragment extends Fragment {
         });
     }
 
-    private void checkIfUserExist(String uid) {
-        firebaseFirestore.collection("users").document(uid)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.getResult() != null){
-                            getFullNameOfUser(task.getResult().getString("fullName"));
-                            Toast.makeText(getContext(), informer_fullName+" "+R.string.user_exist, Toast.LENGTH_SHORT).show();
-                        }else {
-                            Toast.makeText(getContext(), R.string.user_not_exist, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
     private void uploadImageToFirebase(Uri imageUri) {
         acc_uploadProgressBar.setVisibility(View.VISIBLE);
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child("users/"+firebaseAuth.getCurrentUser().getUid()+"/profile_picture.jpg");
+        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+PROFILE_PICTURE);
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -182,7 +170,7 @@ public class AccountFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(imageOfProfile);
-                        DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                        DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
                         docRef.update("urlOfProfile", uri.toString());
                         acc_uploadProgressBar.setVisibility(View.GONE);
                         Toast.makeText(getContext(), R.string.images_uploaded_successfully, Toast.LENGTH_SHORT).show();
@@ -216,7 +204,7 @@ public class AccountFragment extends Fragment {
 
     private void loadImage(String uID) {
         acc_uploadProgressBar.setVisibility(View.VISIBLE);
-        StorageReference profileRef = storageReference.child("users/" + uID + "/profile_picture.jpg");
+        StorageReference profileRef = storageReference.child(USERS+"/" + uID + "/"+PROFILE_PICTURE);
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -227,7 +215,7 @@ public class AccountFragment extends Fragment {
     }
 
     private void getSetUserData(String uID) {
-        firebaseFirestore.collection("users").document(uID)
+        firebaseFirestore.collection(USERS).document(uID)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -251,23 +239,23 @@ public class AccountFragment extends Fragment {
                         } else {
                             if(firebaseAuth.getCurrentUser().isAnonymous())
                             {
-                                first_name = "Anonymous";
-                                last_name = "Anonymous";
-                                parent_name = "Anonymous";
-                                address = "Anonymous";
-                                personal_number = "Anonymous";
-                                phone_number = "Anonymous";
-                                email = "Anonymous";
-                                fullName = "Anonymous";
+                                first_name = ANONYMOUS;
+                                last_name = ANONYMOUS;
+                                parent_name = ANONYMOUS;
+                                address = ANONYMOUS;
+                                personal_number = ANONYMOUS;
+                                phone_number = ANONYMOUS;
+                                email = ANONYMOUS;
+                                fullName = ANONYMOUS;
                             }else {
-                                first_name = "Anonymous";
-                                last_name = "Anonymous";
-                                parent_name = "Anonymous";
-                                address = "Anonymous";
-                                personal_number = "Anonymous";
+                                first_name = ANONYMOUS;
+                                last_name = ANONYMOUS;
+                                parent_name = ANONYMOUS;
+                                address = ANONYMOUS;
+                                personal_number = ANONYMOUS;
                                 phone_number = firebaseAuth.getCurrentUser().getPhoneNumber();
-                                email = "Anonymous";
-                                fullName = "Anonymous";
+                                email = ANONYMOUS;
+                                fullName = ANONYMOUS;
                             }
                         }
                     }
@@ -287,7 +275,7 @@ public class AccountFragment extends Fragment {
                 et_first_name.requestFocus();
                 return false;
             }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
                 docRef.update("name", et_first_name.getText().toString());
                 return true;
             }
@@ -305,7 +293,7 @@ public class AccountFragment extends Fragment {
                 et_last_name.requestFocus();
                 return false;
             }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
                 docRef.update("lastname", et_last_name.getText().toString());
                 return true;
             }
@@ -319,7 +307,7 @@ public class AccountFragment extends Fragment {
         String fullNameFromUser = et_first_name.getText().toString() + et_last_name.getText().toString();
         if(!fullName.equals(fullNameFromUser))
         {
-            DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+            DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
             docRef.update("fullName", fullNameFromUser);
             return true;
         }else
@@ -336,7 +324,7 @@ public class AccountFragment extends Fragment {
                 et_parent_name.requestFocus();
                 return false;
             }else{
-                DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
                 docRef.update("parentName", et_parent_name.getText().toString());
                 return true;
             }
@@ -354,7 +342,7 @@ public class AccountFragment extends Fragment {
                 et_address_account.requestFocus();
                 return false;
             }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
                 docRef.update("address", et_address_account.getText().toString());
                 return true;
             }
@@ -380,7 +368,7 @@ public class AccountFragment extends Fragment {
                 et_personal_number.requestFocus();
                 return false;
             }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
                 docRef.update("personal_number", et_personal_number.getText().toString());
                 return true;
             }
@@ -398,7 +386,7 @@ public class AccountFragment extends Fragment {
                 et_phone_number_account.requestFocus();
                 return false;
             }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
                 docRef.update("phone", et_phone_number_account.getText().toString());
                 return true;
             }
@@ -420,7 +408,7 @@ public class AccountFragment extends Fragment {
                 et_email_account.requestFocus();
                 return false;
             }else {
-                DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseUser.getUid());
+                DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
                 docRef.update("email", et_email_account.getText().toString());
                 return true;
             }

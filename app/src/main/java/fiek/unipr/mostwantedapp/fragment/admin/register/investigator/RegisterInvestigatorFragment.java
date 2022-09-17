@@ -1,5 +1,10 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.investigator;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.CM;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.helpers.Constants.INVESTIGATORS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.KG;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -39,10 +44,6 @@ import fiek.unipr.mostwantedapp.models.Investigator;
 public class RegisterInvestigatorFragment extends Fragment implements View.OnClickListener {
 
     private View register_investigator_view;
-    public static final String KG = "KG";
-    public static final String CM = "CM";
-    public static final String AGE = "AGE";
-    public static final String EURO = "EURO";
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
@@ -270,7 +271,7 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
 
             investigator_progressBar.setVisibility(View.VISIBLE);
 
-            CollectionReference collectionReference = firebaseFirestore.collection("investigators");
+            CollectionReference collectionReference = firebaseFirestore.collection(INVESTIGATORS);
 
             String investigator_id = collectionReference.document().getId();
 
@@ -278,7 +279,7 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
                     null, getTimeDate(), age, gender, height, weight);
 
 
-            firebaseFirestore.collection("investigators").document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            firebaseFirestore.collection(INVESTIGATORS).document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.getResult().exists()) {
@@ -286,7 +287,7 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
                         investigator_progressBar.setVisibility(View.GONE);
                         registerInvestigator.setEnabled(true);
                     } else {
-                        firebaseFirestore.collection("investigators").document(investigator_id).set(investigator).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        firebaseFirestore.collection(INVESTIGATORS).document(investigator_id).set(investigator).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getContext(), getContext().getText(R.string.this_investigator_with_name) + " " + fullName + " " + getContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
@@ -318,7 +319,7 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
     public static String getTimeDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";

@@ -6,15 +6,7 @@ import android.net.NetworkInfo;
 import android.widget.Toast;
 
 public class CheckInternet {
-
-    //usuage
-    // Check Internet Connection
-//    CheckInternet checkInternet = new CheckInternet();
-//    if(!checkInternet.isConnected(this)){
-//        Toast.makeText(this, "You need to connect the internet!", Toast.LENGTH_SHORT).show();
-//        return;
-//    }
-
+    
     public boolean isConnected(Context context) {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -1,15 +1,13 @@
-package fiek.unipr.mostwantedapp.adapter;
+package fiek.unipr.mostwantedapp.adapter.report.report;
+
+import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,28 +21,19 @@ import com.bumptech.glide.request.target.Target;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.fragment.admin.notification.NotificationListViewHolder;
-import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListViewHolder;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Report;
-import fiek.unipr.mostwantedapp.maps.report.SingleReportActivity;
-import fiek.unipr.mostwantedapp.models.User;
 
-public class ReportNotificationAdapter extends RecyclerView.Adapter<NotificationListViewHolder> {
+public class ReportNotificationAdapter extends RecyclerView.Adapter<ReportNotificationListViewHolder> {
 
     private final RecyclerViewInterface recyclerViewInterface;
     private Context context;
     private List<Report> reportList;
-    private static String ANONYMOUS = "ANONYMOUS";
     private String urlOfProfile, user_report_time_elapsed, informer_person;
 
     public ReportNotificationAdapter(Context context, List<Report> reportList, RecyclerViewInterface recyclerViewInterface) {
@@ -55,14 +44,14 @@ public class ReportNotificationAdapter extends RecyclerView.Adapter<Notification
 
     @NonNull
     @Override
-    public NotificationListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ReportNotificationListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View notificationItemView = LayoutInflater.from(context)
                 .inflate(R.layout.report_notification_item, parent, false);
-        return new NotificationListViewHolder(notificationItemView, recyclerViewInterface);
+        return new ReportNotificationListViewHolder(notificationItemView, recyclerViewInterface);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NotificationListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ReportNotificationListViewHolder holder, int position) {
         try {
             holder.user_report_name.setText(reportList.get(position).getInformer_person());
 
@@ -98,7 +87,7 @@ public class ReportNotificationAdapter extends RecyclerView.Adapter<Notification
 
             holder.user_report_description.setText(reportList.get(position).getDescription());
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME);
 
             Date start_date = simpleDateFormat.parse(reportList.get(position).getDate_time());
             Date end_date = simpleDateFormat.parse(getTimeDate());
@@ -157,7 +146,7 @@ public class ReportNotificationAdapter extends RecyclerView.Adapter<Notification
     public static String getTimeDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";

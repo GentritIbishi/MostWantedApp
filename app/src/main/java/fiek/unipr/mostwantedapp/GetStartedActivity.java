@@ -1,5 +1,9 @@
 package fiek.unipr.mostwantedapp;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.FIRST_TIME_INSTALL;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PREFERENCE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.YES;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -30,10 +34,10 @@ public class GetStartedActivity extends AppCompatActivity {
         bt_getStarted = findViewById(R.id.bt_getStarted);
 
         //Check if application is opened for the first time
-        SharedPreferences preferences = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
-        String firstTime = preferences.getString("FirstTimeInstall","");
+        SharedPreferences preferences = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
+        String firstTime = preferences.getString(FIRST_TIME_INSTALL,"");
 
-        if(firstTime.equals("Yes")){
+        if(firstTime.equals(YES)){
             //If application was opened for the first time
             Intent intent = new Intent(GetStartedActivity.this, SplashActivity.class);
             startActivity(intent);
@@ -41,7 +45,7 @@ public class GetStartedActivity extends AppCompatActivity {
         }else {
             //Else...
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("FirstTimeInstall", "Yes");
+            editor.putString(FIRST_TIME_INSTALL, YES);
             editor.apply();
         }
 

@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.fragment.admin.notification;
+package fiek.unipr.mostwantedapp.adapter.report.location;
 
 import android.view.View;
 import android.widget.TextView;
@@ -10,20 +10,20 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 
-public class NotificationListViewHolder extends RecyclerView.ViewHolder {
+public class ManageLocationListViewHolder extends RecyclerView.ViewHolder {
 
     public CircleImageView user_reported_image;
     public TextView user_report_name, user_report_description, user_report_time;
 
-    public NotificationListViewHolder(@NonNull View notificationItemView, RecyclerViewInterface recyclerViewInterface) {
-        super(notificationItemView);
+    public ManageLocationListViewHolder(@NonNull View itemView, RecyclerViewInterface recyclerViewInterface) {
+        super(itemView);
 
-        user_report_name = notificationItemView.findViewById(R.id.user_report_name);
-        user_report_description = notificationItemView.findViewById(R.id.user_report_description);
-        user_report_time = notificationItemView.findViewById(R.id.user_report_time);
-        user_reported_image = notificationItemView.findViewById(R.id.user_reported_image);
+        user_report_name = itemView.findViewById(R.id.user_report_name);
+        user_report_description = itemView.findViewById(R.id.user_report_description);
+        user_report_time = itemView.findViewById(R.id.user_report_time);
+        user_reported_image = itemView.findViewById(R.id.user_reported_image);
 
-        notificationItemView.setOnClickListener(new View.OnClickListener() {
+        itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(recyclerViewInterface != null)
@@ -36,5 +36,7 @@ public class NotificationListViewHolder extends RecyclerView.ViewHolder {
                 }
             }
         });
+
     }
+
 }

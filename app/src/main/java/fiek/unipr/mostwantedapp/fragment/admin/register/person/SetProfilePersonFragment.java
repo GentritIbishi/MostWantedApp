@@ -1,5 +1,9 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.person;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.PERSONS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -83,7 +87,7 @@ public class SetProfilePersonFragment extends Fragment {
         bundle = getArguments();
         getAndSetFromBundle(bundle);
 
-        StorageReference profileRef = storageReference.child("persons/"+ personId +"/profile.jpg");
+        StorageReference profileRef = storageReference.child(PERSONS+"/"+ personId +"/"+PROFILE_PICTURE);
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -134,7 +138,7 @@ public class SetProfilePersonFragment extends Fragment {
     private void uploadImageToFirebase(Uri imageUri) {
 
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child("persons/"+ personId +"/profile.jpg");
+        StorageReference fileRef = storageReference.child(PERSONS+"/"+personId +"/"+PROFILE_PICTURE);
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -142,7 +146,7 @@ public class SetProfilePersonFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(personProfileView);
-                        DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(personId);
+                        DocumentReference docRef = firebaseFirestore.collection(WANTED_PERSONS).document(personId);
                         docRef.update("urlOfProfile", uri.toString());
                         tv_addprofile.setText(R.string.profile_picture_added);
                         new Handler().postDelayed(new Runnable() {

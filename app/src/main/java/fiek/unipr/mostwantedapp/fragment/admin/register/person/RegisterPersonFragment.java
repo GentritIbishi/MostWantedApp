@@ -1,5 +1,15 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.person;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.AGE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.CM;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.helpers.Constants.EURO;
+import static fiek.unipr.mostwantedapp.helpers.Constants.KG;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LATITUDE_DEFAULT;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LONGITUDE_DEFAULT;
+import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -43,12 +53,6 @@ import fiek.unipr.mostwantedapp.models.Person;
 public class RegisterPersonFragment extends Fragment implements View.OnClickListener {
 
     private View register_person_view;
-    public static final String KG = "KG";
-    public static final String CM = "CM";
-    public static final String AGE = "AGE";
-    public static final String EURO = "EURO";
-    public static final Double LATITUDE_DEFAULT = 0.00000;
-    public static final Double LONGITUDE_DEFAULT = 0.00000;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
@@ -319,7 +323,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
 
             progressBar.setVisibility(View.VISIBLE);
 
-            CollectionReference collRef = firebaseFirestore.collection("wanted_persons");
+            CollectionReference collRef = firebaseFirestore.collection(WANTED_PERSONS);
             String personId = collRef.document().getId();
 
             Person person = new Person(personId,
@@ -330,7 +334,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
                     getTimeDate(), age, gender,
                     height, weight, acts, LONGITUDE_DEFAULT, LATITUDE_DEFAULT);
 
-            firebaseFirestore.collection("wanted_persons").document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            firebaseFirestore.collection(WANTED_PERSONS).document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.getResult().exists()) {
@@ -338,7 +342,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
                         progressBar.setVisibility(View.GONE);
                         registerPerson.setEnabled(true);
                     } else {
-                        firebaseFirestore.collection("wanted_persons").document(personId).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        firebaseFirestore.collection(WANTED_PERSONS).document(personId).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getContext(), getContext().getText(R.string.this_person_with_this) + " " + fullName + " " + getContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
@@ -370,7 +374,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
     public static String getTimeDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";
@@ -380,7 +384,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
     public static String getDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";

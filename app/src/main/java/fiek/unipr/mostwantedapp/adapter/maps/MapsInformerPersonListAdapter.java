@@ -1,5 +1,7 @@
 package fiek.unipr.mostwantedapp.adapter.maps;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +66,7 @@ public class MapsInformerPersonListAdapter extends RecyclerView.Adapter<MapsInfo
             }
             holder.lvPerson_progressBar.setVisibility(View.INVISIBLE);
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME);
 
             Date start_date = simpleDateFormat.parse(personList.get(position).getRegistration_date());
             Date end_date = simpleDateFormat.parse(getTimeDate());
@@ -123,7 +125,7 @@ public class MapsInformerPersonListAdapter extends RecyclerView.Adapter<MapsInfo
     public static String getTimeDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";

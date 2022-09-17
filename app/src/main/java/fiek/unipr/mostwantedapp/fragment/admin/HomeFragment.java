@@ -1,5 +1,15 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME_STYLE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.FAKE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.NOTIFICATION_ADMIN;
+import static fiek.unipr.mostwantedapp.helpers.Constants.UNVERIFIED;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.VERIFIED;
+
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -76,14 +86,9 @@ import fiek.unipr.mostwantedapp.models.NotificationAdminState;
 public class HomeFragment extends Fragment {
 
     private SharedPreferences sharedPreferences;
+    public static int IMPORTANCE = NotificationManager.IMPORTANCE_DEFAULT;
     private PieChart admin_home_pieChart;
     private TextView admin_home_tv_num_report_verified, admin_home_tv_num_report_unverified, admin_home_tv_num_report_fake, admin_home_tv_gradeOfUser;
-    public static final String VERIFIED = "VERIFIED";
-    public static final String UNVERIFIED = "UNVERIFIED";
-    public static final String FAKE = "FAKE";
-    private static String DATE_FORMAT = "dd-MM-yyyy";
-    public static final String ANONYMOUS = "ANONYMOUS";
-    public static int IMPORTANCE = NotificationManager.IMPORTANCE_DEFAULT;
     private TextView tv_analytics_today, tv_percentage_today, tv_analytics_weekly, tv_percentage_weekly;
     private ImageView imageTrendingToday, imageTrendingWeekly;
 
@@ -290,7 +295,7 @@ public class HomeFragment extends Fragment {
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
             firebaseFirestore
-                    .collection("users")
+                    .collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -329,7 +334,7 @@ public class HomeFragment extends Fragment {
     //function that count all locations_reports: VERIFIED, UNVERIFIED, FAKE
     private void setPieChart() {
         if(checkConnection()) {
-            firebaseFirestore.collection("locations_reports")
+            firebaseFirestore.collection(LOCATION_REPORTS)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
@@ -435,7 +440,7 @@ public class HomeFragment extends Fragment {
 
     private void loadInfoAndSayHiFromFirebase(FirebaseAuth firebaseAuth, Context context) {
         if(checkConnection()){
-            firebaseFirestore.collection("users")
+            firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -457,7 +462,7 @@ public class HomeFragment extends Fragment {
 
     private void getGrade(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
-            firebaseFirestore.collection("users")
+            firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -498,7 +503,7 @@ public class HomeFragment extends Fragment {
     public static String getDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("E, dd MMM yyyy", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME_STYLE, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";
@@ -508,7 +513,7 @@ public class HomeFragment extends Fragment {
     public static String getDateTime() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";
@@ -516,7 +521,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void realTimeCheckForNewReportNotification() {
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot snapshots,
@@ -549,7 +554,7 @@ public class HomeFragment extends Fragment {
 
     private void saveNotificationInFirestoreAdded(String notificationTime, String notificationTitle, String notificationBody, String notificationType) {
         NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationType);
-        firebaseFirestore.collection("notifications_admin")
+        firebaseFirestore.collection(NOTIFICATION_ADMIN)
                 .whereEqualTo("notificationTitle", notificationTitle)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -594,7 +599,7 @@ public class HomeFragment extends Fragment {
 
     private void saveNotificationInFirestoreModified(String notificationTime, String notificationTitle, String notificationBody, String notificationType) {
         NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationType);
-        firebaseFirestore.collection("notifications_admin")
+        firebaseFirestore.collection(NOTIFICATION_ADMIN)
                 .whereEqualTo("notificationTitle", notificationTitle)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -639,7 +644,7 @@ public class HomeFragment extends Fragment {
 
     private void saveNotificationInFirestoreRemoved(String notificationTime, String notificationTitle, String notificationBody, String notificationType) {
         NotificationAdmin objNotificationAdmin = new NotificationAdmin(notificationTime, notificationBody, notificationTitle, notificationType);
-        firebaseFirestore.collection("notifications_admin")
+        firebaseFirestore.collection(NOTIFICATION_ADMIN)
                 .whereEqualTo("notificationTitle", notificationTitle)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -738,7 +743,7 @@ public class HomeFragment extends Fragment {
         String date = getDateRighNow();
         String start = date+" "+"00:00:00";
         String end = date+" "+"23:59:59";
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThan("date_time", start)
                 .whereLessThan("date_time", end)
                 .get()
@@ -761,7 +766,7 @@ public class HomeFragment extends Fragment {
         String yesterday = getYesterday();
         String start = yesterday+" "+"00:00:00";
         String end = yesterday+" "+"23:59:59";
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThan("date_time", start)
                 .whereLessThan("date_time", end)
                 .orderBy("date_time", Query.Direction.DESCENDING)
@@ -773,7 +778,7 @@ public class HomeFragment extends Fragment {
                             //sa reporte kan qen yesterday edhe me krahasu me today edhe me qit perqindjen
                             int yesterdayReports = task.getResult().size();
 
-                            firebaseFirestore.collection("locations_reports")
+                            firebaseFirestore.collection(LOCATION_REPORTS)
                                     .whereGreaterThan("date_time", start_today)
                                     .whereLessThan("date_time", end_today)
                                     .orderBy("date_time", Query.Direction.DESCENDING)
@@ -816,7 +821,7 @@ public class HomeFragment extends Fragment {
         String start_lastWeek = getFirstDayOfLastWeek()+" "+"00:00:00";
         String start_thisWeek = getFirstDayOfThisWeek()+" "+"00:00:00";
 
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThanOrEqualTo("date_time", start_lastWeek)
                 .orderBy("date_time", Query.Direction.DESCENDING)
                 .get()
@@ -825,7 +830,7 @@ public class HomeFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
                             int lastWeekReports = task.getResult().size();
-                            firebaseFirestore.collection("locations_reports")
+                            firebaseFirestore.collection(LOCATION_REPORTS)
                                     .whereGreaterThanOrEqualTo("date_time", start_thisWeek)
                                     .orderBy("date_time", Query.Direction.DESCENDING)
                                     .get()
@@ -866,7 +871,7 @@ public class HomeFragment extends Fragment {
     private void getAndSetTotalReportForOneWeek() {
         String start_thisWeek = getFirstDayOfThisWeek()+" "+"00:00:00";
 
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThanOrEqualTo("date_time", start_thisWeek)
                 .orderBy("date_time")
                 .get()
@@ -904,7 +909,7 @@ public class HomeFragment extends Fragment {
     public static String getDateRighNow() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";
@@ -915,7 +920,7 @@ public class HomeFragment extends Fragment {
         try{
             Calendar calendar = Calendar.getInstance();
             calendar = firstDayOfLastWeek(calendar);
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE);
             sfd.setTimeZone(calendar.getTimeZone());
             return sfd.format(calendar.getTime());
         } catch(Exception e) {
@@ -932,32 +937,11 @@ public class HomeFragment extends Fragment {
             int year = calendar.get(Calendar.YEAR);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             int month = calendar.get(Calendar.MONTH)+1;
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE);
             sfd.setTimeZone(calendar.getTimeZone());
             return sfd.format(calendar.getTime());
         } catch(Exception e) {
             return "date"+e.getMessage();
-        }
-    }
-
-    public static String getLastMonthDate() { // without parameter argument
-        try{
-            LocalDate now = LocalDate.now(); // 2015-11-24
-            LocalDate earlier = now.minusMonths(1); // 2015-10-24
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-            return sfd.format(earlier);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    public static String getThisMonth() { // without parameter argument
-        try{
-            LocalDate now = LocalDate.now(); // 2015-11-24
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-            return sfd.format(now);
-        } catch(Exception e) {
-            return "date";
         }
     }
 
@@ -969,25 +953,11 @@ public class HomeFragment extends Fragment {
 
     public static String getYesterday() { // without parameter argument
         try{
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE, Locale.getDefault());
             return sfd.format(yesterday());
         } catch(Exception e) {
             return "date";
         }
-    }
-
-    public static String getCalculatedDate(String date,String dateFormat, int days) {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat s = new SimpleDateFormat(dateFormat);
-        if (!date.isEmpty()) {
-            try {
-                cal.setTime(s.parse(date));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        cal.add(Calendar.DAY_OF_YEAR, days);
-        return s.format(new Date(cal.getTimeInMillis()));
     }
 
 }

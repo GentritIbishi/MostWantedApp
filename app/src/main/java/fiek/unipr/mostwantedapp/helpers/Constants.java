@@ -1,0 +1,69 @@
+package fiek.unipr.mostwantedapp.helpers;
+
+import android.Manifest;
+
+public class Constants {
+    public static final String PREFERENCE = "PREFERENCE";
+    public static final String PREFS_NAME = "loginPreferences";
+    public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
+    public static final String FIRST_TIME_INSTALL = "FirstTimeInstall";
+    public static final String ADMIN_ROLE = "Admin";
+    public static final String USER_ROLE = "User";
+    public static final String ROLE = "role";
+    public static final String GRADE_A = "A";
+    public static final String GRADE_B = "B";
+    public static final String GRADE_C = "C";
+    public static final String GRADE_D = "D";
+    public static final String GRADE_E = "E";
+    public static final String YES = "Yes";
+    public static final String NO = "No";
+    public static final String INFORMER_ROLE = "Informer";
+    public static final String VERIFIED = "VERIFIED";
+    public static final String UNVERIFIED = "UNVERIFIED";
+    public static final String FAKE = "FAKE";
+    public static final String SEEN = "SEEN";
+    public static final String MALE = "MALE";
+    public static final String FEMALE = "FEMALE";
+    public static final String ANONYMOUS = "ANONYMOUS";
+    public static final String NA = "N/A";
+    public static final String ADMIN_INFORMER_PREFS = "ADMIN_INFORMER_PREFS";
+    public static final String USER_INFORMER_PREFS = "USER_INFORMER_PREFS";
+    public static final String PHONE_INFORMER_PREFS = "PHONE_INFORMER_PREFS";
+    public static final String PROFILE_USER_PREFS = "PROFILE_USER_PREFS";
+    public static final String HOME_USER_PREF = "HOME_USER_PREF";
+    public static final String MAIN_TAG = "MAIN_TAG";
+    public static final String DATE_TIME = "dd-MM-yyyy HH:mm:ss";
+    public static final String DATE_TIME_STYLE = "E, dd MMM yyyy";
+    public static final String DATE = "dd-MM-yyyy";
+    public static final String KG = "KG";
+    public static final String CM = "CM";
+    public static final String AGE = "AGE";
+    public static final String EURO = "EURO";
+    public static final String PHONE_USER = "PHONE_USER";
+    public static final String COINS = "COINS";
+    public static final String BALANCE_DEFAULT = "0 EURO";
+    public static final String COINS_DEFAULT = "0 COINS";
+    public static final Double LATITUDE_DEFAULT = 42.667542;
+    public static final Double LONGITUDE_DEFAULT = 21.166191;
+    public static final float DEFAULT_ZOOM = 15f;
+
+    //FIREBASE TABLE NAMES
+    public static final String USERS = "users";
+    public static final String WANTED_PERSONS = "wanted_persons";
+    public static final String ASSIGNED_REPORTS = "assigned_reports";
+    public static final String ASSIGNED_REPORTS_PDF = "assign_report.pdf";
+    public static final String REPORTS_ASSIGNED = "reports_assigned";
+    public static final String INVESTIGATORS = "investigators";
+    public static final String LOCATION_REPORTS = "location_reports";
+    public static final String LOGIN_USERS = "logins_users";
+    public static final String NOTIFICATION_ADMIN = "notifications_admin";
+    public static final String NOTIFICATION_USER = "notifications_user";
+    public static final String PERSONS = "persons";
+    public static final String PROFILE_PICTURE = "profile_picture.jpg";
+    public static final String DYNAMIC_DOMAIN = "https://fiek.page.link";
+
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    public static final int PICK_IMAGE = 15;
+    public static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
+    public static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+}

@@ -1,5 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin.update.investigator;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.INVESTIGATORS;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -28,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.UpdateInvestigatorListAdapter;
+import fiek.unipr.mostwantedapp.adapter.update.investigator.UpdateInvestigatorListAdapter;
 import fiek.unipr.mostwantedapp.helpers.MyButtonClickListener;
 import fiek.unipr.mostwantedapp.helpers.MySwipeHelper;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
@@ -107,7 +109,7 @@ public class UpdateInvestigatorListFragment extends Fragment implements Recycler
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
-        firebaseFirestore.collection("investigators")
+        firebaseFirestore.collection(INVESTIGATORS)
                 .orderBy("registration_date", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -147,7 +149,7 @@ public class UpdateInvestigatorListFragment extends Fragment implements Recycler
 
     public void filter(String s) {
         investigatorArrayList.clear();
-        firebaseFirestore.collection("investigators")
+        firebaseFirestore.collection(INVESTIGATORS)
                 .orderBy("fullName")
                 .startAt(s)
                 .endAt(s + "\uf8ff")
@@ -228,7 +230,7 @@ public class UpdateInvestigatorListFragment extends Fragment implements Recycler
                             @Override
                             public void onClick(int pos) {
                                 String investigatorIdToDelete = investigatorArrayList.get(pos).getInvestigator_id();
-                                firebaseFirestore.collection("investigators")
+                                firebaseFirestore.collection(INVESTIGATORS)
                                         .document(investigatorIdToDelete)
                                         .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override

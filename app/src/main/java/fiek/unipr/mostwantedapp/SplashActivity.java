@@ -1,5 +1,9 @@
 package fiek.unipr.mostwantedapp;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.ADMIN_ROLE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.ROLE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -22,10 +26,6 @@ import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final String ADMIN = "Admin";
-    private static final String USER = "User";
-    private static final String ROLE = "role";
-    private static final String USERS = "users";
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
 
@@ -53,7 +53,7 @@ public class SplashActivity extends AppCompatActivity {
                             if(task.isSuccessful() && task.getResult() != null)
                             {
                                 String role = task.getResult().getString(ROLE);
-                                if(role !=null && role.matches(ADMIN))
+                                if(role !=null && role.matches(ADMIN_ROLE))
                                 {
                                     // start AdminDashboardActivity
                                     startActivity(new Intent(SplashActivity.this, AdminDashboardActivity.class));

@@ -1,9 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin.update.user;
 
-import static androidx.constraintlayout.motion.utils.Oscillator.TAG;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,11 +13,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -34,11 +30,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.UpdateUserListAdapter;
+import fiek.unipr.mostwantedapp.adapter.update.user.UpdateUserListAdapter;
 import fiek.unipr.mostwantedapp.helpers.MyButtonClickListener;
 import fiek.unipr.mostwantedapp.helpers.MySwipeHelper;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.models.Person;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class UpdateUserListFragment extends Fragment implements RecyclerViewInterface {
@@ -113,7 +108,7 @@ public class UpdateUserListFragment extends Fragment implements RecyclerViewInte
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
-        firebaseFirestore.collection("users")
+        firebaseFirestore.collection(USERS)
                 .orderBy("register_date_time", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -153,7 +148,7 @@ public class UpdateUserListFragment extends Fragment implements RecyclerViewInte
 
     public void filter(String s) {
         userArrayList.clear();
-        firebaseFirestore.collection("users")
+        firebaseFirestore.collection(USERS)
                 .orderBy("fullName")
                 .startAt(s)
                 .endAt(s + "\uf8ff")
@@ -249,7 +244,7 @@ public class UpdateUserListFragment extends Fragment implements RecyclerViewInte
                             @Override
                             public void onClick(int pos) {
                                 String userIDToDelete = userArrayList.get(pos).getUserID();
-                                firebaseFirestore.collection("users")
+                                firebaseFirestore.collection(USERS)
                                         .document(userIDToDelete)
                                         .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override

@@ -1,6 +1,15 @@
 package fiek.unipr.mostwantedapp;
 
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.ADMIN_ROLE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.INFORMER_ROLE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOGIN_INFORMER_PREFS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOGIN_USERS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PREFS_NAME;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USER_ROLE;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -39,10 +48,6 @@ import fiek.unipr.mostwantedapp.models.User;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    public static final String PREFS_NAME = "loginPreferences";
-    public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
-    public static final String ANONYMOUS = "ANONYMOUS";
-    private static final String login_users = "logins_users";
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
@@ -212,7 +217,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void checkUserRoleAndGoToDashboard(String currentUserId) {
         if(checkConnection()){
-            documentReference = firebaseFirestore.collection("users").document(currentUserId);
+            documentReference = firebaseFirestore.collection(USERS).document(currentUserId);
             documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -222,17 +227,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     User user = new User(currentUserId, etEmail.getText().toString(), role, etPassword.getText().toString());
                     setSharedPreference(currentUserId, role, fullName, etEmail.getText().toString());
                     setLoginsHistoryForUser(user, currentUserId);
-                    if (role != null && role.matches("Admin")) {
+                    if (role != null && role.matches(ADMIN_ROLE)) {
                         login_progressBar.setVisibility(View.INVISIBLE);
                         bt_Login.setEnabled(true);
                         Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
                         goToAdminDashboard();
-                    } else if(role != null && role.matches("User")){
+                    } else if(role != null && role.matches(USER_ROLE)){
                         login_progressBar.setVisibility(View.INVISIBLE);
                         bt_Login.setEnabled(true);
                         Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
                         goToUserDashboard();
-                    }else if(role != null && role.matches("Informer")){
+                    }else if(role != null && role.matches(INFORMER_ROLE)){
                         login_progressBar.setVisibility(View.INVISIBLE);
                         bt_Login.setEnabled(true);
                         Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
@@ -297,7 +302,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void setLoginsHistoryForUser(User user, String currentUserId) {
-        documentReference = firebaseFirestore.collection(login_users).document(currentUserId);
+        documentReference = firebaseFirestore.collection(LOGIN_USERS).document(currentUserId);
         documentReference.set(user);
     }
 

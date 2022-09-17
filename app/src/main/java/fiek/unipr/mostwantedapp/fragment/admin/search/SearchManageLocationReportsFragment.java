@@ -1,5 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin.search;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -30,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.manage.ManageLocationReportListAdapter;
+import fiek.unipr.mostwantedapp.adapter.report.location.ManageLocationReportListAdapter;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.maps.report.SingleReportActivity;
 import fiek.unipr.mostwantedapp.models.Report;
@@ -43,11 +45,7 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
     private ManageLocationReportListAdapter manageLocationReportListAdapter;
     private ArrayList<Report> reportArrayList;
     private FirebaseFirestore firebaseFirestore;
-    private String Description, Date_time, uID, informer_person, wanted_person, docId;
-    private Map<String, Object> images = new HashMap<>();
-    private ReportStatus status = ReportStatus.UNVERIFIED;
     private TextInputEditText locationReports_search_filter;
-    private Double longitude, latitude;
 
     public SearchManageLocationReportsFragment() {}
 
@@ -108,7 +106,7 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .orderBy("date_time", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -125,19 +123,6 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
                                 // after getting this list we are passing
                                 // that list to our object class.
                                 Report report = d.toObject(Report.class);
-
-                                Date_time = report.getDate_time();
-                                Description = report.getDescription();
-                                informer_person = report.getInformer_person();
-                                latitude = report.getLatitude();
-                                longitude = report.getLongitude();
-                                status = report.getStatus();
-                                docId = report.getDocId();
-                                uID = report.getuID();
-                                wanted_person = report.getWanted_person();
-                                images = report.getImages();
-
-
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
                                 reportArrayList.add(report);
@@ -161,7 +146,7 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
 
     public void filter(String s) {
         reportArrayList.clear();
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .orderBy("docId")
                 .startAt(s)
                 .endAt(s + "\uf8ff")
@@ -180,9 +165,6 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
                                 // after getting this list we are passing
                                 // that list to our object class.
                                 Report report = d.toObject(Report.class);
-
-                                 docId = report.getDocId();
-
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
                                 reportArrayList.add(report);

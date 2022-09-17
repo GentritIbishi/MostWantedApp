@@ -1,5 +1,12 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.COINS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.EURO;
+import static fiek.unipr.mostwantedapp.helpers.Constants.NA;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,7 +26,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -29,7 +35,6 @@ import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -52,10 +57,6 @@ import fiek.unipr.mostwantedapp.models.User;
 public class ProfileFragment extends Fragment {
 
     private View admin_account_fragment_view;
-    public static final String EURO = "EURO";
-    public static final String COINS = "COINS";
-    public static final String Anonymous = "Anonymous";
-    public static final String NA = "NA";
     private String informer_fullName;
     private Boolean emailVerified;
     private String address, email, fullName, gender, lastname, name, parentName, password, personal_number, phone, grade,
@@ -240,12 +241,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        try {
-            passowrd();
-        } catch (GeneralSecurityException e) {
-            e.printStackTrace();
-        }
-
         return admin_account_fragment_view;
     }
 
@@ -285,7 +280,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void deletePhoto() {
-        StorageReference fileRef = storageReference.child("users/"+firebaseAuth.getCurrentUser().getUid()+"/profile_picture.jpg");
+        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+PROFILE_PICTURE);
         fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -305,7 +300,7 @@ public class ProfileFragment extends Fragment {
     private void uploadImageToFirebase(Uri imageUri) {
         admin_uploadProgressBar.setVisibility(View.VISIBLE);
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child("users/"+firebaseAuth.getCurrentUser().getUid()+"/profile_picture.jpg");
+        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+PROFILE_PICTURE);
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -313,7 +308,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(admin_imageOfProfile);
-                        DocumentReference docRef = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+                        DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
                         docRef.update("urlOfProfile", uri.toString());
                         admin_uploadProgressBar.setVisibility(View.GONE);
                         Toast.makeText(getContext(), R.string.images_uploaded_successfully, Toast.LENGTH_SHORT).show();
@@ -347,7 +342,7 @@ public class ProfileFragment extends Fragment {
 
     private void loadImage(String uID) {
         admin_uploadProgressBar.setVisibility(View.VISIBLE);
-        StorageReference profileRef = storageReference.child("users/" + uID + "/profile_picture.jpg");
+        StorageReference profileRef = storageReference.child(USERS+"/" + uID + "/"+PROFILE_PICTURE);
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -358,7 +353,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void getSetUserData(String uID) {
-        firebaseFirestore.collection("users").document(uID)
+        firebaseFirestore.collection(USERS).document(uID)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -419,50 +414,50 @@ public class ProfileFragment extends Fragment {
                         } else {
                             if(firebaseAuth.getCurrentUser().isAnonymous())
                             {
-                                address = Anonymous;
+                                address = ANONYMOUS;
                                 admin_etAddress.setText(address);
 
-                                email = Anonymous;
+                                email = ANONYMOUS;
                                 admin_etEmailToUser.setText(email);
 
-                                gender = Anonymous;
+                                gender = ANONYMOUS;
                                 admin_et_gender.setText(gender);
 
-                                lastname = Anonymous;
+                                lastname = ANONYMOUS;
                                 admin_et_lastName.setText(lastname);
 
-                                name = Anonymous;
+                                name = ANONYMOUS;
                                 admin_et_firstName.setText(name);
 
-                                parentName = Anonymous;
+                                parentName = ANONYMOUS;
                                 admin_et_parentName.setText(parentName);
 
-                                password = Anonymous;
+                                password = ANONYMOUS;
                                 admin_etPasswordToUser.setText(password);
 
-                                personal_number = Anonymous;
+                                personal_number = ANONYMOUS;
                                 admin_etNumPersonal.setText(personal_number);
 
-                                phone = Anonymous;
+                                phone = ANONYMOUS;
                                 admin_etPhone.setText(phone);
 
-                                role = Anonymous;
+                                role = ANONYMOUS;
                                 admin_et_role_autocomplete.setText(role);
 
-                                balance = Anonymous;
+                                balance = ANONYMOUS;
                                 admin_et_balance_autocomplete.setText(balance);
 
-                                coins = Anonymous;
+                                coins = ANONYMOUS;
                                 admin_et_coins_autocomplete.setText(coins);
 
-                                fullName = Anonymous;
+                                fullName = ANONYMOUS;
                                 admin_et_fullName.setText(fullName);
 
-                                grade = Anonymous;
+                                grade = ANONYMOUS;
                                 admin_et_grade_autocomplete.setText(grade);
 
                                 //no option for change by default disable
-                                register_date_time = Anonymous;
+                                register_date_time = ANONYMOUS;
                                 admin_etDateRegistration.setText(register_date_time);
                             }else {
 
@@ -612,7 +607,7 @@ public class ProfileFragment extends Fragment {
                     new_balance,
                     new_coins,
                     emailVerified);
-            firebaseFirestore.collection("users")
+            firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getUid())
                     .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -629,38 +624,4 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void passowrd() throws GeneralSecurityException {
-
-        // The user's raw text password
-        String passwd = "user1password";
-
-// Params from the exported account
-        String salt = "BtPRYSSQ4rDtig==";
-        String signerKey = "0azM2y/EpbWMjYbP1OTIIAAUwUMD4vbTaxmK/bMrrE/826ZvAeOoLhXFFbHCFS8WQ6/eFp+f9T3GvGSRVIeBmw==";
-        byte[] signer = signerKey.getBytes(StandardCharsets.UTF_8);
-// Params from the project's password hash parameters
-        String saltSep = "Bw==";
-
-        int rounds = 8;
-        int memcost = 14;
-
-        String expectedHash = "OWzruY3oJ1nAXB7dNLjQ5TnQRhTNAfNUdmI1mLp8/MXIZtO+PdBLuH8ZAZnDsAsKVhxZchtpsnE4vl0fjEGL/w==";
-        byte[] derivedKey = expectedHash.getBytes(StandardCharsets.UTF_8);
-
-        assertTrue(FirebaseScrypt.check(passwd, expectedHash, salt, saltSep, signerKey, rounds, memcost));
-
-        byte[] passByte = FirebaseScrypt.decrypt(signer, derivedKey);
-
-        System.out.println("BYTE"+passByte);
-
-
-    }
-
-    private void assertTrue(boolean check) {
-        if(check){
-            System.out.println("firebaseScrypt: "+true);
-        }else {
-            System.out.println("firebaseScrypt: "+false);
-        }
-    }
 }

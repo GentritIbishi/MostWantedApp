@@ -1,5 +1,13 @@
 package fiek.unipr.mostwantedapp.fragment.admin.update.person;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.AGE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.CM;
+import static fiek.unipr.mostwantedapp.helpers.Constants.EURO;
+import static fiek.unipr.mostwantedapp.helpers.Constants.KG;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PERSONS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -54,10 +62,6 @@ import fiek.unipr.mostwantedapp.models.User;
 public class UpdatePersonFragment extends Fragment {
 
     private View update_person_view;
-    public static final String AGE = "AGE";
-    public static final String KG = "KG";
-    public static final String CM = "CM";
-    public static final String EURO = "EURO";
     private CircleImageView update_person_imageOfProfile;
     private Button update_person_btnUploadNewPicture, update_person_btnDeletePhoto, update_person_btnSaveChanges;
     private ProgressBar update_person_uploadProgressBar, update_person_saveChangesProgressBar;
@@ -258,7 +262,7 @@ public class UpdatePersonFragment extends Fragment {
                 latitude
         );
 
-        firebaseFirestore.collection("wanted_persons")
+        firebaseFirestore.collection(WANTED_PERSONS)
                 .document(personId)
                 .set(person, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -278,7 +282,7 @@ public class UpdatePersonFragment extends Fragment {
     private void uploadImageToFirebase(Uri imageUri) {
         update_person_uploadProgressBar.setVisibility(View.VISIBLE);
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child("persons/"+ personId +"/profile.jpg");
+        StorageReference fileRef = storageReference.child(PERSONS+"/"+ personId +"/"+PROFILE_PICTURE);
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -286,7 +290,7 @@ public class UpdatePersonFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(update_person_imageOfProfile);
-                        DocumentReference docRef = firebaseFirestore.collection("wanted_persons").document(personId);
+                        DocumentReference docRef = firebaseFirestore.collection(WANTED_PERSONS).document(personId);
                         docRef.update("urlOfProfile", uri.toString());
                         update_person_uploadProgressBar.setVisibility(View.GONE);
                         Toast.makeText(getContext(), R.string.images_uploaded_successfully, Toast.LENGTH_SHORT).show();
@@ -314,7 +318,7 @@ public class UpdatePersonFragment extends Fragment {
     }
 
     private void deletePhoto() {
-        StorageReference fileRef = storageReference.child("persons/"+ personId +"/profile.jpg");
+        StorageReference fileRef = storageReference.child(PERSONS+"/"+ personId +"/"+PROFILE_PICTURE);
         fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -332,7 +336,7 @@ public class UpdatePersonFragment extends Fragment {
     }
 
     private void refreshDataFromFirebase() {
-        firebaseFirestore.collection("wanted_persons").document(personId)
+        firebaseFirestore.collection(WANTED_PERSONS).document(personId)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -410,7 +414,7 @@ public class UpdatePersonFragment extends Fragment {
 
     private void loadImage() {
         update_person_uploadProgressBar.setVisibility(View.VISIBLE);
-        StorageReference profileRef = storageReference.child("persons/"+ personId +"/profile.jpg");
+        StorageReference profileRef = storageReference.child(PERSONS+"/"+ personId +"/"+PROFILE_PICTURE);
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {

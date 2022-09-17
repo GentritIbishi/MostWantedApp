@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.fragment.admin.update.person;
+package fiek.unipr.mostwantedapp.adapter.update.person;
 
 import android.view.View;
 import android.widget.ImageView;

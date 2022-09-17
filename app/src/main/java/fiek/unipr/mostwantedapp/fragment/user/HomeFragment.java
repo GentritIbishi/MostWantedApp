@@ -1,5 +1,18 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME_STYLE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.FAKE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.HOME_USER_PREF;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.NA;
+import static fiek.unipr.mostwantedapp.helpers.Constants.NOTIFICATION_USER;
+import static fiek.unipr.mostwantedapp.helpers.Constants.UNVERIFIED;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.VERIFIED;
+import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+
 import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -83,14 +96,9 @@ import fiek.unipr.mostwantedapp.models.Person;
 public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
     private SharedPreferences sharedPreferences;
-    private static final String HOME_USER_PREF = "HOME_USER_PREF";
-    public static final String VERIFIED = "VERIFIED";
-    public static final String UNVERIFIED = "UNVERIFIED";
-    public static final String ANONYMOUS = "ANONYMOUS";
     public String YOUR_REPORT_IN_DATETIME_TRANSLATEABLE;
     public String HAS_NEW_STATUS_RIGHT_NOW;
     public String STATUS_OF_REPORT_HAS_CHANGED_TO;
-    public static final String FAKE = "FAKE";
     private View home_fragment_view;
     private RecyclerView lvPersons;
     private MapsInformerPersonListAdapter mapsInformerPersonListAdapter;
@@ -222,7 +230,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
     private void getGrade(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
-            firebaseFirestore.collection("users")
+            firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -240,7 +248,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
-        firebaseFirestore.collection("wanted_persons")
+        firebaseFirestore.collection(WANTED_PERSONS)
                 .limit(5)
                 .orderBy("registration_date", Query.Direction.ASCENDING)
                 .get()
@@ -283,7 +291,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     }
 
     private void checkingForNewReport(String uID) {
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereEqualTo("uID", uID)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
@@ -343,7 +351,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
             )
     {
 
-        CollectionReference collRef = firebaseFirestore.collection("notifications_user");
+        CollectionReference collRef = firebaseFirestore.collection(NOTIFICATION_USER);
         String notificationId = collRef.document().getId();
         NotificationReportUser objNotificationReportUser = new NotificationReportUser
                 (
@@ -361,7 +369,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                 notificationReportNewStatus
                 );
 
-        firebaseFirestore.collection("notifications_user")
+        firebaseFirestore.collection(NOTIFICATION_USER)
                 .document(notificationId)
                 .set(objNotificationReportUser).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -412,7 +420,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         Map<String, Object> data = new HashMap<>();
         data.put("balance", balance);
         data.put("coins", balance);
-        firebaseFirestore.collection("users")
+        firebaseFirestore.collection(USERS)
                 .document(uid)
                 .update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -490,7 +498,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     public static String getDateTime() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";
@@ -500,7 +508,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     //function that count all locations_reports: VERIFIED, UNVERIFIED, FAKE
     private void setPieChart() {
         if(checkConnection()) {
-            firebaseFirestore.collection("locations_reports")
+            firebaseFirestore.collection(LOCATION_REPORTS)
                     .whereEqualTo("uID", firebaseAuth.getUid())
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -643,7 +651,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
-            documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+            documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -656,7 +664,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                         if(balance != null){
                                 user_tv_balance.setText(balance);
                         }else {
-                            user_tv_balance.setText("N/A");
+                            user_tv_balance.setText(NA);
                         }
 
                         //set Image, verified if is email verified, name
@@ -695,7 +703,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     public static String getDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("E, dd MMM yyyy", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME_STYLE, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";

@@ -1,5 +1,10 @@
 package fiek.unipr.mostwantedapp.fragment.admin.update.user;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.COINS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.EURO;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -50,8 +55,6 @@ import fiek.unipr.mostwantedapp.models.User;
 public class UpdateUserFragment extends Fragment {
 
     private View update_user_view;
-    public static final String EURO = "EURO";
-    public static final String COINS = "COINS";
     private Boolean emailVerified;
     private String address, email, fullName, gender, lastname, name, parentName, password, personal_number, phone, grade,
             register_date_time, role, userID, urlOfProfile, balance, coins;
@@ -325,7 +328,7 @@ public class UpdateUserFragment extends Fragment {
     }
 
     private void deletePhoto() {
-        StorageReference fileRef = storageReference.child("users/"+userID+"/profile_picture.jpg");
+        StorageReference fileRef = storageReference.child(USERS+"/"+userID+"/"+PROFILE_PICTURE);
         fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -345,7 +348,7 @@ public class UpdateUserFragment extends Fragment {
     private void uploadImageToFirebase(Uri imageUri) {
         update_user_uploadProgressBar.setVisibility(View.VISIBLE);
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child("users/"+userID+"/profile_picture.jpg");
+        StorageReference fileRef = storageReference.child(USERS+"/"+userID+"/"+PROFILE_PICTURE);
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -353,7 +356,7 @@ public class UpdateUserFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(update_user_imageOfProfile);
-                        DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
+                        DocumentReference docRef = firebaseFirestore.collection(USERS).document(userID);
                         docRef.update("urlOfProfile", uri.toString());
                         update_user_uploadProgressBar.setVisibility(View.GONE);
                         Toast.makeText(getContext(), R.string.images_uploaded_successfully, Toast.LENGTH_SHORT).show();
@@ -382,7 +385,7 @@ public class UpdateUserFragment extends Fragment {
 
     private void loadImage() {
         update_user_uploadProgressBar.setVisibility(View.VISIBLE);
-        StorageReference profileRef = storageReference.child("users/" + userID + "/profile_picture.jpg");
+        StorageReference profileRef = storageReference.child(USERS+"/" + userID + "/"+PROFILE_PICTURE);
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -426,7 +429,7 @@ public class UpdateUserFragment extends Fragment {
                 new_balance,
                 new_coins,
                 emailVerified);
-        firebaseFirestore.collection("users")
+        firebaseFirestore.collection(USERS)
                 .document(userID)
                 .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -444,7 +447,7 @@ public class UpdateUserFragment extends Fragment {
     }
 
     private void refreshDataFromFirebase() {
-        firebaseFirestore.collection("users").document(userID)
+        firebaseFirestore.collection(USERS).document(userID)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override

@@ -1,39 +1,27 @@
-package fiek.unipr.mostwantedapp.adapter;
+package fiek.unipr.mostwantedapp.adapter.update.investigator;
+
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.fragment.admin.update.investigator.UpdateInvestigatorFragment;
-import fiek.unipr.mostwantedapp.fragment.admin.update.investigator.UpdateInvestigatorListViewHolder;
-import fiek.unipr.mostwantedapp.fragment.admin.update.person.UpdatePersonFragment;
-import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListViewHolder;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Investigator;
-import fiek.unipr.mostwantedapp.models.Person;
-import fiek.unipr.mostwantedapp.models.User;
 
 public class UpdateInvestigatorListAdapter extends RecyclerView.Adapter<UpdateInvestigatorListViewHolder> {
 
@@ -70,7 +58,7 @@ public class UpdateInvestigatorListAdapter extends RecyclerView.Adapter<UpdateIn
                 Picasso.get().load(investigatorList.get(position).getUrlOfProfile()).transform(new CircleTransform()).into(holder.update_investigator_image);
             }
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME);
 
             Date start_date = simpleDateFormat.parse(investigatorList.get(position).getRegistration_date());
             Date end_date = simpleDateFormat.parse(getTimeDate());
@@ -128,7 +116,7 @@ public class UpdateInvestigatorListAdapter extends RecyclerView.Adapter<UpdateIn
     public static String getTimeDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";

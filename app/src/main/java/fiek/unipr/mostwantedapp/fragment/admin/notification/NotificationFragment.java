@@ -1,5 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin.notification;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Intent;
@@ -16,7 +18,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,14 +33,13 @@ import java.util.List;
 import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.ReportNotificationAdapter;
+import fiek.unipr.mostwantedapp.adapter.report.report.ReportNotificationAdapter;
 import fiek.unipr.mostwantedapp.helpers.MyButtonClickListener;
 import fiek.unipr.mostwantedapp.helpers.MySwipeHelper;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.maps.report.SingleReportActivity;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.models.ReportStatus;
-import fiek.unipr.mostwantedapp.models.User;
 
 
 public class NotificationFragment extends Fragment implements RecyclerViewInterface {
@@ -49,13 +49,8 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
     private ReportNotificationAdapter reportNotificationAdapter;
     private ArrayList<Report> reportArrayList;
     private FirebaseFirestore firebaseFirestore;
-    private String Description, Date_time, uID, informer_person, wanted_person;
-    private Map<String, Object> images = new HashMap<>();
-    private ReportStatus status = ReportStatus.UNVERIFIED;
-    private Double longitude, latitude;
 
     public NotificationFragment() {}
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -99,7 +94,7 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .orderBy("date_time", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -113,23 +108,7 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
                             // our progress bar and adding our data in a list.
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
-                                // after getting this list we are passing
-                                // that list to our object class.
                                 Report report = d.toObject(Report.class);
-
-                                Date_time = report.getDate_time();
-                                Description = report.getDescription();
-                                informer_person = report.getInformer_person();
-                                latitude = report.getLatitude();
-                                longitude = report.getLongitude();
-                                status = report.getStatus();
-                                uID = report.getuID();
-                                wanted_person = report.getWanted_person();
-                                images = report.getImages();
-
-
-                                // after getting data from Firebase we are
-                                // storing that data in our array list
                                 reportArrayList.add(report);
                             }
 

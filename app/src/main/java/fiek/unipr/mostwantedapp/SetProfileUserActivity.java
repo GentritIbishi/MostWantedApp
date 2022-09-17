@@ -1,5 +1,8 @@
 package fiek.unipr.mostwantedapp;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,7 +69,7 @@ public class SetProfileUserActivity extends AppCompatActivity {
         progressBarUserOutside = findViewById(R.id.progressBarUserOutside);
         btnSkipSetImageOutside = findViewById(R.id.btnSkipSetImageOutside);
 
-        StorageReference profileRef = storageReference.child("users/" + userID + "/profile_picture.jpg");
+        StorageReference profileRef = storageReference.child(USERS+"/" + userID + "/"+PROFILE_PICTURE);
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -111,7 +114,7 @@ public class SetProfileUserActivity extends AppCompatActivity {
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
-        StorageReference profRef = storageReference.child("users/" + userID + "/profile_picture.jpg");
+        StorageReference profRef = storageReference.child(USERS+"/" + userID + "/"+PROFILE_PICTURE);
         profRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -119,7 +122,7 @@ public class SetProfileUserActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(circleImageViewUserOutside);
-                        DocumentReference docRef = firebaseFirestore.collection("users").document(userID);
+                        DocumentReference docRef = firebaseFirestore.collection(USERS).document(userID);
                         docRef.update("urlOfProfile", uri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {

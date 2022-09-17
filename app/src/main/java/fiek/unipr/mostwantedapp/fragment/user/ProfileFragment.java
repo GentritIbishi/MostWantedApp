@@ -1,5 +1,8 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_USER_PREFS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -50,7 +53,6 @@ import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 public class ProfileFragment extends Fragment {
 
     private View profile_fragment_view;
-    public static final String PROFILE_USER_PREFS = "PROFILE_USER_PREFS";
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -108,7 +110,7 @@ public class ProfileFragment extends Fragment {
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
-            documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+            documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {

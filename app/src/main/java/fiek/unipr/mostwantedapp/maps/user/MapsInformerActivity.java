@@ -1,5 +1,19 @@
 package fiek.unipr.mostwantedapp.maps.user;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.COURSE_LOCATION;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DEFAULT_ZOOM;
+import static fiek.unipr.mostwantedapp.helpers.Constants.FINE_LOCATION;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LATITUDE_DEFAULT;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_PERMISSION_REQUEST_CODE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LONGITUDE_DEFAULT;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PHONE_USER;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PICK_IMAGE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -57,13 +71,6 @@ import fiek.unipr.mostwantedapp.models.ReportStatus;
 public class MapsInformerActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private ActivityMapsInformerBinding binding;
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    public static final String ANONYMOUS = "ANONYMOUS";
-    public static final String PHONE_USER = "PHONE_USER";
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private static final float DEFAULT_ZOOM = 15f;
-    private static final int PICK_IMAGE = 15;
     private int upload_count = 0;
     private FusedLocationProviderClient mfusedLocationProviderClient;
     private GoogleMap mMap;
@@ -76,18 +83,15 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private DocumentReference documentReference;
 
     private String wanted_person, acts, address, eyeColor, hairColor, phy_appearance, status, prize, urlOfProfile, informer_person_urlOfProfile;
-    private String dateNtime;
     private Integer age, height, weight;
     private Double latitude, longitude;
     private String description = "No description!";
     private String informer_person = "ANONYMOUS";
     private MarkerOptions markerOptionsDefault;
-    private Marker marker;
     private Bundle mapsInformerBundle;
     private ProgressDialog progressDialog;
-    private Double default_latitude=42.667542, default_longitude=21.166191;
     private ArrayList<Uri> ImageList = new ArrayList<Uri>();
-    Map<String, Object> imageListMap = new HashMap<>();
+    private Map<String, Object> imageListMap = new HashMap<>();
     private Uri ImageUri;
 
     @Override
@@ -205,7 +209,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     public static String getTimeDate() { // without parameter argument
         try {
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch (Exception e) {
             return "date";
@@ -231,7 +235,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                     longitude = currentLocation.getLongitude();
                                     setMarkerLocation(latitude, longitude);
                                 }else {
-                                    setMarkerLocation(default_latitude, default_longitude);
+                                    setMarkerLocation(LATITUDE_DEFAULT, LONGITUDE_DEFAULT);
                                 }
                                 mMap.setMyLocationEnabled(true);
                             } else {
@@ -241,10 +245,10 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     });
                 } else {
                     Toast.makeText(this, R.string.please_turn_on_location_on_your_phone, Toast.LENGTH_LONG).show();
-                    setMarkerLocation(default_latitude, default_longitude);
+                    setMarkerLocation(LATITUDE_DEFAULT, LONGITUDE_DEFAULT);
                 }
             } else {
-                setMarkerLocation(default_latitude, default_longitude);
+                setMarkerLocation(LATITUDE_DEFAULT, LONGITUDE_DEFAULT);
             }
         } catch (SecurityException e) {
             Toast.makeText(this, "MAPS INFORMER EXCEPTION: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -335,7 +339,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     }
 
     private void setLastSeenLocation(Double latitude, Double longitude, String wanted_person) {
-        DocumentReference locationReports = firebaseFirestore.collection("wanted_persons").document(wanted_person);
+        DocumentReference locationReports = firebaseFirestore.collection(WANTED_PERSONS).document(wanted_person);
 
         locationReports.update("latitude", latitude).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -384,7 +388,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
-            documentReference = firebaseFirestore.collection("users").document(firebaseAuth.getCurrentUser().getUid());
+            documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -399,7 +403,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     private void storeLink (String docId, Uri uri, Integer count) {
         imageListMap.put("image"+ count, uri.toString());
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .document(docId)
                         .update("images", imageListMap).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -411,12 +415,12 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     }
 
     private void save(String informer_person, String wanted_person, Double longitude, Double latitude, String dateNtime) {
-        CollectionReference collRef = firebaseFirestore.collection("locations_reports");
+        CollectionReference collRef = firebaseFirestore.collection(LOCATION_REPORTS);
         String docId = collRef.document().getId();
             if(informer_person.equals(ANONYMOUS))
             {
                 DocumentReference docRef = firebaseFirestore
-                        .collection("locations_reports")
+                        .collection(LOCATION_REPORTS)
                         .document(docId);
                 Report report = new Report(docId, binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
                         dateNtime,
@@ -439,7 +443,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                             if(ImageList.size() != 0){
                                 for(upload_count = 0; upload_count < ImageList.size(); upload_count++){
                                     Uri IndividualImage = ImageList.get(upload_count);
-                                    StorageReference fileRef = storageReference.child("wanted_persons/locations_reports/"+dateNtime+"/Image"+upload_count+".jpg");
+                                    StorageReference fileRef = storageReference.child(WANTED_PERSONS+"/"+LOCATION_REPORTS+"/"+dateNtime+"/Image"+upload_count+".jpg");
                                     int finalI = upload_count;
                                     fileRef.putFile(IndividualImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                         @Override
@@ -479,7 +483,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             }else if(informer_person.startsWith("+"))
             {
                 DocumentReference docRef = firebaseFirestore
-                        .collection("locations_reports")
+                        .collection(LOCATION_REPORTS)
                         .document(docId);
                 Report report = new Report(docId, binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
                         dateNtime,
@@ -501,7 +505,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                             if(ImageList.size() != 0){
                                 for(int upload_count = 0; upload_count < ImageList.size(); upload_count++){
                                     Uri IndividualImage = ImageList.get(upload_count);
-                                    StorageReference fileRef = storageReference.child("wanted_persons/locations_reports/"+dateNtime+"/Image"+upload_count+".jpg");
+                                    StorageReference fileRef = storageReference.child(WANTED_PERSONS+"/"+LOCATION_REPORTS+"/"+dateNtime+"/Image"+upload_count+".jpg");
                                     int finalI = upload_count;
                                     fileRef.putFile(IndividualImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                         @Override
@@ -535,13 +539,12 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                        System.out.println("Error krejt"+e.getMessage());
                         finish();
                     }
                 });
             }else if(!informer_person.equals(ANONYMOUS) && !informer_person.startsWith("+"))
             {
-                firebaseFirestore.collection("users")
+                firebaseFirestore.collection(USERS)
                         .whereEqualTo("fullName", informer_person)
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -552,7 +555,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                     informer_person_urlOfProfile = task.getResult().getDocuments().get(0).getString("urlOfProfile");
 
                                     DocumentReference docRef = firebaseFirestore
-                                            .collection("locations_reports")
+                                            .collection(LOCATION_REPORTS)
                                             .document(docId);
                                     Report report = new Report(docId, binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
                                             dateNtime,
@@ -574,7 +577,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                                 if(ImageList.size() != 0){
                                                     for(int upload_count = 0; upload_count < ImageList.size(); upload_count++){
                                                         Uri IndividualImage = ImageList.get(upload_count);
-                                                        StorageReference fileRef = storageReference.child("wanted_persons/locations_reports/"+dateNtime+"/Image"+upload_count+".jpg");
+                                                        StorageReference fileRef = storageReference.child(WANTED_PERSONS+"/"+LOCATION_REPORTS+"/"+dateNtime+"/Image"+upload_count+".jpg");
                                                         int finalI = upload_count;
                                                         fileRef.putFile(IndividualImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                             @Override

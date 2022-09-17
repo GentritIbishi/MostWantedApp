@@ -1,15 +1,13 @@
-package fiek.unipr.mostwantedapp.adapter;
+package fiek.unipr.mostwantedapp.adapter.update.person;
+
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -21,50 +19,53 @@ import java.util.List;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListViewHolder;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.models.User;
+import fiek.unipr.mostwantedapp.models.Person;
 
-public class UpdateUserListAdapter extends RecyclerView.Adapter<UpdateUserListViewHolder> {
+public class UpdatePersonListAdapter extends RecyclerView.Adapter<UpdatePersonListViewHolder> {
 
     private final RecyclerViewInterface recyclerViewInterface;
     private Context context;
-    private List<User> userList;
-    private String user_time_elapsed;
+    private List<Person> personList;
+    private String person_time_elapsed;
 
-    public UpdateUserListAdapter(Context context, List<User> userList, RecyclerViewInterface recyclerViewInterface) {
+    public UpdatePersonListAdapter(Context context, List<Person> personList, RecyclerViewInterface recyclerViewInterface) {
         this.context = context;
-        this.userList = userList;
+        this.personList = personList;
         this.recyclerViewInterface = recyclerViewInterface;
     }
 
     @NonNull
     @Override
-    public UpdateUserListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View userView = LayoutInflater.from(context)
-                .inflate(R.layout.user_item_single, parent, false);
-        return new UpdateUserListViewHolder(userView, recyclerViewInterface);
+    public UpdatePersonListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(context)
+                .inflate(R.layout.update_person_item_single, parent, false);
+        return new UpdatePersonListViewHolder(itemView, recyclerViewInterface);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UpdateUserListViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UpdatePersonListViewHolder holder, int position) {
         try {
-            holder.update_user_name.setText(userList.get(position).getFullName());
-            holder.update_user_role.setText(userList.get(position).getRole());
+            // after initializing our items we are
+            // setting data to our view.
+            // below line is use to set data to our text view.
+            holder.update_person_name.setText(personList.get(position).getFullName());
 
-            if (userList.get(position).getUrlOfProfile() != null && !userList.get(position).getUrlOfProfile().isEmpty()) {
-                Picasso.get().load(userList.get(position).getUrlOfProfile()).transform(new CircleTransform()).into(holder.update_user_image);
+            // in below line we are using Picasso to
+            // load image from URL in our Image VIew.
+            if (personList.get(position).getUrlOfProfile() != null && !personList.get(position).getUrlOfProfile().isEmpty()) {
+                Picasso.get().load(personList.get(position).getUrlOfProfile()).transform(new CircleTransform()).into(holder.update_person_image);
             }
 
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME);
 
-            Date start_date = simpleDateFormat.parse(userList.get(position).getRegister_date_time());
+            Date start_date = simpleDateFormat.parse(personList.get(position).getRegistration_date());
             Date end_date = simpleDateFormat.parse(getTimeDate());
             printDifference(start_date, end_date);
 
-            if (user_time_elapsed != null) {
-                holder.update_user_time_joined.setText(user_time_elapsed);
+            if (person_time_elapsed != null) {
+                holder.update_person_time_joined.setText(person_time_elapsed);
             }
         }catch (ParseException e) {
             e.printStackTrace();
@@ -73,7 +74,7 @@ public class UpdateUserListAdapter extends RecyclerView.Adapter<UpdateUserListVi
 
     @Override
     public int getItemCount() {
-        return userList.size();
+        return personList.size();
     }
 
     public void printDifference(Date startDate, Date endDate) {
@@ -99,15 +100,15 @@ public class UpdateUserListAdapter extends RecyclerView.Adapter<UpdateUserListVi
         long weeks = elapsedDays/7;
 
         if(weeks != 0){
-            user_time_elapsed = weeks+"w ";
+            person_time_elapsed = weeks+"w ";
         }else if(elapsedDays != 0) {
-            user_time_elapsed = elapsedDays+"d ";
+            person_time_elapsed = elapsedDays+"d ";
         }else if(elapsedHours != 0){
-            user_time_elapsed = elapsedHours+"h ";
+            person_time_elapsed = elapsedHours+"h ";
         }else if(elapsedMinutes != 0){
-            user_time_elapsed = elapsedMinutes+"m ";
+            person_time_elapsed = elapsedMinutes+"m ";
         }else if(elapsedSeconds != 0){
-            user_time_elapsed = elapsedSeconds+"s ";
+            person_time_elapsed = elapsedSeconds+"s ";
         }
 
     }
@@ -115,7 +116,7 @@ public class UpdateUserListAdapter extends RecyclerView.Adapter<UpdateUserListVi
     public static String getTimeDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";

@@ -1,5 +1,7 @@
 package fiek.unipr.mostwantedapp.maps.report;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -52,7 +54,7 @@ public class ReportInfoActivity extends AppCompatActivity {
     }
 
     private void setReportTitleFromFirebase(String notificationReportUID) {
-        firebaseFirestore.collection("users")
+        firebaseFirestore.collection(USERS)
                 .document(notificationReportUID)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

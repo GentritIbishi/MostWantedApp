@@ -1,5 +1,12 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.FAKE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.UNVERIFIED;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.VERIFIED;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -45,11 +52,6 @@ public class ProfileDashboardFragment extends Fragment {
 
     View profile_dashboard_view;
     private PieChart pieChart;
-
-    public static final String VERIFIED = "VERIFIED";
-    public static final String UNVERIFIED = "UNVERIFIED";
-    public static final String FAKE = "FAKE";
-    public static final String ANONYMOUS = "ANONYMOUS";
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -111,7 +113,7 @@ public class ProfileDashboardFragment extends Fragment {
 
     private void setPieChart() {
         if(checkConnection()) {
-                firebaseFirestore.collection("locations_reports")
+                firebaseFirestore.collection(LOCATION_REPORTS)
                         .get()
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
@@ -207,7 +209,7 @@ public class ProfileDashboardFragment extends Fragment {
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
-            firebaseFirestore.collection("users")
+            firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override

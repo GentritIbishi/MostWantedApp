@@ -1,5 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin.search;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -40,7 +42,6 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
     private ArrayList<Person> personArrayList;
     private FirebaseFirestore firebaseFirestore;
     private TextInputEditText admin_search_filter;
-    private String fullName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,7 +96,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
-        firebaseFirestore.collection("wanted_persons")
+        firebaseFirestore.collection(WANTED_PERSONS)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -111,9 +112,6 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                                 // after getting this list we are passing
                                 // that list to our object class.
                                 Person person = d.toObject(Person.class);
-
-                                fullName = person.getFullName();
-
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
                                 personArrayList.add(person);
@@ -138,7 +136,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     public void filter(String s) {
         personArrayList.clear();
-        firebaseFirestore.collection("wanted_persons")
+        firebaseFirestore.collection(WANTED_PERSONS)
                 .orderBy("fullName")
                 .startAt(s)
                 .endAt(s + "\uf8ff")
@@ -157,9 +155,6 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                                 // after getting this list we are passing
                                 // that list to our object class.
                                 Person person = d.toObject(Person.class);
-
-                                fullName = person.getFullName();
-
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
                                 personArrayList.add(person);

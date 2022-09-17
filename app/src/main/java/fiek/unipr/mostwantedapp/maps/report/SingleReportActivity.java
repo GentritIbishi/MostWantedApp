@@ -1,5 +1,8 @@
 package fiek.unipr.mostwantedapp.maps.report;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -52,7 +55,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.CustomizedGalleryAdapter;
+import fiek.unipr.mostwantedapp.adapter.gallery.CustomizedGalleryAdapter;
 import fiek.unipr.mostwantedapp.databinding.ActivitySingleReportBinding;
 
 public class SingleReportActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -162,7 +165,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
         Map<String, Object> data = new HashMap<>();
         data.put("status", value);
 
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .document(docId)
                 .update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -274,7 +277,7 @@ public class SingleReportActivity extends FragmentActivity implements OnMapReady
 
     private void setMarker(String wanted_person) {
         firebaseFirestore
-                .collection("wanted_persons")
+                .collection(WANTED_PERSONS)
                 .document(wanted_person)
                 .get()
                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {

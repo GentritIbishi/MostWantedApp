@@ -1,5 +1,8 @@
 package fiek.unipr.mostwantedapp;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -261,7 +264,7 @@ public class RegisterActivity extends AppCompatActivity {
                               String coins,
                               Boolean isEmailVerified) {
         if(checkConnection()){
-            documentReference = firebaseFirestore.collection("users").document(userID);
+            documentReference = firebaseFirestore.collection(USERS).document(userID);
             User user = new User(
                     userID,
                     name,
@@ -335,7 +338,7 @@ public class RegisterActivity extends AppCompatActivity {
     public static String getTimeDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";

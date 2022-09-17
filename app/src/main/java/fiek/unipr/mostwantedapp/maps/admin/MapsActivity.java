@@ -4,6 +4,16 @@ import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.ASSIGNED_REPORTS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.ASSIGNED_REPORTS_PDF;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DEFAULT_ZOOM;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DYNAMIC_DOMAIN;
+import static fiek.unipr.mostwantedapp.helpers.Constants.INVESTIGATORS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.REPORTS_ASSIGNED;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
@@ -98,12 +108,9 @@ import fiek.unipr.mostwantedapp.models.ReportAssignedUser;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private static final String DYNAMIC_DOMAIN = "https://fiek.page.link";
     private static final int PERMISSION_REQUEST_CODE = 200;
-    private static final float DEFAULT_ZOOM = 15f;
-    private static final String USER_COLLECTION = "users";
     private static final String NO_LOCATION_REPORT = "";
-    private static final String ASSIGNED_REPORTS_COLLECTION = "assigned_reports";
+
     private String fullName, status, urlOfProfile, uID,
             last_seen_address, first_address, second_address, third_address, forth_address,
             urlOfPdfUploaded, date, shortUrl;
@@ -193,7 +200,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 else {
                     try {
 
-                        CollectionReference collRef = firebaseFirestore.collection("assigned_reports");
+                        CollectionReference collRef = firebaseFirestore.collection(ASSIGNED_REPORTS);
                         String reportAssigned_id = collRef.document().getId();
 
                         assignedReport(getApplicationContext(), reportAssigned_id, last_seen_latitude, last_seen_longitude,
@@ -232,7 +239,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setInvestigatorInArray() {
-        firebaseFirestore.collection("investigators")
+        firebaseFirestore.collection(INVESTIGATORS)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -291,7 +298,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void setLocations(String fullName) {
         //ky function i merr locations_reports te wanted person qe nuk jon equal me latest latitude
         // limit 4
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereEqualTo("wanted_person", fullName)
                 .orderBy("date_time", Query.Direction.DESCENDING)
                 .limit(5)
@@ -543,7 +550,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 ,last_seen_address, first_address, second_address, third_address, forth_address, date);
 
 
-        firebaseFirestore.collection("assigned_reports").document(reportAssigned_id).set(reportAssigned).addOnSuccessListener(new OnSuccessListener<Void>() {
+        firebaseFirestore.collection(ASSIGNED_REPORTS).document(reportAssigned_id).set(reportAssigned).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(ctx, R.string.report_assigned_successfully, Toast.LENGTH_SHORT).show();
@@ -577,7 +584,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static String getTimeDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";
@@ -586,7 +593,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void uploadPDFtoFirebase(Uri pdfUri, String reportAssigned_id) {
         //upload image to storage in firebase
-        StorageReference profRef = storageReference.child("assigned_reports/"+firebaseAuth.getCurrentUser().getUid()+"/"+fullName+"/"+reportAssigned_id+"/assign_report.pdf");
+        StorageReference profRef = storageReference.child(ASSIGNED_REPORTS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+fullName+"/"+reportAssigned_id+"/"+ASSIGNED_REPORTS_PDF);
         profRef.putFile(pdfUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -597,7 +604,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         urlOfPdfUploaded = uri.toString();
                         setShortUrl(uri);
                         saveReportUrlToUserCollection(reportAssigned_id, urlOfPdfUploaded);
-                        saveReportUrlToReportCollection(reportAssigned_id, assigned_report_doc, firebaseFirestore, urlOfPdfUploaded, ASSIGNED_REPORTS_COLLECTION);
+                        saveReportUrlToReportCollection(reportAssigned_id, assigned_report_doc, firebaseFirestore, urlOfPdfUploaded, ASSIGNED_REPORTS);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -651,9 +658,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void saveReportUrlToUserCollection(String reportAssigned_id, String urlOfPdfUploaded) {
         ReportAssignedUser reportAssignedUser = new ReportAssignedUser(reportAssigned_id, urlOfPdfUploaded);
 
-        firebaseFirestore.collection("users")
+        firebaseFirestore.collection(USERS)
                         .document(firebaseAuth.getUid())
-                                .collection("reports_assigned")
+                                .collection(REPORTS_ASSIGNED)
                                         .document(reportAssigned_id)
                                                 .set(reportAssignedUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

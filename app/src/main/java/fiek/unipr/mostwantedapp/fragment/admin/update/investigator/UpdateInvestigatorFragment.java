@@ -1,5 +1,11 @@
 package fiek.unipr.mostwantedapp.fragment.admin.update.investigator;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.AGE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.CM;
+import static fiek.unipr.mostwantedapp.helpers.Constants.INVESTIGATORS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.KG;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -45,9 +51,6 @@ import fiek.unipr.mostwantedapp.models.Investigator;
 public class UpdateInvestigatorFragment extends Fragment {
 
     private View update_investigator_view;
-    public static final String AGE = "AGE";
-    public static final String KG = "KG";
-    public static final String CM = "CM";
     private CircleImageView update_investigator_imageOfProfile;
     private Button update_investigator_btnUploadNewPicture, update_investigator_btnDeletePhoto, update_investigator_btnSaveChanges;
     private ProgressBar update_investigator_uploadProgressBar, update_investigator_saveChangesProgressBar;
@@ -218,7 +221,7 @@ public class UpdateInvestigatorFragment extends Fragment {
                 new_height,
                 new_weight
         );
-        firebaseFirestore.collection("investigators")
+        firebaseFirestore.collection(INVESTIGATORS)
                 .document(investigator_id)
                 .set(investigator, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -238,7 +241,7 @@ public class UpdateInvestigatorFragment extends Fragment {
     private void uploadImageToFirebase(Uri imageUri) {
         update_investigator_uploadProgressBar.setVisibility(View.VISIBLE);
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child("investigators/"+ investigator_id +"/profile.jpg");
+        StorageReference fileRef = storageReference.child(INVESTIGATORS+"/"+ investigator_id +"/"+PROFILE_PICTURE);
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -274,7 +277,7 @@ public class UpdateInvestigatorFragment extends Fragment {
     }
 
     private void deletePhoto() {
-        StorageReference fileRef = storageReference.child("investigators/"+ investigator_id +"/profile.jpg");
+        StorageReference fileRef = storageReference.child(INVESTIGATORS+"/"+ investigator_id +"/"+PROFILE_PICTURE);
         fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -292,7 +295,7 @@ public class UpdateInvestigatorFragment extends Fragment {
     }
 
     private void refreshDataFromFirebase() {
-        firebaseFirestore.collection("investigators").document(investigator_id)
+        firebaseFirestore.collection(INVESTIGATORS).document(investigator_id)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -355,7 +358,7 @@ public class UpdateInvestigatorFragment extends Fragment {
 
     private void loadImage() {
         update_investigator_uploadProgressBar.setVisibility(View.VISIBLE);
-        StorageReference profileRef = storageReference.child("investigators/"+ investigator_id +"/profile.jpg");
+        StorageReference profileRef = storageReference.child(INVESTIGATORS+"/"+ investigator_id +"/"+PROFILE_PICTURE);
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {

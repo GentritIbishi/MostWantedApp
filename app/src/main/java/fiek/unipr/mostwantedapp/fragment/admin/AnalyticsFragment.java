@@ -1,5 +1,17 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.helpers.Constants.FAKE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.FEMALE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.INVESTIGATORS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.MALE;
+import static fiek.unipr.mostwantedapp.helpers.Constants.UNVERIFIED;
+import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.VERIFIED;
+import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -64,24 +76,13 @@ import fiek.unipr.mostwantedapp.helpers.CheckInternet;
 
 public class AnalyticsFragment extends Fragment {
 
-    private static String DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm:ss";
-    private static String DATE_FORMAT = "dd-MM-yyyy";
     private View admin_profile_dashboard_view;
     private PieChart admin_pieChart;
-    private BarChart barChartGender;
-    private ArrayList barArraylist;
     private PieChart wp_gender_statistic_pieChart, inv_gender_statistic_pieChart, user_gender_statistic_pieChart;
     private TextView tv_num_report_verified, tv_num_report_unverified, tv_num_report_fake, tv_gradeOfUser,
             tv_num_total_investigators, tv_num_total_person, tv_num_total_users, tv_num_location_reports,
             tv_percent_today, tv_analytic_today, tv_percent_weekly, tv_analytic_weekly;
     private ImageView imageTrendToday, imageTrendWeekly;
-
-    public static final String VERIFIED = "VERIFIED";
-    public static final String UNVERIFIED = "UNVERIFIED";
-    public static final String FAKE = "FAKE";
-    public static final String ANONYMOUS = "ANONYMOUS";
-    public static final String MALE = "MALE";
-    public static final String FEMALE = "FEMALE";
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -94,9 +95,7 @@ public class AnalyticsFragment extends Fragment {
     private String fullName, grade;
     private String[] gender = {"MALE", "FEMALE"};
 
-    public AnalyticsFragment() {
-        // Required empty public constructor
-    }
+    public AnalyticsFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -197,7 +196,7 @@ public class AnalyticsFragment extends Fragment {
     //function that count all locations_reports: VERIFIED, UNVERIFIED, FAKE
     private void setPieChart() {
         if(checkConnection()) {
-            firebaseFirestore.collection("locations_reports")
+            firebaseFirestore.collection(LOCATION_REPORTS)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
@@ -297,7 +296,7 @@ public class AnalyticsFragment extends Fragment {
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
-            firebaseFirestore.collection("users")
+            firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -315,7 +314,7 @@ public class AnalyticsFragment extends Fragment {
         String date = getDate();
         String start = date+" "+"00:00:00";
         String end = date+" "+"23:59:59";
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThan("date_time", start)
                 .whereLessThan("date_time", end)
                 .get()
@@ -338,7 +337,7 @@ public class AnalyticsFragment extends Fragment {
         String yesterday = getYesterday();
         String start = yesterday+" "+"00:00:00";
         String end = yesterday+" "+"23:59:59";
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThan("date_time", start)
                 .whereLessThan("date_time", end)
                 .orderBy("date_time", Query.Direction.DESCENDING)
@@ -350,7 +349,7 @@ public class AnalyticsFragment extends Fragment {
                             //sa reporte kan qen yesterday edhe me krahasu me today edhe me qit perqindjen
                             int yesterdayReports = task.getResult().size();
 
-                            firebaseFirestore.collection("locations_reports")
+                            firebaseFirestore.collection(LOCATION_REPORTS)
                                     .whereGreaterThan("date_time", start_today)
                                     .whereLessThan("date_time", end_today)
                                     .orderBy("date_time", Query.Direction.DESCENDING)
@@ -392,7 +391,7 @@ public class AnalyticsFragment extends Fragment {
     private void getAndSetTotalReportForOneWeek() {
         String start_thisWeek = getFirstDayOfThisWeek()+" "+"00:00:00";
 
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThanOrEqualTo("date_time", start_thisWeek)
                 .orderBy("date_time")
                 .get()
@@ -414,7 +413,7 @@ public class AnalyticsFragment extends Fragment {
         String start_lastWeek = getFirstDayOfLastWeek()+" "+"00:00:00";
         String start_thisWeek = getFirstDayOfThisWeek()+" "+"00:00:00";
 
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThanOrEqualTo("date_time", start_lastWeek)
                 .orderBy("date_time", Query.Direction.DESCENDING)
                 .get()
@@ -423,7 +422,7 @@ public class AnalyticsFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
                             int lastWeekReports = task.getResult().size();
-                            firebaseFirestore.collection("locations_reports")
+                            firebaseFirestore.collection(LOCATION_REPORTS)
                                     .whereGreaterThanOrEqualTo("date_time", start_thisWeek)
                                     .orderBy("date_time", Query.Direction.DESCENDING)
                                     .get()
@@ -492,7 +491,7 @@ public class AnalyticsFragment extends Fragment {
             int year = calendar.get(Calendar.YEAR);
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             int month = calendar.get(Calendar.MONTH)+1;
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE);
             sfd.setTimeZone(calendar.getTimeZone());
             return sfd.format(calendar.getTime());
         } catch(Exception e) {
@@ -509,7 +508,7 @@ public class AnalyticsFragment extends Fragment {
 
     private void getGrade(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
-            firebaseFirestore.collection("users")
+            firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
@@ -556,7 +555,7 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void funAnalyticsGenderForWantedPerson() {
-        firebaseFirestore.collection("wanted_persons")
+        firebaseFirestore.collection(WANTED_PERSONS)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -625,7 +624,7 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void funAnalyticsGenderForInvestigators() {
-        firebaseFirestore.collection("investigators")
+        firebaseFirestore.collection(INVESTIGATORS)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -694,7 +693,7 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void funAnalyticsGenderForUsers() {
-        firebaseFirestore.collection("users")
+        firebaseFirestore.collection(USERS)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -763,7 +762,7 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void setNumberOfLocationsReports() {
-        firebaseFirestore.collection("locations_reports")
+        firebaseFirestore.collection(LOCATION_REPORTS)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -779,7 +778,7 @@ public class AnalyticsFragment extends Fragment {
     public static String getTimeDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
             return sfd.format(netDate);
         } catch(Exception e) {
             return "date";
@@ -789,29 +788,8 @@ public class AnalyticsFragment extends Fragment {
     public static String getDate() { // without parameter argument
         try{
             Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE, Locale.getDefault());
             return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    public static String getLastMonthDate() { // without parameter argument
-        try{
-            LocalDate now = LocalDate.now(); // 2015-11-24
-            LocalDate earlier = now.minusMonths(1); // 2015-10-24
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-            return sfd.format(earlier);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    public static String getThisMonth() { // without parameter argument
-        try{
-            LocalDate now = LocalDate.now(); // 2015-11-24
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-            return sfd.format(now);
         } catch(Exception e) {
             return "date";
         }
@@ -825,29 +803,15 @@ public class AnalyticsFragment extends Fragment {
 
     public static String getYesterday() { // without parameter argument
         try{
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE, Locale.getDefault());
             return sfd.format(yesterday());
         } catch(Exception e) {
             return "date";
         }
     }
 
-    public static String getCalculatedDate(String date,String dateFormat, int days) {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat s = new SimpleDateFormat(dateFormat);
-        if (!date.isEmpty()) {
-            try {
-                cal.setTime(s.parse(date));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-        cal.add(Calendar.DAY_OF_YEAR, days);
-        return s.format(new Date(cal.getTimeInMillis()));
-    }
-
     private void getAndSetTotalUsers() {
-        firebaseFirestore.collection("users")
+        firebaseFirestore.collection(USERS)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -864,7 +828,7 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void getAndSetTotalInvestigators() {
-        firebaseFirestore.collection("investigators")
+        firebaseFirestore.collection(INVESTIGATORS)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -881,7 +845,7 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void getAndSetTotalPerson() {
-        firebaseFirestore.collection("wanted_persons")
+        firebaseFirestore.collection(WANTED_PERSONS)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override

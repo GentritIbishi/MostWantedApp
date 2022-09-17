@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.adapter;
+package fiek.unipr.mostwantedapp.adapter.gallery;
 
 import android.content.Context;
 import android.graphics.Bitmap;

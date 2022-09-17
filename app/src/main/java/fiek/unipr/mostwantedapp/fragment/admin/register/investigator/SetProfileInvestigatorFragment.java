@@ -1,5 +1,8 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.investigator;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.INVESTIGATORS;
+import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
@@ -82,7 +85,7 @@ public class SetProfileInvestigatorFragment extends Fragment {
         bundle = getArguments();
         getAndSetFromBundle(bundle);
 
-        StorageReference profileRef = storageReference.child("investigators/"+ investigator_id +"/profile.jpg");
+        StorageReference profileRef = storageReference.child(INVESTIGATORS+"/"+ investigator_id +"/"+PROFILE_PICTURE);
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -133,7 +136,7 @@ public class SetProfileInvestigatorFragment extends Fragment {
     private void uploadImageToFirebase(Uri imageUri) {
 
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child("investigators/"+ investigator_id +"/profile.jpg");
+        StorageReference fileRef = storageReference.child(INVESTIGATORS+"/"+ investigator_id +"/"+PROFILE_PICTURE);
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -141,7 +144,7 @@ public class SetProfileInvestigatorFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(investigator_ProfileView);
-                        DocumentReference docRef = firebaseFirestore.collection("investigators").document(investigator_id);
+                        DocumentReference docRef = firebaseFirestore.collection(INVESTIGATORS).document(investigator_id);
                         docRef.update("urlOfProfile", uri.toString());
                         investigator_tv_addprofile.setText(R.string.profile_picture_added);
                         new Handler().postDelayed(new Runnable() {
