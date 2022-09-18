@@ -203,39 +203,111 @@ public class UpdateInvestigatorFragment extends Fragment {
         String new_weight = update_investigator_et_weight_autocomplete.getText().toString();
         String new_phy_appearance = update_investigator_et_phy_appearance_autocomplete.getText().toString();
 
-        Investigator investigator = new Investigator(
-                investigator_id,
-                new_firstName,
-                new_lastName,
-                new_parentName,
-                new_fullName,
-                new_birthday,
-                new_address,
-                new_eyeColor,
-                new_hairColor,
-                new_phy_appearance,
-                urlOfProfile,
-                registration_date,
-                new_age,
-                new_gender,
-                new_height,
-                new_weight
-        );
-        firebaseFirestore.collection(INVESTIGATORS)
-                .document(investigator_id)
-                .set(investigator, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-                        Fragment fragment = new UpdateInvestigatorListFragment();
-                        loadFragment(fragment);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        if (new_firstName.isEmpty()) {
+            update_investigator_et_firstName.setError(getText(R.string.error_first_name_required));
+            update_investigator_et_firstName.requestFocus();
+            return;
+        }
+
+        else if (new_lastName.isEmpty()) {
+            update_investigator_et_lastName.setError(getText(R.string.error_last_name_required));
+            update_investigator_et_lastName.requestFocus();
+            return;
+        }
+
+        else if (new_parentName.isEmpty()) {
+            update_investigator_et_parentName.setError(getText(R.string.error_parent_name_required));
+            update_investigator_et_parentName.requestFocus();
+            return;
+        }
+
+        else if (new_address.isEmpty()) {
+            update_investigator_etAddress.setError(getText(R.string.error_address_required));
+            update_investigator_etAddress.requestFocus();
+            return;
+        }
+
+        else if (new_birthday.isEmpty()) {
+            update_investigator_et_birthday.setError(getText(R.string.error_birthday_required));
+            update_investigator_et_birthday.requestFocus();
+            return;
+        }
+
+        else if (new_age.isEmpty()) {
+            update_investigator_et_age_autocomplete.setError(getText(R.string.error_age_required));
+            update_investigator_et_age_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_gender.isEmpty()) {
+            update_investigator_et_gender_autocomplete.setError(getText(R.string.error_gender_required));
+            update_investigator_et_gender_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_height.isEmpty()) {
+            update_investigator_et_height_autocomplete.setError(getText(R.string.error_height_required));
+            update_investigator_et_height_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_weight.isEmpty()) {
+            update_investigator_et_weight_autocomplete.setError(getText(R.string.error_weight_required));
+            update_investigator_et_weight_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_eyeColor.isEmpty()) {
+            update_investigator_et_eye_color_autocomplete.setError(getText(R.string.error_eyeColor_required));
+            update_investigator_et_eye_color_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_eyeColor.isEmpty()) {
+            update_investigator_et_eye_color_autocomplete.setError(getText(R.string.error_hairColor_required));
+            update_investigator_et_eye_color_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_phy_appearance.isEmpty()) {
+            update_investigator_et_phy_appearance_autocomplete.setError(getText(R.string.error_phy_appearance_required));
+            update_investigator_et_phy_appearance_autocomplete.requestFocus();
+            return;
+        }else {
+            Investigator investigator = new Investigator(
+                    investigator_id,
+                    new_firstName,
+                    new_lastName,
+                    new_parentName,
+                    new_fullName,
+                    new_birthday,
+                    new_address,
+                    new_eyeColor,
+                    new_hairColor,
+                    new_phy_appearance,
+                    urlOfProfile,
+                    registration_date,
+                    new_age,
+                    new_gender,
+                    new_height,
+                    new_weight
+            );
+            firebaseFirestore.collection(INVESTIGATORS)
+                    .document(investigator_id)
+                    .set(investigator, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                            Fragment fragment = new UpdateInvestigatorListFragment();
+                            loadFragment(fragment);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     private void uploadImageToFirebase(Uri imageUri) {

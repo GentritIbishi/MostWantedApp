@@ -21,6 +21,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -238,45 +239,134 @@ public class UpdatePersonFragment extends Fragment {
         String new_prize = update_person_et_prize_autocomplete.getText().toString();
         String new_status = update_person_et_status_autocomplete.getText().toString();
 
-        Person person = new Person(
-                personId,
-                new_firstName,
-                new_lastName,
-                new_parentName,
-                new_fullName,
-                new_birthday,
-                new_address,
-                new_eyeColor,
-                new_hairColor,
-                new_phy_appearance,
-                urlOfProfile,
-                new_status,
-                new_prize,
-                registration_date,
-                new_age,
-                new_gender,
-                new_height,
-                new_weight,
-                new_acts,
-                longitude,
-                latitude
-        );
+        if (new_firstName.isEmpty()) {
+            update_person_et_firstName.setError(getText(R.string.error_first_name_required));
+            update_person_et_firstName.requestFocus();
+            return;
+        }
 
-        firebaseFirestore.collection(WANTED_PERSONS)
-                .document(personId)
-                .set(person, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-                        Fragment fragment = new UpdatePersonListFragment();
-                        loadFragment(fragment);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        else if (new_lastName.isEmpty()) {
+            update_person_et_lastName.setError(getText(R.string.error_last_name_required));
+            update_person_et_lastName.requestFocus();
+            return;
+        }
+
+        else if (new_parentName.isEmpty()) {
+            update_person_et_parentName.setError(getText(R.string.error_parent_name_required));
+            update_person_et_parentName.requestFocus();
+            return;
+        }
+
+        else if (new_birthday.isEmpty()) {
+            update_person_et_birthday.setError(getText(R.string.error_birthday_required));
+            update_person_et_birthday.requestFocus();
+            return;
+        }
+
+        else if (new_address.isEmpty()) {
+            update_person_etAddress.setError(getText(R.string.error_address_required));
+            update_person_etAddress.requestFocus();
+            return;
+        }
+
+        else if (new_age.isEmpty()) {
+            update_person_et_age_autocomplete.setError(getText(R.string.error_age_required));
+            update_person_et_age_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (TextUtils.isEmpty(new_gender)) {
+            update_person_et_gender_autocomplete.setError(getText(R.string.error_gender_required));
+            update_person_et_gender_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_height.isEmpty()) {
+            update_person_et_height_autocomplete.setError(getText(R.string.error_height_required));
+            update_person_et_height_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_weight.isEmpty()) {
+            update_person_et_weight_autocomplete.setError(getText(R.string.error_weight_required));
+            update_person_et_weight_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_eyeColor.isEmpty()) {
+            update_person_et_eye_color_autocomplete.setError(getText(R.string.error_eyeColor_required));
+            update_person_et_eye_color_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_hairColor.isEmpty()) {
+            update_person_et_hair_color_autocomplete.setError(getText(R.string.error_hairColor_required));
+            update_person_et_hair_color_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_phy_appearance.isEmpty()) {
+            update_person_et_phy_appearance_autocomplete.setError(getText(R.string.error_phy_appearance_required));
+            update_person_et_phy_appearance_autocomplete.requestFocus();
+            return;
+        }
+
+        else if (new_acts.isEmpty()) {
+            update_person_et_acts_multiAutocomplete.setError(getText(R.string.error_acts_required));
+            update_person_et_acts_multiAutocomplete.requestFocus();
+            return;
+        }
+
+        else  if (new_status.isEmpty()) {
+            update_person_et_status_autocomplete.setError(getText(R.string.error_status_required));
+            update_person_et_status_autocomplete.requestFocus();
+            return;
+        }
+        else if (new_prize.isEmpty()) {
+            update_person_et_prize_autocomplete.setError(getText(R.string.error_prize_required));
+            update_person_et_prize_autocomplete.requestFocus();
+            return;
+        }else {
+            Person person = new Person(
+                    personId,
+                    new_firstName,
+                    new_lastName,
+                    new_parentName,
+                    new_fullName,
+                    new_birthday,
+                    new_address,
+                    new_eyeColor,
+                    new_hairColor,
+                    new_phy_appearance,
+                    urlOfProfile,
+                    new_status,
+                    new_prize,
+                    registration_date,
+                    new_age,
+                    new_gender,
+                    new_height,
+                    new_weight,
+                    new_acts,
+                    longitude,
+                    latitude
+            );
+
+            firebaseFirestore.collection(WANTED_PERSONS)
+                    .document(personId)
+                    .set(person, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                            Fragment fragment = new UpdatePersonListFragment();
+                            loadFragment(fragment);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     private void uploadImageToFirebase(Uri imageUri) {

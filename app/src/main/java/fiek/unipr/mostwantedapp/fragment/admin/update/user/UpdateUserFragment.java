@@ -18,6 +18,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -410,40 +411,76 @@ public class UpdateUserFragment extends Fragment {
         String new_password = update_user_etPasswordToUser.getText().toString();
         String new_balance = update_user_et_balance_autocomplete.getText().toString();
         String new_coins = update_user_et_coins_autocomplete.getText().toString();
-        User user = new User(
-                userID,
-                new_name,
-                new_lastname,
-                new_fullName,
-                new_address,
-                new_email,
-                new_ParentName,
-                new_gender,
-                new_role,
-                new_phone,
-                new_personal_number,
-                register_date_time,
-                new_grade,
-                new_password,
-                urlOfProfile,
-                new_balance,
-                new_coins,
-                emailVerified);
-        firebaseFirestore.collection(USERS)
-                .document(userID)
-                .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-                        Fragment fragment = new UpdateUserListFragment();
-                        loadFragment(fragment);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+
+        if(TextUtils.isEmpty(new_fullName)){
+            update_user_et_fullName.setError(getText(R.string.error_fullname_required));
+            update_user_et_fullName.requestFocus();
+        } else if(TextUtils.isEmpty(new_personal_number)){
+            update_user_etNumPersonal.setError(getText(R.string.error_number_personal_required));
+            update_user_etNumPersonal.requestFocus();
+        }else if(new_personal_number.length()>10){
+            update_user_etNumPersonal.setError(getText(R.string.error_number_personal_is_ten_digit));
+            update_user_etNumPersonal.requestFocus();
+        }else if(new_personal_number.length()<10){
+            update_user_etNumPersonal.setError(getText(R.string.error_number_personal_less_than_ten_digits));
+            update_user_etNumPersonal.requestFocus();
+        }else if(TextUtils.isEmpty(new_phone)){
+            update_user_etPhone.setError(getText(R.string.error_phone_required));
+            update_user_etPhone.requestFocus();
+        }else if(TextUtils.isEmpty(new_address)){
+            update_user_etAddress.setError(getText(R.string.error_address_required));
+            update_user_etAddress.requestFocus();
+        }else if(TextUtils.isEmpty(new_email)){
+            update_user_etEmailToUser.setError(getText(R.string.error_email_required));
+            update_user_etEmailToUser.requestFocus();
+        }else if(!email.matches("^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
+            update_user_etEmailToUser.setError(getText(R.string.error_validate_email));
+            update_user_etEmailToUser.requestFocus();
+        }else if(!new_password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")){
+            update_user_etPasswordToUser.setError(getText(R.string.error_password_weak));
+            update_user_etPasswordToUser.requestFocus();
+        } else if(TextUtils.isEmpty(new_password)){
+            update_user_etPasswordToUser.setError(getText(R.string.error_password_required));
+            update_user_etPasswordToUser.requestFocus();
+        }else if (TextUtils.isEmpty(new_gender)) {
+            update_user_et_gender.setError(getText(R.string.error_gender_required));
+            update_user_et_gender.requestFocus();
+        }else {
+            User user = new User(
+                    userID,
+                    new_name,
+                    new_lastname,
+                    new_fullName,
+                    new_address,
+                    new_email,
+                    new_ParentName,
+                    new_gender,
+                    new_role,
+                    new_phone,
+                    new_personal_number,
+                    register_date_time,
+                    new_grade,
+                    new_password,
+                    urlOfProfile,
+                    new_balance,
+                    new_coins,
+                    emailVerified);
+            firebaseFirestore.collection(USERS)
+                    .document(userID)
+                    .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            Toast.makeText(getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                            Fragment fragment = new UpdateUserListFragment();
+                            loadFragment(fragment);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     private void refreshDataFromFirebase() {
