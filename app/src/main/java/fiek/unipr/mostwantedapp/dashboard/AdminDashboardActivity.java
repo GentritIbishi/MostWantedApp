@@ -44,7 +44,7 @@ import fiek.unipr.mostwantedapp.fragment.admin.search.SearchLocationReportsFragm
 import fiek.unipr.mostwantedapp.fragment.admin.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.HelpFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
-import fiek.unipr.mostwantedapp.fragment.admin.notification.NotificationFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.NotificationFragment;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.SettingsFragment;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;

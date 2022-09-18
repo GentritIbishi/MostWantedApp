@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -27,16 +28,14 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.report.location.ManageLocationReportListAdapter;
+import fiek.unipr.mostwantedapp.fragment.admin.SingleReportFragment;
 import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.maps.report.SingleReportActivity;
 import fiek.unipr.mostwantedapp.models.Report;
-import fiek.unipr.mostwantedapp.models.ReportStatus;
 
 public class SearchManageLocationReportsFragment extends Fragment implements RecyclerViewInterface {
 
@@ -188,7 +187,7 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
 
     @Override
     public void onItemClick(int position) {
-        Intent intent=new Intent(getContext(), SingleReportActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        SingleReportFragment singleReportFragment = new SingleReportFragment();
         Bundle viewBundle = new Bundle();
         viewBundle.putString("date_time", reportArrayList.get(position).getDate_time());
         viewBundle.putString("title", reportArrayList.get(position).getTitle());
@@ -221,8 +220,13 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
 
             viewBundle.putStringArray("images", arrImages);
         }
+        singleReportFragment.setArguments(viewBundle);
+        loadFragment(singleReportFragment);
+    }
 
-        intent.putExtras(viewBundle);
-        startActivity(intent);
+    private void loadFragment(Fragment fragment) {
+        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.admin_fragmentContainer, fragment)
+                .commit();
     }
 }

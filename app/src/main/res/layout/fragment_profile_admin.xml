@@ -17,7 +17,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="15dp"
-                        android:layout_toRightOf="@id/imageOfProfile"
+                        android:layout_toEndOf="@id/imageOfProfile"
                         android:fontFamily="@font/open_sans_bold"
                         android:padding="16dp"
                         android:text="@string/profile_picture"
@@ -50,7 +50,7 @@
                         android:layout_centerInParent="true"
                         android:layout_marginStart="30dp"
                         android:layout_marginEnd="15dp"
-                        android:layout_toRightOf="@id/admin_imageOfProfile">
+                        android:layout_toEndOf="@id/admin_imageOfProfile">
 
                         <Button
                             android:id="@+id/admin_btnUploadNewPicture"
@@ -61,7 +61,7 @@
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="3dp"
                             android:layout_marginBottom="8dp"
-                            android:layout_toRightOf="@id/admin_imageOfProfile"
+                            android:layout_toEndOf="@id/admin_imageOfProfile"
                             android:background="@drawable/button"
                             android:padding="10dp"
                             android:text="@string/upload"
@@ -95,7 +95,7 @@
                         android:id="@+id/admin_imageOfProfile"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:layout_marginLeft="15dp"
+                        android:layout_marginStart="15dp"
                         android:layout_marginTop="35dp"
                         android:src="@drawable/ic_profile_picture_default" />
 
@@ -601,8 +601,11 @@
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
+                            android:layout_marginEnd="16dp"
                             android:elevation="6dp"
+                            android:enabled="false"
                             android:hint="@string/date_time_registration"
                             android:textColorHint="@color/gray"
                             android:textDirection="firstStrong"
@@ -611,11 +614,10 @@
                             app:endIconMode="clear_text"
                             app:helperTextTextColor="@color/gray"
                             app:hintTextColor="@color/gray"
-                            android:enabled="false"
-                            app:startIconDrawable="@drawable/ic_baseline_date_range_24"
-                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_admin_coins_layout"
-                            app:layout_constraintStart_toStartOf="@+id/autocomplete_admin_coins_layout"
-                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_admin_coins_layout">
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_admin_coins_layout"
+                            app:startIconDrawable="@drawable/ic_baseline_date_range_24">
 
                             <com.google.android.material.textfield.TextInputEditText
                                 android:id="@+id/admin_etDateRegistration"
@@ -638,19 +640,28 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@+id/admin_constraintField"
-                        android:layout_marginTop="10dp">
+                        android:layout_alignStart="@+id/admin_constraintField"
+                        android:layout_alignEnd="@+id/admin_constraintField"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="0dp">
 
                         <Button
                             android:id="@+id/admin_btnSaveChanges"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/admin_et_email_account"
-                            android:layout_marginStart="15dp"
-                            android:layout_marginTop="10dp"
-                            android:layout_marginEnd="15dp"
+                            android:layout_marginStart="24dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginEnd="24dp"
+                            android:layout_marginBottom="8dp"
                             android:background="@drawable/button"
                             android:text="@string/save_changes"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/white"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
 
                         <ProgressBar
                             android:id="@+id/admin_saveChangesProgressBar"

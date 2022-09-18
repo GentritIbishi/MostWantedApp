@@ -482,6 +482,7 @@
     <string name="error_investigator_failed_to_delete">Failed to delete investigator!</string>
     <string name="this_report_is_deleted_successfully">This report deleted successfully!</string>
     <string name="error_report_failed_to_delete">Report failed to delete!</string>
+    <string name="no_data">No Data</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

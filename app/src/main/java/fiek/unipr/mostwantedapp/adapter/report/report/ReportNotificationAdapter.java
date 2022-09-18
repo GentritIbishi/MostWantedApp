@@ -57,15 +57,15 @@ public class ReportNotificationAdapter extends RecyclerView.Adapter<ReportNotifi
 
             informer_person = holder.user_report_name.getText().toString();
 
-            if (informer_person != null && informer_person.equals(ANONYMOUS)){
+            if (!informer_person.isEmpty() && informer_person.equals(ANONYMOUS)){
 
                 holder.user_reported_image.setImageResource(R.drawable.ic_anonymous);
 
-            }else if(informer_person != null && informer_person.startsWith("+")){
+            }else if(!informer_person.isEmpty() && informer_person.startsWith("+")){
 
                 holder.user_reported_image.setImageResource(R.drawable.ic_phone_login);
 
-            }else if(!informer_person.equals(ANONYMOUS) && !informer_person.startsWith("+")){
+            }else if(!informer_person.matches(ANONYMOUS) && !informer_person.startsWith("+")){
                 Glide.with(context)
                         .load(reportList.get(position).getInformer_person_urlOfProfile())
                         .listener(new RequestListener<Drawable>() {

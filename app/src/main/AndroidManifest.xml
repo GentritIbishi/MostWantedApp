@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fiek.unipr.mostwantedapp">
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -26,9 +27,7 @@
         android:roundIcon="@drawable/ic_app"
         android:supportsRtl="true"
         android:theme="@style/Theme.MostWantedApp">
-        <activity
-            android:name=".SplashActivity"
-            android:exported="false" />
+
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -45,9 +44,8 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".maps.report.SingleReportActivity"
-            android:exported="false"
-            android:label="@string/title_activity_single_report" />
+            android:name=".SplashActivity"
+            android:exported="false" />
         <activity
             android:name=".maps.user.MapsInformerActivity"
             android:exported="false"
