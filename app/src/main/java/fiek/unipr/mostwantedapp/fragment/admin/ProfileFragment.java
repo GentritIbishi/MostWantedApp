@@ -266,15 +266,15 @@ public class ProfileFragment extends Fragment {
     }
 
     private void setBalanceArray(String euro) {
-        BALANCE_ARRAY = new String[1000000];
-        for(int i=0; i<1000000; i++) {
+        BALANCE_ARRAY = new String[50000];
+        for(int i=0; i<50000; i++) {
             BALANCE_ARRAY[i] = i+" "+euro;
         }
     }
 
     private void setCoinsArray(String coin) {
-        COINS_ARRAY = new String[1000000];
-        for(int i=0; i<1000000; i++) {
+        COINS_ARRAY = new String[50000];
+        for(int i=0; i<50000; i++) {
             COINS_ARRAY[i] = (i+5)+" "+coin;
         }
     }
