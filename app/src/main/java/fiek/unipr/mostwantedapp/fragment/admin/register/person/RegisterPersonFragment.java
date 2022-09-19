@@ -224,7 +224,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
         String eyeColor = et_eyeColor.getText().toString().trim();
         String hairColor = et_hairColor.getText().toString().trim();
         String phy_appearance = et_phy_appearance.getText().toString().trim();
-        String act = et_acts.getText().toString().trim();
+        String act = removeLastChar(et_acts.getText().toString().trim());
         // Trafficking in human beings, Narcotics trafficking, Narcotics trafficking, Robbery,
         String[] array = act.split(",");
         List<String> acts = Arrays.asList(array);
@@ -396,6 +396,11 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
                 .replace(R.id.admin_fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private String removeLastChar(String s)
+    {
+        return s.substring(0, s.length() - 1);
     }
 
 }

@@ -1,6 +1,10 @@
 package fiek.unipr.mostwantedapp;
 
+import static fiek.unipr.mostwantedapp.helpers.Constants.BALANCE_DEFAULT;
+import static fiek.unipr.mostwantedapp.helpers.Constants.COINS_DEFAULT;
 import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.helpers.Constants.GRADE_E;
+import static fiek.unipr.mostwantedapp.helpers.Constants.INFORMER_ROLE;
 import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
 
 import androidx.annotation.NonNull;
@@ -97,10 +101,6 @@ public class RegisterActivity extends AppCompatActivity {
                 String email = etEmailToInformer.getText().toString().trim();
                 String password = etPasswordToInformer.getText().toString();
                 String confirm_password = etConfirmPassword.getText().toString();
-                String grade = "E";
-                String role = "Informer";
-                String balance = "0 EURO";
-                String coins = "0 COINS";
                 String urlOfProfile = null;
                 Boolean isEmailVerified = false;
 
@@ -165,21 +165,21 @@ public class RegisterActivity extends AppCompatActivity {
                                         email,
                                         parentName,
                                         gender,
-                                        role,
+                                        INFORMER_ROLE,
                                         phone,
                                         personal_number,
                                         register_date_time,
-                                        grade,
+                                        GRADE_E,
                                         password,
                                         urlOfProfile,
-                                        balance,
-                                        coins,
+                                        BALANCE_DEFAULT,
+                                        COINS_DEFAULT,
                                         isEmailVerified
                                 );
                                 firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Toast.makeText(RegisterActivity.this, R.string.verification_email_sent_to + firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RegisterActivity.this, getApplicationContext().getText(R.string.verification_email_sent_to) +" "+ firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -290,7 +290,7 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onSuccess(Void unused) {
                     ri_progressBar.setVisibility(View.INVISIBLE);
                     bt_Register.setEnabled(true);
-                    Toast.makeText(RegisterActivity.this, getApplicationContext().getText(R.string.this_person_with_this) + " " + fullName + " " + RegisterActivity.this.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getApplicationContext().getText(R.string.this_person_with_this) + " " + fullName + " " + getApplicationContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
                     setEmptyFields();
                     goToSetProfilePicture();
                 }
@@ -299,7 +299,7 @@ public class RegisterActivity extends AppCompatActivity {
                 public void onFailure(@NonNull Exception e) {
                     ri_progressBar.setVisibility(View.INVISIBLE);
                     bt_Register.setEnabled(true);
-                    Toast.makeText(RegisterActivity.this, ""+e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), ""+e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         }else {

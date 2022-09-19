@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +19,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -43,7 +43,7 @@ public class SetProfileUserActivity extends AppCompatActivity {
 
     private CircleImageView circleImageViewUserOutside;
     private ImageView ic_add_user_outside;
-    private TextView tv_addprofile_user_outside;
+    private TextView tv_add_profile_user_outside;
     private ProgressBar progressBarUserOutside;
     private Button btnSkipSetImageOutside;
 
@@ -51,6 +51,7 @@ public class SetProfileUserActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private StorageReference storageReference;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,10 +63,11 @@ public class SetProfileUserActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
         userID = firebaseAuth.getUid();
+        progressDialog = new ProgressDialog(this);
 
         circleImageViewUserOutside = findViewById(R.id.circleImageViewUserOutside);
         ic_add_user_outside = findViewById(R.id.ic_add_user_outside);
-        tv_addprofile_user_outside = findViewById(R.id.tv_addprofile_user_outside);
+        tv_add_profile_user_outside = findViewById(R.id.tv_addprofile_user_outside);
         progressBarUserOutside = findViewById(R.id.progressBarUserOutside);
         btnSkipSetImageOutside = findViewById(R.id.btnSkipSetImageOutside);
 
@@ -88,10 +90,12 @@ public class SetProfileUserActivity extends AppCompatActivity {
         btnSkipSetImageOutside.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv_addprofile_user_outside.setText(R.string.successfully_login_to_new_user);
+                progressDialog.setMessage(getApplicationContext().getText(R.string.successfully_login_to_new_user));
+                progressDialog.show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        progressDialog.dismiss();
                         Intent intent = new Intent(SetProfileUserActivity.this, UserDashboardActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // To clean up all activities
                         startActivity(intent);
@@ -114,6 +118,8 @@ public class SetProfileUserActivity extends AppCompatActivity {
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
+        progressDialog.setMessage(getApplicationContext().getText(R.string.loading));
+        progressDialog.show();
         StorageReference profRef = storageReference.child(USERS+"/" + userID + "/"+PROFILE_PICTURE);
         profRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -121,20 +127,23 @@ public class SetProfileUserActivity extends AppCompatActivity {
                 profRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        progressDialog.show();
                         Picasso.get().load(uri).transform(new CircleTransform()).into(circleImageViewUserOutside);
                         DocumentReference docRef = firebaseFirestore.collection(USERS).document(userID);
                         docRef.update("urlOfProfile", uri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task != null && task.isSuccessful()) {
-                                    tv_addprofile_user_outside.setText(R.string.profile_picture_added);
+                                    progressDialog.setMessage(getApplicationContext().getText(R.string.profile_picture_added));
+                                    tv_add_profile_user_outside.setText(getApplicationContext().getText(R.string.profile_picture_added));
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
                                             progressBarUserOutside.setVisibility(View.GONE);
-                                            tv_addprofile_user_outside.setText(R.string.successfully_login_to_new_user);
+                                            progressDialog.setMessage(getApplicationContext().getText(R.string.successfully_login_to_new_user));
                                             Intent intent = new Intent(SetProfileUserActivity.this, UserDashboardActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // To clean up all activities
+                                            progressDialog.dismiss();
                                             startActivity(intent);
                                         }
                                     }, 4500);
@@ -146,7 +155,13 @@ public class SetProfileUserActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(SetProfileUserActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.setMessage(e.getMessage());
+                                progressDialog.dismiss();
+                            }
+                        }, 4500);
                         progressBarUserOutside.setVisibility(View.GONE);
                     }
                 });
@@ -160,4 +175,11 @@ public class SetProfileUserActivity extends AppCompatActivity {
         super.onBackPressed();
         return;
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        progressDialog.dismiss();
+    }
+
 }

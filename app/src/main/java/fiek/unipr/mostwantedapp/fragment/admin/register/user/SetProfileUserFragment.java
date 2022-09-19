@@ -4,6 +4,7 @@ import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
 import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -41,6 +42,8 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.SetProfileUserActivity;
+import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 
 public class SetProfileUserFragment extends Fragment {
@@ -59,6 +62,7 @@ public class SetProfileUserFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private StorageReference storageReference;
+    private ProgressDialog progressDialog;
 
     private Bundle bundle;
 
@@ -73,6 +77,7 @@ public class SetProfileUserFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
         userID = firebaseAuth.getUid();
+        progressDialog = new ProgressDialog(getContext());
     }
 
     @Override
@@ -108,11 +113,18 @@ public class SetProfileUserFragment extends Fragment {
         btnSkipFragSetProfileUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                tv_addprofile_user.setText(R.string.successfully_login_to_new_user);
-                firebaseAuth.signOut();
-                Intent intent = new Intent(getContext(), LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // To clean up all activities
-                startActivity(intent);
+                progressDialog.setMessage(getContext().getText(R.string.success_redirect_to_login));
+                progressDialog.show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        firebaseAuth.signOut();
+                        Intent intent = new Intent(getContext(), LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // To clean up all activities
+                        progressDialog.dismiss();
+                        startActivity(intent);
+                    }
+                }, 4500);
             }
         });
 
@@ -141,6 +153,8 @@ public class SetProfileUserFragment extends Fragment {
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
+        progressDialog.setMessage(getContext().getText(R.string.loading));
+        progressDialog.show();
         StorageReference profRef = storageReference.child(USERS+"/" + userID + "/"+PROFILE_PICTURE);
         profRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -148,21 +162,24 @@ public class SetProfileUserFragment extends Fragment {
                 profRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
+                        progressDialog.show();
                         Picasso.get().load(uri).transform(new CircleTransform()).into(circleImageViewUser);
                         DocumentReference docRef = firebaseFirestore.collection(USERS).document(userID);
                         docRef.update("urlOfProfile", uri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task != null && task.isSuccessful()) {
+                                    progressDialog.setMessage(getContext().getText(R.string.profile_picture_added));
                                     tv_addprofile_user.setText(R.string.profile_picture_added);
+                                    progressDialog.setMessage(getContext().getText(R.string.success_redirect_to_login));
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
                                             progressBarUser.setVisibility(View.GONE);
-                                            tv_addprofile_user.setText(R.string.successfully_login_to_new_user);
                                             firebaseAuth.signOut();
                                             Intent intent = new Intent(getContext(), LoginActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // To clean up all activities
+                                            progressDialog.dismiss();
                                             startActivity(intent);
                                         }
                                     }, 3000);
@@ -174,7 +191,13 @@ public class SetProfileUserFragment extends Fragment {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.setMessage(e.getMessage());
+                                progressDialog.dismiss();
+                            }
+                        }, 4500);
                         progressBarUser.setVisibility(View.GONE);
                     }
                 });

@@ -153,7 +153,7 @@ public class SetProfilePersonFragment extends Fragment {
                             @Override
                             public void run() {
                                 progressBarPerson.setVisibility(View.GONE);
-                                Fragment fragment = new HomeFragment();
+                                Fragment fragment = new RegisterFragment();
                                 loadFragment(fragment);
                             }
                         }, 5000);

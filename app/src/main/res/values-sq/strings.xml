@@ -473,7 +473,7 @@
     <string name="error_you_need_to_add_photo_for_investigator">You must add photos for this registered investigator!</string>
     <string name="error_you_need_to_add_photo_for_person">You must add photo for this registered person!</string>
     <string name="this_user_with_this">This user with this</string>
-    <string name="successfully_login_to_new_user">Successfully user created, login new user!</string>
+    <string name="successfully_login_to_new_user">Success, redirecting to dashboard...</string>
     <string name="user_is_deleted_successfully">User deleted successfully!</string>
     <string name="error_user_failed_to_delete">Failed to delete this user!</string>
     <string name="person_is_deleted_successfully">Person deleted successfully!</string>
@@ -483,6 +483,8 @@
     <string name="this_report_is_deleted_successfully">This report deleted successfully!</string>
     <string name="error_report_failed_to_delete">Report failed to delete!</string>
     <string name="no_data">No Data</string>
+    <string name="loading">Loading</string>
+    <string name="success_redirect_to_login">Success redirect to login page.</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
