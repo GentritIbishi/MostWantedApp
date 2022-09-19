@@ -32,9 +32,9 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/notification">
+    <PreferenceCategory app:title="@string/notifications">
         <SwitchPreferenceCompat
-            app:key="@string/notification"
+            app:key="@string/notifications"
             app:title="@string/turn_on_notification" />
     </PreferenceCategory>
 

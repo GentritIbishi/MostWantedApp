@@ -26,8 +26,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/notification"
-                    android:textSize="18sp"
+                    android:text="@string/notifications"
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/gray"/>
 

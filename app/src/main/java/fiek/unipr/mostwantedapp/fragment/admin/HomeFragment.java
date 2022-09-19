@@ -165,7 +165,7 @@ public class HomeFragment extends Fragment {
         if(checkContext(getContext()))
         {
             getAndSetTotalReportFor24H();
-            vsYesterday();
+            vsYesterday(getContext());
             getAndSetTotalReportForOneWeek();
             vsWeek(getContext());
             rightNowDateTime.setText(getDate());
@@ -185,7 +185,7 @@ public class HomeFragment extends Fragment {
                         setupPieChart();
                         setPieChart();
                         getAndSetTotalReportFor24H();
-                        vsYesterday();
+                        vsYesterday(getContext());
                         getAndSetTotalReportForOneWeek();
                         vsWeek(getContext());
                     }
@@ -758,7 +758,7 @@ public class HomeFragment extends Fragment {
                 });
     }
 
-    private void vsYesterday() {
+    private void vsYesterday(Context context) {
         String today = getDateRighNow();
         String start_today = today+" "+"00:00:00";
         String end_today = today+" "+"23:59:59";
@@ -795,15 +795,15 @@ public class HomeFragment extends Fragment {
                                                 if(percentage > 0) {
                                                     imageTrendingToday.setImageResource(R.drawable.ic_baseline_trending_up_24);
                                                     tv_percentage_today.setText(percentage+"%");
-                                                    tv_percentage_today.setTextColor(getResources().getColor(R.color.neon_green));
+                                                    tv_percentage_today.setTextColor(context.getResources().getColor(R.color.neon_green));
                                                 }else if(percentage < 0) {
                                                     imageTrendingToday.setImageResource(R.drawable.ic_baseline_trending_down_24);
                                                     tv_percentage_today.setText(percentage+"%");
-                                                    tv_percentage_today.setTextColor(getResources().getColor(R.color.neon_red));
+                                                    tv_percentage_today.setTextColor(context.getResources().getColor(R.color.neon_red));
                                                 }else if(percentage == 0) {
                                                     imageTrendingToday.setImageResource(R.drawable.ic_baseline_trending_flat_24);
                                                     tv_percentage_today.setText(percentage+"%");
-                                                    tv_percentage_today.setTextColor(getResources().getColor(R.color.bluelight));
+                                                    tv_percentage_today.setTextColor(context.getResources().getColor(R.color.bluelight));
                                                 }
                                             }else {
                                                 System.out.println("ERROR INSIDE VS YESTERDAY: "+task.getException());

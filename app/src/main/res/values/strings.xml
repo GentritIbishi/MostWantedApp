@@ -144,7 +144,7 @@
     <string name="skip">Skip</string>
     <string name="set_profile_picture">Set Profile Picture</string>
     <string name="home">Home</string>
-    <string name="notification">Notification</string>
+    <string name="notifications">Notifications</string>
     <string name="likes">Likes</string>
     <string name="please_type_name_like_hint">Please type name like hint with cap words!</string>
     <string name="remember">Remember?</string>
