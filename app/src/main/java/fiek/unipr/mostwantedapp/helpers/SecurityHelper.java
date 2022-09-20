@@ -16,11 +16,11 @@ public class SecurityHelper {
     public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
     private KeySpec ks;
     private SecretKeyFactory skf;
-    private Cipher cipher;
+    private static Cipher cipher;
     byte[] arrayBytes;
     private String myEncryptionKey;
     private String myEncryptionScheme;
-    SecretKey key;
+    static SecretKey key;
 
     public SecurityHelper() throws Exception {
         myEncryptionKey = KEY;
@@ -33,7 +33,7 @@ public class SecurityHelper {
     }
 
 
-    public String encrypt(String unencryptedString) {
+    public static String encrypt(String unencryptedString) {
         String encryptedString = null;
         try {
             cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -47,7 +47,7 @@ public class SecurityHelper {
     }
 
 
-    public String decrypt(String encryptedString) {
+    public static String decrypt(String encryptedString) {
         String decryptedText=null;
         try {
             cipher.init(Cipher.DECRYPT_MODE, key);
@@ -59,20 +59,5 @@ public class SecurityHelper {
         }
         return decryptedText;
     }
-
-
-//    public static void main(String args []) throws Exception
-//    {
-//        SecurityHelper securityHelper = new SecurityHelper();
-//
-//        String target="imparator";
-//        String encrypted=securityHelper.encrypt(target);
-//        String decrypted=securityHelper.decrypt(encrypted);
-//
-//        System.out.println("String To Encrypt: "+ target);
-//        System.out.println("Encrypted String:" + encrypted);
-//        System.out.println("Decrypted String:" + decrypted);
-//
-//    }
 
 }

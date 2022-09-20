@@ -45,20 +45,15 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.nio.charset.StandardCharsets;
-import java.security.GeneralSecurityException;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
-import fiek.unipr.mostwantedapp.helpers.FirebaseScrypt;
 import fiek.unipr.mostwantedapp.helpers.SecurityHelper;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class ProfileFragment extends Fragment {
 
     private View admin_account_fragment_view;
-    private String informer_fullName;
     private Boolean emailVerified;
     private String address, email, fullName, gender, lastname, name, parentName, password, personal_number, phone, grade,
             register_date_time, role, userID, urlOfProfile, balance, coins;
@@ -192,11 +187,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 admin_saveChangesProgressBar.setVisibility(View.VISIBLE);
-                try {
-                    update();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                update();
             }
         });
 
@@ -517,8 +508,7 @@ public class ProfileFragment extends Fragment {
                 });
     }
 
-    private void update() throws Exception {
-        SecurityHelper securityHelper = new SecurityHelper();
+    private void update(){
         String new_name = admin_et_firstName.getText().toString();
         String new_lastname = admin_et_lastName.getText().toString();
         String new_fullName = admin_et_fullName.getText().toString();
@@ -589,7 +579,7 @@ public class ProfileFragment extends Fragment {
             admin_et_gender.setError(getText(R.string.error_gender_required));
             admin_et_gender.requestFocus();
         }else {
-            String hashPassword = securityHelper.encrypt(new_password);
+            String hashPassword = SecurityHelper.encrypt(new_password);
             User user = new User(
                     userID,
                     new_name,
@@ -610,7 +600,7 @@ public class ProfileFragment extends Fragment {
                     new_coins,
                     emailVerified);
             firebaseFirestore.collection(USERS)
-                    .document(firebaseAuth.getUid())
+                    .document(userID)
                     .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
