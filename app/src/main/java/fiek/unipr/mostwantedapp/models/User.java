@@ -15,13 +15,6 @@ public class User {
     public User() {
     }
 
-    public User(String userID, String email, String role, String password) {
-        this.userID = userID;
-        this.email = email;
-        this.role = role;
-        this.password = password;
-    }
-
     public User(String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, String urlOfProfile, String balance, String coins, Boolean isEmailVerified) {
         this.userID = userID;
         this.name = name;
@@ -41,23 +34,6 @@ public class User {
         this.balance = balance;
         this.coins = coins;
         this.isEmailVerified = isEmailVerified;
-    }
-
-    public User(String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String grade, String password, String balance, String coins) {
-        this.name = name;
-        this.lastname = lastname;
-        this.fullName = fullName;
-        this.address = address;
-        this.email = email;
-        this.parentName = parentName;
-        this.gender = gender;
-        this.role = role;
-        this.phone = phone;
-        this.personal_number = personal_number;
-        this.grade = grade;
-        this.password = password;
-        this.balance = balance;
-        this.coins = coins;
     }
 
     public String getUserID() {

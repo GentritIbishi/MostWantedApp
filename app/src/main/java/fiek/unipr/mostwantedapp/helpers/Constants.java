@@ -46,6 +46,7 @@ public class Constants {
     public static final Double LATITUDE_DEFAULT = 42.667542;
     public static final Double LONGITUDE_DEFAULT = 21.166191;
     public static final float DEFAULT_ZOOM = 15f;
+    public static final String KEY = "O9b8jboCKh95zYheMD6Wsc7UViPuFHIJ";
 
     //FIREBASE TABLE NAMES
     public static final String USERS = "users";
@@ -55,13 +56,14 @@ public class Constants {
     public static final String REPORTS_ASSIGNED = "reports_assigned";
     public static final String INVESTIGATORS = "investigators";
     public static final String LOCATION_REPORTS = "location_reports";
-    public static final String LOGIN_USERS = "logins_users";
+    public static final String LOGIN_HISTORY = "loginHistory";
     public static final String NOTIFICATION_ADMIN = "notifications_admin";
     public static final String NOTIFICATION_USER = "notifications_user";
     public static final String PERSONS = "persons";
     public static final String PROFILE_PICTURE = "profile_picture.jpg";
     public static final String DYNAMIC_DOMAIN = "https://fiek.page.link";
 
+    //permissions
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     public static final int PICK_IMAGE = 15;
     public static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
