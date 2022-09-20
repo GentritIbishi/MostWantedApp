@@ -40,6 +40,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
+import fiek.unipr.mostwantedapp.helpers.SecurityHelper;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -89,117 +90,122 @@ public class RegisterActivity extends AppCompatActivity {
         bt_Register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    SecurityHelper securityHelper = new SecurityHelper();
+                    String name = etName.getText().toString().trim();
+                    String lastName = etLastName.getText().toString().trim();
+                    String fullName = name + " "+lastName;
+                    String phone = etPhone.getText().toString().trim();
+                    String address = etAddress.getText().toString().trim();
+                    String personal_number = etPersonalNumber.getText().toString().trim();
+                    String gender = et_gender_user.getText().toString().trim();
+                    String parentName = etParentName.getText().toString().trim();
+                    String email = etEmailToInformer.getText().toString().trim();
+                    String password = etPasswordToInformer.getText().toString();
+                    String confirm_password = etConfirmPassword.getText().toString();
+                    String urlOfProfile = null;
+                    Boolean isEmailVerified = false;
 
-                String name = etName.getText().toString().trim();
-                String lastName = etLastName.getText().toString().trim();
-                String fullName = name + " "+lastName;
-                String phone = etPhone.getText().toString().trim();
-                String address = etAddress.getText().toString().trim();
-                String personal_number = etPersonalNumber.getText().toString().trim();
-                String gender = et_gender_user.getText().toString().trim();
-                String parentName = etParentName.getText().toString().trim();
-                String email = etEmailToInformer.getText().toString().trim();
-                String password = etPasswordToInformer.getText().toString();
-                String confirm_password = etConfirmPassword.getText().toString();
-                String urlOfProfile = null;
-                Boolean isEmailVerified = false;
-
-                if(TextUtils.isEmpty(fullName)){
-                    etName.setError(getText(R.string.error_fullname_required));
-                    etName.requestFocus();
-                } else if(TextUtils.isEmpty(personal_number)){
-                    etPersonalNumber.setError(getText(R.string.error_number_personal_required));
-                    etPersonalNumber.requestFocus();
-                }else if(personal_number.length()>10){
-                    etPersonalNumber.setError(getText(R.string.error_number_personal_is_ten_digit));
-                    etPersonalNumber.requestFocus();
-                }else if(personal_number.length()<10){
-                    etPersonalNumber.setError(getText(R.string.error_number_personal_less_than_ten_digits));
-                    etPersonalNumber.requestFocus();
-                }else if(TextUtils.isEmpty(phone)){
-                    etPhone.setError(getText(R.string.error_phone_required));
-                    etPhone.requestFocus();
-                }else if(TextUtils.isEmpty(address)){
-                    etAddress.setError(getText(R.string.error_address_required));
-                    etAddress.requestFocus();
-                }else if(TextUtils.isEmpty(email)){
-                    etEmailToInformer.setError(getText(R.string.error_email_required));
-                    etEmailToInformer.requestFocus();
-                }else if(!email.matches("^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
-                    etEmailToInformer.setError(getText(R.string.error_validate_email));
-                    etEmailToInformer.requestFocus();
-                }else if(!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")){
-                    etPasswordToInformer.setError(getText(R.string.error_password_weak));
-                    etPasswordToInformer.requestFocus();
-                } else if(TextUtils.isEmpty(password)){
-                    etPasswordToInformer.setError(getText(R.string.error_password_required));
-                    etPasswordToInformer.requestFocus();
-                }else if(TextUtils.isEmpty(confirm_password)){
-                    etConfirmPassword.setError(getText(R.string.error_confirm_password_required));
-                    etConfirmPassword.requestFocus();
-                }else if(!password.matches(confirm_password)){
-                    etPasswordToInformer.setError(getText(R.string.error_password_not_same));
-                    etPasswordToInformer.requestFocus();
-                }else if (TextUtils.isEmpty(gender)) {
-                    et_gender_user.setError(getText(R.string.error_gender_required));
-                    et_gender_user.requestFocus();
-                    return;
-                }else {
-
-                    ri_progressBar.setVisibility(View.VISIBLE);
-                    bt_Register.setEnabled(false);
-
-                    if(checkConnection()){
-                        firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
-                            @Override
-                            public void onSuccess(AuthResult authResult) {
-
-                                String userID = authResult.getUser().getUid();
-                                String register_date_time = getTimeDate();
-                                registerUser(
-                                        userID,
-                                        name,
-                                        lastName,
-                                        fullName,
-                                        address,
-                                        email,
-                                        parentName,
-                                        gender,
-                                        INFORMER_ROLE,
-                                        phone,
-                                        personal_number,
-                                        register_date_time,
-                                        GRADE_E,
-                                        password,
-                                        urlOfProfile,
-                                        BALANCE_DEFAULT,
-                                        COINS_DEFAULT,
-                                        isEmailVerified
-                                );
-                                firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Toast.makeText(RegisterActivity.this, getApplicationContext().getText(R.string.verification_email_sent_to) +" "+ firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(RegisterActivity.this, R.string.failed_to_send_verification_email, Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                ri_progressBar.setVisibility(View.INVISIBLE);
-                                bt_Register.setEnabled(true);
-                                Toast.makeText(RegisterActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                    if(TextUtils.isEmpty(fullName)){
+                        etName.setError(getText(R.string.error_fullname_required));
+                        etName.requestFocus();
+                    } else if(TextUtils.isEmpty(personal_number)){
+                        etPersonalNumber.setError(getText(R.string.error_number_personal_required));
+                        etPersonalNumber.requestFocus();
+                    }else if(personal_number.length()>10){
+                        etPersonalNumber.setError(getText(R.string.error_number_personal_is_ten_digit));
+                        etPersonalNumber.requestFocus();
+                    }else if(personal_number.length()<10){
+                        etPersonalNumber.setError(getText(R.string.error_number_personal_less_than_ten_digits));
+                        etPersonalNumber.requestFocus();
+                    }else if(TextUtils.isEmpty(phone)){
+                        etPhone.setError(getText(R.string.error_phone_required));
+                        etPhone.requestFocus();
+                    }else if(TextUtils.isEmpty(address)){
+                        etAddress.setError(getText(R.string.error_address_required));
+                        etAddress.requestFocus();
+                    }else if(TextUtils.isEmpty(email)){
+                        etEmailToInformer.setError(getText(R.string.error_email_required));
+                        etEmailToInformer.requestFocus();
+                    }else if(!email.matches("^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
+                        etEmailToInformer.setError(getText(R.string.error_validate_email));
+                        etEmailToInformer.requestFocus();
+                    }else if(!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")){
+                        etPasswordToInformer.setError(getText(R.string.error_password_weak));
+                        etPasswordToInformer.requestFocus();
+                    } else if(TextUtils.isEmpty(password)){
+                        etPasswordToInformer.setError(getText(R.string.error_password_required));
+                        etPasswordToInformer.requestFocus();
+                    }else if(TextUtils.isEmpty(confirm_password)){
+                        etConfirmPassword.setError(getText(R.string.error_confirm_password_required));
+                        etConfirmPassword.requestFocus();
+                    }else if(!password.matches(confirm_password)){
+                        etPasswordToInformer.setError(getText(R.string.error_password_not_same));
+                        etPasswordToInformer.requestFocus();
+                    }else if (TextUtils.isEmpty(gender)) {
+                        et_gender_user.setError(getText(R.string.error_gender_required));
+                        et_gender_user.requestFocus();
+                        return;
                     }else {
-                        Toast.makeText(RegisterActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
-                    }
 
+                        ri_progressBar.setVisibility(View.VISIBLE);
+                        bt_Register.setEnabled(false);
+
+                        String hashPassword = securityHelper.encrypt(password);
+                        if(checkConnection()){
+                            firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+
+                                    String userID = authResult.getUser().getUid();
+                                    String register_date_time = getTimeDate();
+                                    registerUser(
+                                            userID,
+                                            name,
+                                            lastName,
+                                            fullName,
+                                            address,
+                                            email,
+                                            parentName,
+                                            gender,
+                                            INFORMER_ROLE,
+                                            phone,
+                                            personal_number,
+                                            register_date_time,
+                                            GRADE_E,
+                                            hashPassword,
+                                            urlOfProfile,
+                                            BALANCE_DEFAULT,
+                                            COINS_DEFAULT,
+                                            isEmailVerified
+                                    );
+                                    firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(RegisterActivity.this, getApplicationContext().getText(R.string.verification_email_sent_to) +" "+ firebaseAuth.getCurrentUser().getEmail(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(RegisterActivity.this, R.string.failed_to_send_verification_email, Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    ri_progressBar.setVisibility(View.INVISIBLE);
+                                    bt_Register.setEnabled(true);
+                                    Toast.makeText(RegisterActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }else {
+                            Toast.makeText(RegisterActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+                        }
+
+                }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

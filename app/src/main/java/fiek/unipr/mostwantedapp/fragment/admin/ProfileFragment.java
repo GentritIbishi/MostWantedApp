@@ -52,6 +52,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
 import fiek.unipr.mostwantedapp.helpers.FirebaseScrypt;
+import fiek.unipr.mostwantedapp.helpers.SecurityHelper;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class ProfileFragment extends Fragment {
@@ -191,7 +192,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 admin_saveChangesProgressBar.setVisibility(View.VISIBLE);
-                update();
+                try {
+                    update();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -333,11 +338,6 @@ public class ProfileFragment extends Fragment {
                 uploadImageToFirebase(imageUri);
             }
         }
-    }
-
-    private String getFullNameOfUser(String full_name) {
-        informer_fullName = full_name;
-        return informer_fullName;
     }
 
     private void loadImage(String uID) {
@@ -517,7 +517,8 @@ public class ProfileFragment extends Fragment {
                 });
     }
 
-    private void update() {
+    private void update() throws Exception {
+        SecurityHelper securityHelper = new SecurityHelper();
         String new_name = admin_et_firstName.getText().toString();
         String new_lastname = admin_et_lastName.getText().toString();
         String new_fullName = admin_et_fullName.getText().toString();
@@ -588,6 +589,7 @@ public class ProfileFragment extends Fragment {
             admin_et_gender.setError(getText(R.string.error_gender_required));
             admin_et_gender.requestFocus();
         }else {
+            String hashPassword = securityHelper.encrypt(new_password);
             User user = new User(
                     userID,
                     new_name,
@@ -602,7 +604,7 @@ public class ProfileFragment extends Fragment {
                     new_personal_number,
                     register_date_time,
                     new_grade,
-                    new_password,
+                    hashPassword,
                     urlOfProfile,
                     new_balance,
                     new_coins,

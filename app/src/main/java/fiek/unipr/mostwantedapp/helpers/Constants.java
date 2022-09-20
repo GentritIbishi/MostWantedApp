@@ -46,7 +46,7 @@ public class Constants {
     public static final Double LATITUDE_DEFAULT = 42.667542;
     public static final Double LONGITUDE_DEFAULT = 21.166191;
     public static final float DEFAULT_ZOOM = 15f;
-    public static final String KEY = "O9b8jboCKh95zYheMD6Wsc7UViPuFHIJ";
+    public static final String KEY = "O9b8jboCKh95zYheMD6Wsc7U";
 
     //FIREBASE TABLE NAMES
     public static final String USERS = "users";

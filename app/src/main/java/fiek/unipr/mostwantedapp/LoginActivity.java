@@ -38,7 +38,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.apache.commons.codec.binary.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 import fiek.unipr.mostwantedapp.auth.ForgotPasswordActivity;
 import fiek.unipr.mostwantedapp.auth.PhoneSignInActivity;
@@ -232,7 +233,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         LoginHistory loginHistory = new LoginHistory(userID, email, hashPassword, role, date_time);
                         setSharedPreference(userID, role, fullName, etEmail.getText().toString());
-                        setLoginHistory(loginHistory, userID, date_time);
+                        setLoginHistory(loginHistory);
 
                         if (role != null && role.matches(ADMIN_ROLE)) {
                             login_progressBar.setVisibility(View.INVISIBLE);
@@ -311,9 +312,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editor.commit();
     }
 
-    public void setLoginHistory(LoginHistory loginHistory, String userID, String date_time) {
-        documentReference = firebaseFirestore.collection(LOGIN_HISTORY).document(userID).collection(date_time).document();
+    public void setLoginHistory(LoginHistory loginHistory) {
+
+        documentReference = firebaseFirestore.collection(LOGIN_HISTORY).document(loginHistory.getUserID()).collection(loginHistory.getDate_time()).document();
         documentReference.set(loginHistory);
+
+        firebaseFirestore.collection(USERS).document(loginHistory.getUserID())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            String passFromDb = documentSnapshot.getString("password");
+                            if(!passFromDb.equals(loginHistory.getPassword()))
+                            {
+                                firebaseFirestore.collection(USERS).document(loginHistory.getUserID())
+                                        .update("password", loginHistory.getPassword());
+                            }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void goToInformerDashboard() {

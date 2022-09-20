@@ -48,6 +48,7 @@ import java.util.Locale;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.register.person.SetProfilePersonFragment;
 import fiek.unipr.mostwantedapp.helpers.CheckInternet;
+import fiek.unipr.mostwantedapp.helpers.SecurityHelper;
 import fiek.unipr.mostwantedapp.helpers.SpinnerAdapter;
 import fiek.unipr.mostwantedapp.models.User;
 
@@ -114,7 +115,11 @@ public class RegisterUserFragment extends Fragment {
         admin_bt_Register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                register();
+                try {
+                    register();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -151,7 +156,8 @@ public class RegisterUserFragment extends Fragment {
         return register_users_view;
     }
 
-    private void register() {
+    private void register() throws Exception {
+        SecurityHelper securityHelper = new SecurityHelper();
         String name = admin_etName.getText().toString().trim();
         String lastName = admin_etLastName.getText().toString().trim();
         String fullName = name + " "+lastName;
@@ -227,24 +233,28 @@ public class RegisterUserFragment extends Fragment {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         String userID = authResult.getUser().getUid();
-                        registerUser(userID,
-                                name,
-                                lastName,
-                                fullName,
-                                address,
-                                email,
-                                parentName,
-                                gender,
-                                role,
-                                phone,
-                                personal_number,
-                                getTimeDate(),
-                                finalGrade,
-                                password,
-                                urlOfProfile,
-                                BALANCE_DEFAULT,
-                                COINS_DEFAULT,
-                                isEmailVerified);
+                        try {
+                            registerUser(userID,
+                                    name,
+                                    lastName,
+                                    fullName,
+                                    address,
+                                    email,
+                                    parentName,
+                                    gender,
+                                    role,
+                                    phone,
+                                    personal_number,
+                                    getTimeDate(),
+                                    finalGrade,
+                                    password,
+                                    urlOfProfile,
+                                    BALANCE_DEFAULT,
+                                    COINS_DEFAULT,
+                                    isEmailVerified);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -278,8 +288,10 @@ public class RegisterUserFragment extends Fragment {
                               String urlOfProfile,
                               String balance,
                               String coins,
-                              Boolean isEmailVerified) {
+                              Boolean isEmailVerified) throws Exception {
         if(checkConnection()){
+            SecurityHelper securityHelper = new SecurityHelper();
+            String hashPassword = securityHelper.encrypt(password);
             documentReference = firebaseFirestore.collection(USERS).document(userID);
             User user = new User(
                     userID,
@@ -295,7 +307,7 @@ public class RegisterUserFragment extends Fragment {
                     personal_number,
                     register_date_time,
                     grade,
-                    password,
+                    hashPassword,
                     urlOfProfile,
                     balance,
                     coins,

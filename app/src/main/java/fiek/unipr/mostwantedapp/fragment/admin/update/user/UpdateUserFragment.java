@@ -51,6 +51,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.helpers.SecurityHelper;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class UpdateUserFragment extends Fragment {
@@ -161,7 +162,11 @@ public class UpdateUserFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 update_user_saveChangesProgressBar.setVisibility(View.VISIBLE);
-                update();
+                try {
+                    update();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -260,7 +265,14 @@ public class UpdateUserFragment extends Fragment {
             update_user_et_parentName.setText(parentName);
 
             password = bundle.getString("password");
-            update_user_etPasswordToUser.setText(password);
+
+            try {
+                SecurityHelper securityHelper = new SecurityHelper();
+                String decryptedPassword  = securityHelper.decrypt(password);
+                update_user_etPasswordToUser.setText(decryptedPassword);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             personal_number = bundle.getString("personal_number");
             update_user_etNumPersonal.setText(personal_number);
@@ -396,7 +408,8 @@ public class UpdateUserFragment extends Fragment {
         });
     }
 
-    private void update() {
+    private void update() throws Exception {
+        SecurityHelper securityHelper = new SecurityHelper();
         String new_name = update_user_et_firstName.getText().toString();
         String new_lastname = update_user_et_lastName.getText().toString();
         String new_fullName = update_user_et_fullName.getText().toString();
@@ -446,6 +459,7 @@ public class UpdateUserFragment extends Fragment {
             update_user_et_gender.setError(getText(R.string.error_gender_required));
             update_user_et_gender.requestFocus();
         }else {
+            String hashPassword = securityHelper.encrypt(new_password);
             User user = new User(
                     userID,
                     new_name,
@@ -460,7 +474,7 @@ public class UpdateUserFragment extends Fragment {
                     new_personal_number,
                     register_date_time,
                     new_grade,
-                    new_password,
+                    hashPassword,
                     urlOfProfile,
                     new_balance,
                     new_coins,
@@ -513,7 +527,15 @@ public class UpdateUserFragment extends Fragment {
                             update_user_etPhone.setText(phone);
                             update_user_etEmailToUser.setText(email);
                             update_user_et_gender.setText(gender);
-                            update_user_etPasswordToUser.setText(password);
+
+                            try {
+                                SecurityHelper securityHelper = new SecurityHelper();
+                                String decryptedPassword  = securityHelper.decrypt(password);
+                                update_user_etPasswordToUser.setText(decryptedPassword);
+                                System.out.println("PP"+update_user_etPasswordToUser.getText().toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             update_user_et_role_autocomplete.setText(role);
                             update_user_et_fullName.setText(fullName);
                             update_user_et_grade_autocomplete.setText(grade);
