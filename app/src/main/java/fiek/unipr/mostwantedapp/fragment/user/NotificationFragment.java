@@ -36,7 +36,7 @@ import java.util.Map;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.report.modified.ModifiedReportNotificationAdapter;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.maps.report.ReportInfoActivity;
+import fiek.unipr.mostwantedapp.activity.maps.report.ReportInfoActivity;
 import fiek.unipr.mostwantedapp.models.NotificationReportUser;
 
 public class NotificationFragment extends Fragment implements RecyclerViewInterface {

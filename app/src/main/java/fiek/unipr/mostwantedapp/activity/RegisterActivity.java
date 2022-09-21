@@ -1,8 +1,7 @@
-package fiek.unipr.mostwantedapp;
+package fiek.unipr.mostwantedapp.activity;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.COINS_DEFAULT;
-import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_E;
 import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
@@ -16,7 +15,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -35,11 +33,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
+import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.SecurityHelper;
 import fiek.unipr.mostwantedapp.models.User;
 
@@ -62,19 +58,12 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_informer);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        etName = findViewById(R.id.etName);
-        etLastName = findViewById(R.id.etLastName);
-        etParentName = findViewById(R.id.etParentName);
-        etPhone = findViewById(R.id.etPhone);
-        etAddress = findViewById(R.id.etAddress);
-        etPersonalNumber = findViewById(R.id.etNumPersonal);
-        etPersonalNumberLayout = findViewById(R.id.etPersonalNumberLayout);
-        etEmailToInformer = findViewById(R.id.etEmailToInformer);
-        etPasswordToInformer = findViewById(R.id.etPasswordToInformer);
-        etConfirmPassword = findViewById(R.id.etConfirmPassword);
-        ri_progressBar = findViewById(R.id.ri_progressBar);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        initializeFields();
 
         et_gender_user = findViewById(R.id.et_gender_user);
         ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
@@ -82,10 +71,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         bt_Register = findViewById(R.id.bt_Register);
         tv_alreadyHaveAccount = findViewById(R.id.tv_alreadyHaveAccount);
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
 
         bt_Register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,6 +122,20 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void initializeFields() {
+        etName = findViewById(R.id.etName);
+        etLastName = findViewById(R.id.etLastName);
+        etParentName = findViewById(R.id.etParentName);
+        etPhone = findViewById(R.id.etPhone);
+        etAddress = findViewById(R.id.etAddress);
+        etPersonalNumber = findViewById(R.id.etNumPersonal);
+        etPersonalNumberLayout = findViewById(R.id.etPersonalNumberLayout);
+        etEmailToInformer = findViewById(R.id.etEmailToInformer);
+        etPasswordToInformer = findViewById(R.id.etPasswordToInformer);
+        etConfirmPassword = findViewById(R.id.etConfirmPassword);
+        ri_progressBar = findViewById(R.id.ri_progressBar);
     }
 
     private void register() throws Exception {
@@ -201,12 +200,12 @@ public class RegisterActivity extends AppCompatActivity {
             bt_Register.setEnabled(false);
 
             String hashPassword = securityHelper.encrypt(password);
-            if(checkConnection()){
+            if(CheckInternet.isConnected(getApplicationContext())){
                 firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         String userID = authResult.getUser().getUid();
-                        String register_date_time = getTimeDate();
+                        String register_date_time = DateHelper.getDateTime();
                         registerUser(
                                 userID,
                                 name,
@@ -272,7 +271,7 @@ public class RegisterActivity extends AppCompatActivity {
                               String balance,
                               String coins,
                               Boolean isEmailVerified) {
-        if(checkConnection()){
+        if(CheckInternet.isConnected(getApplicationContext())){
             documentReference = firebaseFirestore.collection(USERS).document(userID);
             User user = new User(
                     userID,
@@ -332,26 +331,6 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent = new Intent(RegisterActivity.this, SetProfileUserActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    private boolean checkConnection() {
-        //Check Internet Connection
-        CheckInternet checkInternet = new CheckInternet();
-        if(!checkInternet.isConnected(this)){
-            return false;
-        }else {
-            return true;
-        }
-    }
-
-    public static String getTimeDate() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
     }
 
 }

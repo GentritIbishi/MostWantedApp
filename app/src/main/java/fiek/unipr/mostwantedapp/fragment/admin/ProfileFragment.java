@@ -157,7 +157,7 @@ public class ProfileFragment extends Fragment {
         pullToRefreshInHome.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-               // getSetUserData(userID);
+                getSetUserData(userID);
                 pullToRefreshInHome.setRefreshing(false);
             }
         });
@@ -381,7 +381,13 @@ public class ProfileFragment extends Fragment {
                             admin_et_parentName.setText(parentName);
 
                             password = documentSnapshot.getString("password");
-                            admin_etPasswordToUser.setText(password);
+                            try {
+                                SecurityHelper securityHelper = new SecurityHelper();
+                                String clean_password = securityHelper.decrypt(password);
+                                admin_etPasswordToUser.setText(clean_password);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
                             personal_number = documentSnapshot.getString("personal_number");
                             admin_etNumPersonal.setText(personal_number);

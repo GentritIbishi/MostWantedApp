@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="15dp"
     android:fitsSystemWindows="true"
-    tools:context=".GetStartedActivity">
+    tools:context=".activity.GetStartedActivity">
 
     <RelativeLayout
         android:id="@+id/view_getStarted"

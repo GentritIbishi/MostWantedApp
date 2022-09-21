@@ -39,7 +39,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fiek.unipr.mostwantedapp.LoginActivity;
+import fiek.unipr.mostwantedapp.activity.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.CircleTransform;
 

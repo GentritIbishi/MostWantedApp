@@ -1,12 +1,13 @@
-package fiek.unipr.mostwantedapp.maps.admin;
+package fiek.unipr.mostwantedapp.activity.maps.admin;
 
 import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+import static fiek.unipr.mostwantedapp.utils.BitmapHelper.BitmapFromVector;
+import static fiek.unipr.mostwantedapp.utils.BitmapHelper.addBorder;
 import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS_PDF;
-import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
 import static fiek.unipr.mostwantedapp.utils.Constants.DYNAMIC_DOMAIN;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVESTIGATORS;
@@ -24,10 +25,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -50,7 +47,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -94,10 +90,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -105,6 +99,7 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsBinding;
 import fiek.unipr.mostwantedapp.models.ReportAssigned;
 import fiek.unipr.mostwantedapp.models.ReportAssignedUser;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -272,27 +267,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_TITLE)));
 
         setLocations(fullName);
-    }
-
-    private static Bitmap addBorder(Bitmap resource, Context context) {
-        int w = resource.getWidth();
-        int h = resource.getHeight();
-        int radius = Math.min(h / 2, w / 2);
-        Bitmap output = Bitmap.createBitmap(w + 8, h + 8, Bitmap.Config.ARGB_8888);
-        Paint p = new Paint();
-        p.setAntiAlias(true);
-        Canvas c = new Canvas(output);
-        c.drawARGB(0, 0, 0, 0);
-        p.setStyle(Paint.Style.FILL);
-        c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
-        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        c.drawBitmap(resource, 4, 4, p);
-        p.setXfermode(null);
-        p.setStyle(Paint.Style.STROKE);
-        p.setColor(ContextCompat.getColor(context, R.color.gray));
-        p.setStrokeWidth(10);
-        c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
-        return output;
     }
 
     private void setLocations(String fullName) {
@@ -499,28 +473,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 });
     }
 
-    private BitmapDescriptor BitmapFromVector(Context context, int vectorResId) {
-        // below line is use to generate a drawable.
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
-
-        // below line is use to set bounds to our vector drawable.
-        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
-
-        // below line is use to create a bitmap for our
-        // drawable which we have added.
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-
-        // below line is use to add bitmap in our canvas.
-        Canvas canvas = new Canvas(bitmap);
-
-        // below line is use to draw our
-        // vector drawable in canvas.
-        vectorDrawable.draw(canvas);
-
-        // after generating our bitmap we are returning our bitmap.
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
-
     private void setStationAsMarker(Double latitude, Double longitude, String police_station_title) {
         LatLng latLng = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions()
@@ -544,7 +496,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         second_address = getAddress(ctx, lat3, lon3);
         third_address = getAddress(ctx, lat4, lon4);
         forth_address = getAddress(ctx, lat5, lon5);
-        date = getTimeDate();
+        date = DateHelper.getDateTime();
 
         ReportAssigned reportAssigned = new ReportAssigned(reportAssigned_id, first_investigator, second_investigator, fullNameOfWantedPerson
                 ,last_seen_address, first_address, second_address, third_address, forth_address, date);
@@ -578,17 +530,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(ctx, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return fullAdd;
-    }
-
-
-    public static String getTimeDate() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
     }
 
     private void uploadPDFtoFirebase(Uri pdfUri, String reportAssigned_id) {

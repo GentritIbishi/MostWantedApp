@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".maps.report.ReportInfoActivity">
+    tools:context=".activity.maps.report.ReportInfoActivity">
 
     <ScrollView
         android:layout_width="fill_parent"

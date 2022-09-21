@@ -1,6 +1,7 @@
-package fiek.unipr.mostwantedapp;
+package fiek.unipr.mostwantedapp.activity;
 
 
+import static fiek.unipr.mostwantedapp.utils.CheckInternet.isConnected;
 import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
 import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
@@ -40,11 +41,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.auth.ForgotPasswordActivity;
 import fiek.unipr.mostwantedapp.auth.PhoneSignInActivity;
 import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
-import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.SecurityHelper;
 import fiek.unipr.mostwantedapp.models.LoginHistory;
@@ -71,6 +72,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
+        initializeFields();
+    }
+
+    private void initializeFields() {
         tv_createNewAccount = findViewById(R.id.tv_remember);
         tv_createNewAccount.setOnClickListener(this);
 
@@ -144,7 +149,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 anonymous.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        //Do something after 2000ms
                         signInAnonymouslyInformer();
                         disableProgressBar(anonymous_progressBar, btnAnonymous);
                     }
@@ -154,7 +158,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Login();
                 break;
             case R.id.forgotPassword:
-                startActivity(new Intent(this, ForgotPasswordActivity.class));
+                goToForgotPassword();
                 break;
         }
 
@@ -215,7 +219,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void signIn(String email, String password) {
-        if(checkConnection()){
+        if(isConnected(getApplicationContext())){
             firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -240,7 +244,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void checkUserRoleAndGoToDashboard(String userID){
-        if(checkConnection()){
+        if(isConnected(getApplicationContext())){
             documentReference = firebaseFirestore.collection(USERS).document(userID);
             documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
@@ -298,7 +302,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void signInAnonymouslyInformer() {
-        if(checkConnection()){
+        if(isConnected(getApplicationContext())){
             firebaseAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                 @Override
                 public void onSuccess(AuthResult authResult) {
@@ -393,6 +397,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
+    private void goToForgotPassword() {
+        startActivity(new Intent(this, ForgotPasswordActivity.class));
+    }
+
     private void goToUserDashboard() {
 //        Intent intent = new Intent(LoginActivity.this, AdminUserDashboardActivity.class);
 //        startActivity(intent);
@@ -400,7 +408,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void sendEmailVerification() {
-        if(checkConnection()){
+        if(isConnected(getApplicationContext())){
             firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
@@ -411,16 +419,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             });
         }else {
             Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private boolean checkConnection() {
-        //Check Internet Connection
-        CheckInternet checkInternet = new CheckInternet();
-        if(!checkInternet.isConnected(this)){
-            return false;
-        }else {
-            return true;
         }
     }
 

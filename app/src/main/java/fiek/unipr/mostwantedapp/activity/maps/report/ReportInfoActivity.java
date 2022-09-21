@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.maps.report;
+package fiek.unipr.mostwantedapp.activity.maps.report;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
@@ -16,6 +16,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class ReportInfoActivity extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class ReportInfoActivity extends AppCompatActivity {
         reportInfoBundle = new Bundle();
         getFromBundle(reportInfoBundle);
 
-        if(firebaseAuth.getCurrentUser().getPhoneNumber() == null || empty(firebaseAuth.getCurrentUser().getPhoneNumber())){
+        if(firebaseAuth.getCurrentUser().getPhoneNumber() == null || StringHelper.empty(firebaseAuth.getCurrentUser().getPhoneNumber())){
             setReportTitleFromFirebase(notificationReportUID);
         }else {
             report_info_title.setText(getApplicationContext().getText(R.string.hello_dear)+" "+firebaseAuth.getCurrentUser().getPhoneNumber());
@@ -85,11 +86,6 @@ public class ReportInfoActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.getMessage();
         }
-    }
-
-    public static boolean empty( final String s ) {
-        // Null-safe, short-circuit evaluation.
-        return s == null || s.trim().isEmpty();
     }
 
 }

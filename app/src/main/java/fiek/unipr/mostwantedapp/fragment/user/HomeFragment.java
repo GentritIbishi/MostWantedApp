@@ -1,8 +1,6 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
-import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
-import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME_STYLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.FAKE;
 import static fiek.unipr.mostwantedapp.utils.Constants.HOME_USER_PREF;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
@@ -77,12 +75,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -91,7 +86,7 @@ import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.maps.user.MapsInformerActivity;
+import fiek.unipr.mostwantedapp.activity.maps.user.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.NotificationAdminState;
 import fiek.unipr.mostwantedapp.models.NotificationReportUser;
 import fiek.unipr.mostwantedapp.models.Person;

@@ -34,7 +34,7 @@ import java.util.List;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsLocationListAdapter;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.maps.admin.MapsActivity;
+import fiek.unipr.mostwantedapp.activity.maps.admin.MapsActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class SearchLocationReportsFragment extends Fragment implements RecyclerViewInterface {

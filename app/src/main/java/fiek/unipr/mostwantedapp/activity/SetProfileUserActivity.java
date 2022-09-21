@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp;
+package fiek.unipr.mostwantedapp.activity;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
@@ -34,6 +34,7 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.utils.CircleTransform;
 
@@ -65,11 +66,7 @@ public class SetProfileUserActivity extends AppCompatActivity {
         userID = firebaseAuth.getUid();
         progressDialog = new ProgressDialog(this);
 
-        circleImageViewUserOutside = findViewById(R.id.circleImageViewUserOutside);
-        ic_add_user_outside = findViewById(R.id.ic_add_user_outside);
-        tv_add_profile_user_outside = findViewById(R.id.tv_addprofile_user_outside);
-        progressBarUserOutside = findViewById(R.id.progressBarUserOutside);
-        btnSkipSetImageOutside = findViewById(R.id.btnSkipSetImageOutside);
+        initializeFields();
 
         StorageReference profileRef = storageReference.child(USERS+"/" + userID + "/"+PROFILE_PICTURE);
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -104,6 +101,14 @@ public class SetProfileUserActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void initializeFields() {
+        circleImageViewUserOutside = findViewById(R.id.circleImageViewUserOutside);
+        ic_add_user_outside = findViewById(R.id.ic_add_user_outside);
+        tv_add_profile_user_outside = findViewById(R.id.tv_addprofile_user_outside);
+        progressBarUserOutside = findViewById(R.id.progressBarUserOutside);
+        btnSkipSetImageOutside = findViewById(R.id.btnSkipSetImageOutside);
     }
 
     @Override

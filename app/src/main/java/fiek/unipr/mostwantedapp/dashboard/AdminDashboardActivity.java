@@ -35,7 +35,7 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import fiek.unipr.mostwantedapp.LoginActivity;
+import fiek.unipr.mostwantedapp.activity.LoginActivity;
 import fiek.unipr.mostwantedapp.fragment.admin.AboutFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.search.SearchLocationReportsFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.ProfileFragment;

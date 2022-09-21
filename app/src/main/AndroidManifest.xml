@@ -44,10 +44,10 @@
             android:value="${MAPS_API_KEY}" />
 
         <activity
-            android:name=".SplashActivity"
+            android:name=".activity.SplashActivity"
             android:exported="false" />
         <activity
-            android:name=".maps.user.MapsInformerActivity"
+            android:name=".activity.maps.user.MapsInformerActivity"
             android:exported="false"
             android:label="@string/title_activity_maps_informer" />
 
@@ -56,7 +56,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".SetProfileUserActivity"
+            android:name=".activity.SetProfileUserActivity"
             android:exported="false" />
         <activity
             android:name=".auth.ForgotPasswordActivity"
@@ -68,10 +68,10 @@
             android:name=".dashboard.UserDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activity.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".GetStartedActivity"
+            android:name=".activity.GetStartedActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -85,12 +85,12 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".maps.admin.MapsActivity"
+            android:name=".activity.maps.admin.MapsActivity"
             android:exported="true"
             android:label="@string/title_activity_maps" />
         <activity android:name=".dashboard.AdminDashboardActivity" />
-        <activity android:name=".maps.report.ReportInfoActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".activity.maps.report.ReportInfoActivity" />
+        <activity android:name=".activity.LoginActivity" />
         <!--
  Set custom default icon. This is used when no icon is set for incoming notification messages.
      See README(https://goo.gl/l4GJaQ) for more.

@@ -1,8 +1,7 @@
-package fiek.unipr.mostwantedapp.maps.user;
+package fiek.unipr.mostwantedapp.activity.maps.user;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
 import static fiek.unipr.mostwantedapp.utils.Constants.COURSE_LOCATION;
-import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
 import static fiek.unipr.mostwantedapp.utils.Constants.FINE_LOCATION;
 import static fiek.unipr.mostwantedapp.utils.Constants.LATITUDE_DEFAULT;
@@ -54,11 +53,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
@@ -66,6 +62,7 @@ import fiek.unipr.mostwantedapp.databinding.ActivityMapsInformerBinding;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.models.ReportStatus;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
 
 public class MapsInformerActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
@@ -145,7 +142,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
                 progressDialog.show();
                 binding.alert.setText(getApplicationContext().getText(R.string.if_loading_takes_too_long_please_press_the_button_again));
-                save(informer_person, wanted_person, longitude, latitude, getTimeDate());
+                save(informer_person, wanted_person, longitude, latitude, DateHelper.getDateTime());
             }
         });
 
@@ -202,16 +199,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 loadInfoFromFirebase(firebaseAuth);
             }
 
-        }
-    }
-
-    public static String getTimeDate() { // without parameter argument
-        try {
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch (Exception e) {
-            return "date";
         }
     }
 
@@ -376,17 +363,8 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         return s == null || s.trim().isEmpty();
     }
 
-    private boolean checkConnection() {
-        CheckInternet checkInternet = new CheckInternet();
-        if(!checkInternet.isConnected(this)){
-            return false;
-        }else {
-            return true;
-        }
-    }
-
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
-        if(checkConnection()){
+        if(CheckInternet.isConnected(getApplicationContext())){
             documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override

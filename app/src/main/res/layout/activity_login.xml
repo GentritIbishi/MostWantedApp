@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:padding="5dp"
     android:background="#ffffff"
-    tools:context=".LoginActivity">
+    tools:context=".activity.LoginActivity">
 
     <View
         android:layout_width="match_parent"
