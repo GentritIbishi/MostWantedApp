@@ -6,6 +6,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
 import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOGIN_INFORMER_PREFS;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOGIN_HISTORY;
+import static fiek.unipr.mostwantedapp.utils.Constants.PHONE_USER;
 import static fiek.unipr.mostwantedapp.utils.Constants.PREFS_NAME;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
@@ -99,13 +100,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(firebaseUser.isAnonymous()){
                 signInAnonymouslyInformer();
             }else if(firebaseUser.isEmailVerified()){
-                String email = etEmail.getText().toString();
-                String password = etPassword.getText().toString();
+                setVerifiedTrue(firebaseUser.getUid());
                 checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid());
             }else if(firebaseUser.getPhoneNumber() != null){
+                LoginHistory loginHistory = new LoginHistory(firebaseUser.getUid(), PHONE_USER, PHONE_USER, PHONE_USER, DateHelper.getDateTime());
+                setLoginHistoryPhone(loginHistory);
                 goToInformerDashboard();
             }
         }
+    }
+
+    private void setVerifiedTrue(String userID) {
+        firebaseFirestore.collection(USERS)
+                .document(userID)
+                .update("emailVerified", true);
     }
 
     @Override
@@ -272,6 +280,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             firebaseAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                 @Override
                 public void onSuccess(AuthResult authResult) {
+                    LoginHistory loginHistory = new LoginHistory(firebaseAuth.getUid(), ANONYMOUS, ANONYMOUS, ANONYMOUS, DateHelper.getDateTime());
+                    seLoginHistoryAnonymous(loginHistory);
                     setSharedPreferenceInformer(firebaseAuth.getCurrentUser().getUid());
                     setSharedPreferenceAnonymous(ANONYMOUS);
                     goToInformerDashboard();
@@ -285,6 +295,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void seLoginHistoryAnonymous(LoginHistory loginHistory) {
+        firebaseFirestore.collection(LOGIN_HISTORY)
+                .document(loginHistory.getUserID()).collection(loginHistory.getRole())
+                .document(loginHistory.getUserID()+" "+loginHistory.getDate_time()).set(loginHistory);
     }
 
     public void setSharedPreference(String currentUserId, String role, String fullName, String email) {
@@ -313,7 +329,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public void setLoginHistory(LoginHistory loginHistory) {
 
-        documentReference = firebaseFirestore.collection(LOGIN_HISTORY).document(loginHistory.getUserID()).collection(loginHistory.getDate_time()).document();
+        documentReference = firebaseFirestore.collection(LOGIN_HISTORY)
+                .document(loginHistory.getUserID()).collection(loginHistory.getRole())
+                .document(loginHistory.getUserID()+" "+loginHistory.getDate_time());
         documentReference.set(loginHistory);
 
         firebaseFirestore.collection(USERS).document(loginHistory.getUserID())
@@ -328,12 +346,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                         .update("password", loginHistory.getPassword());
                             }
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
                 });
+    }
+
+    public void setLoginHistoryPhone(LoginHistory loginHistory) {
+
+        documentReference = firebaseFirestore.collection(LOGIN_HISTORY)
+                .document(loginHistory.getUserID()).collection(loginHistory.getRole())
+                .document(firebaseAuth.getUid()+" "+loginHistory.getDate_time());
+        documentReference.set(loginHistory);
     }
 
     private void goToInformerDashboard() {
@@ -367,7 +388,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }else {
             Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
         }
-
     }
 
     private boolean checkConnection() {
@@ -382,7 +402,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        //disabled back pressed
+        return;
     }
 
     @Override
