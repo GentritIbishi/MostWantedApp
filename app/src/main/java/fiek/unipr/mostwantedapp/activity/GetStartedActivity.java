@@ -1,9 +1,5 @@
 package fiek.unipr.mostwantedapp.activity;
 
-import static fiek.unipr.mostwantedapp.utils.Constants.FIRST_TIME_INSTALL;
-import static fiek.unipr.mostwantedapp.utils.Constants.PREFERENCE;
-import static fiek.unipr.mostwantedapp.utils.Constants.YES;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -34,10 +30,10 @@ public class GetStartedActivity extends AppCompatActivity {
         bt_getStarted = findViewById(R.id.bt_getStarted);
 
         //Check if application is opened for the first time
-        SharedPreferences preferences = getSharedPreferences(PREFERENCE, MODE_PRIVATE);
-        String firstTime = preferences.getString(FIRST_TIME_INSTALL,"");
+        SharedPreferences preferences = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
+        String firstTime = preferences.getString("FirstTimeInstall","");
 
-        if(firstTime.equals(YES)){
+        if(firstTime.equals("Yes")){
             //If application was opened for the first time
             Intent intent = new Intent(GetStartedActivity.this, SplashActivity.class);
             startActivity(intent);
@@ -45,7 +41,7 @@ public class GetStartedActivity extends AppCompatActivity {
         }else {
             //Else...
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString(FIRST_TIME_INSTALL, YES);
+            editor.putString("FirstTimeInstall", "Yes");
             editor.apply();
         }
 
@@ -63,14 +59,14 @@ public class GetStartedActivity extends AppCompatActivity {
 
         view_getStarted.setOnTouchListener(new OnSwipeTouchListener(GetStartedActivity.this){
             public void onSwipeRight() {
-                    tvgetStarted1.setText(R.string.get_started_description);
-                    dot1.setBackgroundResource(R.drawable.ic_dot_clicked);
-                    dot2.setBackgroundResource(R.drawable.ic_dot_unclicked);
+                tvgetStarted1.setText(R.string.get_started_description);
+                dot1.setBackgroundResource(R.drawable.ic_dot_clicked);
+                dot2.setBackgroundResource(R.drawable.ic_dot_unclicked);
             }
             public void onSwipeLeft() {
-                    tvgetStarted1.setText(R.string.get_started_description2);
-                    dot2.setBackgroundResource(R.drawable.ic_dot_clicked);
-                    dot1.setBackgroundResource(R.drawable.ic_dot_unclicked);
+                tvgetStarted1.setText(R.string.get_started_description2);
+                dot2.setBackgroundResource(R.drawable.ic_dot_clicked);
+                dot1.setBackgroundResource(R.drawable.ic_dot_unclicked);
             }
         });
 

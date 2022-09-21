@@ -3,10 +3,8 @@ package fiek.unipr.mostwantedapp.utils;
 import android.Manifest;
 
 public class Constants {
-    public static final String PREFERENCE = "PREFERENCE";
     public static final String PREFS_NAME = "loginPreferences";
     public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
-    public static final String FIRST_TIME_INSTALL = "FirstTimeInstall";
     public static final String ADMIN_ROLE = "Admin";
     public static final String USER_ROLE = "User";
     public static final String ROLE = "role";
