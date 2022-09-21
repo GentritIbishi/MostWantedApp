@@ -47,8 +47,10 @@ import java.util.List;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.DateInputMask;
 import fiek.unipr.mostwantedapp.models.Person;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class RegisterPersonFragment extends Fragment implements View.OnClickListener {
 
@@ -224,7 +226,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
         String eyeColor = et_eyeColor.getText().toString().trim();
         String hairColor = et_hairColor.getText().toString().trim();
         String phy_appearance = et_phy_appearance.getText().toString().trim();
-        String act = removeLastChar(et_acts.getText().toString().trim());
+        String act = StringHelper.removeLastChar(et_acts.getText().toString().trim());
         // Trafficking in human beings, Narcotics trafficking, Narcotics trafficking, Robbery,
         String[] array = act.split(",");
         List<String> acts = Arrays.asList(array);
@@ -331,7 +333,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
                     fullName, birthday, address, eyeColor,
                     hairColor, phy_appearance,
                     null, status, prize,
-                    getTimeDate(), age, gender,
+                    DateHelper.getDateTime(), age, gender,
                     height, weight, acts, LONGITUDE_DEFAULT, LATITUDE_DEFAULT);
 
             firebaseFirestore.collection(WANTED_PERSONS).document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -371,36 +373,11 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
         }
     }
 
-    public static String getTimeDate() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    public static String getDate() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
     private void loadFragment(Fragment fragment) {
         ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
                 .replace(R.id.admin_fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit();
-    }
-
-    private String removeLastChar(String s)
-    {
-        return s.substring(0, s.length() - 1);
     }
 
 }

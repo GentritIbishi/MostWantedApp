@@ -61,6 +61,7 @@ import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
 
 
 public class AnalyticsFragment extends Fragment {
@@ -102,27 +103,7 @@ public class AnalyticsFragment extends Fragment {
                              Bundle savedInstanceState) {
         admin_profile_dashboard_view = inflater.inflate(R.layout.fragment_analytics_admin, container, false);
 
-        admin_pieChart = admin_profile_dashboard_view.findViewById(R.id.admin_pieChart);
-        tv_num_report_verified = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_verified);
-        tv_num_report_unverified = admin_profile_dashboard_view.findViewById(R.id.user_tv_balance);
-        tv_num_report_fake = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_fake);
-        tv_num_total_investigators = admin_profile_dashboard_view.findViewById(R.id.tv_num_total_investigators);
-        tv_num_total_person = admin_profile_dashboard_view.findViewById(R.id.tv_num_total_person);
-        tv_num_total_users = admin_profile_dashboard_view.findViewById(R.id.tv_num_total_users);
-        tv_num_location_reports = admin_profile_dashboard_view.findViewById(R.id.tv_num_location_reports);
-        tv_gradeOfUser = admin_profile_dashboard_view.findViewById(R.id.tv_gradeOfUser);
-        wp_gender_statistic_pieChart = admin_profile_dashboard_view.findViewById(R.id.wp_gender_statistic_pieChart);
-        inv_gender_statistic_pieChart = admin_profile_dashboard_view.findViewById(R.id.inv_gender_statistic_pieChart);
-        user_gender_statistic_pieChart = admin_profile_dashboard_view.findViewById(R.id.user_gender_statistic_pieChart);
-
-        imageTrendToday = admin_profile_dashboard_view.findViewById(R.id.imageTrendToday);
-        tv_percent_today = admin_profile_dashboard_view.findViewById(R.id.tv_percent_today);
-        tv_analytic_today = admin_profile_dashboard_view.findViewById(R.id.tv_analytic_today);
-        imageTrendWeekly = admin_profile_dashboard_view.findViewById(R.id.imageTrendWeekly);
-        tv_percent_weekly = admin_profile_dashboard_view.findViewById(R.id.tv_percent_weekly);
-        tv_analytic_weekly = admin_profile_dashboard_view.findViewById(R.id.tv_analytic_weekly);
-
-        final SwipeRefreshLayout pullToRefreshInSearch = admin_profile_dashboard_view.findViewById(R.id.admin_pullToRefreshProfileDashboard);
+        initializeFields();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -145,6 +126,7 @@ public class AnalyticsFragment extends Fragment {
         getAndSetTotalReportForOneWeek();
         vsWeek();
 
+        final SwipeRefreshLayout pullToRefreshInSearch = admin_profile_dashboard_view.findViewById(R.id.admin_pullToRefreshProfileDashboard);
         pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -182,9 +164,31 @@ public class AnalyticsFragment extends Fragment {
         return admin_profile_dashboard_view;
     }
 
+    private void initializeFields() {
+        admin_pieChart = admin_profile_dashboard_view.findViewById(R.id.admin_pieChart);
+        tv_num_report_verified = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_verified);
+        tv_num_report_unverified = admin_profile_dashboard_view.findViewById(R.id.user_tv_balance);
+        tv_num_report_fake = admin_profile_dashboard_view.findViewById(R.id.tv_num_report_fake);
+        tv_num_total_investigators = admin_profile_dashboard_view.findViewById(R.id.tv_num_total_investigators);
+        tv_num_total_person = admin_profile_dashboard_view.findViewById(R.id.tv_num_total_person);
+        tv_num_total_users = admin_profile_dashboard_view.findViewById(R.id.tv_num_total_users);
+        tv_num_location_reports = admin_profile_dashboard_view.findViewById(R.id.tv_num_location_reports);
+        tv_gradeOfUser = admin_profile_dashboard_view.findViewById(R.id.tv_gradeOfUser);
+        wp_gender_statistic_pieChart = admin_profile_dashboard_view.findViewById(R.id.wp_gender_statistic_pieChart);
+        inv_gender_statistic_pieChart = admin_profile_dashboard_view.findViewById(R.id.inv_gender_statistic_pieChart);
+        user_gender_statistic_pieChart = admin_profile_dashboard_view.findViewById(R.id.user_gender_statistic_pieChart);
+        imageTrendToday = admin_profile_dashboard_view.findViewById(R.id.imageTrendToday);
+        tv_percent_today = admin_profile_dashboard_view.findViewById(R.id.tv_percent_today);
+        tv_analytic_today = admin_profile_dashboard_view.findViewById(R.id.tv_analytic_today);
+        imageTrendWeekly = admin_profile_dashboard_view.findViewById(R.id.imageTrendWeekly);
+        tv_percent_weekly = admin_profile_dashboard_view.findViewById(R.id.tv_percent_weekly);
+        tv_analytic_weekly = admin_profile_dashboard_view.findViewById(R.id.tv_analytic_weekly);
+
+    }
+
     //function that count all locations_reports: VERIFIED, UNVERIFIED, FAKE
     private void setPieChart() {
-        if(checkConnection()) {
+        if(CheckInternet.isConnected(getContext())) {
             firebaseFirestore.collection(LOCATION_REPORTS)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -284,7 +288,7 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
-        if(checkConnection()){
+        if(CheckInternet.isConnected(getContext())){
             firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -300,7 +304,7 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void getAndSetTotalReportFor24H() {
-        String date = getDate();
+        String date = DateHelper.getDate();
         String start = date+" "+"00:00:00";
         String end = date+" "+"23:59:59";
         firebaseFirestore.collection(LOCATION_REPORTS)
@@ -319,11 +323,11 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void vsYesterday() {
-        String today = getDate();
+        String today = DateHelper.getDate();
         String start_today = today+" "+"00:00:00";
         String end_today = today+" "+"23:59:59";
 
-        String yesterday = getYesterday();
+        String yesterday = DateHelper.getYesterday();
         String start = yesterday+" "+"00:00:00";
         String end = yesterday+" "+"23:59:59";
         firebaseFirestore.collection(LOCATION_REPORTS)
@@ -378,7 +382,7 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void getAndSetTotalReportForOneWeek() {
-        String start_thisWeek = getFirstDayOfThisWeek()+" "+"00:00:00";
+        String start_thisWeek = DateHelper.getFirstDayOfThisWeek()+" "+"00:00:00";
 
         firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThanOrEqualTo("date_time", start_thisWeek)
@@ -399,8 +403,8 @@ public class AnalyticsFragment extends Fragment {
     }
 
     private void vsWeek() {
-        String start_lastWeek = getFirstDayOfLastWeek()+" "+"00:00:00";
-        String start_thisWeek = getFirstDayOfThisWeek()+" "+"00:00:00";
+        String start_lastWeek = DateHelper.getFirstDayOfLastWeek()+" "+"00:00:00";
+        String start_thisWeek = DateHelper.getFirstDayOfThisWeek()+" "+"00:00:00";
 
         firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThanOrEqualTo("date_time", start_lastWeek)
@@ -449,54 +453,8 @@ public class AnalyticsFragment extends Fragment {
                 });
     }
 
-    private static String getFirstDayOfLastWeek() {
-        try{
-            Calendar calendar = Calendar.getInstance();
-            calendar = firstDayOfLastWeek(calendar);
-            SimpleDateFormat sfd = new SimpleDateFormat("dd-MM-yyyy");
-            sfd.setTimeZone(calendar.getTimeZone());
-            return sfd.format(calendar.getTime());
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    public static Calendar firstDayOfLastWeek(Calendar c)
-    {
-        c = (Calendar) c.clone();
-        // last week
-        c.add(Calendar.WEEK_OF_YEAR, -1);
-        // first day
-        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
-        return c;
-    }
-
-    private static String getFirstDayOfThisWeek() {
-        try{
-            Calendar calendar = new GregorianCalendar();
-            Date date = new Date();
-            calendar.clear();
-            calendar.setTime(firstDayOfWeek(date));
-            int year = calendar.get(Calendar.YEAR);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            int month = calendar.get(Calendar.MONTH)+1;
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE);
-            sfd.setTimeZone(calendar.getTimeZone());
-            return sfd.format(calendar.getTime());
-        } catch(Exception e) {
-            return "date"+e.getMessage();
-        }
-    }
-
-    private static Date firstDayOfWeek(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.DAY_OF_WEEK, 1);
-        return calendar.getTime();
-    }
-
     private void getGrade(FirebaseAuth firebaseAuth) {
-        if(checkConnection()){
+        if(CheckInternet.isConnected(getContext())){
             firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -526,21 +484,6 @@ public class AnalyticsFragment extends Fragment {
         if(firebaseAuth != null){
             loadInfoFromFirebase(firebaseAuth);
         }
-    }
-
-    private boolean checkConnection() {
-        CheckInternet checkInternet = new CheckInternet();
-        if(!checkInternet.isConnected(getContext())){
-            Toast.makeText(getContext(), R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
-            return false;
-        }else {
-            return true;
-        }
-    }
-
-    public static boolean empty( final String s ) {
-        // Null-safe, short-circuit evaluation.
-        return s == null || s.trim().isEmpty();
     }
 
     private void funAnalyticsGenderForWantedPerson() {
@@ -762,41 +705,6 @@ public class AnalyticsFragment extends Fragment {
                        }
                     }
                 });
-    }
-
-    public static String getTimeDate() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    public static String getDate() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    private static Date yesterday() {
-        final Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        return cal.getTime();
-    }
-
-    public static String getYesterday() { // without parameter argument
-        try{
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE, Locale.getDefault());
-            return sfd.format(yesterday());
-        } catch(Exception e) {
-            return "date";
-        }
     }
 
     private void getAndSetTotalUsers() {

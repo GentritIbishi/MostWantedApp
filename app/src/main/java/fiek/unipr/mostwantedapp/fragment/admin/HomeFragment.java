@@ -9,6 +9,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_ADMIN;
 import static fiek.unipr.mostwantedapp.utils.Constants.UNVERIFIED;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
+import static fiek.unipr.mostwantedapp.utils.ContextHelper.checkContext;
 
 import android.app.Activity;
 import android.app.NotificationChannel;
@@ -80,6 +81,8 @@ import fiek.unipr.mostwantedapp.fragment.admin.search.SearchManageLocationReport
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.models.NotificationAdmin;
 import fiek.unipr.mostwantedapp.models.NotificationAdminState;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class HomeFragment extends Fragment {
 
@@ -105,9 +108,7 @@ public class HomeFragment extends Fragment {
     private FirebaseStorage firebaseStorage;
     private String user_anonymousID = null;
 
-    private Integer balance;
-    private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
-    private Uri photoURL;
+    private String fullName, urlOfProfile, name, grade;
 
     public HomeFragment() {}
 
@@ -133,26 +134,9 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         admin_dashboard_view = inflater.inflate(R.layout.fragment_home_admin, container, false);
 
-        imageOfAccount = admin_dashboard_view.findViewById(R.id.imageOfAccount);
-        imageOfDashboard = admin_dashboard_view.findViewById(R.id.imageOfDashboard);
-
-        admin_home_pieChart = admin_dashboard_view.findViewById(R.id.admin_home_pieChart);
-        rightNowDateTime = admin_dashboard_view.findViewById(R.id.rightNowDateTime);
-        hiDashboard = admin_dashboard_view.findViewById(R.id.hiDashboard);
-        admin_home_tv_num_report_verified = admin_dashboard_view.findViewById(R.id.admin_home_tv_num_report_verified);
-        admin_home_tv_num_report_unverified = admin_dashboard_view.findViewById(R.id.admin_home_tv_num_report_unverified);
-        admin_home_tv_num_report_fake = admin_dashboard_view.findViewById(R.id.admin_home_tv_num_report_fake);
-        admin_home_tv_gradeOfUser = admin_dashboard_view.findViewById(R.id.admin_home_tv_gradeOfUser);
-        tv_percentage_today = admin_dashboard_view.findViewById(R.id.tv_percentage_today);
-        tv_analytics_today = admin_dashboard_view.findViewById(R.id.tv_analytics_today);
-        tv_analytics_weekly = admin_dashboard_view.findViewById(R.id.tv_analytics_weekly);
-        tv_percentage_weekly = admin_dashboard_view.findViewById(R.id.tv_percentage_weekly);
-        imageTrendingToday = admin_dashboard_view.findViewById(R.id.imageTrendingToday);
-        imageTrendingWeekly = admin_dashboard_view.findViewById(R.id.imageTrendingWeekly);
+        initializeFields();
 
         final SwipeRefreshLayout pullToRefreshInSearch = admin_dashboard_view.findViewById(R.id.admin_home_pullToRefreshProfileDashboard);
-
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -166,7 +150,7 @@ public class HomeFragment extends Fragment {
             vsYesterday(getContext());
             getAndSetTotalReportForOneWeek();
             vsWeek(getContext());
-            rightNowDateTime.setText(getDate());
+            rightNowDateTime.setText(DateHelper.getDate());
             getGrade(firebaseAuth);
             setupPieChart();
             setPieChart();
@@ -266,6 +250,24 @@ public class HomeFragment extends Fragment {
         return admin_dashboard_view;
     }
 
+    private void initializeFields() {
+        imageOfAccount = admin_dashboard_view.findViewById(R.id.imageOfAccount);
+        imageOfDashboard = admin_dashboard_view.findViewById(R.id.imageOfDashboard);
+        admin_home_pieChart = admin_dashboard_view.findViewById(R.id.admin_home_pieChart);
+        rightNowDateTime = admin_dashboard_view.findViewById(R.id.rightNowDateTime);
+        hiDashboard = admin_dashboard_view.findViewById(R.id.hiDashboard);
+        admin_home_tv_num_report_verified = admin_dashboard_view.findViewById(R.id.admin_home_tv_num_report_verified);
+        admin_home_tv_num_report_unverified = admin_dashboard_view.findViewById(R.id.admin_home_tv_num_report_unverified);
+        admin_home_tv_num_report_fake = admin_dashboard_view.findViewById(R.id.admin_home_tv_num_report_fake);
+        admin_home_tv_gradeOfUser = admin_dashboard_view.findViewById(R.id.admin_home_tv_gradeOfUser);
+        tv_percentage_today = admin_dashboard_view.findViewById(R.id.tv_percentage_today);
+        tv_analytics_today = admin_dashboard_view.findViewById(R.id.tv_analytics_today);
+        tv_analytics_weekly = admin_dashboard_view.findViewById(R.id.tv_analytics_weekly);
+        tv_percentage_weekly = admin_dashboard_view.findViewById(R.id.tv_percentage_weekly);
+        imageTrendingToday = admin_dashboard_view.findViewById(R.id.imageTrendingToday);
+        imageTrendingWeekly = admin_dashboard_view.findViewById(R.id.imageTrendingWeekly);
+    }
+
     private void loadFragment(Fragment fragment) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -283,7 +285,7 @@ public class HomeFragment extends Fragment {
 
     private void loadInfoPhoneFirebase() {
         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-        if(!empty(phone))
+        if(!StringHelper.empty(phone))
         {
             imageOfAccount.setImageResource(R.drawable.ic_phone_login);
             imageOfDashboard.setImageResource(R.drawable.ic_phone_login);
@@ -291,7 +293,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
-        if(checkConnection()){
+        if(CheckInternet.isConnected(getContext())){
             firebaseFirestore
                     .collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
@@ -315,23 +317,9 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private boolean checkConnection() {
-        CheckInternet checkInternet = new CheckInternet();
-        if(!checkInternet.isConnected(getContext())){
-            return false;
-        }else {
-            return true;
-        }
-    }
-
-    public static boolean empty( final String s ) {
-        // Null-safe, short-circuit evaluation.
-        return s == null || s.trim().isEmpty();
-    }
-
     //function that count all locations_reports: VERIFIED, UNVERIFIED, FAKE
     private void setPieChart() {
-        if(checkConnection()) {
+        if(CheckInternet.isConnected(getContext())) {
             firebaseFirestore.collection(LOCATION_REPORTS)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -437,7 +425,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void loadInfoAndSayHiFromFirebase(FirebaseAuth firebaseAuth, Context context) {
-        if(checkConnection()){
+        if(CheckInternet.isConnected(getContext())){
             firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -459,7 +447,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void getGrade(FirebaseAuth firebaseAuth) {
-        if(checkConnection()){
+        if(CheckInternet.isConnected(getContext())){
             firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -491,33 +479,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private boolean checkContext(Context context) {
-        if(context != null)
-            return true;
-        else
-            return false;
-    }
-
-    public static String getDate() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME_STYLE, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    public static String getDateTime() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
     private void realTimeCheckForNewReportNotification() {
         firebaseFirestore.collection(LOCATION_REPORTS)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -534,13 +495,13 @@ public class HomeFragment extends Fragment {
                             String notificationTitle = dc.getDocument().getString("title");
                             switch (dc.getType()) {
                                 case ADDED:
-                                    saveNotificationInFirestoreAdded(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.ADDED));
+                                    saveNotificationInFirestoreAdded(DateHelper.getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.ADDED));
                                     break;
                                 case MODIFIED:
-                                    saveNotificationInFirestoreModified(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.MODIFIED));
+                                    saveNotificationInFirestoreModified(DateHelper.getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.MODIFIED));
                                     break;
                                 case REMOVED:
-                                    saveNotificationInFirestoreRemoved(getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.REMOVED));
+                                    saveNotificationInFirestoreRemoved(DateHelper.getDateTime(), notificationTitle, notificationBody, String.valueOf(NotificationAdminState.REMOVED));
                                     break;
                             }
                         }
@@ -738,7 +699,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void getAndSetTotalReportFor24H() {
-        String date = getDateRighNow();
+        String date = DateHelper.getDate();
         String start = date+" "+"00:00:00";
         String end = date+" "+"23:59:59";
         firebaseFirestore.collection(LOCATION_REPORTS)
@@ -757,11 +718,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void vsYesterday(Context context) {
-        String today = getDateRighNow();
+        String today = DateHelper.getDate();
         String start_today = today+" "+"00:00:00";
         String end_today = today+" "+"23:59:59";
 
-        String yesterday = getYesterday();
+        String yesterday = DateHelper.getYesterday();
         String start = yesterday+" "+"00:00:00";
         String end = yesterday+" "+"23:59:59";
         firebaseFirestore.collection(LOCATION_REPORTS)
@@ -816,8 +777,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void vsWeek(Context context) {
-        String start_lastWeek = getFirstDayOfLastWeek()+" "+"00:00:00";
-        String start_thisWeek = getFirstDayOfThisWeek()+" "+"00:00:00";
+        String start_lastWeek = DateHelper.getFirstDayOfLastWeek()+" "+"00:00:00";
+        String start_thisWeek = DateHelper.getFirstDayOfThisWeek()+" "+"00:00:00";
 
         firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThanOrEqualTo("date_time", start_lastWeek)
@@ -867,7 +828,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void getAndSetTotalReportForOneWeek() {
-        String start_thisWeek = getFirstDayOfThisWeek()+" "+"00:00:00";
+        String start_thisWeek = DateHelper.getFirstDayOfThisWeek()+" "+"00:00:00";
 
         firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereGreaterThanOrEqualTo("date_time", start_thisWeek)
@@ -885,77 +846,6 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private static Date firstDayOfWeek(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.set(Calendar.DAY_OF_WEEK, 1);
-        return calendar.getTime();
-    }
-
-    public static Calendar firstDayOfLastWeek(Calendar c)
-    {
-        c = (Calendar) c.clone();
-        // last week
-        c.add(Calendar.WEEK_OF_YEAR, -1);
-        // first day
-        c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
-        return c;
-    }
-
-    public static String getDateRighNow() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    private static String getFirstDayOfLastWeek() {
-        try{
-            Calendar calendar = Calendar.getInstance();
-            calendar = firstDayOfLastWeek(calendar);
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE);
-            sfd.setTimeZone(calendar.getTimeZone());
-            return sfd.format(calendar.getTime());
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    private static String getFirstDayOfThisWeek() {
-        try{
-            Calendar calendar = new GregorianCalendar();
-            Date date = new Date();
-            calendar.clear();
-            calendar.setTime(firstDayOfWeek(date));
-            int year = calendar.get(Calendar.YEAR);
-            int day = calendar.get(Calendar.DAY_OF_MONTH);
-            int month = calendar.get(Calendar.MONTH)+1;
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE);
-            sfd.setTimeZone(calendar.getTimeZone());
-            return sfd.format(calendar.getTime());
-        } catch(Exception e) {
-            return "date"+e.getMessage();
-        }
-    }
-
-    private static Date yesterday() {
-        final Calendar cal = Calendar.getInstance();
-        cal.add(Calendar.DATE, -1);
-        return cal.getTime();
-    }
-
-    public static String getYesterday() { // without parameter argument
-        try{
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE, Locale.getDefault());
-            return sfd.format(yesterday());
-        } catch(Exception e) {
-            return "date";
-        }
     }
 
 }

@@ -7,6 +7,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.KG;
 import static fiek.unipr.mostwantedapp.utils.Constants.PERSONS;
 import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.StringHelper.removeFirstLetterAndLastLetter;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -608,12 +609,6 @@ public class UpdatePersonFragment extends Fragment {
 
             urlOfProfile = bundle.getString("urlOfProfile");
         }
-    }
-
-    public static String removeFirstLetterAndLastLetter(String str)
-    {
-        str = str.substring(1, str.length() - 1);
-        return str;
     }
 
     private void setPrizeInYourCurrency(String euro) {

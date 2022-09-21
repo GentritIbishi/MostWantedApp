@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class ProfileFragment extends Fragment {
 
@@ -137,7 +138,7 @@ public class ProfileFragment extends Fragment {
 
     private void loadInfoPhoneFirebase() {
         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-        if(!empty(phone))
+        if(!StringHelper.empty(phone))
         {
             //logged in with phone
             user_nav_header_name.setText(phone);
@@ -164,11 +165,6 @@ public class ProfileFragment extends Fragment {
         if(firebaseUser.isEmailVerified()){
             user_verifiedBadge.setVisibility(View.VISIBLE);
         }
-    }
-
-    public static boolean empty( final String s ) {
-        // Null-safe, short-circuit evaluation.
-        return s == null || s.trim().isEmpty();
     }
 
 }

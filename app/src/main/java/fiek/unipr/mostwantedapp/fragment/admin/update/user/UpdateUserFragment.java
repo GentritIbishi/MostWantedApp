@@ -99,29 +99,7 @@ public class UpdateUserFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
 
-        update_user_imageOfProfile = update_user_view.findViewById(R.id.update_user_imageOfProfile);
-        update_user_btnUploadNewPicture = update_user_view.findViewById(R.id.update_user_btnUploadNewPicture);
-        update_user_btnDeletePhoto = update_user_view.findViewById(R.id.update_user_btnDeletePhoto);
-        update_user_btnSaveChanges = update_user_view.findViewById(R.id.update_user_btnSaveChanges);
-        update_user_et_firstName = update_user_view.findViewById(R.id.update_user_et_firstName);
-        update_user_et_lastName = update_user_view.findViewById(R.id.update_user_et_lastName);
-        update_user_et_parentName = update_user_view.findViewById(R.id.update_user_et_parentName);
-        update_user_et_fullName = update_user_view.findViewById(R.id.update_user_et_fullName);
-        update_user_etPhone = update_user_view.findViewById(R.id.update_user_etPhone);
-        update_user_etAddress = update_user_view.findViewById(R.id.update_user_etAddress);
-        update_user_etNumPersonal = update_user_view.findViewById(R.id.update_user_etNumPersonal);
-        update_user_etNumPersonalLayout = update_user_view.findViewById(R.id.update_user_etNumPersonalLayout);
-        update_user_etEmailToUser = update_user_view.findViewById(R.id.update_user_etEmailToUser);
-        update_user_etPasswordToUser = update_user_view.findViewById(R.id.update_user_etPasswordToUser);
-        update_user_et_gender = update_user_view.findViewById(R.id.update_user_et_gender);
-        update_user_et_role_autocomplete = update_user_view.findViewById(R.id.update_user_et_role_autocomplete);
-        update_user_saveChangesProgressBar = update_user_view.findViewById(R.id.update_user_saveChangesProgressBar);
-        update_user_uploadProgressBar = update_user_view.findViewById(R.id.update_user_uploadProgressBar);
-        update_user_swipeUpToRefresh = update_user_view.findViewById(R.id.update_user_swipeUpToRefresh);
-        update_user_et_coins_autocomplete = update_user_view.findViewById(R.id.update_user_et_coins_autocomplete);
-        update_user_et_balance_autocomplete = update_user_view.findViewById(R.id.update_user_et_balance_autocomplete);
-        update_user_et_grade_autocomplete = update_user_view.findViewById(R.id.update_user_et_grade_autocomplete);
-        update_user_etDateRegistration = update_user_view.findViewById(R.id.update_user_etDateRegistration);
+        initializeFields();
 
         ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
         update_user_et_gender.setAdapter(gender_adapter);
@@ -221,6 +199,32 @@ public class UpdateUserFragment extends Fragment {
         onBackPressed();
 
         return update_user_view;
+    }
+
+    private void initializeFields() {
+        update_user_imageOfProfile = update_user_view.findViewById(R.id.update_user_imageOfProfile);
+        update_user_btnUploadNewPicture = update_user_view.findViewById(R.id.update_user_btnUploadNewPicture);
+        update_user_btnDeletePhoto = update_user_view.findViewById(R.id.update_user_btnDeletePhoto);
+        update_user_btnSaveChanges = update_user_view.findViewById(R.id.update_user_btnSaveChanges);
+        update_user_et_firstName = update_user_view.findViewById(R.id.update_user_et_firstName);
+        update_user_et_lastName = update_user_view.findViewById(R.id.update_user_et_lastName);
+        update_user_et_parentName = update_user_view.findViewById(R.id.update_user_et_parentName);
+        update_user_et_fullName = update_user_view.findViewById(R.id.update_user_et_fullName);
+        update_user_etPhone = update_user_view.findViewById(R.id.update_user_etPhone);
+        update_user_etAddress = update_user_view.findViewById(R.id.update_user_etAddress);
+        update_user_etNumPersonal = update_user_view.findViewById(R.id.update_user_etNumPersonal);
+        update_user_etNumPersonalLayout = update_user_view.findViewById(R.id.update_user_etNumPersonalLayout);
+        update_user_etEmailToUser = update_user_view.findViewById(R.id.update_user_etEmailToUser);
+        update_user_etPasswordToUser = update_user_view.findViewById(R.id.update_user_etPasswordToUser);
+        update_user_et_gender = update_user_view.findViewById(R.id.update_user_et_gender);
+        update_user_et_role_autocomplete = update_user_view.findViewById(R.id.update_user_et_role_autocomplete);
+        update_user_saveChangesProgressBar = update_user_view.findViewById(R.id.update_user_saveChangesProgressBar);
+        update_user_uploadProgressBar = update_user_view.findViewById(R.id.update_user_uploadProgressBar);
+        update_user_swipeUpToRefresh = update_user_view.findViewById(R.id.update_user_swipeUpToRefresh);
+        update_user_et_coins_autocomplete = update_user_view.findViewById(R.id.update_user_et_coins_autocomplete);
+        update_user_et_balance_autocomplete = update_user_view.findViewById(R.id.update_user_et_balance_autocomplete);
+        update_user_et_grade_autocomplete = update_user_view.findViewById(R.id.update_user_et_grade_autocomplete);
+        update_user_etDateRegistration = update_user_view.findViewById(R.id.update_user_etDateRegistration);
     }
 
     private void onBackPressed() {

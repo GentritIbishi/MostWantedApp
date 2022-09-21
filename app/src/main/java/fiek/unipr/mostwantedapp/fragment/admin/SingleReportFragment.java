@@ -2,6 +2,7 @@ package fiek.unipr.mostwantedapp.fragment.admin;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.EditTextHelper.disableEditable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -65,6 +66,7 @@ import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.gallery.CustomizedGalleryAdapter;
+import fiek.unipr.mostwantedapp.utils.BitmapHelper;
 
 public class SingleReportFragment extends Fragment {
 
@@ -118,16 +120,7 @@ public class SingleReportFragment extends Fragment {
         storageReference = FirebaseStorage.getInstance().getReference();
         uID = firebaseUser.getUid();
 
-        et_report_uid = view.findViewById(R.id.et_report_uid);
-        et_report_informer = view.findViewById(R.id.et_report_informer);
-        et_report_date_time = view.findViewById(R.id.et_report_date_time);
-        et_report_title = view.findViewById(R.id.et_report_title);
-        et_report_description = view.findViewById(R.id.et_report_description);
-        imageView = view.findViewById(R.id.imageView);
-        image_gallery = view.findViewById(R.id.image_gallery);
-        auto_complete_report_status = view.findViewById(R.id.auto_complete_report_status);
-        btnSaveReport = view.findViewById(R.id.btnSaveReport);
-        autocomplete_report_status_layout = view.findViewById(R.id.autocomplete_report_status_layout);
+        initializeFields();
 
         getFromBundle(singleReportMapBundle);
 
@@ -148,7 +141,22 @@ public class SingleReportFragment extends Fragment {
         disableEditable(et_report_title);
         disableEditable(et_report_description);
 
+        onBackPressed();
+
         return view;
+    }
+
+    private void initializeFields() {
+        et_report_uid = view.findViewById(R.id.et_report_uid);
+        et_report_informer = view.findViewById(R.id.et_report_informer);
+        et_report_date_time = view.findViewById(R.id.et_report_date_time);
+        et_report_title = view.findViewById(R.id.et_report_title);
+        et_report_description = view.findViewById(R.id.et_report_description);
+        imageView = view.findViewById(R.id.imageView);
+        image_gallery = view.findViewById(R.id.image_gallery);
+        auto_complete_report_status = view.findViewById(R.id.auto_complete_report_status);
+        btnSaveReport = view.findViewById(R.id.btnSaveReport);
+        autocomplete_report_status_layout = view.findViewById(R.id.autocomplete_report_status_layout);
     }
 
     private void setDropDownOptions() {
@@ -196,15 +204,6 @@ public class SingleReportFragment extends Fragment {
                         Toast.makeText(getContext(), getContext().getText(R.string.failed_to_save), Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private void disableEditable(TextInputEditText textInputEditText) {
-        textInputEditText.setFocusable(false);
-        textInputEditText.setFocusableInTouchMode(false);
-        textInputEditText.setClickable(false);
-        textInputEditText.setKeyListener(null);
-        textInputEditText.setCursorVisible(false);
-        textInputEditText.setPressed(false);
     }
 
     private void setReportInformation(String uID, String date_time, String informer_person, String title, String description, String status) {
@@ -314,7 +313,7 @@ public class SingleReportFragment extends Fragment {
 
                                         @Override
                                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                            Bitmap newBitmap = addBorder(resource, getContext());
+                                            Bitmap newBitmap = BitmapHelper.addBorder(resource, getContext());
                                             LatLng latLng = new LatLng(latitude, longitude);
 
                                             Geocoder geocoder;
@@ -357,32 +356,6 @@ public class SingleReportFragment extends Fragment {
                         Toast.makeText(getContext(), getContext().getText(R.string.error_failed_to_get_image_from_database)+"", Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private static Bitmap addBorder(Bitmap resource, Context context) {
-        int w = resource.getWidth();
-        int h = resource.getHeight();
-        int radius = Math.min(h / 2, w / 2);
-        Bitmap output = Bitmap.createBitmap(w + 8, h + 8, Bitmap.Config.ARGB_8888);
-        Paint p = new Paint();
-        p.setAntiAlias(true);
-        Canvas c = new Canvas(output);
-        c.drawARGB(0, 0, 0, 0);
-        p.setStyle(Paint.Style.FILL);
-        c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
-        p.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        c.drawBitmap(resource, 4, 4, p);
-        p.setXfermode(null);
-        p.setStyle(Paint.Style.STROKE);
-        p.setColor(ContextCompat.getColor(context, R.color.gray));
-        p.setStrokeWidth(10);
-        c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
-        return output;
-    }
-
-    public static boolean empty( final String s ) {
-        // Null-safe, short-circuit evaluation.
-        return s == null || s.trim().isEmpty();
     }
 
     @Override

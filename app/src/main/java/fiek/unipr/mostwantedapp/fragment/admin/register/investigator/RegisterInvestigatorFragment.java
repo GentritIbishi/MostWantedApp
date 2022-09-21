@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.DateInputMask;
 import fiek.unipr.mostwantedapp.models.Investigator;
 
@@ -276,7 +277,7 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
             String investigator_id = collectionReference.document().getId();
 
             Investigator investigator = new Investigator(investigator_id, firstName, lastName, parentName, fullName, birthday, address, eyeColor, hairColor, phy_appearance,
-                    null, getTimeDate(), age, gender, height, weight);
+                    null, DateHelper.getDateTime(), age, gender, height, weight);
 
 
             firebaseFirestore.collection(INVESTIGATORS).document(fullName).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -313,16 +314,6 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
                 }
             });
 
-        }
-    }
-
-    public static String getTimeDate() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
         }
     }
 

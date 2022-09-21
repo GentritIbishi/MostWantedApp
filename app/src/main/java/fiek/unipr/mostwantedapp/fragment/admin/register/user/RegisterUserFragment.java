@@ -46,6 +46,7 @@ import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.SecurityHelper;
 import fiek.unipr.mostwantedapp.utils.SpinnerAdapter;
 import fiek.unipr.mostwantedapp.models.User;
@@ -223,7 +224,7 @@ public class RegisterUserFragment extends Fragment {
             admin_ri_progressBar.setVisibility(View.VISIBLE);
             admin_bt_Register.setEnabled(false);
 
-            if(checkConnection()){
+            if(CheckInternet.isConnected(getContext())){
                 String finalGrade = grade;
 
                 firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -242,7 +243,7 @@ public class RegisterUserFragment extends Fragment {
                                     role,
                                     phone,
                                     personal_number,
-                                    getTimeDate(),
+                                    DateHelper.getDateTime(),
                                     finalGrade,
                                     password,
                                     urlOfProfile,
@@ -286,7 +287,7 @@ public class RegisterUserFragment extends Fragment {
                               String balance,
                               String coins,
                               Boolean isEmailVerified) throws Exception {
-        if(checkConnection()){
+        if(CheckInternet.isConnected(getContext())){
             SecurityHelper securityHelper = new SecurityHelper();
             String hashPassword = securityHelper.encrypt(password);
             documentReference = firebaseFirestore.collection(USERS).document(userID);
@@ -337,25 +338,6 @@ public class RegisterUserFragment extends Fragment {
             Toast.makeText(getContext(), getContext().getText(R.string.error_no_internet_connection_check_wifi_or_mobile_data), Toast.LENGTH_SHORT).show();
         }
 
-    }
-
-    private boolean checkConnection() {
-        CheckInternet checkInternet = new CheckInternet();
-        if(!checkInternet.isConnected(getContext())){
-            return false;
-        }else {
-            return true;
-        }
-    }
-
-    public static String getTimeDate() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
     }
 
     public void setEmptyFields() {

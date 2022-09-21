@@ -89,11 +89,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.maps.user.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.NotificationAdminState;
 import fiek.unipr.mostwantedapp.models.NotificationReportUser;
 import fiek.unipr.mostwantedapp.models.Person;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
@@ -197,7 +199,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
         realTimeCheckingForNewReport();
 
-        user_rightNowDateTime.setText(getDate());
+        user_rightNowDateTime.setText(DateHelper.getDate());
         getGrade(firebaseAuth);
         setupPieChart();
         setPieChart();
@@ -238,7 +240,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     }
 
     private void getGrade(FirebaseAuth firebaseAuth) {
-        if(checkConnection()){
+        if(CheckInternet.isConnected(getContext())){
             firebaseFirestore.collection(USERS)
                     .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -328,7 +330,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
                             switch (dc.getType()) {
                                 case MODIFIED:
-                                    saveNotificationInFirestoreModified(getDateTime(),
+                                    saveNotificationInFirestoreModified(DateHelper.getDateTime(),
                                             notificationType,
                                             notificationReportId,
                                             notificationReportUid,
@@ -508,19 +510,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         }
     }
 
-    public static String getDateTime() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
     //function that count all locations_reports: VERIFIED, UNVERIFIED, FAKE
     private void setPieChart() {
-        if(checkConnection()) {
+        if(CheckInternet.isConnected(getContext())) {
             firebaseFirestore.collection(LOCATION_REPORTS)
                     .whereEqualTo("uID", firebaseAuth.getUid())
                     .get()
@@ -554,7 +546,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                             user_home_tv_num_report_fake.setText(String.valueOf(newCountFAKE));
 
                             String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-                            if(!empty(phone))
+                            if(!StringHelper.empty(phone))
                             {
                                 //logged in with phone
                                 // A B C D E
@@ -650,11 +642,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         l.setEnabled(true);
     }
 
-    public static boolean empty( final String s ) {
-        // Null-safe, short-circuit evaluation.
-        return s == null || s.trim().isEmpty();
-    }
-
     private void loadInfoAnonymousFirebase() {
         if(firebaseAuth.getCurrentUser().isAnonymous()){
             user_hiDashboard.setText(getActivity().getText(R.string.hi)+" "+ANONYMOUS);
@@ -663,7 +650,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     }
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
-        if(checkConnection()){
+        if(CheckInternet.isConnected(getContext())){
             documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -697,7 +684,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
     private void loadInfoPhoneFirebase() {
         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-        if(!empty(phone))
+        if(!StringHelper.empty(phone))
         {
             //logged in with phone
             user_hiDashboard.setText(getActivity().getText(R.string.hi)+" "+phone);
@@ -711,25 +698,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("phone", phone);
         editor.commit();
-    }
-
-    public static String getDate() { // without parameter argument
-        try{
-            Date netDate = new Date(); // current time from here
-            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME_STYLE, Locale.getDefault());
-            return sfd.format(netDate);
-        } catch(Exception e) {
-            return "date";
-        }
-    }
-
-    private boolean checkConnection() {
-        CheckInternet checkInternet = new CheckInternet();
-        if(!checkInternet.isConnected(getContext())){
-            return false;
-        }else {
-            return true;
-        }
     }
 
     private void createNotificationChannel() {

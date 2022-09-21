@@ -99,28 +99,7 @@ public class ProfileFragment extends Fragment {
         storageReference = FirebaseStorage.getInstance().getReference();
         userID = firebaseAuth.getCurrentUser().getUid();
 
-        admin_imageOfProfile = admin_account_fragment_view.findViewById(R.id.admin_imageOfProfile);
-        admin_btnUploadNewPicture = admin_account_fragment_view.findViewById(R.id.admin_btnUploadNewPicture);
-        admin_btnDeletePhoto = admin_account_fragment_view.findViewById(R.id.admin_btnDeletePhoto);
-        admin_btnSaveChanges = admin_account_fragment_view.findViewById(R.id.admin_btnSaveChanges);
-        admin_et_firstName = admin_account_fragment_view.findViewById(R.id.admin_et_firstName);
-        admin_et_lastName = admin_account_fragment_view.findViewById(R.id.admin_et_lastName);
-        admin_et_parentName = admin_account_fragment_view.findViewById(R.id.admin_et_parentName);
-        admin_et_fullName = admin_account_fragment_view.findViewById(R.id.admin_et_fullName);
-        admin_etPhone = admin_account_fragment_view.findViewById(R.id.admin_etPhone);
-        admin_etAddress = admin_account_fragment_view.findViewById(R.id.admin_etAddress);
-        admin_etNumPersonal = admin_account_fragment_view.findViewById(R.id.admin_etNumPersonal);
-        admin_etNumPersonalLayout = admin_account_fragment_view.findViewById(R.id.admin_etNumPersonalLayout);
-        admin_etEmailToUser = admin_account_fragment_view.findViewById(R.id.admin_etEmailToUser);
-        admin_etPasswordToUser = admin_account_fragment_view.findViewById(R.id.admin_etPasswordToUser);
-        admin_et_gender = admin_account_fragment_view.findViewById(R.id.admin_et_gender);
-        admin_et_role_autocomplete = admin_account_fragment_view.findViewById(R.id.admin_et_role_autocomplete);
-        admin_saveChangesProgressBar = admin_account_fragment_view.findViewById(R.id.admin_saveChangesProgressBar);
-        admin_uploadProgressBar = admin_account_fragment_view.findViewById(R.id.admin_uploadProgressBar);
-        admin_et_coins_autocomplete = admin_account_fragment_view.findViewById(R.id.admin_et_coins_autocomplete);
-        admin_et_balance_autocomplete = admin_account_fragment_view.findViewById(R.id.admin_et_balance_autocomplete);
-        admin_et_grade_autocomplete = admin_account_fragment_view.findViewById(R.id.admin_et_grade_autocomplete);
-        admin_etDateRegistration = admin_account_fragment_view.findViewById(R.id.admin_etDateRegistration);
+        initializeFields();
 
         admin_et_gender.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,6 +221,31 @@ public class ProfileFragment extends Fragment {
         });
 
         return admin_account_fragment_view;
+    }
+
+    private void initializeFields() {
+        admin_imageOfProfile = admin_account_fragment_view.findViewById(R.id.admin_imageOfProfile);
+        admin_btnUploadNewPicture = admin_account_fragment_view.findViewById(R.id.admin_btnUploadNewPicture);
+        admin_btnDeletePhoto = admin_account_fragment_view.findViewById(R.id.admin_btnDeletePhoto);
+        admin_btnSaveChanges = admin_account_fragment_view.findViewById(R.id.admin_btnSaveChanges);
+        admin_et_firstName = admin_account_fragment_view.findViewById(R.id.admin_et_firstName);
+        admin_et_lastName = admin_account_fragment_view.findViewById(R.id.admin_et_lastName);
+        admin_et_parentName = admin_account_fragment_view.findViewById(R.id.admin_et_parentName);
+        admin_et_fullName = admin_account_fragment_view.findViewById(R.id.admin_et_fullName);
+        admin_etPhone = admin_account_fragment_view.findViewById(R.id.admin_etPhone);
+        admin_etAddress = admin_account_fragment_view.findViewById(R.id.admin_etAddress);
+        admin_etNumPersonal = admin_account_fragment_view.findViewById(R.id.admin_etNumPersonal);
+        admin_etNumPersonalLayout = admin_account_fragment_view.findViewById(R.id.admin_etNumPersonalLayout);
+        admin_etEmailToUser = admin_account_fragment_view.findViewById(R.id.admin_etEmailToUser);
+        admin_etPasswordToUser = admin_account_fragment_view.findViewById(R.id.admin_etPasswordToUser);
+        admin_et_gender = admin_account_fragment_view.findViewById(R.id.admin_et_gender);
+        admin_et_role_autocomplete = admin_account_fragment_view.findViewById(R.id.admin_et_role_autocomplete);
+        admin_saveChangesProgressBar = admin_account_fragment_view.findViewById(R.id.admin_saveChangesProgressBar);
+        admin_uploadProgressBar = admin_account_fragment_view.findViewById(R.id.admin_uploadProgressBar);
+        admin_et_coins_autocomplete = admin_account_fragment_view.findViewById(R.id.admin_et_coins_autocomplete);
+        admin_et_balance_autocomplete = admin_account_fragment_view.findViewById(R.id.admin_et_balance_autocomplete);
+        admin_et_grade_autocomplete = admin_account_fragment_view.findViewById(R.id.admin_et_grade_autocomplete);
+        admin_etDateRegistration = admin_account_fragment_view.findViewById(R.id.admin_etDateRegistration);
     }
 
     @Override
