@@ -1,7 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.user;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -12,7 +12,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -42,9 +41,7 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.SetProfileUserActivity;
-import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.utils.CircleTransform;
 
 public class SetProfileUserFragment extends Fragment {
 

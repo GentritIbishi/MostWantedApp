@@ -485,6 +485,7 @@
     <string name="no_data">No Data</string>
     <string name="loading">Loading</string>
     <string name="success_redirect_to_login">Success redirect to login page.</string>
+    <string name="failed_to_load_data">Failed to load data!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

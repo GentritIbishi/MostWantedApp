@@ -1,7 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.NOTIFICATION_USER;
-import static fiek.unipr.mostwantedapp.helpers.Constants.SEEN;
+import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_USER;
+import static fiek.unipr.mostwantedapp.utils.Constants.SEEN;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,8 +15,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,7 +35,7 @@ import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.report.modified.ModifiedReportNotificationAdapter;
-import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.maps.report.ReportInfoActivity;
 import fiek.unipr.mostwantedapp.models.NotificationReportUser;
 
@@ -41,6 +43,9 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
 
     private View notification_fragment_view;
     private RecyclerView user_lvReportNotification;
+    private LinearLayout notification_user_list_view1, notification_user_list_view2;
+    private TextView tv_notification_user_userListEmpty;
+    private ViewSwitcher notification_user_list_switcher;
     private ModifiedReportNotificationAdapter reportNotificationAdapter;
     private ArrayList<NotificationReportUser> reportArrayList;
     private FirebaseFirestore firebaseFirestore;
@@ -80,6 +85,10 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
 
     private void InitializeFields() {
         user_lvReportNotification = notification_fragment_view.findViewById(R.id.user_lvReportNotification);
+        notification_user_list_view1 = notification_fragment_view.findViewById(R.id.notification_user_list_view1);
+        notification_user_list_view2 = notification_fragment_view.findViewById(R.id.notification_user_list_view2);
+        tv_notification_user_userListEmpty = notification_fragment_view.findViewById(R.id.tv_notification_user_userListEmpty);
+        notification_user_list_switcher = notification_fragment_view.findViewById(R.id.notification_user_list_switcher);
         reportArrayList = new ArrayList<>();
         reportNotificationAdapter = new ModifiedReportNotificationAdapter(getContext(), reportArrayList, this);
         user_lvReportNotification.setAdapter(reportNotificationAdapter);
@@ -99,6 +108,9 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
+                            if(notification_user_list_switcher.getCurrentView() == notification_user_list_view2){
+                                notification_user_list_switcher.showNext();
+                            }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
@@ -112,8 +124,9 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
 
                             reportNotificationAdapter.notifyDataSetChanged();
                         } else {
-                            // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getActivity().getApplicationContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
+                            if(notification_user_list_switcher.getCurrentView() == notification_user_list_view1){
+                                notification_user_list_switcher.showNext();
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

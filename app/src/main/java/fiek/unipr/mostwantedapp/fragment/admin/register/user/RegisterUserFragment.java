@@ -1,16 +1,15 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.user;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.ADMIN_ROLE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.BALANCE_DEFAULT;
-import static fiek.unipr.mostwantedapp.helpers.Constants.COINS_DEFAULT;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
-import static fiek.unipr.mostwantedapp.helpers.Constants.GRADE_A;
-import static fiek.unipr.mostwantedapp.helpers.Constants.GRADE_E;
-import static fiek.unipr.mostwantedapp.helpers.Constants.INFORMER_ROLE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
+import static fiek.unipr.mostwantedapp.utils.Constants.COINS_DEFAULT;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_A;
+import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_E;
+import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
 
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -46,10 +45,9 @@ import java.util.Date;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.fragment.admin.register.person.SetProfilePersonFragment;
-import fiek.unipr.mostwantedapp.helpers.CheckInternet;
-import fiek.unipr.mostwantedapp.helpers.SecurityHelper;
-import fiek.unipr.mostwantedapp.helpers.SpinnerAdapter;
+import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.SecurityHelper;
+import fiek.unipr.mostwantedapp.utils.SpinnerAdapter;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterUserFragment extends Fragment {
@@ -115,7 +113,11 @@ public class RegisterUserFragment extends Fragment {
         admin_bt_Register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
                     register();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -152,7 +154,7 @@ public class RegisterUserFragment extends Fragment {
         return register_users_view;
     }
 
-    private void register() {
+    private void register() throws Exception {
         String name = admin_etName.getText().toString().trim();
         String lastName = admin_etLastName.getText().toString().trim();
         String fullName = name + " "+lastName;
@@ -285,7 +287,8 @@ public class RegisterUserFragment extends Fragment {
                               String coins,
                               Boolean isEmailVerified) throws Exception {
         if(checkConnection()){
-            String hashPassword = SecurityHelper.encrypt(password);
+            SecurityHelper securityHelper = new SecurityHelper();
+            String hashPassword = securityHelper.encrypt(password);
             documentReference = firebaseFirestore.collection(USERS).document(userID);
             User user = new User(
                     userID,

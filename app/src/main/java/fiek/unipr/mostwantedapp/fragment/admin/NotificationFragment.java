@@ -1,10 +1,9 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -19,8 +18,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,10 +36,9 @@ import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.report.report.ReportNotificationAdapter;
-import fiek.unipr.mostwantedapp.fragment.admin.SingleReportFragment;
-import fiek.unipr.mostwantedapp.helpers.MyButtonClickListener;
-import fiek.unipr.mostwantedapp.helpers.MySwipeHelper;
-import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.utils.MyButtonClickListener;
+import fiek.unipr.mostwantedapp.utils.MySwipeHelper;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Report;
 
 
@@ -46,6 +46,9 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
 
     private View notification_fragment_view;
     private RecyclerView lvReportNotification;
+    private LinearLayout notification_admin_list_view1, notification_admin_list_view2;
+    private TextView tv_notification_admin_userListEmpty;
+    private ViewSwitcher notification_admin_list_switcher;
     private ReportNotificationAdapter reportNotificationAdapter;
     private ArrayList<Report> reportArrayList;
     private FirebaseFirestore firebaseFirestore;
@@ -86,11 +89,14 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
 
     private void InitializeFields() {
         lvReportNotification = notification_fragment_view.findViewById(R.id.lvReportNotification);
+        notification_admin_list_view1 = notification_fragment_view.findViewById(R.id.notification_admin_list_view1);
+        notification_admin_list_view2 = notification_fragment_view.findViewById(R.id.notification_admin_list_view2);
+        notification_admin_list_switcher = notification_fragment_view.findViewById(R.id.notification_admin_list_switcher);
+        tv_notification_admin_userListEmpty = notification_fragment_view.findViewById(R.id.tv_notification_admin_userListEmpty);
         reportArrayList = new ArrayList<>();
         reportNotificationAdapter = new ReportNotificationAdapter(getContext(), reportArrayList, this);
         lvReportNotification.setAdapter(reportNotificationAdapter);
         lvReportNotification.setLayoutManager(new LinearLayoutManager(getContext()));
-        tv_empty = notification_fragment_view.findViewById(R.id.tv_empty);
     }
 
     private void loadDatainListview() {
@@ -108,6 +114,9 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
+                            if(notification_admin_list_switcher.getCurrentView() == notification_admin_list_view2){
+                                notification_admin_list_switcher.showNext();
+                            }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 Report report = d.toObject(Report.class);
@@ -116,8 +125,9 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
 
                             reportNotificationAdapter.notifyDataSetChanged();
                         } else {
-                            // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getActivity().getApplicationContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
+                            if(notification_admin_list_switcher.getCurrentView() == notification_admin_list_view1){
+                                notification_admin_list_switcher.showNext();
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

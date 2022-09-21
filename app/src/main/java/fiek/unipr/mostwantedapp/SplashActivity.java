@@ -1,8 +1,8 @@
 package fiek.unipr.mostwantedapp;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.ADMIN_ROLE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.ROLE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;

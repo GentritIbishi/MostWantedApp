@@ -1,8 +1,8 @@
 package fiek.unipr.mostwantedapp;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.FIRST_TIME_INSTALL;
-import static fiek.unipr.mostwantedapp.helpers.Constants.PREFERENCE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.YES;
+import static fiek.unipr.mostwantedapp.utils.Constants.FIRST_TIME_INSTALL;
+import static fiek.unipr.mostwantedapp.utils.Constants.PREFERENCE;
+import static fiek.unipr.mostwantedapp.utils.Constants.YES;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,9 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import fiek.unipr.mostwantedapp.helpers.OnSwipeTouchListener;
+import fiek.unipr.mostwantedapp.utils.OnSwipeTouchListener;
 
 public class GetStartedActivity extends AppCompatActivity {
 

@@ -1,7 +1,7 @@
-package fiek.unipr.mostwantedapp.helpers;
+package fiek.unipr.mostwantedapp.utils;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

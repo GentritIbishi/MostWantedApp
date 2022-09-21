@@ -1,11 +1,11 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.FAKE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.UNVERIFIED;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.VERIFIED;
+import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.utils.Constants.FAKE;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.UNVERIFIED;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -45,7 +45,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.helpers.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.CheckInternet;
 
 
 public class ProfileDashboardFragment extends Fragment {

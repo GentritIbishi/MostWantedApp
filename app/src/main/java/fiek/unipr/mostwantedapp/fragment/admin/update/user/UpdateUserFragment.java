@@ -1,9 +1,9 @@
 package fiek.unipr.mostwantedapp.fragment.admin.update.user;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.COINS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.EURO;
-import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.COINS;
+import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
+import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -45,13 +45,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
-import fiek.unipr.mostwantedapp.helpers.SecurityHelper;
+import fiek.unipr.mostwantedapp.utils.CircleTransform;
+import fiek.unipr.mostwantedapp.utils.SecurityHelper;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class UpdateUserFragment extends Fragment {
@@ -145,7 +142,11 @@ public class UpdateUserFragment extends Fragment {
         update_user_et_coins_autocomplete.setAdapter(coins_adapter);
 
         bundle = getArguments();
-        getAndSetFromBundle(bundle);
+        try {
+            getAndSetFromBundle(bundle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         loadImage();
 
@@ -162,7 +163,11 @@ public class UpdateUserFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 update_user_saveChangesProgressBar.setVisibility(View.VISIBLE);
+                try {
                     update();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -235,7 +240,7 @@ public class UpdateUserFragment extends Fragment {
         });
     }
 
-    private void getAndSetFromBundle(Bundle bundle) {
+    private void getAndSetFromBundle(Bundle bundle) throws Exception {
         if(bundle != null){
 
             //no need to change
@@ -261,8 +266,8 @@ public class UpdateUserFragment extends Fragment {
             update_user_et_parentName.setText(parentName);
 
             password = bundle.getString("password");
-
-            String decryptedPassword  = SecurityHelper.decrypt(password);
+            SecurityHelper securityHelper = new SecurityHelper();
+            String decryptedPassword  = securityHelper.decrypt(password);
             update_user_etPasswordToUser.setText(decryptedPassword);
 
             personal_number = bundle.getString("personal_number");
@@ -399,7 +404,8 @@ public class UpdateUserFragment extends Fragment {
         });
     }
 
-    private void update() {
+    private void update() throws Exception {
+        SecurityHelper securityHelper = new SecurityHelper();
         String new_name = update_user_et_firstName.getText().toString();
         String new_lastname = update_user_et_lastName.getText().toString();
         String new_fullName = update_user_et_fullName.getText().toString();
@@ -449,7 +455,7 @@ public class UpdateUserFragment extends Fragment {
             update_user_et_gender.setError(getText(R.string.error_gender_required));
             update_user_et_gender.requestFocus();
         }else {
-            String hashPassword = SecurityHelper.encrypt(new_password);
+            String hashPassword = securityHelper.encrypt(new_password);
             User user = new User(
                     userID,
                     new_name,
@@ -517,8 +523,13 @@ public class UpdateUserFragment extends Fragment {
                             update_user_etPhone.setText(phone);
                             update_user_etEmailToUser.setText(email);
                             update_user_et_gender.setText(gender);
-                            String decryptedPassword  = SecurityHelper.decrypt(password);
-                            update_user_etPasswordToUser.setText(decryptedPassword);
+                            try {
+                                SecurityHelper securityHelper = new SecurityHelper();
+                                String decryptedPassword  = securityHelper.decrypt(password);
+                                update_user_etPasswordToUser.setText(decryptedPassword);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                             update_user_et_role_autocomplete.setText(role);
                             update_user_et_fullName.setText(fullName);
                             update_user_et_grade_autocomplete.setText(grade);

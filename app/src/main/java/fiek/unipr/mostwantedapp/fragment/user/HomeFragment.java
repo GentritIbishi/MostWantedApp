@@ -1,17 +1,17 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME_STYLE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.FAKE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.HOME_USER_PREF;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.NA;
-import static fiek.unipr.mostwantedapp.helpers.Constants.NOTIFICATION_USER;
-import static fiek.unipr.mostwantedapp.helpers.Constants.UNVERIFIED;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.VERIFIED;
-import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME_STYLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.FAKE;
+import static fiek.unipr.mostwantedapp.utils.Constants.HOME_USER_PREF;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.NA;
+import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_USER;
+import static fiek.unipr.mostwantedapp.utils.Constants.UNVERIFIED;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
+import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
 import android.Manifest;
 import android.app.NotificationChannel;
@@ -43,8 +43,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -86,8 +88,8 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
-import fiek.unipr.mostwantedapp.helpers.CheckInternet;
-import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.maps.user.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.NotificationAdminState;
 import fiek.unipr.mostwantedapp.models.NotificationReportUser;
@@ -100,7 +102,10 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     public String HAS_NEW_STATUS_RIGHT_NOW;
     public String STATUS_OF_REPORT_HAS_CHANGED_TO;
     private View home_fragment_view;
-    private RecyclerView lvPersons;
+    private RecyclerView home_lvPersons;
+    private LinearLayout home_user_list_view1, home_user_list_view2;
+    private TextView tv_home_user_userListEmpty;
+    private ViewSwitcher home_user_list_switcher;
     private MapsInformerPersonListAdapter mapsInformerPersonListAdapter;
     private ArrayList<Person> personArrayList;
 
@@ -212,11 +217,11 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     }
 
     private void InitializeFields() {
-        lvPersons = home_fragment_view.findViewById(R.id.lvPersons);
+        home_lvPersons = home_fragment_view.findViewById(R.id.home_lvPersons);
         personArrayList = new ArrayList<>();
         mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getContext(), personArrayList, this);
-        lvPersons.setAdapter(mapsInformerPersonListAdapter);
-        lvPersons.setLayoutManager(new LinearLayoutManager(getContext()));
+        home_lvPersons.setAdapter(mapsInformerPersonListAdapter);
+        home_lvPersons.setLayoutManager(new LinearLayoutManager(getContext()));
         user_rightNowDateTime = home_fragment_view.findViewById(R.id.user_rightNowDateTime);
         user_hiDashboard = home_fragment_view.findViewById(R.id.user_hiDashboard);
         user_imageOfDashboard = home_fragment_view.findViewById(R.id.user_imageOfDashboard);
@@ -226,6 +231,10 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         user_home_tv_gradeOfUser = home_fragment_view.findViewById(R.id.user_home_tv_gradeOfUser);
         user_home_pieChart = home_fragment_view.findViewById(R.id.user_home_pieChart);
         user_tv_balance = home_fragment_view.findViewById(R.id.user_tv_balance);
+        home_user_list_switcher = home_fragment_view.findViewById(R.id.home_user_list_switcher);
+        home_user_list_view1 = home_fragment_view.findViewById(R.id.home_user_list_view1);
+        home_user_list_view2 = home_fragment_view.findViewById(R.id.home_user_list_view2);
+        tv_home_user_userListEmpty = home_fragment_view.findViewById(R.id.tv_home_user_userListEmpty);
     }
 
     private void getGrade(FirebaseAuth firebaseAuth) {
@@ -261,6 +270,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
+                            if(home_user_list_switcher.getCurrentView() == home_user_list_view2){
+                                home_user_list_switcher.showNext();
+                            }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
@@ -276,8 +288,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
                             mapsInformerPersonListAdapter.notifyDataSetChanged();
                         } else {
-                            // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getActivity().getApplicationContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
+                            if(home_user_list_switcher.getCurrentView() == home_user_list_view1){
+                                home_user_list_switcher.showNext();
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -285,7 +298,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                     public void onFailure(@NonNull Exception e) {
                         // we are displaying a toast message
                         // when we get any error from Firebase.
-                        Toast.makeText(getActivity().getApplicationContext(), "Fail to load data..", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

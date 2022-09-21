@@ -1,11 +1,11 @@
 package fiek.unipr.mostwantedapp;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.BALANCE_DEFAULT;
-import static fiek.unipr.mostwantedapp.helpers.Constants.COINS_DEFAULT;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
-import static fiek.unipr.mostwantedapp.helpers.Constants.GRADE_E;
-import static fiek.unipr.mostwantedapp.helpers.Constants.INFORMER_ROLE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
+import static fiek.unipr.mostwantedapp.utils.Constants.COINS_DEFAULT;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_E;
+import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,8 +39,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import fiek.unipr.mostwantedapp.helpers.CheckInternet;
-import fiek.unipr.mostwantedapp.helpers.SecurityHelper;
+import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.SecurityHelper;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -90,7 +90,11 @@ public class RegisterActivity extends AppCompatActivity {
         bt_Register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
                     register();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -135,7 +139,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private void register() {
+    private void register() throws Exception {
+        SecurityHelper securityHelper = new SecurityHelper();
         String name = etName.getText().toString().trim();
         String lastName = etLastName.getText().toString().trim();
         String fullName = name + " "+lastName;
@@ -195,12 +200,11 @@ public class RegisterActivity extends AppCompatActivity {
             ri_progressBar.setVisibility(View.VISIBLE);
             bt_Register.setEnabled(false);
 
-            String hashPassword = SecurityHelper.encrypt(password);
+            String hashPassword = securityHelper.encrypt(password);
             if(checkConnection()){
                 firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                     @Override
                     public void onSuccess(AuthResult authResult) {
-
                         String userID = authResult.getUser().getUid();
                         String register_date_time = getTimeDate();
                         registerUser(

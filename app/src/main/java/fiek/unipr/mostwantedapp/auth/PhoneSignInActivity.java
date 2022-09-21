@@ -1,7 +1,7 @@
 package fiek.unipr.mostwantedapp.auth;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.MAIN_TAG;
-import static fiek.unipr.mostwantedapp.helpers.Constants.PHONE_INFORMER_PREFS;
+import static fiek.unipr.mostwantedapp.utils.Constants.MAIN_TAG;
+import static fiek.unipr.mostwantedapp.utils.Constants.PHONE_INFORMER_PREFS;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

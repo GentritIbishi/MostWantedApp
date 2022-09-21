@@ -1,6 +1,9 @@
 package fiek.unipr.mostwantedapp.fragment.admin.update.person;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
 import android.os.Bundle;
 
@@ -16,7 +19,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -25,24 +31,30 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.update.person.UpdatePersonListAdapter;
-import fiek.unipr.mostwantedapp.helpers.MyButtonClickListener;
-import fiek.unipr.mostwantedapp.helpers.MySwipeHelper;
-import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.utils.MyButtonClickListener;
+import fiek.unipr.mostwantedapp.utils.MySwipeHelper;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class UpdatePersonListFragment extends Fragment implements RecyclerViewInterface {
 
     private View update_person_view;
     private RecyclerView lvUpdatePersons;
+    private LinearLayout update_person_list_view1, update_person_list_view2;
+    private TextView tv_update_personListEmpty;
+    private ViewSwitcher update_person_list_switcher;
     private ArrayList<Person> personArrayList;
     private UpdatePersonListAdapter updatePersonListAdapter;
     private FirebaseFirestore firebaseFirestore;
+    private StorageReference storageReference;
     private TextInputEditText update_et_person_search_filter;
 
     public UpdatePersonListFragment() {}
@@ -51,6 +63,7 @@ public class UpdatePersonListFragment extends Fragment implements RecyclerViewIn
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
     }
 
     @Override
@@ -61,9 +74,14 @@ public class UpdatePersonListFragment extends Fragment implements RecyclerViewIn
         // initializing our variable for firebase
         // firestore and getting its instance.
         firebaseFirestore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
         // below line is use to initialize our variables
         lvUpdatePersons = update_person_view.findViewById(R.id.lvUpdatePersons);
+        update_person_list_view1 = update_person_view.findViewById(R.id.update_person_list_view1);
+        update_person_list_view2 = update_person_view.findViewById(R.id.update_person_list_view2);
+        update_person_list_switcher = update_person_view.findViewById(R.id.update_person_list_switcher);
+        tv_update_personListEmpty = update_person_view.findViewById(R.id.tv_update_personListEmpty);
         update_et_person_search_filter = update_person_view.findViewById(R.id.update_et_person_search_filter);
         personArrayList = new ArrayList<>();
         updatePersonListAdapter = new UpdatePersonListAdapter(getContext(), personArrayList, this);
@@ -119,6 +137,9 @@ public class UpdatePersonListFragment extends Fragment implements RecyclerViewIn
                         // and inside this method we are checking if the received
                         // query snapshot is empty or not.
                         if (!queryDocumentSnapshots.isEmpty()) {
+                            if(update_person_list_switcher.getCurrentView() == update_person_list_view2){
+                                update_person_list_switcher.showNext();
+                            }
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
@@ -133,8 +154,9 @@ public class UpdatePersonListFragment extends Fragment implements RecyclerViewIn
                             }
                             updatePersonListAdapter.notifyDataSetChanged();
                         } else {
-                            // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
+                            if(update_person_list_switcher.getCurrentView() == update_person_list_view1){
+                                update_person_list_switcher.showNext();
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -142,7 +164,7 @@ public class UpdatePersonListFragment extends Fragment implements RecyclerViewIn
                     public void onFailure(@NonNull Exception e) {
                         // we are displaying a toast message
                         // when we get any error from Firebase.
-                        Toast.makeText(getContext(), "Fail to load data..", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -163,6 +185,9 @@ public class UpdatePersonListFragment extends Fragment implements RecyclerViewIn
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
+                            if(update_person_list_switcher.getCurrentView() == update_person_list_view2){
+                                update_person_list_switcher.showNext();
+                            }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
@@ -175,8 +200,9 @@ public class UpdatePersonListFragment extends Fragment implements RecyclerViewIn
                             }
                             updatePersonListAdapter.notifyDataSetChanged();
                         } else {
-                            // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();
+                            if(update_person_list_switcher.getCurrentView() == update_person_list_view1){
+                                update_person_list_switcher.showNext();
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -247,9 +273,20 @@ public class UpdatePersonListFragment extends Fragment implements RecyclerViewIn
                                         .delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void unused) {
-                                                Toast.makeText(getContext(), getContext().getText(R.string.person_is_deleted_successfully), Toast.LENGTH_SHORT).show();
-                                                personArrayList.clear();
-                                                loadDatainListview();
+                                                StorageReference fileRef = storageReference.child(PERSONS+"/"+ personIdToDelete +"/"+PROFILE_PICTURE);
+                                                fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void unused) {
+                                                        Toast.makeText(getContext(), getContext().getText(R.string.person_is_deleted_successfully), Toast.LENGTH_SHORT).show();
+                                                        personArrayList.clear();
+                                                        loadDatainListview();
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override

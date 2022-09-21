@@ -1,14 +1,14 @@
 package fiek.unipr.mostwantedapp;
 
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.ADMIN_ROLE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.INFORMER_ROLE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LOGIN_INFORMER_PREFS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LOGIN_HISTORY;
-import static fiek.unipr.mostwantedapp.helpers.Constants.PREFS_NAME;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOGIN_INFORMER_PREFS;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOGIN_HISTORY;
+import static fiek.unipr.mostwantedapp.utils.Constants.PREFS_NAME;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,16 +38,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import fiek.unipr.mostwantedapp.auth.ForgotPasswordActivity;
 import fiek.unipr.mostwantedapp.auth.PhoneSignInActivity;
 import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
-import fiek.unipr.mostwantedapp.helpers.CheckInternet;
-import fiek.unipr.mostwantedapp.helpers.DateHelper;
-import fiek.unipr.mostwantedapp.helpers.SecurityHelper;
+import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
+import fiek.unipr.mostwantedapp.utils.SecurityHelper;
 import fiek.unipr.mostwantedapp.models.LoginHistory;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -104,7 +101,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }else if(firebaseUser.isEmailVerified()){
                 String email = etEmail.getText().toString();
                 String password = etPassword.getText().toString();
-                checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid(), email, password);
+                checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid());
             }else if(firebaseUser.getPhoneNumber() != null){
                 goToInformerDashboard();
             }
@@ -115,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_remember:
-                startActivity(new Intent(this, RegisterActivity.class));
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
                 break;
             case R.id.btnPhone:
                 enableProgressBar(phone_progressBar, btnPhone);
@@ -123,7 +120,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 phone.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        startActivity(new Intent(getApplicationContext(), PhoneSignInActivity.class));
+                        startActivity(new Intent(LoginActivity.this, PhoneSignInActivity.class));
                         disableProgressBar(phone_progressBar, btnPhone);
                     }
                 }, 1000);
@@ -200,7 +197,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (task.isSuccessful() && task.getResult() != null) {
                         if(firebaseAuth.getCurrentUser().isEmailVerified()) {
                             String userID = task.getResult().getUser().getUid();
-                            checkUserRoleAndGoToDashboard(userID, email, password);
+                            checkUserRoleAndGoToDashboard(userID);
                         }else {
                             sendEmailVerification();
                         }
@@ -217,7 +214,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void checkUserRoleAndGoToDashboard(String userID, String email, String password){
+    private void checkUserRoleAndGoToDashboard(String userID){
         if(checkConnection()){
             documentReference = firebaseFirestore.collection(USERS).document(userID);
             documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -227,6 +224,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     {
                         String role = documentSnapshot.getString("role");
                         String fullName = documentSnapshot.getString("fullName");
+                        String email = etEmail.getText().toString();
+                        String password = etPassword.getText().toString();
                         String date_time = DateHelper.getDateTime();
                         SecurityHelper securityHelper = new SecurityHelper();
                         String hashPassword = securityHelper.encrypt(password);

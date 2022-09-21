@@ -1,8 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin.search;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -17,7 +16,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,13 +36,16 @@ import java.util.Map;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.report.location.ManageLocationReportListAdapter;
 import fiek.unipr.mostwantedapp.fragment.admin.SingleReportFragment;
-import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Report;
 
 public class SearchManageLocationReportsFragment extends Fragment implements RecyclerViewInterface {
 
     private View location_reports_view;
     private RecyclerView lvLocationReports_manage;
+    private LinearLayout manage_location_list_view1, manage_location_list_view2;
+    private TextView tv_manage_location_userListEmpty;
+    private ViewSwitcher manage_location_list_switcher;
     private ManageLocationReportListAdapter manageLocationReportListAdapter;
     private ArrayList<Report> reportArrayList;
     private FirebaseFirestore firebaseFirestore;
@@ -95,6 +100,10 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
 
     private void InitializeFields() {
         locationReports_search_filter = location_reports_view.findViewById(R.id.locationReports_search_filter);
+        manage_location_list_view1 = location_reports_view.findViewById(R.id.manage_location_list_view1);
+        manage_location_list_view2 = location_reports_view.findViewById(R.id.manage_location_list_view2);
+        manage_location_list_switcher = location_reports_view.findViewById(R.id.manage_location_list_switcher);
+        tv_manage_location_userListEmpty = location_reports_view.findViewById(R.id.tv_manage_location_userListEmpty);
         lvLocationReports_manage = location_reports_view.findViewById(R.id.lvLocationReports_manage);
         reportArrayList = new ArrayList<>();
         manageLocationReportListAdapter = new ManageLocationReportListAdapter(getContext(), reportArrayList, this);
@@ -117,6 +126,9 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
+                            if(manage_location_list_switcher.getCurrentView() == manage_location_list_view2){
+                                manage_location_list_switcher.showNext();
+                            }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
@@ -129,8 +141,9 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
 
                             manageLocationReportListAdapter.notifyDataSetChanged();
                         } else {
-                            // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getActivity().getApplicationContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
+                            if(manage_location_list_switcher.getCurrentView() == manage_location_list_view1){
+                                manage_location_list_switcher.showNext();
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -159,6 +172,9 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
+                            if(manage_location_list_switcher.getCurrentView() == manage_location_list_view2){
+                                manage_location_list_switcher.showNext();
+                            }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
@@ -170,8 +186,9 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
                             }
                             manageLocationReportListAdapter.notifyDataSetChanged();
                         } else {
-                            // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getActivity().getApplicationContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();
+                            if(manage_location_list_switcher.getCurrentView() == manage_location_list_view1){
+                                manage_location_list_switcher.showNext();
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

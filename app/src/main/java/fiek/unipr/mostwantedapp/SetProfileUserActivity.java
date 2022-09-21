@@ -1,7 +1,7 @@
 package fiek.unipr.mostwantedapp;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +35,7 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.utils.CircleTransform;
 
 public class SetProfileUserActivity extends AppCompatActivity {
 

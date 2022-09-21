@@ -1,13 +1,12 @@
-package fiek.unipr.mostwantedapp.helpers;
+package fiek.unipr.mostwantedapp.utils;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.widget.Toast;
 
 public class CheckInternet {
     
-    public boolean isConnected(Context context) {
+    public static boolean isConnected(Context context) {
 
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 

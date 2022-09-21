@@ -4,15 +4,15 @@ import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.ASSIGNED_REPORTS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.ASSIGNED_REPORTS_PDF;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DEFAULT_ZOOM;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DYNAMIC_DOMAIN;
-import static fiek.unipr.mostwantedapp.helpers.Constants.INVESTIGATORS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.REPORTS_ASSIGNED;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS_PDF;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
+import static fiek.unipr.mostwantedapp.utils.Constants.DYNAMIC_DOMAIN;
+import static fiek.unipr.mostwantedapp.utils.Constants.INVESTIGATORS;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.REPORTS_ASSIGNED;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

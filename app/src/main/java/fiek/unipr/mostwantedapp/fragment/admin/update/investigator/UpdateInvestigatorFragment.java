@@ -1,10 +1,10 @@
 package fiek.unipr.mostwantedapp.fragment.admin.update.investigator;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.AGE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.CM;
-import static fiek.unipr.mostwantedapp.helpers.Constants.INVESTIGATORS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.KG;
-import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.utils.Constants.AGE;
+import static fiek.unipr.mostwantedapp.utils.Constants.CM;
+import static fiek.unipr.mostwantedapp.utils.Constants.INVESTIGATORS;
+import static fiek.unipr.mostwantedapp.utils.Constants.KG;
+import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -44,8 +44,8 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
-import fiek.unipr.mostwantedapp.helpers.DateInputMask;
+import fiek.unipr.mostwantedapp.utils.CircleTransform;
+import fiek.unipr.mostwantedapp.utils.DateInputMask;
 import fiek.unipr.mostwantedapp.models.Investigator;
 
 public class UpdateInvestigatorFragment extends Fragment {

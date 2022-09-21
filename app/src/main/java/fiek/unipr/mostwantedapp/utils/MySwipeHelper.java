@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.helpers;
+package fiek.unipr.mostwantedapp.utils;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -15,7 +15,6 @@ import android.graphics.drawable.Drawable;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -28,8 +27,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-
-import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListFragment;
 
 public abstract class MySwipeHelper extends ItemTouchHelper.SimpleCallback {
 

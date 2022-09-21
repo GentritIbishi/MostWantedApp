@@ -1,43 +1,27 @@
 package fiek.unipr.mostwantedapp.adapter.report.modified;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
-import static fiek.unipr.mostwantedapp.helpers.Constants.FAKE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.UNVERIFIED;
-import static fiek.unipr.mostwantedapp.helpers.Constants.VERIFIED;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.FAKE;
+import static fiek.unipr.mostwantedapp.utils.Constants.UNVERIFIED;
+import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.update.user.UpdateUserListViewHolder;
-import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.maps.report.ReportInfoActivity;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.NotificationReportUser;
-import fiek.unipr.mostwantedapp.models.User;
 
 public class ModifiedReportNotificationAdapter extends RecyclerView.Adapter<ModifiedReportNotificationListViewHolder> {
 

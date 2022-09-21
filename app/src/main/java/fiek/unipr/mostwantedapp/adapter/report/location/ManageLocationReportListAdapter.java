@@ -1,7 +1,7 @@
 package fiek.unipr.mostwantedapp.adapter.report.location;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.report.location.ManageLocationListViewHolder;
-import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Report;
 
 public class ManageLocationReportListAdapter extends RecyclerView.Adapter<ManageLocationListViewHolder> {

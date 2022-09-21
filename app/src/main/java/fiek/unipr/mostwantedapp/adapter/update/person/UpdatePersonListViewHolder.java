@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 
 public class UpdatePersonListViewHolder extends RecyclerView.ViewHolder{
 

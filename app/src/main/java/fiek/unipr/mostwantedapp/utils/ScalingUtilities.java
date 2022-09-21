@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.helpers;
+package fiek.unipr.mostwantedapp.utils;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

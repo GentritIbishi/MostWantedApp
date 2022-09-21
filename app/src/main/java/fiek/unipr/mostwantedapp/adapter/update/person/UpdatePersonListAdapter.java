@@ -1,6 +1,6 @@
 package fiek.unipr.mostwantedapp.adapter.update.person;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
-import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.utils.CircleTransform;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class UpdatePersonListAdapter extends RecyclerView.Adapter<UpdatePersonListViewHolder> {

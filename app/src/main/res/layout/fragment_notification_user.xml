@@ -43,16 +43,52 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/user_bar">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/user_lvReportNotification"
+        <ViewSwitcher
+            android:id="@+id/notification_user_list_switcher"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:divider="@android:color/transparent"
-            android:layout_marginTop="5.0sp"
-            android:dividerHeight="5.0sp"
-            android:clickable="true"
-            android:focusable="true"
-            android:elevation="6dp"/>
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:inAnimation="@android:anim/slide_in_left">
+
+            <LinearLayout
+                android:id="@+id/notification_user_list_view1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/user_lvReportNotification"
+                    android:elevation="6dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginTop="5.0sp"
+                    android:clickable="true"
+                    android:background="@drawable/bg_listview_item"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="2.5sp"
+                    android:focusable="true"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/notification_user_list_view2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView android:id="@+id/tv_notification_user_userListEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/no_data"
+                    android:fontFamily="@font/open_sans"
+                    android:gravity="center"
+                    />
+
+            </LinearLayout>
+
+        </ViewSwitcher>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

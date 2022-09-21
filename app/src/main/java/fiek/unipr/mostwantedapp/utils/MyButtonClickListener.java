@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.helpers;
+package fiek.unipr.mostwantedapp.utils;
 
 public interface MyButtonClickListener {
     void onClick(int pos);

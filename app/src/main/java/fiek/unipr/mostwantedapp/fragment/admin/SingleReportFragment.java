@@ -1,7 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

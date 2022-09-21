@@ -85,18 +85,52 @@
                                 android:layout_marginTop="16dp"
                                 android:layout_marginBottom="16dp"/>
 
-                            <androidx.recyclerview.widget.RecyclerView
-                                android:id="@+id/lvPersons"
+                            <ViewSwitcher
+                                android:id="@+id/home_user_list_switcher"
                                 android:layout_width="match_parent"
-                                android:layout_height="414dp"
-                                android:layout_marginStart="8dp"
-                                android:layout_marginEnd="8dp"
-                                android:clickable="true"
-                                android:background="@android:color/transparent"
-                                android:divider="@android:color/transparent"
-                                android:dividerHeight="5.0sp"
-                                android:elevation="6dp"
-                                android:focusable="true" />
+                                android:layout_height="match_parent"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentTop="true"
+                                android:inAnimation="@android:anim/slide_in_left">
+
+                                   <LinearLayout
+                                       android:id="@+id/home_user_list_view1"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="match_parent">
+
+                                          <androidx.recyclerview.widget.RecyclerView
+                                              android:id="@+id/home_lvPersons"
+                                              android:elevation="6dp"
+                                              android:layout_width="match_parent"
+                                              android:layout_height="match_parent"
+                                              android:layout_marginStart="8dp"
+                                              android:layout_marginEnd="8dp"
+                                              android:layout_marginTop="5.0sp"
+                                              android:clickable="true"
+                                              android:background="@drawable/bg_listview_item"
+                                              android:divider="@android:color/transparent"
+                                              android:dividerHeight="2.5sp"
+                                              android:focusable="true"
+                                              />
+
+                                   </LinearLayout>
+
+                                   <LinearLayout
+                                       android:id="@+id/home_user_list_view2"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="match_parent">
+
+                                          <TextView android:id="@+id/tv_home_user_userListEmpty"
+                                              android:layout_width="match_parent"
+                                              android:layout_height="match_parent"
+                                              android:text="@string/no_data"
+                                              android:fontFamily="@font/open_sans"
+                                              android:gravity="center"
+                                              />
+
+                                   </LinearLayout>
+
+                            </ViewSwitcher>
 
                             <androidx.constraintlayout.widget.ConstraintLayout
                                 android:id="@+id/cons_analytics"

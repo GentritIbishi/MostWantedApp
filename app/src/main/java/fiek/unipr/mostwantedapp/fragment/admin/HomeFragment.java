@@ -1,14 +1,14 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME_STYLE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.FAKE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.NOTIFICATION_ADMIN;
-import static fiek.unipr.mostwantedapp.helpers.Constants.UNVERIFIED;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.VERIFIED;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME_STYLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.FAKE;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_ADMIN;
+import static fiek.unipr.mostwantedapp.utils.Constants.UNVERIFIED;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
 
 import android.app.Activity;
 import android.app.NotificationChannel;
@@ -66,9 +66,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -79,7 +77,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.search.SearchLocationReportsFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.search.SearchManageLocationReportsFragment;
-import fiek.unipr.mostwantedapp.helpers.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.models.NotificationAdmin;
 import fiek.unipr.mostwantedapp.models.NotificationAdminState;
 

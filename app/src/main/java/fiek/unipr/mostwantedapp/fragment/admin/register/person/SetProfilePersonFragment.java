@@ -1,8 +1,8 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.person;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.PERSONS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -39,9 +39,8 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.RegisterFragment;
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
+import fiek.unipr.mostwantedapp.utils.CircleTransform;
 
 public class SetProfilePersonFragment extends Fragment {
 

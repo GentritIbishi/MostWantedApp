@@ -1,6 +1,6 @@
 package fiek.unipr.mostwantedapp.fragment.admin.search;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -30,7 +33,7 @@ import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
-import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.maps.admin.MapsActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 
@@ -38,6 +41,9 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     private View search_admin_view;
     private RecyclerView lvPersons;
+    private LinearLayout search_admin_list_view1, search_admin_list_view2;
+    private TextView tv_search_admin_userListEmpty;
+    private ViewSwitcher search_admin_list_switcher;
     private MapsInformerPersonListAdapter mapsInformerPersonListAdapter;
     private ArrayList<Person> personArrayList;
     private FirebaseFirestore firebaseFirestore;
@@ -86,6 +92,10 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     private void InitializeFields() {
         admin_search_filter = search_admin_view.findViewById(R.id.admin_search_filter);
+        search_admin_list_view1 = search_admin_view.findViewById(R.id.search_admin_list_view1);
+        search_admin_list_view2 = search_admin_view.findViewById(R.id.search_admin_list_view2);
+        tv_search_admin_userListEmpty = search_admin_view.findViewById(R.id.tv_search_admin_userListEmpty);
+        search_admin_list_switcher = search_admin_view.findViewById(R.id.search_admin_list_switcher);
         lvPersons = search_admin_view.findViewById(R.id.lvPersons);
         personArrayList = new ArrayList<>();
         mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getContext(), personArrayList, this);
@@ -107,6 +117,9 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
+                            if(search_admin_list_switcher.getCurrentView() == search_admin_list_view2){
+                                search_admin_list_switcher.showNext();
+                            }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
@@ -119,8 +132,9 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
                             mapsInformerPersonListAdapter.notifyDataSetChanged();
                         } else {
-                            // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getActivity().getApplicationContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
+                            if(search_admin_list_switcher.getCurrentView() == search_admin_list_view1){
+                                search_admin_list_switcher.showNext();
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -128,7 +142,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                     public void onFailure(@NonNull Exception e) {
                         // we are displaying a toast message
                         // when we get any error from Firebase.
-                        Toast.makeText(getActivity().getApplicationContext(), "Fail to load data..", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -150,6 +164,9 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
+                            if(search_admin_list_switcher.getCurrentView() == search_admin_list_view2){
+                                search_admin_list_switcher.showNext();
+                            }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
@@ -161,8 +178,9 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                             }
                             mapsInformerPersonListAdapter.notifyDataSetChanged();
                         } else {
-                            // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getActivity().getApplicationContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();
+                            if(search_admin_list_switcher.getCurrentView() == search_admin_list_view1){
+                                search_admin_list_switcher.showNext();
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

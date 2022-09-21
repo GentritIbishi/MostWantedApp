@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.helpers;
+package fiek.unipr.mostwantedapp.utils;
 
 import com.lambdaworks.crypto.SCrypt;
 import org.apache.commons.codec.binary.Base64;

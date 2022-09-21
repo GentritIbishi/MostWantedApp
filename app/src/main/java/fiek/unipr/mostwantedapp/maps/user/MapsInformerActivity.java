@@ -1,18 +1,18 @@
 package fiek.unipr.mostwantedapp.maps.user;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.COURSE_LOCATION;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DEFAULT_ZOOM;
-import static fiek.unipr.mostwantedapp.helpers.Constants.FINE_LOCATION;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LATITUDE_DEFAULT;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_PERMISSION_REQUEST_CODE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LOCATION_REPORTS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LONGITUDE_DEFAULT;
-import static fiek.unipr.mostwantedapp.helpers.Constants.PHONE_USER;
-import static fiek.unipr.mostwantedapp.helpers.Constants.PICK_IMAGE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.utils.Constants.COURSE_LOCATION;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
+import static fiek.unipr.mostwantedapp.utils.Constants.FINE_LOCATION;
+import static fiek.unipr.mostwantedapp.utils.Constants.LATITUDE_DEFAULT;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_PERMISSION_REQUEST_CODE;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.LONGITUDE_DEFAULT;
+import static fiek.unipr.mostwantedapp.utils.Constants.PHONE_USER;
+import static fiek.unipr.mostwantedapp.utils.Constants.PICK_IMAGE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -38,7 +38,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -64,7 +63,7 @@ import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsInformerBinding;
-import fiek.unipr.mostwantedapp.helpers.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.models.ReportStatus;
 

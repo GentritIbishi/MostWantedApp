@@ -1,6 +1,6 @@
 package fiek.unipr.mostwantedapp.fragment.admin.search;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,8 +16,10 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,7 +33,7 @@ import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsLocationListAdapter;
-import fiek.unipr.mostwantedapp.helpers.RecyclerViewInterface;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.maps.admin.MapsActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 
@@ -39,6 +41,9 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
 
     private View locations_persons_view;
     private RecyclerView lvLocationPersonsFragment;
+    private LinearLayout search_location_list_view1, search_location_list_view2;
+    private TextView tv_search_location_userListEmpty;
+    private ViewSwitcher search_location_list_switcher;
     private MapsLocationListAdapter mapsLocationListAdapter;
     private ArrayList<Person> locationArrayList;
     private FirebaseFirestore firebaseFirestore;
@@ -87,6 +92,10 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
 
     private void InitializeFields() {
         lvLocationPersonsFragment = locations_persons_view.findViewById(R.id.lvLocationPersonsFragment);
+        search_location_list_view1 = locations_persons_view.findViewById(R.id.search_location_list_view1);
+        search_location_list_view2 = locations_persons_view.findViewById(R.id.search_location_list_view2);
+        search_location_list_switcher = locations_persons_view.findViewById(R.id.search_location_list_switcher);
+        tv_search_location_userListEmpty = locations_persons_view.findViewById(R.id.tv_search_location_userListEmpty);
         location_search_filter = locations_persons_view.findViewById(R.id.location_search_filter);
         locationArrayList = new ArrayList<>();
         mapsLocationListAdapter = new MapsLocationListAdapter(getContext(), locationArrayList, this);
@@ -107,6 +116,10 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
+                            if(search_location_list_switcher.getCurrentView() == search_location_list_view2){
+                                search_location_list_switcher.showNext();
+                            }
+
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
@@ -119,8 +132,9 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
 
                             mapsLocationListAdapter.notifyDataSetChanged();
                         } else {
-                            // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getContext(), "No data found in Database", Toast.LENGTH_SHORT).show();
+                            if(search_location_list_switcher.getCurrentView() == search_location_list_view1){
+                                search_location_list_switcher.showNext();
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -128,7 +142,7 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
                     public void onFailure(@NonNull Exception e) {
                         // we are displaying a toast message
                         // when we get any error from Firebase.
-                        Toast.makeText(getContext(), "Fail to load data..", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getContext().getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -149,6 +163,9 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
+                            if(search_location_list_switcher.getCurrentView() == search_location_list_view2){
+                                search_location_list_switcher.showNext();
+                            }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
@@ -160,8 +177,9 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
                             }
                             mapsLocationListAdapter.notifyDataSetChanged();
                         } else {
-                            // if the snapshot is empty we are displaying a toast message.
-                            Toast.makeText(getActivity().getApplicationContext(), R.string.please_type_name_like_hint, Toast.LENGTH_SHORT).show();
+                            if(search_location_list_switcher.getCurrentView() == search_location_list_view1){
+                                search_location_list_switcher.showNext();
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

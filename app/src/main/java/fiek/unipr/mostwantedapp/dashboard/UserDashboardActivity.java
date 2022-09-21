@@ -1,7 +1,7 @@
 package fiek.unipr.mostwantedapp.dashboard;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USER_INFORMER_PREFS;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.USER_INFORMER_PREFS;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -19,8 +19,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -43,14 +41,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.LoginActivity;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.user.AboutFragment;
-import fiek.unipr.mostwantedapp.fragment.user.AccountFragment;
 import fiek.unipr.mostwantedapp.fragment.user.HelpFragment;
 import fiek.unipr.mostwantedapp.fragment.user.HomeFragment;
 import fiek.unipr.mostwantedapp.fragment.user.NotificationFragment;
 import fiek.unipr.mostwantedapp.fragment.user.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.user.SearchFragment;
 import fiek.unipr.mostwantedapp.fragment.user.SettingsFragment;
-import fiek.unipr.mostwantedapp.helpers.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class UserDashboardActivity extends AppCompatActivity {
 
@@ -351,11 +349,6 @@ public class UserDashboardActivity extends AppCompatActivity {
         }
     }
 
-    public static boolean empty( final String s ) {
-        // Null-safe, short-circuit evaluation.
-        return s == null || s.trim().isEmpty();
-    }
-
     public void setSharedPreference(String phone) {
         SharedPreferences settings = getSharedPreferences(USER_INFORMER_PREFS, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -374,7 +367,6 @@ public class UserDashboardActivity extends AppCompatActivity {
     }
 
     //firebase logical function
-
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
             documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
@@ -411,7 +403,7 @@ public class UserDashboardActivity extends AppCompatActivity {
 
     private void loadInfoPhoneFirebase() {
         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-        if(!empty(phone))
+        if(!StringHelper.empty(phone))
         {
             //logged in with phone
             nav_header_name.setText(phone);

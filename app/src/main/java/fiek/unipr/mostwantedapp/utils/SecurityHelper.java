@@ -1,6 +1,6 @@
-package fiek.unipr.mostwantedapp.helpers;
+package fiek.unipr.mostwantedapp.utils;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.KEY;
+import static fiek.unipr.mostwantedapp.utils.Constants.KEY;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -16,11 +16,11 @@ public class SecurityHelper {
     public static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
     private KeySpec ks;
     private SecretKeyFactory skf;
-    private static Cipher cipher;
+    private Cipher cipher;
     byte[] arrayBytes;
     private String myEncryptionKey;
     private String myEncryptionScheme;
-    static SecretKey key;
+    SecretKey key;
 
     public SecurityHelper() throws Exception {
         myEncryptionKey = KEY;
@@ -33,7 +33,7 @@ public class SecurityHelper {
     }
 
 
-    public static String encrypt(String unencryptedString) {
+    public String encrypt(String unencryptedString) {
         String encryptedString = null;
         try {
             cipher.init(Cipher.ENCRYPT_MODE, key);
@@ -47,7 +47,7 @@ public class SecurityHelper {
     }
 
 
-    public static String decrypt(String encryptedString) {
+    public String decrypt(String encryptedString) {
         String decryptedText=null;
         try {
             cipher.init(Cipher.DECRYPT_MODE, key);

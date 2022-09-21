@@ -1,11 +1,11 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.ANONYMOUS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.COINS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.EURO;
-import static fiek.unipr.mostwantedapp.helpers.Constants.NA;
-import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.utils.Constants.COINS;
+import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
+import static fiek.unipr.mostwantedapp.utils.Constants.NA;
+import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -47,8 +47,8 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
-import fiek.unipr.mostwantedapp.helpers.SecurityHelper;
+import fiek.unipr.mostwantedapp.utils.CircleTransform;
+import fiek.unipr.mostwantedapp.utils.SecurityHelper;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class ProfileFragment extends Fragment {
@@ -187,7 +187,11 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 admin_saveChangesProgressBar.setVisibility(View.VISIBLE);
-                update();
+                try {
+                    update();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -508,7 +512,8 @@ public class ProfileFragment extends Fragment {
                 });
     }
 
-    private void update(){
+    private void update() throws Exception {
+        SecurityHelper securityHelper = new SecurityHelper();
         String new_name = admin_et_firstName.getText().toString();
         String new_lastname = admin_et_lastName.getText().toString();
         String new_fullName = admin_et_fullName.getText().toString();
@@ -579,7 +584,7 @@ public class ProfileFragment extends Fragment {
             admin_et_gender.setError(getText(R.string.error_gender_required));
             admin_et_gender.requestFocus();
         }else {
-            String hashPassword = SecurityHelper.encrypt(new_password);
+            String hashPassword = securityHelper.encrypt(new_password);
             User user = new User(
                     userID,
                     new_name,

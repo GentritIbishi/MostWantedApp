@@ -1,14 +1,14 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.person;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.AGE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.CM;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.DATE_TIME;
-import static fiek.unipr.mostwantedapp.helpers.Constants.EURO;
-import static fiek.unipr.mostwantedapp.helpers.Constants.KG;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LATITUDE_DEFAULT;
-import static fiek.unipr.mostwantedapp.helpers.Constants.LONGITUDE_DEFAULT;
-import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.AGE;
+import static fiek.unipr.mostwantedapp.utils.Constants.CM;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
+import static fiek.unipr.mostwantedapp.utils.Constants.KG;
+import static fiek.unipr.mostwantedapp.utils.Constants.LATITUDE_DEFAULT;
+import static fiek.unipr.mostwantedapp.utils.Constants.LONGITUDE_DEFAULT;
+import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
 import android.os.Bundle;
 
@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.helpers.DateInputMask;
+import fiek.unipr.mostwantedapp.utils.DateInputMask;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class RegisterPersonFragment extends Fragment implements View.OnClickListener {

@@ -1,7 +1,6 @@
 package fiek.unipr.mostwantedapp.dashboard;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.ADMIN_INFORMER_PREFS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -14,8 +13,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -47,15 +44,13 @@ import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.NotificationFragment;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.SettingsFragment;
-import fiek.unipr.mostwantedapp.helpers.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
     private int selectedTab = 1;
-    private Integer balance;
-    private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
-    private Uri photoURL;
-    private String user_anonymousID = null;
+    private String fullName, urlOfProfile;
 
     private DrawerLayout admin_drawerLayout_real;
     private ActionBarDrawerToggle admin_toggle;
@@ -66,15 +61,11 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private ImageView admin_homeImage, admin_searchImage, admin_notificationImage, admin_profileImage;
     private LinearLayout admin_homeLayout, admin_searchLayout, admin_notificationLayout, admin_profileLayout;
 
-    //nav header
     private TextView nav_header_name;
     private ImageView verifiedBadge;
     private CircleImageView nav_header_image_view, topImageProfile;
-    //nav header
 
-    //FirebaseDatabase
     private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     private DocumentReference documentReference;
@@ -251,18 +242,16 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void setHomeDefaultConfig() {
-
         setSupportActionBar(admin_toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-         admin_toolbar.setTitle("");
-         admin_toolbar.setSubtitle("");
+        admin_toolbar.setTitle("");
+        admin_toolbar.setSubtitle("");
 
         admin_toggle = new ActionBarDrawerToggle(AdminDashboardActivity.this, admin_drawerLayout_real, admin_toolbar, R.string.open, R.string.close);
         admin_drawerLayout_real.addDrawerListener(admin_toggle);
         admin_toggle.syncState();
 
         //set home fragment by default
-        // admin_homeLayout.setBackgroundResource(R.drawable.round_back_home_100);
         admin_homeImage.setImageResource(R.drawable.ic_home_selected);
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
@@ -337,31 +326,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private boolean checkConnection() {
-        CheckInternet checkInternet = new CheckInternet();
-        if(!checkInternet.isConnected(AdminDashboardActivity.this)){
-            return false;
-        }else {
-            return true;
-        }
-    }
-
     private void setVerifiedBadge(FirebaseUser firebaseUser) {
         if(firebaseUser.isEmailVerified()){
             verifiedBadge.setVisibility(View.VISIBLE);
         }
-    }
-
-    public static boolean empty( final String s ) {
-        // Null-safe, short-circuit evaluation.
-        return s == null || s.trim().isEmpty();
-    }
-
-    public void setSharedPreference(String phone) {
-        SharedPreferences settings = getSharedPreferences(ADMIN_INFORMER_PREFS, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("phone", phone);
-        editor.commit();
     }
 
     @Override
@@ -375,9 +343,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     //firebase logical function
-
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
-        if(checkConnection()){
+        if(CheckInternet.isConnected(getApplicationContext())){
             documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -415,11 +382,10 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     private void loadInfoPhoneFirebase() {
         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-        if(!empty(phone))
+        if(!StringHelper.empty(phone))
         {
             //logged in with phone
             nav_header_name.setText(phone);
-            setSharedPreference(phone);
             nav_header_image_view.setImageResource(R.drawable.ic_phone_login);
             topImageProfile.setImageResource(R.drawable.ic_phone_login);
         }

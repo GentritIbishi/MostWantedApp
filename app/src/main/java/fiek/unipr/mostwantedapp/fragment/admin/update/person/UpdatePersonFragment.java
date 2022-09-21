@@ -1,12 +1,12 @@
 package fiek.unipr.mostwantedapp.fragment.admin.update.person;
 
-import static fiek.unipr.mostwantedapp.helpers.Constants.AGE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.CM;
-import static fiek.unipr.mostwantedapp.helpers.Constants.EURO;
-import static fiek.unipr.mostwantedapp.helpers.Constants.KG;
-import static fiek.unipr.mostwantedapp.helpers.Constants.PERSONS;
-import static fiek.unipr.mostwantedapp.helpers.Constants.PROFILE_PICTURE;
-import static fiek.unipr.mostwantedapp.helpers.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.AGE;
+import static fiek.unipr.mostwantedapp.utils.Constants.CM;
+import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
+import static fiek.unipr.mostwantedapp.utils.Constants.KG;
+import static fiek.unipr.mostwantedapp.utils.Constants.PERSONS;
+import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,9 +20,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.provider.MediaStore;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,16 +47,13 @@ import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListFragment;
-import fiek.unipr.mostwantedapp.helpers.CircleTransform;
-import fiek.unipr.mostwantedapp.helpers.DateInputMask;
+import fiek.unipr.mostwantedapp.utils.CircleTransform;
+import fiek.unipr.mostwantedapp.utils.DateInputMask;
 import fiek.unipr.mostwantedapp.models.Person;
-import fiek.unipr.mostwantedapp.models.User;
 
 public class UpdatePersonFragment extends Fragment {
 
