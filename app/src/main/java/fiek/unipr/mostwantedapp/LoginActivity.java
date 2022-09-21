@@ -14,6 +14,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -58,6 +59,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextInputEditText etEmail, etPassword;
     private Button bt_Login, btnPhone, btnAnonymous;
     private ProgressBar login_progressBar, phone_progressBar, anonymous_progressBar;
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -124,16 +126,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btnPhone:
                 enableProgressBar(phone_progressBar, btnPhone);
+                setProgressDialog();
                 final Handler phone = new Handler(Looper.getMainLooper());
                 phone.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         startActivity(new Intent(LoginActivity.this, PhoneSignInActivity.class));
                         disableProgressBar(phone_progressBar, btnPhone);
+                        progressDialog.dismiss();
                     }
                 }, 1000);
                 break;
             case R.id.btnAnonymous:
+                setProgressDialog();
                 enableProgressBar(anonymous_progressBar, btnAnonymous);
                 final Handler anonymous = new Handler(Looper.getMainLooper());
                 anonymous.postDelayed(new Runnable() {
@@ -155,10 +160,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private void setProgressDialog() {
+        progressDialog = new ProgressDialog(this);
+        progressDialog.show();
+        progressDialog.setContentView(R.layout.progress_dialog_custom);
+        progressDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+    }
+
     private void Login() {
 
         login_progressBar.setVisibility(View.VISIBLE);
         bt_Login.setEnabled(false);
+        setProgressDialog();
 
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
@@ -168,6 +181,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             etEmail.setError(getText(R.string.error_email_required));
             etEmail.requestFocus();
             login_progressBar.setVisibility(View.GONE);
+            progressDialog.dismiss();
             bt_Login.setEnabled(true);
             return;
         }else if(!Patterns.EMAIL_ADDRESS.matcher(email).matches())
@@ -175,6 +189,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             etEmail.setError(getText(R.string.error_please_provide_valid_email));
             etEmail.requestFocus();
             login_progressBar.setVisibility(View.GONE);
+            progressDialog.dismiss();
             bt_Login.setEnabled(true);
             return;
         }else if(password.isEmpty())
@@ -182,6 +197,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             etPassword.setError(getText(R.string.error_password_required));
             etPassword.requestFocus();
             login_progressBar.setVisibility(View.GONE);
+            progressDialog.dismiss();
             bt_Login.setEnabled(true);
             return;
         }else if(password.length() < 6)
@@ -189,6 +205,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             etPassword.setError(getText(R.string.error_min_password_length));
             etPassword.requestFocus();
             login_progressBar.setVisibility(View.GONE);
+            progressDialog.dismiss();
             bt_Login.setEnabled(true);
             return;
         }else
@@ -245,18 +262,22 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (role != null && role.matches(ADMIN_ROLE)) {
                             login_progressBar.setVisibility(View.INVISIBLE);
                             bt_Login.setEnabled(true);
-                            Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
+                            progressDialog.setMessage(getApplicationContext().getText(R.string.logins_successfully));
+                            //Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
                             goToAdminDashboard();
+                            progressDialog.dismiss();
                         } else if(role != null && role.matches(USER_ROLE)){
                             login_progressBar.setVisibility(View.INVISIBLE);
                             bt_Login.setEnabled(true);
-                            Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
+                            progressDialog.setMessage(getApplicationContext().getText(R.string.logins_successfully));
                             goToUserDashboard();
+                            progressDialog.dismiss();
                         }else if(role != null && role.matches(INFORMER_ROLE)){
                             login_progressBar.setVisibility(View.INVISIBLE);
                             bt_Login.setEnabled(true);
-                            Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
+                            progressDialog.setMessage(getApplicationContext().getText(R.string.logins_successfully));
                             goToInformerDashboard();
+                            progressDialog.dismiss();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -266,6 +287,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     login_progressBar.setVisibility(View.INVISIBLE);
+                    progressDialog.dismiss();
                     bt_Login.setEnabled(true);
                     Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -289,6 +311,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, R.string.error_failed_to_login_as_anonymous, Toast.LENGTH_SHORT).show();
                 }
             });
@@ -360,6 +383,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void goToInformerDashboard() {
         Intent intent = new Intent(LoginActivity.this, UserDashboardActivity.class);
         startActivity(intent);
+        progressDialog.dismiss();
         finish();
     }
 
@@ -423,4 +447,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         progressBar.setVisibility(View.INVISIBLE);
         button.setEnabled(true);
     }
+
 }
