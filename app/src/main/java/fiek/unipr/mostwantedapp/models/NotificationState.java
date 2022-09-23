@@ -1,6 +1,6 @@
 package fiek.unipr.mostwantedapp.models;
 
-public enum NotificationAdminState {
+public enum NotificationState {
     ADDED,
     MODIFIED,
     REMOVED

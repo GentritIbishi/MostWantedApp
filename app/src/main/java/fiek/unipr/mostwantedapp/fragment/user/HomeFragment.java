@@ -5,6 +5,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.FAKE;
 import static fiek.unipr.mostwantedapp.utils.Constants.HOME_USER_PREF;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.NA;
+import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_ADMIN;
 import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_USER;
 import static fiek.unipr.mostwantedapp.utils.Constants.UNVERIFIED;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
@@ -40,7 +41,6 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -83,12 +83,13 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
+import fiek.unipr.mostwantedapp.models.Notification;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.ContextHelper;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.activity.maps.user.MapsInformerActivity;
-import fiek.unipr.mostwantedapp.models.NotificationAdminState;
-import fiek.unipr.mostwantedapp.models.NotificationReportUser;
+import fiek.unipr.mostwantedapp.models.NotificationState;
 import fiek.unipr.mostwantedapp.models.Person;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 
@@ -148,12 +149,14 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     @Override
     public void onStart() {
         super.onStart();
-        createNotificationChannel();
         if(firebaseAuth != null){
-            //getLocationPermission();
-            loadInfoFromFirebase(firebaseAuth);
-            loadInfoAnonymousFirebase();
-            loadInfoPhoneFirebase();
+            if(ContextHelper.checkContext(getContext())){
+                createNotificationChannelModified();
+                //getLocationPermission();
+                loadInfoFromFirebase(firebaseAuth);
+                loadInfoAnonymousFirebase();
+                loadInfoPhoneFirebase();
+            }
         }
     }
 
@@ -166,8 +169,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
-
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         InitializeFields();
         loadDatainListview();
@@ -186,7 +187,10 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
                 setupPieChart();
                 setPieChart();
-                checkingForNewReport(firebaseAuth.getUid());
+                if(getContext() != null)
+                {
+                    checkingForNewReport(firebaseAuth.getUid());
+                }
 
                 user_home_pullToRefreshProfileDashboard.setRefreshing(false);
             }
@@ -206,7 +210,10 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         Handler handler = new Handler();
         final Runnable r = new Runnable() {
             public void run() {
-                checkingForNewReport(firebaseAuth.getUid());
+                if(getContext() != null)
+                {
+                    checkingForNewReport(firebaseAuth.getUid());
+                }
                 handler.postDelayed(this, 1000);
             }
         };
@@ -321,7 +328,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                             String notificationReportWantedPerson = dc.getDocument().getString("wanted_person");
                             String notificationReportPrizeToWin = dc.getDocument().getString("prizeToWin");
                             String notificationReportNewStatus = dc.getDocument().getString("status");
-                            String notificationType = String.valueOf(NotificationAdminState.MODIFIED);
+                            String notificationType = String.valueOf(NotificationState.MODIFIED);
 
                             switch (dc.getType()) {
                                 case MODIFIED:
@@ -345,73 +352,101 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
     }
 
-    private void saveNotificationInFirestoreModified
-            (
-            String notificationDateTime,
-            String notificationType,
-            String notificationReportId,
-            String notificationReportUid,
-            String notificationReportDateTime,
-            String notificationReportTitle,
-            String notificationReportDescription,
-            String notificationReportInformerPerson,
-            String notificationReportWantedPerson,
-            String notificationReportPrizeToWin,
-            String notificationReportNewStatus
-            )
-    {
-
+    private void saveNotificationInFirestoreModified(String notificationDateTime,
+                                                  String notificationType,
+                                                  String notificationReportId,
+                                                  String notificationReportUid,
+                                                  String notificationReportDateTime,
+                                                  String notificationReportTitle,
+                                                  String notificationReportDescription,
+                                                  String notificationReportInformerPerson,
+                                                  String notificationReportWantedPerson,
+                                                  String notificationReportPrizeToWin,
+                                                  String notificationReportNewStatus) {
         CollectionReference collRef = firebaseFirestore.collection(NOTIFICATION_USER);
-        String notificationId = collRef.document().getId();
-        NotificationReportUser objNotificationReportUser = new NotificationReportUser
-                (
-                notificationId,
-                notificationDateTime,
-                notificationType,
-                notificationReportId,
-                notificationReportUid,
-                notificationReportDateTime,
-                notificationReportTitle,
-                notificationReportDescription,
-                notificationReportInformerPerson,
-                notificationReportWantedPerson,
-                notificationReportPrizeToWin,
-                notificationReportNewStatus
-                );
+        String notificationId = collRef.getId();
+        String notificationForUserId = firebaseAuth.getUid();
+        Notification notification = new Notification(notificationId, notificationDateTime, notificationType,
+                notificationReportId, notificationReportUid, notificationReportDateTime,
+                notificationReportTitle, notificationReportDescription, notificationReportInformerPerson, notificationReportWantedPerson,
+                notificationReportPrizeToWin, notificationReportNewStatus, notificationForUserId);
 
         firebaseFirestore.collection(NOTIFICATION_USER)
-                .document(notificationId)
-                .set(objNotificationReportUser).addOnSuccessListener(new OnSuccessListener<Void>() {
-                @Override
-                public void onSuccess(Void aVoid) {
-                    Uri modified_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                    int importance = NotificationManager.IMPORTANCE_DEFAULT;
-                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), "ID_MODIFIED_REPORT");
-                    notificationBuilder.setContentTitle(YOUR_REPORT_IN_DATETIME_TRANSLATEABLE+" "+notificationReportDateTime+" "+HAS_NEW_STATUS_RIGHT_NOW);
-                    notificationBuilder.setContentText(STATUS_OF_REPORT_HAS_CHANGED_TO+" "+
-                            notificationReportNewStatus);
-                    notificationBuilder.setSmallIcon(R.drawable.ic_app);
-                    notificationBuilder.setSound(modified_defaultSoundUri);
-                    notificationBuilder.setPriority(importance);
-                    notificationBuilder.setAutoCancel(true);
+                .whereEqualTo("notificationReportId", notificationReportId)
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(queryDocumentSnapshots.size() == 0){
+                            //save and make notification
+                            firebaseFirestore.collection(NOTIFICATION_USER).document().set(notification)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            //nese u bo save tash bo notification
+                                            //nese ska asni notification qe u bo bone ni notification te useri me uid per raportin qe ka bo
+                                            Uri modified_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                                            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), "NEW_REPORT_MODIFIED");
+                                            notificationBuilder.setContentTitle(YOUR_REPORT_IN_DATETIME_TRANSLATEABLE+" "+notificationReportDateTime+" "+HAS_NEW_STATUS_RIGHT_NOW);
+                                            notificationBuilder.setContentText(STATUS_OF_REPORT_HAS_CHANGED_TO+" "+
+                                                    notificationReportNewStatus);
+                                            notificationBuilder.setSmallIcon(R.drawable.ic_app);
+                                            notificationBuilder.setSound(modified_defaultSoundUri);
+                                            notificationBuilder.setPriority(importance);
+                                            notificationBuilder.setAutoCancel(true);
 
-                    int notificationReportStatusModified = sharedPreferences.getInt("notificationReportStatusModified", 1);
+                                            int notificationReportStatusModified = sharedPreferences.getInt("notificationReportStatusModified", 1);
 
-                    NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.notify(notificationReportStatusModified, notificationBuilder.build());
+                                            NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                                            notificationManager.notify(notificationReportStatusModified, notificationBuilder.build());
 
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    notificationReportStatusModified++;
-                    editor.putInt("notificationReportStatusModified", notificationReportStatusModified);
-                    editor.commit();
+                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                                            notificationReportStatusModified++;
+                                            editor.putInt("notificationReportStatusModified", notificationReportStatusModified);
+                                            editor.commit();
+                                        }
+                                    });
+                        }else {
+                            //nese egziston naj nja kqyr nese ja ke qu filan userit nese po mos ja qo ma, nese jo qoja
+                            for(int i=0; i<queryDocumentSnapshots.size();i++){
+                                String notificationForUserIdInside = queryDocumentSnapshots.getDocuments().get(i).getString("notificationReportUid");
+                                if(notificationForUserIdInside.equals(notificationForUserId)){
+                                    // i bjen qe i ka qu ma heret notification ketij useri
+                                }else {
+                                    //save and make notification
+                                    firebaseFirestore.collection(NOTIFICATION_USER).document().set(notification)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    //nese u bo save tash bo notification
+                                                    //nese ska asni notification qe u bo bone ni notification te useri me uid per raportin qe ka bo
+                                                    Uri modified_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                                    int importance = NotificationManager.IMPORTANCE_DEFAULT;
+                                                    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getContext(), "NEW_REPORT_MODIFIED");
+                                                    notificationBuilder.setContentTitle(YOUR_REPORT_IN_DATETIME_TRANSLATEABLE+" "+notificationReportDateTime+" "+HAS_NEW_STATUS_RIGHT_NOW);
+                                                    notificationBuilder.setContentText(STATUS_OF_REPORT_HAS_CHANGED_TO+" "+
+                                                            notificationReportNewStatus);
+                                                    notificationBuilder.setSmallIcon(R.drawable.ic_app);
+                                                    notificationBuilder.setSound(modified_defaultSoundUri);
+                                                    notificationBuilder.setPriority(importance);
+                                                    notificationBuilder.setAutoCancel(true);
 
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+                                                    int notificationReportStatusModified = sharedPreferences.getInt("notificationReportStatusModified", 1);
+
+                                                    NotificationManager notificationManager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                                                    notificationManager.notify(notificationReportStatusModified, notificationBuilder.build());
+
+                                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                    notificationReportStatusModified++;
+                                                    editor.putInt("notificationReportStatusModified", notificationReportStatusModified);
+                                                    editor.commit();
+                                                }
+                                            });
+                                }
+                            }
+                        }
+                    }
+                });
 
     }
 
@@ -695,13 +730,13 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         editor.commit();
     }
 
-    private void createNotificationChannel() {
+    private void createNotificationChannelModified() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String CHANNEL_ID = "ID_MODIFIED_REPORT";
-            CharSequence name = "NotificationReportUser";
-            String description = "This channel is for user, that send notification when status of report change in database!";
+            String CHANNEL_ID = "NEW_REPORT_MODIFIED";
+            CharSequence name = "USER REPORT MODIFIED NOTIFICATION";
+            String description = "This channel is for user, that send notification when one report state modified in database!";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
@@ -716,6 +751,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     public void onItemClick(int position) {
         Intent intent=new Intent(getContext(), MapsInformerActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle viewBundle = new Bundle();
+        viewBundle.putString("personId", personArrayList.get(position).getPersonId());
         viewBundle.putString("fullName", personArrayList.get(position).getFullName());
         viewBundle.putStringArrayList("acts", (ArrayList<String>) personArrayList.get(position).getActs());
         viewBundle.putString("address", personArrayList.get(position).getAddress());

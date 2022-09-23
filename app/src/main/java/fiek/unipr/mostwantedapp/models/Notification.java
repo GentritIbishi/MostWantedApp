@@ -1,6 +1,6 @@
 package fiek.unipr.mostwantedapp.models;
 
-public class NotificationReportUser {
+public class Notification {
     String  notificationId,
             notificationDateTime,
             notificationType,
@@ -12,12 +12,13 @@ public class NotificationReportUser {
             notificationReportInformerPerson,
             notificationReportWantedPerson,
             notificationReportPrizeToWin,
-            notificationReportNewStatus;
+            notificationReportNewStatus,
+            notificationForUserId;
 
-    public NotificationReportUser() {
+    public Notification() {
     }
 
-    public NotificationReportUser(String notificationId, String notificationDateTime, String notificationType, String notificationReportId, String notificationReportUid, String notificationReportDateTime, String notificationReportTitle, String notificationReportDescription, String notificationReportInformerPerson, String notificationReportWantedPerson, String notificationReportPrizeToWin, String notificationReportNewStatus) {
+    public Notification(String notificationId, String notificationDateTime, String notificationType, String notificationReportId, String notificationReportUid, String notificationReportDateTime, String notificationReportTitle, String notificationReportDescription, String notificationReportInformerPerson, String notificationReportWantedPerson, String notificationReportPrizeToWin, String notificationReportNewStatus, String notificationForUserId) {
         this.notificationId = notificationId;
         this.notificationDateTime = notificationDateTime;
         this.notificationType = notificationType;
@@ -30,6 +31,7 @@ public class NotificationReportUser {
         this.notificationReportWantedPerson = notificationReportWantedPerson;
         this.notificationReportPrizeToWin = notificationReportPrizeToWin;
         this.notificationReportNewStatus = notificationReportNewStatus;
+        this.notificationForUserId = notificationForUserId;
     }
 
     public String getNotificationId() {
@@ -126,5 +128,13 @@ public class NotificationReportUser {
 
     public void setNotificationReportNewStatus(String notificationReportNewStatus) {
         this.notificationReportNewStatus = notificationReportNewStatus;
+    }
+
+    public String getNotificationForUserId() {
+        return notificationForUserId;
+    }
+
+    public void setNotificationForUserId(String notificationForUserId) {
+        this.notificationForUserId = notificationForUserId;
     }
 }

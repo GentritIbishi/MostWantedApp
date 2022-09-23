@@ -78,7 +78,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private StorageReference storageReference;
     private DocumentReference documentReference;
 
-    private String wanted_person, acts, address, eyeColor, hairColor, phy_appearance, status, prize, urlOfProfile, informer_person_urlOfProfile;
+    private String personId, wanted_person, acts, address, eyeColor, hairColor, phy_appearance, status, prize, urlOfProfile, informer_person_urlOfProfile;
     private Integer age, height, weight;
     private Double latitude, longitude;
     private String description = "No description!";
@@ -167,6 +167,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
         try {
             bundle = getIntent().getExtras();
+            personId = bundle.getString("personId");
             wanted_person = bundle.getString("fullName");
             acts = bundle.getString("acts");
             address = bundle.getString("address");
@@ -324,8 +325,8 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         }
     }
 
-    private void setLastSeenLocation(Double latitude, Double longitude, String wanted_person) {
-        DocumentReference locationReports = firebaseFirestore.collection(WANTED_PERSONS).document(wanted_person);
+    private void setLastSeenLocation(Double latitude, Double longitude, String personId) {
+        DocumentReference locationReports = firebaseFirestore.collection(WANTED_PERSONS).document(personId);
 
         locationReports.update("latitude", latitude).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -416,7 +417,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful() && task !=null) {
                             // Toast.makeText(MapsInformerActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
-                            setLastSeenLocation(latitude, longitude, wanted_person);
+                            setLastSeenLocation(latitude, longitude, personId);
                             if(ImageList.size() != 0){
                                 for(upload_count = 0; upload_count < ImageList.size(); upload_count++){
                                     Uri IndividualImage = ImageList.get(upload_count);
@@ -478,7 +479,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful() && task !=null) {
-                            setLastSeenLocation(latitude, longitude, wanted_person);
+                            setLastSeenLocation(latitude, longitude, personId);
                             if(ImageList.size() != 0){
                                 for(int upload_count = 0; upload_count < ImageList.size(); upload_count++){
                                     Uri IndividualImage = ImageList.get(upload_count);
@@ -550,7 +551,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if(task.isSuccessful() && task !=null) {
-                                                setLastSeenLocation(latitude, longitude, wanted_person);
+                                                setLastSeenLocation(latitude, longitude, personId);
                                                 if(ImageList.size() != 0){
                                                     for(int upload_count = 0; upload_count < ImageList.size(); upload_count++){
                                                         Uri IndividualImage = ImageList.get(upload_count);

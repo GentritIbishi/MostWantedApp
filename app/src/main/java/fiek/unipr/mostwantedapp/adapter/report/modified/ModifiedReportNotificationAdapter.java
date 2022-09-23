@@ -17,21 +17,20 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.models.Notification;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.models.NotificationReportUser;
 
 public class ModifiedReportNotificationAdapter extends RecyclerView.Adapter<ModifiedReportNotificationListViewHolder> {
 
     private final RecyclerViewInterface recyclerViewInterface;
     private Context context;
     private String time_elapsed;
-    private List<NotificationReportUser> modifiedReportList;
+    private List<Notification> modifiedReportList;
 
-    public ModifiedReportNotificationAdapter(Context context, List<NotificationReportUser> modifiedReportList, RecyclerViewInterface recyclerViewInterface) {
+    public ModifiedReportNotificationAdapter(Context context, List<Notification> modifiedReportList, RecyclerViewInterface recyclerViewInterface) {
         this.context = context;
         this.modifiedReportList = modifiedReportList;
         this.recyclerViewInterface = recyclerViewInterface;

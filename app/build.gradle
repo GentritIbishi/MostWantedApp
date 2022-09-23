@@ -118,6 +118,6 @@ dependencies {
     implementation group: 'com.lambdaworks', name: 'scrypt', version: '1.4.0'
 
     implementation 'com.github.bumptech.glide:glide:4.9.0'
-
+    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 
 }
