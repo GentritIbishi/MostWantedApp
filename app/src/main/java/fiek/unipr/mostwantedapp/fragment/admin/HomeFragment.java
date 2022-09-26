@@ -249,7 +249,6 @@ public class HomeFragment extends Fragment {
                         }
 
                         for (DocumentChange dc : snapshots.getDocumentChanges()) {
-                            int countAdded, countModified, countRemoved;
 
                             String notificationReportId = dc.getDocument().getString("docId");
                             String notificationReportUid = dc.getDocument().getString("uID");
@@ -263,38 +262,28 @@ public class HomeFragment extends Fragment {
                             String doc = dc.getDocument().getId();
                             switch (dc.getType()) {
                                 case ADDED:
-                                    Log.d(TAG, "New city: " + dc.getDocument().getData());
-                                    for(countAdded = 0; countAdded < 1; countAdded++)
-                                    {
                                         makeNotification(DateHelper.getDateTime(), String.valueOf(NotificationState.ADDED),
                                                 notificationReportId, notificationReportUid, notificationReportDateTime,
                                                 notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
                                                 notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus,
                                                 Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid(),
                                                 CHANNEL_ID_ADDED, NOTIFICATION_NUMBER_1, 1);
-                                    }
                                     break;
                                 case MODIFIED:
-                                    for(countModified = 0; countModified < 1; countModified++)
-                                    {
                                         makeNotification(DateHelper.getDateTime(), String.valueOf(NotificationState.MODIFIED),
                                                 notificationReportId, notificationReportUid, notificationReportDateTime,
                                                 notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
                                                 notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus,
                                                 Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid(),
                                                 CHANNEL_ID_MODIFIED, NOTIFICATION_NUMBER_2, 2);
-                                    }
                                     break;
                                 case REMOVED:
-                                    for(countRemoved = 0; countRemoved < 1; countRemoved++)
-                                    {
                                         makeNotification(DateHelper.getDateTime(), String.valueOf(NotificationState.REMOVED),
                                                 notificationReportId, notificationReportUid, notificationReportDateTime,
                                                 notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
                                                 notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus,
                                                 Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid(),
                                                 CHANNEL_ID_REMOVED, NOTIFICATION_NUMBER_3, 3);
-                                    }
                                     break;
                             }
                         }

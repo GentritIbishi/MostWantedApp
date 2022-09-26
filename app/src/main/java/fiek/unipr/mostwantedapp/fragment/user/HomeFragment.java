@@ -227,7 +227,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                         }
 
                         for (DocumentChange dc : snapshots.getDocumentChanges()) {
-                            int countModified;
 
                             String notificationReportId = dc.getDocument().getString("docId");
                             String notificationReportUid = dc.getDocument().getString("uID");
@@ -240,14 +239,12 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                             String notificationReportNewStatus = dc.getDocument().getString("status");
                             switch (dc.getType()) {
                                 case MODIFIED:
-                                    for(countModified = 0; countModified < 1; countModified++) {
                                         makeNotification(DateHelper.getDateTime(), String.valueOf(NotificationState.MODIFIED),
                                                 notificationReportId, notificationReportUid, notificationReportDateTime,
                                                 notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
                                                 notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus,
                                                 userID,
                                                 CHANNEL_ID_USER_MODIFIED, NOTIFICATION_NUMBER_4, 4);
-                                    }
                                     break;
                             }
                         }
