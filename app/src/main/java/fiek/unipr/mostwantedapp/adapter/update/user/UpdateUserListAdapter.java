@@ -58,7 +58,7 @@ public class UpdateUserListAdapter extends RecyclerView.Adapter<UpdateUserListVi
 
             Date start_date = simpleDateFormat.parse(userList.get(position).getRegister_date_time());
             Date end_date = simpleDateFormat.parse(DateHelper.getDateTime());
-            DateHelper.printDifference(start_date, end_date, time_elapsed);
+            time_elapsed = DateHelper.printDifference(start_date, end_date);
 
             if (time_elapsed != null) {
                 holder.update_user_time_joined.setText(time_elapsed);

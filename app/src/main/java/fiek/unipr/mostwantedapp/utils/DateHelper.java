@@ -2,6 +2,7 @@ package fiek.unipr.mostwantedapp.utils;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME_STYLE;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,8 +32,19 @@ public class DateHelper {
         }
     }
 
-    public static void printDifference(Date startDate, Date endDate, String time_elapsed) {
+    public static String getDateTimeStyle() {
+        try{
+            Date netDate = new Date(); // current time from here
+            SimpleDateFormat sfd = new SimpleDateFormat(DATE_TIME_STYLE, Locale.getDefault());
+            return sfd.format(netDate);
+        } catch(Exception e) {
+            return "date";
+        }
+    }
+
+    public static String printDifference(Date startDate, Date endDate) {
         //milliseconds
+        String time_elapsed = "";
         long different = endDate.getTime() - startDate.getTime();
 
         long secondsInMilli = 1000;
@@ -54,17 +66,18 @@ public class DateHelper {
         long weeks = elapsedDays/7;
 
         if(weeks != 0){
-            time_elapsed = weeks+"w ";
+          return  time_elapsed = weeks+"w ";
         }else if(elapsedDays != 0) {
-            time_elapsed = elapsedDays+"d ";
+            return   time_elapsed = elapsedDays+"d ";
         }else if(elapsedHours != 0){
-            time_elapsed = elapsedHours+"h ";
+            return   time_elapsed = elapsedHours+"h ";
         }else if(elapsedMinutes != 0){
-            time_elapsed = elapsedMinutes+"m ";
+            return   time_elapsed = elapsedMinutes+"m ";
         }else if(elapsedSeconds != 0){
-            time_elapsed = elapsedSeconds+"s ";
+            return   time_elapsed = elapsedSeconds+"s ";
+        }else{
+            return time_elapsed;
         }
-
     }
 
     public static Date yesterday() {

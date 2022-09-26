@@ -1,9 +1,17 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
 import static android.content.ContentValues.TAG;
+import static fiek.unipr.mostwantedapp.utils.Constants.CHANNEL_ID_ADDED;
+import static fiek.unipr.mostwantedapp.utils.Constants.CHANNEL_ID_MODIFIED;
+import static fiek.unipr.mostwantedapp.utils.Constants.CHANNEL_ID_REMOVED;
 import static fiek.unipr.mostwantedapp.utils.Constants.FAKE;
+import static fiek.unipr.mostwantedapp.utils.Constants.IMPORTANCE;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_ADMIN;
+import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_HELPER_ADMIN;
+import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_NUMBER_1;
+import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_NUMBER_2;
+import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_NUMBER_3;
 import static fiek.unipr.mostwantedapp.utils.Constants.UNVERIFIED;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
@@ -29,7 +37,6 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +69,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -84,15 +90,13 @@ import fiek.unipr.mostwantedapp.utils.StringHelper;
 public class HomeFragment extends Fragment {
 
     private SharedPreferences sharedPreferences;
-    public static final String CHANNEL_ID_ADDED = "NEW_REPORT_ADDED";
-    public static int IMPORTANCE = NotificationManager.IMPORTANCE_DEFAULT;
+    private Context contextAttach;
     private PieChart admin_home_pieChart;
     private TextView admin_home_tv_num_report_verified, admin_home_tv_num_report_unverified, admin_home_tv_num_report_fake, admin_home_tv_gradeOfUser;
     private TextView tv_analytics_today, tv_percentage_today, tv_analytics_weekly, tv_percentage_weekly;
     private ImageView imageTrendingToday, imageTrendingWeekly;
 
     private String userID;
-
 
     private View admin_dashboard_view;
     private CircleImageView imageOfAccount, imageOfDashboard;
@@ -149,7 +153,7 @@ public class HomeFragment extends Fragment {
             vsYesterday(getContext());
             getAndSetTotalReportForOneWeek();
             vsWeek(getContext());
-            rightNowDateTime.setText(DateHelper.getDate());
+            rightNowDateTime.setText(DateHelper.getDateTimeStyle());
             getGrade(firebaseAuth);
             setupPieChart();
             setPieChart();
@@ -234,17 +238,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        Handler handler = new Handler();
-//
-//        final Runnable r = new Runnable() {
-//            public void run() {
-//                realTimeCheckForNewReportNotification();
-//                handler.postDelayed(this, 1000);
-//            }
-//        };
-//
-//        handler.postDelayed(r, 1000);
-
         Query query = firebaseFirestore.collection(LOCATION_REPORTS);
         registration = query.addSnapshotListener(
                 new EventListener<QuerySnapshot>() {
@@ -256,6 +249,8 @@ public class HomeFragment extends Fragment {
                         }
 
                         for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                            int countAdded, countModified, countRemoved;
+
                             String notificationReportId = dc.getDocument().getString("docId");
                             String notificationReportUid = dc.getDocument().getString("uID");
                             String notificationReportDateTime = dc.getDocument().getString("date_time");
@@ -265,20 +260,41 @@ public class HomeFragment extends Fragment {
                             String notificationReportWantedPerson = dc.getDocument().getString("wanted_person");
                             String notificationReportPrizeToWin = dc.getDocument().getString("prizeToWin");
                             String notificationReportNewStatus = dc.getDocument().getString("status");
+                            String doc = dc.getDocument().getId();
                             switch (dc.getType()) {
                                 case ADDED:
                                     Log.d(TAG, "New city: " + dc.getDocument().getData());
-                                    makeNotification(DateHelper.getDateTime(), String.valueOf(NotificationState.ADDED),
-                                            notificationReportId, notificationReportUid, notificationReportDateTime,
-                                            notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
-                                            notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus,
-                                            Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());
+                                    for(countAdded = 0; countAdded < 1; countAdded++)
+                                    {
+                                        makeNotification(DateHelper.getDateTime(), String.valueOf(NotificationState.ADDED),
+                                                notificationReportId, notificationReportUid, notificationReportDateTime,
+                                                notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
+                                                notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus,
+                                                Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid(),
+                                                CHANNEL_ID_ADDED, NOTIFICATION_NUMBER_1, 1);
+                                    }
                                     break;
                                 case MODIFIED:
-                                    Log.d(TAG, "Modified city: " + dc.getDocument().getData());
+                                    for(countModified = 0; countModified < 1; countModified++)
+                                    {
+                                        makeNotification(DateHelper.getDateTime(), String.valueOf(NotificationState.MODIFIED),
+                                                notificationReportId, notificationReportUid, notificationReportDateTime,
+                                                notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
+                                                notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus,
+                                                Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid(),
+                                                CHANNEL_ID_MODIFIED, NOTIFICATION_NUMBER_2, 2);
+                                    }
                                     break;
                                 case REMOVED:
-                                    Log.d(TAG, "Removed city: " + dc.getDocument().getData());
+                                    for(countRemoved = 0; countRemoved < 1; countRemoved++)
+                                    {
+                                        makeNotification(DateHelper.getDateTime(), String.valueOf(NotificationState.REMOVED),
+                                                notificationReportId, notificationReportUid, notificationReportDateTime,
+                                                notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
+                                                notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus,
+                                                Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid(),
+                                                CHANNEL_ID_REMOVED, NOTIFICATION_NUMBER_3, 3);
+                                    }
                                     break;
                             }
                         }
@@ -300,7 +316,8 @@ public class HomeFragment extends Fragment {
                                   String notificationReportWantedPerson,
                                   String notificationReportPrizeToWin,
                                   String notificationReportNewStatus,
-                                  String notificationForUserId) {
+                                  String notificationForUserId,
+                                  String CHANNEL_ID, String sharedPrefName, int default_number) {
 
         CollectionReference collRef = firebaseFirestore.collection(NOTIFICATION_ADMIN);
         String notificationId = collRef.document().getId();
@@ -311,12 +328,14 @@ public class HomeFragment extends Fragment {
                 notificationReportNewStatus, notificationForUserId);
         // check if notification for that user exist in database
         Log.d("FILLON", "FILLON");
-        check(getContext(), getActivity(), notificationId, notification, userID);
+        check(getContext(), notificationId, notification, userID, CHANNEL_ID, sharedPrefName, default_number);
         Log.d("MBARON", "MBARON");
 
     }
 
-    private void saveAndMakeNotificationForAdded(Context context, Activity activity, String notificationId, Notification notification) {
+    private void saveAndMakeNotification(
+            Context context, String notificationId,
+            Notification notification, String CHANNEL_ID, String sharedPrefName, int default_number) {
         //save and make notification for added report
         firebaseFirestore.collection(NOTIFICATION_ADMIN)
                 .document(notificationId)
@@ -324,26 +343,27 @@ public class HomeFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("SAVED", "SUCCESS SAVED");
-                        //when is saved successfully now make notification
+                        Log.d("SAVED", "SUCCESS SAVED"+notification.getNotificationType());
+
                         Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID_ADDED);
-                        notificationBuilder.setContentTitle(notification.getNotificationReportTitle());
+                        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID);
+                        notificationBuilder.setContentTitle(notification.getNotificationType()+": "+notification.getNotificationReportTitle());
                         notificationBuilder.setContentText(notification.getNotificationReportDescription());
                         notificationBuilder.setSmallIcon(R.drawable.ic_app);
                         notificationBuilder.setPriority(IMPORTANCE);
                         notificationBuilder.setSound(new_defaultSoundUri);
                         notificationBuilder.setAutoCancel(true);
 
-                        sharedPreferences = activity.getSharedPreferences(Activity.class.getSimpleName(), Context.MODE_PRIVATE);
-                        int notificationNumber1 = sharedPreferences.getInt("notificationNumber1", 1);
+                        sharedPreferences = PreferenceManager
+                                .getDefaultSharedPreferences(contextAttach);
+                        int number = sharedPreferences.getInt(sharedPrefName, default_number);
 
                         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                        notificationManager.notify(notificationNumber1, notificationBuilder.build());
+                        notificationManager.notify(number, notificationBuilder.build());
 
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        notificationNumber1++;
-                        editor.putInt("notificationNumber1", notificationNumber1);
+                        number++;
+                        editor.putInt(sharedPrefName, number);
                         editor.apply();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -354,7 +374,14 @@ public class HomeFragment extends Fragment {
                 });
     }
 
-    private void check(Context context, Activity activity, String notificationId, Notification notification, String userID) {
+    @Override
+    public void onAttach(@NonNull Context contextAttach) {
+        super.onAttach(contextAttach);
+        this.contextAttach = contextAttach;
+    }
+
+    private void check(Context context, String notificationId,
+                       Notification notification, String userID, String CHANNEL_ID, String sharedPrefName, int default_number) {
         firebaseFirestore.collection(NOTIFICATION_ADMIN)
                 .whereEqualTo("notificationReportId", notification.getNotificationReportId())
                 .get()
@@ -365,8 +392,9 @@ public class HomeFragment extends Fragment {
                         for(int i = 0; i < queryDocumentSnapshots.size(); i++)
                         {
                             String notificationForUserId = queryDocumentSnapshots.getDocuments().get(i).getString("notificationForUserId");
+                            String notificationType = queryDocumentSnapshots.getDocuments().get(i).getString("notificationType");
 
-                            if(notificationForUserId.equals(userID))
+                            if(notificationForUserId.equals(userID) && notificationType.equals(notification.getNotificationType()))
                             {
                                 count++;
                             }
@@ -375,7 +403,13 @@ public class HomeFragment extends Fragment {
                         System.out.println("COUNT_VALUE "+count);
                         if(count==0)
                         {
-                            saveAndMakeNotificationForAdded(context, activity, notificationId, notification);
+                            saveAndMakeNotification(
+                                    context,
+                                    notificationId,
+                                    notification,
+                                    CHANNEL_ID,
+                                    sharedPrefName,
+                                    default_number);
                         }
                     }
                 });
@@ -630,11 +664,10 @@ public class HomeFragment extends Fragment {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String CHANNEL_ID = "NEW_REPORT_MODIFIED";
             CharSequence name = "ADMIN REPORT MODIFIED NOTIFICATION";
             String description = "This channel is for admin, that send notification when one report modified in database!";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_MODIFIED, name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
@@ -647,11 +680,10 @@ public class HomeFragment extends Fragment {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String CHANNEL_ID = "NEW_REPORT_REMOVED";
             CharSequence name = "ADMIN REPORT REMOVED NOTIFICATION";
             String description = "This channel is for admin, that send notification when one report removed from database!";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_REMOVED, name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this

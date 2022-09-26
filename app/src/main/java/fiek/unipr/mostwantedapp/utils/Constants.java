@@ -1,6 +1,7 @@
 package fiek.unipr.mostwantedapp.utils;
 
 import android.Manifest;
+import android.app.NotificationManager;
 
 public class Constants {
     public static final String PREFS_NAME = "loginPreferences";
@@ -55,6 +56,7 @@ public class Constants {
     public static final String INVESTIGATORS = "investigators";
     public static final String LOCATION_REPORTS = "location_reports";
     public static final String LOGIN_HISTORY = "loginHistory";
+    public static final String NOTIFICATION_HELPER_ADMIN = "notifications_helper_admin";
     public static final String NOTIFICATION_ADMIN = "notifications_admin";
     public static final String NOTIFICATION_USER = "notifications_user";
     public static final String PERSONS = "persons";
@@ -66,4 +68,19 @@ public class Constants {
     public static final int PICK_IMAGE = 15;
     public static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     public static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
+    public static final int IMPORTANCE = NotificationManager.IMPORTANCE_DEFAULT;
+
+    //Notifications
+    public static final String CHANNEL_ID_ADDED = "NEW_REPORT_ADDED";
+    public static final String NOTIFICATION_NUMBER_1 = "notificationNumber1";
+
+    public static final String CHANNEL_ID_MODIFIED = "NEW_REPORT_MODIFIED";
+    public static final String NOTIFICATION_NUMBER_2 = "notificationNumber2";
+
+    public static final String CHANNEL_ID_REMOVED = "NEW_REPORT_REMOVED";
+    public static final String NOTIFICATION_NUMBER_3 = "notificationNumber3";
+
+    public static final String CHANNEL_ID_USER_MODIFIED = "NEW_REPORT_USER_MODIFIED";
+    public static final String NOTIFICATION_NUMBER_4 = "notificationNumber4";
+
 }

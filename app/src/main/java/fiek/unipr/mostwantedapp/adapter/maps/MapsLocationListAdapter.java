@@ -63,7 +63,7 @@ public class MapsLocationListAdapter extends RecyclerView.Adapter<MapsLocationLi
 
             Date start_date = simpleDateFormat.parse(personLocationList.get(position).getRegistration_date());
             Date end_date = simpleDateFormat.parse(DateHelper.getDateTime());
-            DateHelper.printDifference(start_date, end_date, time_elapsed);
+            time_elapsed = DateHelper.printDifference(start_date, end_date);
 
             if (time_elapsed != null) {
                 holder.tv_location_time_elapsed.setText(time_elapsed);

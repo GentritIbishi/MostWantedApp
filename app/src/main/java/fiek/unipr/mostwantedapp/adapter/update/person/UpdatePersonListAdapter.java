@@ -62,7 +62,7 @@ public class UpdatePersonListAdapter extends RecyclerView.Adapter<UpdatePersonLi
 
             Date start_date = simpleDateFormat.parse(personList.get(position).getRegistration_date());
             Date end_date = simpleDateFormat.parse(DateHelper.getDateTime());
-            DateHelper.printDifference(start_date, end_date, time_elapsed);
+            time_elapsed = DateHelper.printDifference(start_date, end_date);
 
             if (time_elapsed != null) {
                 holder.update_person_time_joined.setText(time_elapsed);

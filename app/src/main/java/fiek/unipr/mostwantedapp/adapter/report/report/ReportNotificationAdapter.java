@@ -91,7 +91,7 @@ public class ReportNotificationAdapter extends RecyclerView.Adapter<ReportNotifi
 
             Date start_date = simpleDateFormat.parse(reportList.get(position).getDate_time());
             Date end_date = simpleDateFormat.parse(DateHelper.getDateTime());
-            DateHelper.printDifference(start_date, end_date, time_elapsed);
+            time_elapsed = DateHelper.printDifference(start_date, end_date);
 
             if(time_elapsed != null){
                 holder.user_report_time.setText(time_elapsed);
