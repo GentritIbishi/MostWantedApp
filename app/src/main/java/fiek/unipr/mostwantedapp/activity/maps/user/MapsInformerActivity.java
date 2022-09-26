@@ -56,6 +56,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsInformerBinding;
@@ -142,7 +143,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
                 progressDialog.show();
                 binding.alert.setText(getApplicationContext().getText(R.string.if_loading_takes_too_long_please_press_the_button_again));
-                save(informer_person, wanted_person, longitude, latitude, DateHelper.getDateTime());
+                save(informer_person, personId, wanted_person, longitude, latitude, DateHelper.getDateTime());
             }
         });
 
@@ -392,7 +393,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         progressDialog.setMessage(getApplicationContext().getString(R.string.thank_you_for_collaboration));
     }
 
-    private void save(String informer_person, String wanted_person, Double longitude, Double latitude, String dateNtime) {
+    private void save(String informer_person, String personId, String wanted_person, Double longitude, Double latitude, String dateNtime) {
         CollectionReference collRef = firebaseFirestore.collection(LOCATION_REPORTS);
         String docId = collRef.document().getId();
             if(informer_person.equals(ANONYMOUS))
@@ -400,9 +401,12 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 DocumentReference docRef = firebaseFirestore
                         .collection(LOCATION_REPORTS)
                         .document(docId);
-                Report report = new Report(docId, binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
+                Report report = new Report(docId,
+                        binding.etReportTitle.getText().toString(),
+                        binding.etDescription.getText().toString(),
                         dateNtime,
-                        firebaseAuth.getCurrentUser().getUid(),
+                        Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid(),
+                        personId,
                         informer_person,
                         wanted_person,
                         ANONYMOUS,
@@ -466,6 +470,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 Report report = new Report(docId, binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
                         dateNtime,
                         firebaseAuth.getCurrentUser().getUid(),
+                        personId,
                         informer_person,
                         wanted_person,
                         PHONE_USER,
@@ -535,9 +540,13 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                     DocumentReference docRef = firebaseFirestore
                                             .collection(LOCATION_REPORTS)
                                             .document(docId);
-                                    Report report = new Report(docId, binding.etReportTitle.getText().toString(), binding.etDescription.getText().toString(),
+                                    Report report = new Report(
+                                            docId,
+                                            binding.etReportTitle.getText().toString(),
+                                            binding.etDescription.getText().toString(),
                                             dateNtime,
                                             firebaseAuth.getCurrentUser().getUid(),
+                                            personId,
                                             informer_person,
                                             wanted_person,
                                             informer_person_urlOfProfile,

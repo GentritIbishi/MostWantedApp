@@ -217,6 +217,7 @@ public class SearchManageLocationReportsFragment extends Fragment implements Rec
         viewBundle.putDouble("longitude", reportArrayList.get(position).getLongitude());
         viewBundle.putString("uID", reportArrayList.get(position).getuID());
         viewBundle.putString("wanted_person", reportArrayList.get(position).getWanted_person());
+        viewBundle.putString("personId", reportArrayList.get(position).getPersonId());
 
         if(reportArrayList.get(position).getImages() == null || reportArrayList.get(position).getImages().equals(null) || reportArrayList.get(position).getImages().isEmpty()) {
             viewBundle.putInt("totalImages", 0);

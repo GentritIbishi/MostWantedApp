@@ -1,5 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import static fiek.unipr.mostwantedapp.utils.BitmapHelper.addBorder;
+import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 import static fiek.unipr.mostwantedapp.utils.EditTextHelper.disableEditable;
@@ -20,6 +22,7 @@ import android.graphics.PorterDuffXfermode;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +57,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -63,10 +67,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.gallery.CustomizedGalleryAdapter;
-import fiek.unipr.mostwantedapp.utils.BitmapHelper;
 
 public class SingleReportFragment extends Fragment {
 
@@ -91,7 +95,7 @@ public class SingleReportFragment extends Fragment {
     private MaterialAutoCompleteTextView auto_complete_report_status;
     private Button btnSaveReport;
 
-    private String date_time, title, docId, description, informer_person, status, uID, wanted_person, urlOfProfile;
+    private String date_time, title, docId, description, informer_person, status, uID, personId, wanted_person, urlOfProfile;
     private Double latitude, longitude;
     private int totalImages;
     private String[] images;
@@ -101,9 +105,11 @@ public class SingleReportFragment extends Fragment {
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            if(wanted_person.isEmpty() && latitude != null && longitude != null) {
-                setMarker(wanted_person, latitude, longitude);
-            }
+            mMap = googleMap;
+                if(wanted_person != null && personId != null)
+                {
+                    setMarker(getContext(), personId, wanted_person);
+                }
         }
     };
 
@@ -228,6 +234,7 @@ public class SingleReportFragment extends Fragment {
             status = bundle.getString("status");
             uID = bundle.getString("uID");
             docId = bundle.getString("docId");
+            personId = bundle.getString("personId");
             wanted_person = bundle.getString("wanted_person");
             totalImages = bundle.getInt("totalImages");
             images = bundle.getStringArray("images");
@@ -291,63 +298,70 @@ public class SingleReportFragment extends Fragment {
                 .preload();
     }
 
-    private void setMarker(String wanted_person, Double latitude, Double longitude) {
+    private void setMarker(Context context, String personId, String wanted_person) {
         firebaseFirestore
                 .collection(WANTED_PERSONS)
-                .document(wanted_person)
+                .whereEqualTo("personId", personId)
+                .limit(1)
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        urlOfProfile = documentSnapshot.getString("urlOfProfile");
-                        try {
-                            Glide.with(getActivity())
-                                    .asBitmap()
-                                    .load(urlOfProfile)
-                                    .apply(new RequestOptions().override(200, 200))
-                                    .listener(new RequestListener<Bitmap>() {
-                                        @Override
-                                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                            return false;
-                                        }
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(queryDocumentSnapshots != null)
+                        {
+                               for (int i = 0; i<queryDocumentSnapshots.size();i++)
+                               {
+                                   urlOfProfile = queryDocumentSnapshots.getDocuments().get(i).getString("urlOfProfile");
+                                   try {
+                                       Glide.with(context)
+                                               .asBitmap()
+                                               .load(urlOfProfile)
+                                               .apply(new RequestOptions().override(200, 200))
+                                               .listener(new RequestListener<Bitmap>() {
+                                                   @Override
+                                                   public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                                       return false;
+                                                   }
 
-                                        @Override
-                                        public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                            Bitmap newBitmap = BitmapHelper.addBorder(resource, getContext());
-                                            LatLng latLng = new LatLng(latitude, longitude);
+                                                   @Override
+                                                   public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                                                       Bitmap newBitmap = addBorder(resource, getContext());
+                                                       LatLng latLng = new LatLng(latitude, longitude);
 
-                                            Geocoder geocoder;
-                                            List<Address> addresses = null;
-                                            geocoder = new Geocoder(getContext(), Locale.getDefault());
+                                                       Geocoder geocoder;
+                                                       List<Address> addresses = null;
+                                                       geocoder = new Geocoder(getContext(), Locale.getDefault());
 
-                                            try {
-                                                addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                                                String address = addresses.get(0).getAddressLine(0);
-                                                String city = addresses.get(0).getLocality();
-                                                String state = addresses.get(0).getAdminArea();
-                                                String country = addresses.get(0).getCountryName();
-                                                String postalCode = addresses.get(0).getPostalCode();
-                                                String knownName = addresses.get(0).getFeatureName();
+                                                       try {
+                                                           addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                                                           String address = addresses.get(0).getAddressLine(0);
+                                                           String city = addresses.get(0).getLocality();
+                                                           String state = addresses.get(0).getAdminArea();
+                                                           String country = addresses.get(0).getCountryName();
+                                                           String postalCode = addresses.get(0).getPostalCode();
+                                                           String knownName = addresses.get(0).getFeatureName();
 
-                                                mMap.addMarker(new MarkerOptions()
-                                                        .position(latLng)
-                                                        .title(wanted_person)
-                                                        .snippet(address + ", "+ city+ ", "+ postalCode)
-                                                        .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
-                                                mMap.setMinZoomPreference(17);
-                                                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                                                           mMap.addMarker(new MarkerOptions()
+                                                                   .position(latLng)
+                                                                   .title(wanted_person)
+                                                                   .snippet(address + ", "+ city+ ", "+ postalCode)
+                                                                   .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
+                                                           mMap.setMinZoomPreference(DEFAULT_ZOOM);
+                                                           mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-                                            } catch (IOException e) {
-                                                e.printStackTrace();
-                                            }
+                                                       } catch (IOException e) {
+                                                           e.printStackTrace();
+                                                       }
 
-                                            return true;
-                                        }
-                                    })
-                                    .circleCrop()
-                                    .preload();
-                        } catch(Exception e) {
-                            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                       return true;
+                                                   }
+                                               })
+                                               .circleCrop()
+                                               .preload();
+                                   } catch(Exception e) {
+                                       Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                   }
+                               }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -394,4 +408,5 @@ public class SingleReportFragment extends Fragment {
                 .replace(R.id.admin_fragmentContainer, fragment)
                 .commit();
     }
+
 }

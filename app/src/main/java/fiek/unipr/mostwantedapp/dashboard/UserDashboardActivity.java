@@ -49,6 +49,7 @@ import fiek.unipr.mostwantedapp.fragment.user.SearchFragment;
 import fiek.unipr.mostwantedapp.fragment.user.SettingsFragment;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
+import fiek.unipr.mostwantedapp.utils.WindowHelper;
 
 public class UserDashboardActivity extends AppCompatActivity {
 
@@ -85,6 +86,8 @@ public class UserDashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_dashboard);
+
+        WindowHelper.setFullScreenActivity(getWindow());
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();

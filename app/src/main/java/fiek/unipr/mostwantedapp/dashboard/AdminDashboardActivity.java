@@ -46,6 +46,7 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.SettingsFragment;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
+import fiek.unipr.mostwantedapp.utils.WindowHelper;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
@@ -76,6 +77,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_dashboard);
+
+        WindowHelper.setFullScreenActivity(getWindow());
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
