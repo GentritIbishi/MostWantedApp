@@ -89,7 +89,6 @@
             android:exported="true"
             android:label="@string/title_activity_maps" />
         <activity android:name=".dashboard.AdminDashboardActivity" />
-        <activity android:name=".activity.maps.report.ReportInfoActivity" />
         <activity android:name=".activity.LoginActivity" />
         <!--
  Set custom default icon. This is used when no icon is set for incoming notification messages.

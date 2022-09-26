@@ -3,11 +3,11 @@ package fiek.unipr.mostwantedapp.fragment.user;
 import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_USER;
 import static fiek.unipr.mostwantedapp.utils.Constants.SEEN;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -37,7 +37,6 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.report.modified.ModifiedReportNotificationAdapter;
 import fiek.unipr.mostwantedapp.models.Notification;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.activity.maps.report.ReportInfoActivity;
 
 public class NotificationFragment extends Fragment implements RecyclerViewInterface {
 
@@ -140,20 +139,27 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
 
     @Override
     public void onItemClick(int position) {
-        Intent intent=new Intent(getContext(), ReportInfoActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ReportInfoFragment reportInfoFragment = new ReportInfoFragment();
         Bundle viewBundle = new Bundle();
 
+        viewBundle.putString("notificationId", reportArrayList.get(position).getNotificationId());
+        viewBundle.putString("notificationDateTime", reportArrayList.get(position).getNotificationDateTime());
+        viewBundle.putString("notificationType", reportArrayList.get(position).getNotificationType());
+        viewBundle.putString("notificationReportId", reportArrayList.get(position).getNotificationReportId());
+        viewBundle.putString("notificationReportUid", reportArrayList.get(position).getNotificationReportUid());
         viewBundle.putString("notificationReportDateTime", reportArrayList.get(position).getNotificationReportDateTime());
-        viewBundle.putString("notificationReportType", reportArrayList.get(position).getNotificationType());
         viewBundle.putString("notificationReportTitle", reportArrayList.get(position).getNotificationReportTitle());
-        viewBundle.putString("notificationReportStatusChangedTo", reportArrayList.get(position).getNotificationReportNewStatus());
-        viewBundle.putString("notificationDateTimeChanged", reportArrayList.get(position).getNotificationDateTime());
-        viewBundle.putString("notificationReportBody", reportArrayList.get(position).getNotificationReportDescription());
-        viewBundle.putString("notificationReportUID", reportArrayList.get(position).getNotificationReportUid());
+        viewBundle.putString("notificationReportDescription", reportArrayList.get(position).getNotificationReportDescription());
+        viewBundle.putString("notificationReportInformerPerson", reportArrayList.get(position).getNotificationReportInformerPerson());
+        viewBundle.putString("notificationReportWantedPerson", reportArrayList.get(position).getNotificationReportWantedPerson());
+        viewBundle.putString("notificationReportPrizeToWin", reportArrayList.get(position).getNotificationReportPrizeToWin());
+        viewBundle.putString("notificationReportNewStatus", reportArrayList.get(position).getNotificationReportNewStatus());
+        viewBundle.putString("notificationForUserId", reportArrayList.get(position).getNotificationForUserId());
+
         setSeenNotification(SEEN, reportArrayList.get(position).getNotificationId());
 
-        intent.putExtras(viewBundle);
-        startActivity(intent);
+        reportInfoFragment.setArguments(viewBundle);
+        loadFragment(reportInfoFragment);
     }
 
     private void setSeenNotification(String status, String notificationReportId) {
@@ -174,6 +180,13 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
                     }
                 });
 
+    }
+
+    private void loadFragment(Fragment fragment) {
+        ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction()
+                .replace(R.id.admin_fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 
 }

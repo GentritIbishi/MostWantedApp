@@ -149,7 +149,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-
         getSetUserData(userID);
         loadImage(userID);
 
@@ -416,102 +415,6 @@ public class ProfileFragment extends Fragment {
                             admin_etDateRegistration.setEnabled(false);
 
                             emailVerified = documentSnapshot.getBoolean("emailVerified");
-                        } else {
-                            if(firebaseAuth.getCurrentUser().isAnonymous())
-                            {
-                                address = ANONYMOUS;
-                                admin_etAddress.setText(address);
-
-                                email = ANONYMOUS;
-                                admin_etEmailToUser.setText(email);
-
-                                gender = ANONYMOUS;
-                                admin_et_gender.setText(gender);
-
-                                lastname = ANONYMOUS;
-                                admin_et_lastName.setText(lastname);
-
-                                name = ANONYMOUS;
-                                admin_et_firstName.setText(name);
-
-                                parentName = ANONYMOUS;
-                                admin_et_parentName.setText(parentName);
-
-                                password = ANONYMOUS;
-                                admin_etPasswordToUser.setText(password);
-
-                                personal_number = ANONYMOUS;
-                                admin_etNumPersonal.setText(personal_number);
-
-                                phone = ANONYMOUS;
-                                admin_etPhone.setText(phone);
-
-                                role = ANONYMOUS;
-                                admin_et_role_autocomplete.setText(role);
-
-                                balance = ANONYMOUS;
-                                admin_et_balance_autocomplete.setText(balance);
-
-                                coins = ANONYMOUS;
-                                admin_et_coins_autocomplete.setText(coins);
-
-                                fullName = ANONYMOUS;
-                                admin_et_fullName.setText(fullName);
-
-                                grade = ANONYMOUS;
-                                admin_et_grade_autocomplete.setText(grade);
-
-                                //no option for change by default disable
-                                register_date_time = ANONYMOUS;
-                                admin_etDateRegistration.setText(register_date_time);
-                            }else {
-
-                                address = NA;
-                                admin_etAddress.setText(address);
-
-                                email = NA;
-                                admin_etEmailToUser.setText(email);
-
-                                gender = NA;
-                                admin_et_gender.setText(gender);
-
-                                lastname = NA;
-                                admin_et_lastName.setText(lastname);
-
-                                name = NA;
-                                admin_et_firstName.setText(name);
-
-                                parentName = NA;
-                                admin_et_parentName.setText(parentName);
-
-                                password = NA;
-                                admin_etPasswordToUser.setText(password);
-
-                                personal_number = NA;
-                                admin_etNumPersonal.setText(personal_number);
-
-                                phone = firebaseAuth.getCurrentUser().getPhoneNumber();;
-                                admin_etPhone.setText(phone);
-
-                                role = NA;
-                                admin_et_role_autocomplete.setText(role);
-
-                                balance = NA;
-                                admin_et_balance_autocomplete.setText(balance);
-
-                                coins = NA;
-                                admin_et_coins_autocomplete.setText(coins);
-
-                                fullName = NA;
-                                admin_et_fullName.setText(fullName);
-
-                                grade = NA;
-                                admin_et_grade_autocomplete.setText(grade);
-
-                                //no option for change by default disable
-                                register_date_time = NA;
-                                admin_etDateRegistration.setText(register_date_time);
-                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
