@@ -14,6 +14,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.INVESTIGATORS;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.REPORTS_ASSIGNED;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.StringHelper.removeFirstLetterAndLastLetter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -100,16 +101,21 @@ import fiek.unipr.mostwantedapp.databinding.ActivityMapsBinding;
 import fiek.unipr.mostwantedapp.models.ReportAssigned;
 import fiek.unipr.mostwantedapp.models.ReportAssignedUser;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
+import fiek.unipr.mostwantedapp.utils.WindowHelper;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private static final int PERMISSION_REQUEST_CODE = 200;
     private static final String NO_LOCATION_REPORT = "";
 
-    private String fullName, status, urlOfProfile, uID,
-            last_seen_address, first_address, second_address, third_address, forth_address,
-            urlOfPdfUploaded, date, shortUrl;
+    private String uID, last_seen_address, first_address, second_address, third_address, forth_address,
+            urlOfPdfUploaded, date, shortUrl, personId, firstName, lastName, parentName, fullName, birthday, gender, address, age, eyeColor, hairColor, height,
+            phy_appearance, status, prize, urlOfProfile, weight, registration_date;
+
     private double last_seen_latitude, last_seen_longitude, lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4;
+
+    private List<String> acts;
 
 
     private GoogleMap mMap;
@@ -130,7 +136,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        WindowHelper.setFullScreenActivity(getWindow());
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -223,10 +229,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         try {
             bundle = getIntent().getExtras();
-
+            personId = bundle.getString("personId");
+            firstName = bundle.getString("firstName");
+            lastName = bundle.getString("lastName");
+            parentName = bundle.getString("parentName");
             fullName = bundle.getString("fullName");
+            birthday = bundle.getString("birthday");
+            gender = bundle.getString("gender");
+            address = bundle.getString("address");
+            age = bundle.getString("age");
+            eyeColor = bundle.getString("eyeColor");
+            hairColor = bundle.getString("hairColor");
+            height = bundle.getString("height");
+            weight = bundle.getString("weight");
+            phy_appearance = bundle.getString("phy_appearance");
+            acts = bundle.getStringArrayList("acts");
+            last_seen_longitude = bundle.getDouble("latitude");
+            last_seen_longitude = bundle.getDouble("longitude");
+            prize = bundle.getString("prize");
             status = bundle.getString("status");
+            registration_date = bundle.getString("registration_date");
             urlOfProfile = bundle.getString("urlOfProfile");
+
         } catch (Exception e) {
             e.getMessage();
         }
@@ -279,187 +303,55 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for(int i = 0; i < queryDocumentSnapshots.size(); i++){
+                        for(int i = 0; i < queryDocumentSnapshots.size(); i++)
+                        {
                             DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(i);
                             Double latitude = doc.getDouble("latitude");
                             Double longitude = doc.getDouble("longitude");
                             String date_time = doc.getString("date_time");
-                            String description = "";
-                            description = doc.getString("description");
+                            String description = doc.getString("description");
 
-                            if(i==0){
-                                last_seen_latitude = latitude; //last seen
-                                last_seen_longitude = longitude; //last seen
-
-                                try {
-                                    Glide.with(MapsActivity.this)
-                                            .asBitmap()
-                                            .load(urlOfProfile)
-                                            .apply(new RequestOptions().override(200, 200))
-                                            .listener(new RequestListener<Bitmap>() {
-                                                @Override
-                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                                    return false;
-                                                }
-
-                                                @Override
-                                                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                                    Bitmap newBitmap = addBorder(resource, getApplicationContext());
-                                                    LatLng latLng = new LatLng(last_seen_latitude, last_seen_longitude);
-                                                    mMap.addMarker(new MarkerOptions()
-                                                            .position(latLng)
-                                                            .title(getApplicationContext().getText(R.string.last_seen)+" "+fullName)
-                                                            .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
-                                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
-                                                    return true;
-                                                }
-                                            })
-                                            .circleCrop()
-                                            .preload();
-                                } catch(Exception e) {
-                                    Toast.makeText(getApplicationContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-
+                            if(i==0 && latitude != null && longitude != null)
+                            {
+                                last_seen_latitude = latitude;
+                                last_seen_longitude = longitude;
+                                setBorderOnPointWithMoveCamera(getApplicationContext(),
+                                        urlOfProfile, 200, 200,
+                                        latitude, longitude, getApplicationContext().getString(R.string.last_seen), description, fullName,
+                                        R.color.yellow);
                             }
-
-                            if(i==1){
+                            else if(i==1 && latitude != null && longitude != null)
+                            {
                                 lat1 = latitude;
                                 lon1 = longitude;
-                                try {
-                                    int finalI = i;
-                                    String finalDescription = description;
-                                    Glide.with(MapsActivity.this)
-                                            .asBitmap()
-                                            .load(urlOfProfile)
-                                            .apply(new RequestOptions().override(100, 100))
-                                            .listener(new RequestListener<Bitmap>() {
-                                                @Override
-                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                                    return false;
-                                                }
-
-                                                @Override
-                                                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                                    LatLng latLng = new LatLng(lat1, lon1);
-                                                    mMap.addMarker(new MarkerOptions()
-                                                            .position(latLng)
-                                                            .title(date_time+" "+fullName)
-                                                            .snippet(finalDescription)
-                                                            .icon(BitmapDescriptorFactory.fromBitmap(resource)));
-                                                    return true;
-                                                }
-                                            })
-                                            .circleCrop()
-                                            .preload();
-                                }catch (Exception e){
-                                    Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-
-                            }
-
-                            if(i==2){
+                                setBorderOnPointWithOutMoveCamera(getApplicationContext(),
+                                        urlOfProfile, 100, 100,
+                                        latitude, longitude, date_time, description, fullName,
+                                        R.color.white);
+                            }else if(i==2 && latitude != null && longitude != null)
+                            {
                                 lat2 = latitude;
                                 lon2 = longitude;
-                                try {
-                                    int finalI = i;
-                                    String finalDescription = description;
-                                    Glide.with(MapsActivity.this)
-                                            .asBitmap()
-                                            .load(urlOfProfile)
-                                            .apply(new RequestOptions().override(100, 100))
-                                            .listener(new RequestListener<Bitmap>() {
-                                                @Override
-                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                                    return false;
-                                                }
-
-                                                @Override
-                                                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                                    LatLng latLng = new LatLng(lat2, lon2);
-                                                    mMap.addMarker(new MarkerOptions()
-                                                            .position(latLng)
-                                                            .title(date_time+" "+fullName)
-                                                            .snippet(finalDescription)
-                                                            .icon(BitmapDescriptorFactory.fromBitmap(resource)));
-                                                    return true;
-                                                }
-                                            })
-                                            .circleCrop()
-                                            .preload();
-                                }catch (Exception e){
-                                    Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-
-                            }
-
-                            if(i==3){
+                                setBorderOnPointWithOutMoveCamera(getApplicationContext(),
+                                        urlOfProfile, 100, 100,
+                                        latitude, longitude, date_time, description, fullName,
+                                        R.color.white);
+                            }else if(i==3 && latitude != null && longitude != null)
+                            {
                                 lat3 = latitude;
                                 lon3 = longitude;
-
-                                try {
-                                    int finalI = i;
-                                    String finalDescription = description;
-                                    Glide.with(MapsActivity.this)
-                                            .asBitmap()
-                                            .load(urlOfProfile)
-                                            .apply(new RequestOptions().override(100, 100))
-                                            .listener(new RequestListener<Bitmap>() {
-                                                @Override
-                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                                    return false;
-                                                }
-
-                                                @Override
-                                                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                                    LatLng latLng = new LatLng(lat3, lon3);
-                                                    mMap.addMarker(new MarkerOptions()
-                                                            .position(latLng)
-                                                            .title(date_time+" "+fullName)
-                                                            .snippet(finalDescription)
-                                                            .icon(BitmapDescriptorFactory.fromBitmap(resource)));
-                                                    return true;
-                                                }
-                                            })
-                                            .circleCrop()
-                                            .preload();
-                                }catch (Exception e){
-                                    Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-
-                            if(i==4){
+                                setBorderOnPointWithOutMoveCamera(getApplicationContext(),
+                                        urlOfProfile, 100, 100,
+                                        latitude, longitude, date_time, description, fullName,
+                                        R.color.white);
+                            }else if(i==4 && latitude != null && longitude != null)
+                            {
                                 lat4 = latitude;
                                 lon4 = longitude;
-
-                                try {
-                                    int finalI = i;
-                                    String finalDescription = description;
-                                    Glide.with(MapsActivity.this)
-                                            .asBitmap()
-                                            .load(urlOfProfile)
-                                            .apply(new RequestOptions().override(100, 100))
-                                            .listener(new RequestListener<Bitmap>() {
-                                                @Override
-                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                                    return false;
-                                                }
-
-                                                @Override
-                                                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                                    LatLng latLng = new LatLng(lat4, lon4);
-                                                    mMap.addMarker(new MarkerOptions()
-                                                            .position(latLng)
-                                                            .title(date_time+" "+fullName)
-                                                            .snippet(finalDescription)
-                                                            .icon(BitmapDescriptorFactory.fromBitmap(resource)));
-                                                    return true;
-                                                }
-                                            })
-                                            .circleCrop()
-                                            .preload();
-                                }catch (Exception e){
-                                    Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                }
+                                setBorderOnPointWithOutMoveCamera(getApplicationContext(),
+                                        urlOfProfile, 100, 100,
+                                        latitude, longitude, date_time, description, fullName,
+                                        R.color.white);
                             }
 
                         }
@@ -471,6 +363,62 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+
+    private void setBorderOnPointWithMoveCamera(Context context, String urlOfProfile, int width, int height, Double latitude, Double longitude, String title, String description, String fullName, int borderColorId) {
+        Glide.with(context)
+                .asBitmap()
+                .load(urlOfProfile)
+                .apply(new RequestOptions().override(width, height))
+                .listener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        Bitmap newBitmap = addBorder(resource, getApplicationContext(), borderColorId);
+                        LatLng latLng = new LatLng(latitude, longitude);
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(title+" "+fullName)
+                                .snippet(description)
+                                .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+                        return true;
+                    }
+                })
+                .circleCrop()
+                .preload();
+    }
+
+    private void setBorderOnPointWithOutMoveCamera(Context context, String urlOfProfile, int width, int height, Double latitude, Double longitude, String title, String description, String fullName, int borderColorId) {
+        Glide.with(context)
+                .asBitmap()
+                .load(urlOfProfile)
+                .apply(new RequestOptions().override(width, height))
+                .listener(new RequestListener<Bitmap>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                        Bitmap newBitmap = addBorder(resource, getApplicationContext(), borderColorId);
+                        LatLng latLng = new LatLng(latitude, longitude);
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(title+" "+fullName)
+                                .snippet(description)
+                                .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
+                        return true;
+                    }
+                })
+                .circleCrop()
+                .preload();
     }
 
     private void setStationAsMarker(Double latitude, Double longitude, String police_station_title) {
@@ -600,10 +548,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ReportAssignedUser reportAssignedUser = new ReportAssignedUser(reportAssigned_id, urlOfPdfUploaded);
 
         firebaseFirestore.collection(USERS)
-                        .document(firebaseAuth.getUid())
-                                .collection(REPORTS_ASSIGNED)
-                                        .document(reportAssigned_id)
-                                                .set(reportAssignedUser)
+                .document(firebaseAuth.getUid())
+                .collection(REPORTS_ASSIGNED)
+                .document(reportAssigned_id)
+                .set(reportAssignedUser)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -634,6 +582,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                              String last_seen_address, String first_address,
                              String second_address, String third_address,
                              String forth_address) throws FileNotFoundException {
+
         String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
         // File directory = getFilesDir();
         File file = new File(pdfPath, "GFG.pdf");
@@ -689,50 +638,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.latitude_cell)))));
         table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.longitude_cell)))));
 
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.last_seen_location)))));
-        if(last_seen_address != null){
-            table1.addCell(new Cell().add(new Paragraph(last_seen_address)));
-        }else {
-            table1.addCell(new Cell().add(new Paragraph(NO_LOCATION_REPORT)));
+        for(int i = 0; i<5; i++)
+        {
+            if(i==0 && last_seen_address != null)
+            {
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.last_seen_location)))));
+                table1.addCell(new Cell().add(new Paragraph(last_seen_address)));
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(last_seen_latitude))));
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(last_seen_longitude))));
+            }else if(i==1 && first_address != null)
+            {
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.first_location)))));
+                table1.addCell(new Cell().add(new Paragraph(first_address)));
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat1))));
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon1))));
+            }else if(i==2 && second_address != null)
+            {
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.second_location)))));
+                table1.addCell(new Cell().add(new Paragraph(second_address)));
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat2))));
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon2))));
+            }else if(i==3 && third_address != null)
+            {
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.third_location)))));
+                table1.addCell(new Cell().add(new Paragraph(third_address)));
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat3))));
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon3))));
+            }else if(i==4 && forth_address != null)
+            {
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.forth_location)))));
+                table1.addCell(new Cell().add(new Paragraph(forth_address)));
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat4))));
+                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon4))));
+            }
         }
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(last_seen_latitude))));
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(last_seen_longitude))));
 
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.first_location)))));
-        if(first_address != null){
-            table1.addCell(new Cell().add(new Paragraph(first_address)));
-        }else {
-            table1.addCell(new Cell().add(new Paragraph(NO_LOCATION_REPORT)));
-        }
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat1))));
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon1))));
-
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.second_location)))));
-        if(second_address != null){
-            table1.addCell(new Cell().add(new Paragraph(second_address)));
-        }else {
-            table1.addCell(new Cell().add(new Paragraph(NO_LOCATION_REPORT)));
-        }
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat2))));
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon2))));
-
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.third_location)))));
-        if(third_address != null){
-            table1.addCell(new Cell().add(new Paragraph(third_address)));
-        }else {
-            table1.addCell(new Cell().add(new Paragraph(NO_LOCATION_REPORT)));
-        }
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat3))));
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon3))));
-
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.forth_location)))));
-        if(forth_address != null){
-            table1.addCell(new Cell().add(new Paragraph(forth_address)));
-        }else {
-            table1.addCell(new Cell().add(new Paragraph(NO_LOCATION_REPORT)));
-        }
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat4))));
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon4))));
         table1.setHorizontalAlignment(HorizontalAlignment.CENTER);
 
         image_ic_republic_of_kosovo.setWidth(80);

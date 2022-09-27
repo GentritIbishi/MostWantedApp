@@ -197,11 +197,27 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
     public void onItemClick(int position) {
         Intent intent =new Intent(getContext(), MapsActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle viewBundle = new Bundle();
+        viewBundle.putString("personId", locationArrayList.get(position).getPersonId());
+        viewBundle.putString("firstName", locationArrayList.get(position).getFirstName());
+        viewBundle.putString("lastName", locationArrayList.get(position).getLastName());
+        viewBundle.putString("parentName", locationArrayList.get(position).getParentName());
         viewBundle.putString("fullName", locationArrayList.get(position).getFullName());
+        viewBundle.putString("birthday", locationArrayList.get(position).getBirthday());
+        viewBundle.putString("gender", locationArrayList.get(position).getGender());
+        viewBundle.putString("address", locationArrayList.get(position).getAddress());
+        viewBundle.putString("age", locationArrayList.get(position).getAge());
+        viewBundle.putString("eyeColor", locationArrayList.get(position).getEyeColor());
+        viewBundle.putString("hairColor", locationArrayList.get(position).getHairColor());
+        viewBundle.putString("height", locationArrayList.get(position).getHeight());
+        viewBundle.putString("weight", locationArrayList.get(position).getWeight());
+        viewBundle.putString("phy_appearance", locationArrayList.get(position).getPhy_appearance());
+        viewBundle.putStringArrayList("acts", (ArrayList<String>) locationArrayList.get(position).getActs());
+        viewBundle.putDouble("latitude", locationArrayList.get(position).getLatitude());
+        viewBundle.putDouble("longitude", locationArrayList.get(position).getLongitude());
+        viewBundle.putString("prize", locationArrayList.get(position).getPrize());
         viewBundle.putString("status", locationArrayList.get(position).getStatus());
+        viewBundle.putString("registration_date", locationArrayList.get(position).getRegistration_date());
         viewBundle.putString("urlOfProfile", locationArrayList.get(position).getUrlOfProfile());
-        viewBundle.putString("latitude", locationArrayList.get(position).getLatitude().toString());
-        viewBundle.putString("longitude", locationArrayList.get(position).getLongitude().toString());
         intent.putExtras(viewBundle);
         startActivity(intent);
     }

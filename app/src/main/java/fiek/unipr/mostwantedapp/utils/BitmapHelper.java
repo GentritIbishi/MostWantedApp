@@ -17,7 +17,7 @@ import fiek.unipr.mostwantedapp.R;
 
 public class BitmapHelper {
 
-    public static Bitmap addBorder(Bitmap resource, Context context) {
+    public static Bitmap addBorder(Bitmap resource, Context context, int colorId) {
         int w = resource.getWidth();
         int h = resource.getHeight();
         int radius = Math.min(h / 2, w / 2);
@@ -32,7 +32,7 @@ public class BitmapHelper {
         c.drawBitmap(resource, 4, 4, p);
         p.setXfermode(null);
         p.setStyle(Paint.Style.STROKE);
-        p.setColor(ContextCompat.getColor(context, R.color.gray));
+        p.setColor(ContextCompat.getColor(context, colorId));
         p.setStrokeWidth(10);
         c.drawCircle((w / 2) + 4, (h / 2) + 4, radius, p);
         return output;

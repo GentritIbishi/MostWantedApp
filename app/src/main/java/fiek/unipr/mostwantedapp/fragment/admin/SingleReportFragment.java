@@ -325,7 +325,7 @@ public class SingleReportFragment extends Fragment {
 
                                                    @Override
                                                    public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                                       Bitmap newBitmap = addBorder(resource, getContext());
+                                                       Bitmap newBitmap = addBorder(resource, getContext(), R.color.white);
                                                        LatLng latLng = new LatLng(latitude, longitude);
 
                                                        Geocoder geocoder;
