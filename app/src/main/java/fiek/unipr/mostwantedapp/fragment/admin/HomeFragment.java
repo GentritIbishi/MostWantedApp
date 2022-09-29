@@ -610,7 +610,10 @@ public class HomeFragment extends Fragment {
                             if(task.isSuccessful() && task.getResult() != null)
                             {
                                 grade = task.getResult().getString("grade");
-                                admin_home_tv_gradeOfUser.setText(grade);
+                                if(grade != null)
+                                {
+                                    admin_home_tv_gradeOfUser.setText(grade);
+                                }
                             }
                         }
                     });

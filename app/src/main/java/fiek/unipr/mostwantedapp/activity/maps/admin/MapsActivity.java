@@ -6,6 +6,8 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.BitmapFromVector;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.addBorder;
+import static fiek.unipr.mostwantedapp.utils.BitmapHelper.drawableFromUrl;
+import static fiek.unipr.mostwantedapp.utils.BitmapHelper.getCroppedBitmap;
 import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS_PDF;
 import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
@@ -31,8 +33,11 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
+import android.text.Layout;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -151,6 +156,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initMap();
 
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
         // below code is used for
         // checking our permissions.
         if (!checkPermissionForPDF()) {
@@ -193,30 +206,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if(TextUtils.isEmpty(first_investigator)){
                     binding.theFirstInvestigator.setError(getText(R.string.error_first_investigator_required));
                     binding.theFirstInvestigator.requestFocus();
-                }
-                if(TextUtils.isEmpty(second_investigator)){
+                    binding.generateReportProgressBar.setVisibility(View.INVISIBLE);
+                    binding.btnGenerateReport.setEnabled(true);
+                }else if(TextUtils.isEmpty(second_investigator)){
                     binding.theSecondInvestigator.setError(getText(R.string.error_second_investigator_required));
                     binding.theSecondInvestigator.requestFocus();
-                }
-                else {
-                    try {
+                    binding.generateReportProgressBar.setVisibility(View.INVISIBLE);
+                    binding.btnGenerateReport.setEnabled(true);
+                }else if(first_investigator.equals(second_investigator)){
+                    binding.theSecondInvestigator.setError(getText(R.string.error_not_allowed_same_investigator));
+                    binding.theSecondInvestigator.requestFocus();
+                    binding.generateReportProgressBar.setVisibility(View.INVISIBLE);
+                    binding.btnGenerateReport.setEnabled(true);
+                }else
+                {
+                    new Thread(new Runnable()
+                    {
+                        public void run()
+                        {
+                            CollectionReference collRef = firebaseFirestore.collection(ASSIGNED_REPORTS);
+                            String reportAssigned_id = collRef.document().getId();
 
-                        CollectionReference collRef = firebaseFirestore.collection(ASSIGNED_REPORTS);
-                        String reportAssigned_id = collRef.document().getId();
+                            assignedReport(getApplicationContext(), reportAssigned_id, last_seen_latitude, last_seen_longitude,
+                                    lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4, first_investigator, second_investigator, fullName);
 
-                        assignedReport(getApplicationContext(), reportAssigned_id, last_seen_latitude, last_seen_longitude,
-                                lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4, first_investigator, second_investigator, fullName);
+                            //create pdf file and upload in firestore and add link option for share
+                            Uri uri = null;
+                            try {
+                                uri = generatePDF(first_investigator, second_investigator, last_seen_address, first_address,
+                                        second_address, third_address, forth_address);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
-                        //create pdf file and upload in firestore and add link option for share
-                        generatePDF(reportAssigned_id, first_investigator, second_investigator, last_seen_address, first_address,
-                                second_address, third_address, forth_address);
-
-                        binding.generateReportProgressBar.setVisibility(View.INVISIBLE);
-                        binding.btnGenerateReport.setEnabled(true);
-
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                            uploadPDFtoFirebase(uri, reportAssigned_id);
+                        }
+                    }).start();
                 }
             }
         });
@@ -295,7 +320,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setLocations(String fullName) {
         //ky function i merr locations_reports te wanted person qe nuk jon equal me latest latitude
-        // limit 4
         firebaseFirestore.collection(LOCATION_REPORTS)
                 .whereEqualTo("wanted_person", fullName)
                 .orderBy("date_time", Query.Direction.DESCENDING)
@@ -449,20 +473,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ReportAssigned reportAssigned = new ReportAssigned(reportAssigned_id, first_investigator, second_investigator, fullNameOfWantedPerson
                 ,last_seen_address, first_address, second_address, third_address, forth_address, date);
 
-
-        firebaseFirestore.collection(ASSIGNED_REPORTS).document(reportAssigned_id).set(reportAssigned).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(ctx, R.string.report_assigned_successfully, Toast.LENGTH_SHORT).show();
-                binding.generateConstraint.setVisibility(View.GONE);
-                binding.generatedSuccessfully.setVisibility(View.VISIBLE);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(ctx, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+        firebaseFirestore.collection(ASSIGNED_REPORTS).document(reportAssigned_id).set(reportAssigned)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(ctx, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     public String getAddress(Context ctx, double latitude, double longitude) {
@@ -491,9 +508,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void onSuccess(Uri uri) {
                         //save uri of pdf uploaded file
                         urlOfPdfUploaded = uri.toString();
-                        setShortUrl(uri);
                         saveReportUrlToUserCollection(reportAssigned_id, urlOfPdfUploaded);
                         saveReportUrlToReportCollection(reportAssigned_id, assigned_report_doc, firebaseFirestore, urlOfPdfUploaded, ASSIGNED_REPORTS);
+                        binding.generateConstraint.setVisibility(View.GONE);
+                        binding.generatedSuccessfully.setVisibility(View.VISIBLE);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -505,28 +523,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void setShortUrl(Uri link) {
-        Task<ShortDynamicLink> shortLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
-                .setLongLink(link)
-                .setDomainUriPrefix(DYNAMIC_DOMAIN)
-                // Set parameters
-                // ...
-                .buildShortDynamicLink();
-
-        shortLinkTask.addOnCompleteListener(this, new OnCompleteListener<ShortDynamicLink>() {
-            @Override
-            public void onComplete(@NonNull Task<ShortDynamicLink> task) {
-                if (task.isSuccessful()) {
-                    // Short link created
-                    Uri shortLink = task.getResult().getShortLink();
-                    System.out.println(shortLink.toString());
-                } else {
-                    Toast.makeText(MapsActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
     private void saveReportUrlToReportCollection(String reportAssigned_id, DocumentReference documentReference, FirebaseFirestore firebaseFirestore, String urlOfPdfUploaded,
                                                  String collection) {
         if(date!=null) {
@@ -534,9 +530,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             documentReference.update("assigned_report_url", urlOfPdfUploaded).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if(task != null && task.isSuccessful()) {
-                        Toast.makeText(MapsActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
-                    }else {
+                    if(!task.isSuccessful()){
                         Toast.makeText(MapsActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -552,12 +546,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .collection(REPORTS_ASSIGNED)
                 .document(reportAssigned_id)
                 .set(reportAssignedUser)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(MapsActivity.this, getApplicationContext().getText(R.string.successfully), Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+                .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -578,10 +567,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, MANAGE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 
-    private void generatePDF(String reportAssigned_id, String first_investigator, String second_investigator,
-                             String last_seen_address, String first_address,
-                             String second_address, String third_address,
-                             String forth_address) throws FileNotFoundException {
+    private Uri generatePDF(String first_investigator, String second_investigator,
+                            String last_seen_address, String first_address,
+                            String second_address, String third_address,
+                            String forth_address) throws IOException {
 
         String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
         // File directory = getFilesDir();
@@ -617,6 +606,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         ImageData image_data_ic_kp = ImageDataFactory.create(bitmap_data_ic_kp);
         Image image_ic_kp = new Image(image_data_ic_kp);
+
+        Drawable profile = drawableFromUrl(urlOfProfile);
+        Bitmap bmp_profile = ((BitmapDrawable)profile).getBitmap();
+        Bitmap bmp_circle_profile = getCroppedBitmap(bmp_profile);
+        ByteArrayOutputStream stream_profile = new ByteArrayOutputStream();
+        bmp_circle_profile.compress(Bitmap.CompressFormat.PNG, 100, stream_profile);
+        byte[] bitmap_data_profile = stream_profile.toByteArray();
+
+        ImageData image_data_profile = ImageDataFactory.create(bitmap_data_profile);
+        Image image_profile = new Image(image_data_profile);
 
         // Initial point of the line in begin
         canvas.moveTo(0, pdfDocument.getDefaultPageSize().getHeight()/1.225);
@@ -688,8 +687,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Paragraph republika_e_kosoves = new Paragraph(String.valueOf(this.getText(R.string.republika_e_kosoves)));
         Paragraph republika_kosovo_republic_of_kosovo = new Paragraph(String.valueOf(this.getText(R.string.republika_kosovo_republic_of_kosovo)));
         Paragraph mpb_three_language = new Paragraph(String.valueOf(this.getText(R.string.mpb_three_language)));
+        Paragraph empty = new Paragraph("");
         Paragraph confidential_report = new Paragraph(String.valueOf(this.getText(R.string.confidential_report)));
-        Paragraph location_report_of = new Paragraph(this.getText(R.string.location_reports_of)+" "+fullName);
+
+        image_profile.setWidth(80);
+        image_profile.setHeight(80);
+        image_profile.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        Paragraph p_fullName = new Paragraph(fullName);
+        Paragraph info = new Paragraph(getApplicationContext().getText(R.string.birthday)+": "+birthday+"\n")
+                .add(getApplicationContext().getText(R.string.gender)+": "+gender+"\n")
+                .add(getApplicationContext().getText(R.string.age)+": "+age+"\n")
+                .add(getApplicationContext().getText(R.string.eye_color)+": "+eyeColor+"\n")
+                .add(getApplicationContext().getText(R.string.hair_color)+": "+hairColor+"\n")
+                .add(getApplicationContext().getText(R.string.height)+": "+height+"\n")
+                .add(getApplicationContext().getText(R.string.weight)+": "+weight+"\n")
+                .add(getApplicationContext().getText(R.string.phy_appearance)+": "+phy_appearance+"\n");
+
         Paragraph _first_investigator = new Paragraph(this.getText(R.string.investigator)+" "+first_investigator);
         Paragraph _second_investigator = new Paragraph(this.getText(R.string.investigator)+" "+second_investigator);
 
@@ -712,37 +726,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         republika_kosovo_republic_of_kosovo.setFontSize(10f);
         mpb_three_language.setFontSize(10f);
         confidential_report.setFontSize(22f);
-        location_report_of.setFontSize(18f);
+        p_fullName.setFontSize(18f);
 
         republika_e_kosoves.setHorizontalAlignment(HorizontalAlignment.CENTER);
         republika_kosovo_republic_of_kosovo.setHorizontalAlignment(HorizontalAlignment.CENTER);
         mpb_three_language.setHorizontalAlignment(HorizontalAlignment.CENTER);
         confidential_report.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        location_report_of.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        p_fullName.setHorizontalAlignment(HorizontalAlignment.CENTER);
 
         republika_e_kosoves.setTextAlignment(TextAlignment.CENTER);
         republika_kosovo_republic_of_kosovo.setTextAlignment(TextAlignment.CENTER);
         mpb_three_language.setTextAlignment(TextAlignment.CENTER);
         confidential_report.setTextAlignment(TextAlignment.CENTER);
-        location_report_of.setTextAlignment(TextAlignment.CENTER);
+        p_fullName.setTextAlignment(TextAlignment.CENTER);
+        confidential_report.setMarginTop(pdfDocument.getDefaultPageSize().getHeight()/18);
 
-        confidential_report.setMarginTop(pdfDocument.getDefaultPageSize().getHeight()/5);
+        info.setTextAlignment(TextAlignment.CENTER);
 
         document.add(image_ic_republic_of_kosovo);
         document.add(republika_e_kosoves);
         document.add(republika_kosovo_republic_of_kosovo);
         document.add(mpb_three_language);
+        document.add(empty);
         document.add(confidential_report);
-        document.add(location_report_of);
+        document.add(image_profile);
+        document.add(p_fullName);
+        document.add(info);
         document.add(table1);
         document.add(_first_investigator);
         document.add(_second_investigator);
         document.close();
 
         Uri uri = Uri.fromFile(file);
-        uploadPDFtoFirebase(uri, reportAssigned_id);
-
-        Toast.makeText(this, R.string.pdf_file_generated_successfully, Toast.LENGTH_SHORT).show();
+        return uri;
     }
 
     private void btnShare(String sub) {

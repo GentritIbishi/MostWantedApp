@@ -486,6 +486,17 @@
     <string name="loading">Loading</string>
     <string name="success_redirect_to_login">Success redirect to login page.</string>
     <string name="failed_to_load_data">Failed to load data!</string>
+    <string name="gender">Gender</string>
+    <string name="eye_color">Eye Color</string>
+    <string name="hair_color">Hair Color</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="phy_appearance">Physical Appearance</string>
+    <string name="collection_created">Collection created..</string>
+    <string name="uploaded_successfully">Uploaded successfully</string>
+    <string name="collection_saved_successfully">Collection saved successfully!</string>
+    <string name="error_not_allowed_same_investigator">Error not allowed same investigator!</string>
+    <string name="uploading">Uploading...</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
