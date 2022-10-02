@@ -35,7 +35,7 @@ import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.report.modified.ModifiedReportNotificationAdapter;
-import fiek.unipr.mostwantedapp.models.Notification;
+import fiek.unipr.mostwantedapp.models.Notifications;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 
 public class NotificationFragment extends Fragment implements RecyclerViewInterface {
@@ -46,7 +46,7 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
     private TextView tv_notification_user_userListEmpty;
     private ViewSwitcher notification_user_list_switcher;
     private ModifiedReportNotificationAdapter reportNotificationAdapter;
-    private ArrayList<Notification> reportArrayList;
+    private ArrayList<Notifications> reportArrayList;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
 
@@ -114,7 +114,7 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
                                 // that list to our object class.
-                                Notification report = d.toObject(Notification.class);
+                                Notifications report = d.toObject(Notifications.class);
 
                                 // after getting data from Firebase we are
                                 // storing that data in our array list

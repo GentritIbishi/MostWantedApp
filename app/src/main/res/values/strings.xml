@@ -401,8 +401,8 @@
     <string name="report_title">REPORT TITLE</string>
     <string name="failed_to_save">Failed to save!</string>
     <string name="ok">ok</string>
-    <string name="text_location_permission">text_location_permission</string>
-    <string name="title_location_permission">title_location_permission</string>
+    <string name="text_location_permission">If u want you can share your location right now, or not!</string>
+    <string name="title_location_permission">Location Permission</string>
     <string name="no_location_found_tap_on_map_for_manual_location">No location found, tap on map for manual location!</string>
     <string name="failed_to_save_report">Failed to save report</string>
     <string name="failed_to_find_document_for_save_images">Failed to find document for save images</string>
@@ -497,6 +497,7 @@
     <string name="collection_saved_successfully">Collection saved successfully!</string>
     <string name="error_not_allowed_same_investigator">Error not allowed same investigator!</string>
     <string name="uploading">Uploading...</string>
+    <string name="you_need_permissions">You need location permission if u want your location!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

@@ -142,7 +142,7 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
 
     private void checkNotificationPermission() {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("My Notification", "My Notification", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel("My Notifications", "My Notifications", NotificationManager.IMPORTANCE_DEFAULT);
             NotificationManager manager = getActivity().getSystemService(NotificationManager.class);
             manager.createNotificationChannel(channel);
         }

@@ -64,13 +64,17 @@ public class Constants {
     public static final String DYNAMIC_DOMAIN = "https://fiek.page.link";
 
     //permissions
-    public static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    public static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
+    public static final int LOCATION_PERMISSION_REQUEST_CODE_FINE = 21;
+    public static final int LOCATION_PERMISSION_REQUEST_CODE_COURSE = 22;
+    public static final int LOCATION_PERMISSION_REQUEST_CODE_BACKGROUND = 23;
     public static final int PICK_IMAGE = 15;
-    public static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    public static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     public static final int IMPORTANCE = NotificationManager.IMPORTANCE_DEFAULT;
+    public static final String FOREGROUND_SERVICE = Manifest.permission.FOREGROUND_SERVICE;
 
     //Notifications
+    public static final String NOTIFICATION_CHANNEL_ID = "NOTIFICATION_CHANNEL_ID";
+    public static final String NOTIFICATION_SERVICE = "NOTIFICATION_SERVICE";
     public static final String CHANNEL_ID_ADDED = "NEW_REPORT_ADDED";
     public static final String NOTIFICATION_NUMBER_1 = "notificationNumber1";
 
@@ -82,5 +86,5 @@ public class Constants {
 
     public static final String CHANNEL_ID_USER_MODIFIED = "NEW_REPORT_USER_MODIFIED";
     public static final String NOTIFICATION_NUMBER_4 = "notificationNumber4";
-
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
 }

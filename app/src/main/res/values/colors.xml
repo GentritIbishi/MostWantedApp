@@ -41,7 +41,7 @@
 
     <color name="home">#1194AA</color>
     <color name="search">#C9379d</color>
-    <color name="notification">#AE7E0F</color>
+    <color name="notifications">#AE7E0F</color>
     <color name="profile">#5B37B7</color>
 
     <color name="home_20">#2D1194AA</color>

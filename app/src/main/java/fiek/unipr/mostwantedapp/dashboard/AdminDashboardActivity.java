@@ -1,19 +1,29 @@
 package fiek.unipr.mostwantedapp.dashboard;
 
+import static android.content.ContentValues.TAG;
+import static fiek.unipr.mostwantedapp.utils.Constants.FOREGROUND_SERVICE;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -27,9 +37,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -44,12 +60,16 @@ import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.NotificationFragment;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.SettingsFragment;
+import fiek.unipr.mostwantedapp.models.Notifications;
+import fiek.unipr.mostwantedapp.models.NotificationState;
+import fiek.unipr.mostwantedapp.services.ServiceNotification;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
-import fiek.unipr.mostwantedapp.utils.WindowHelper;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
+    public static final String IS_LOGGED = "IS_LOGGED";
     private int selectedTab = 1;
     private String fullName, urlOfProfile;
 
@@ -72,13 +92,13 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
+    private ListenerRegistration registration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_dashboard);
-
-        WindowHelper.setFullScreenActivity(getWindow());
+        getPermissionForNotification();
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -108,6 +128,91 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_menu_group_logout = findViewById(R.id.admin_menu_group_logout);
 
         setHomeDefaultConfig();
+
+        Query query = firebaseFirestore.collection(LOCATION_REPORTS);
+        registration = query.addSnapshotListener(
+                new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "listen:error", e);
+                            return;
+                        }
+
+                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+
+                            String notificationReportId = dc.getDocument().getString("docId");
+                            String notificationReportUid = dc.getDocument().getString("uID");
+                            String notificationReportDateTime = dc.getDocument().getString("date_time");
+                            String notificationReportTitle = dc.getDocument().getString("title");
+                            String notificationReportDescription = dc.getDocument().getString("description");
+                            String notificationReportInformerPerson = dc.getDocument().getString("informer_person");
+                            String notificationReportWantedPerson = dc.getDocument().getString("wanted_person");
+                            String notificationReportPrizeToWin = dc.getDocument().getString("prizeToWin");
+                            String notificationReportNewStatus = dc.getDocument().getString("status");
+
+                            Notifications notificationsAdded = new Notifications(
+                                    DateHelper.getDateTime(),
+                                    String.valueOf(NotificationState.ADDED),
+                                    notificationReportId,
+                                    notificationReportUid,
+                                    notificationReportDateTime,
+                                    notificationReportTitle,
+                                    notificationReportDescription,
+                                    notificationReportInformerPerson,
+                                    notificationReportWantedPerson,
+                                    notificationReportPrizeToWin,
+                                    notificationReportNewStatus,
+                                    firebaseAuth.getUid()
+                            );
+
+                            Notifications notificationsModified = new Notifications(
+                                    DateHelper.getDateTime(),
+                                    String.valueOf(NotificationState.MODIFIED),
+                                    notificationReportId,
+                                    notificationReportUid,
+                                    notificationReportDateTime,
+                                    notificationReportTitle,
+                                    notificationReportDescription,
+                                    notificationReportInformerPerson,
+                                    notificationReportWantedPerson,
+                                    notificationReportPrizeToWin,
+                                    notificationReportNewStatus,
+                                    firebaseAuth.getUid()
+                            );
+
+                            Notifications notificationsRemoved = new Notifications(
+                                    DateHelper.getDateTime(),
+                                    String.valueOf(NotificationState.REMOVED),
+                                    notificationReportId,
+                                    notificationReportUid,
+                                    notificationReportDateTime,
+                                    notificationReportTitle,
+                                    notificationReportDescription,
+                                    notificationReportInformerPerson,
+                                    notificationReportWantedPerson,
+                                    notificationReportPrizeToWin,
+                                    notificationReportNewStatus,
+                                    firebaseAuth.getUid()
+                            );
+
+                            switch (dc.getType()) {
+                                case ADDED:
+                                    final Intent intentAdded = new Intent(AdminDashboardActivity.this, ServiceNotification.class);
+                                    ServiceCaller(intentAdded, notificationsAdded);
+                                    break;
+                                case MODIFIED:
+                                    final Intent intentModified = new Intent(AdminDashboardActivity.this, ServiceNotification.class);
+                                    ServiceCaller(intentModified, notificationsModified);
+                                    break;
+                                case REMOVED:
+                                    final Intent intentRemoved = new Intent(AdminDashboardActivity.this, ServiceNotification.class);
+                                    ServiceCaller(intentRemoved, notificationsRemoved);
+                                    break;
+                            }
+                        }
+                    }
+                });
 
         admin_menu_group_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,6 +349,18 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     }
 
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("Service status", "Running");
+                return true;
+            }
+        }
+        Log.i ("Service status", "Not running");
+        return false;
+    }
+
     private void setHomeDefaultConfig() {
         setSupportActionBar(admin_toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -261,7 +378,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                 .replace(R.id.admin_fragmentContainer, HomeFragment.class, null)
                 .commit();
 
-        //set deafult seleted
+        //set default selected
         admin_nav_view.getMenu().getItem(0).setChecked(true);
     }
 
@@ -303,7 +420,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
         }
     }
 
-    private void Logout() {
+    private void Logout()
+    {
         //check for phone authentication
         if(firebaseAuth != null){
             firebaseAuth.signOut();
@@ -312,7 +430,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_logout_progressBar.setVisibility(View.GONE);
     }
 
-    public void sendUserToLogin() {
+    public void sendUserToLogin()
+    {
         Intent loginIntent = new Intent(AdminDashboardActivity.this, LoginActivity.class);
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -392,6 +511,40 @@ public class AdminDashboardActivity extends AppCompatActivity {
             nav_header_image_view.setImageResource(R.drawable.ic_phone_login);
             topImageProfile.setImageResource(R.drawable.ic_phone_login);
         }
+    }
+
+    private void getPermissionForNotification() {
+        ActivityCompat.requestPermissions(this, new String[] {FOREGROUND_SERVICE}, PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void ServiceCaller(Intent intent, Notifications notifications) {
+        stopService(intent);
+        intent.putExtra("notificationDateTime", notifications.getNotificationDateTime());
+        intent.putExtra("notificationType", notifications.getNotificationType());
+        intent.putExtra("notificationReportId", notifications.getNotificationReportId());
+        intent.putExtra("notificationReportUid", notifications.getNotificationReportUid());
+        intent.putExtra("notificationReportDateTime", notifications.getNotificationReportDateTime());
+        intent.putExtra("notificationReportTitle", notifications.getNotificationReportTitle());
+        intent.putExtra("notificationReportInformerPerson", notifications.getNotificationReportInformerPerson());
+        intent.putExtra("notificationReportWantedPerson", notifications.getNotificationReportWantedPerson());
+        intent.putExtra("notificationReportPrizeToWin", notifications.getNotificationReportPrizeToWin());
+        intent.putExtra("notificationReportNewStatus", notifications.getNotificationReportNewStatus());
+        intent.putExtra("notificationForUserId", notifications.getNotificationForUserId());
+        startService(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (firebaseAuth != null) {
+            SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
+            editor.putBoolean("isLogged", true);
+            editor.apply();
+        } else {
+            SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
+            editor.putBoolean("isLogged", false);
+            editor.apply();
+        }
+        super.onDestroy();
     }
 
 }

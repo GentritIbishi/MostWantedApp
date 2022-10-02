@@ -1,6 +1,6 @@
 package fiek.unipr.mostwantedapp.models;
 
-public class Notification {
+public class Notifications {
     String  notificationId,
             notificationDateTime,
             notificationType,
@@ -15,10 +15,25 @@ public class Notification {
             notificationReportNewStatus,
             notificationForUserId;
 
-    public Notification() {
+    public Notifications() {
     }
 
-    public Notification(String notificationId, String notificationDateTime, String notificationType, String notificationReportId, String notificationReportUid, String notificationReportDateTime, String notificationReportTitle, String notificationReportDescription, String notificationReportInformerPerson, String notificationReportWantedPerson, String notificationReportPrizeToWin, String notificationReportNewStatus, String notificationForUserId) {
+    public Notifications(String notificationDateTime, String notificationType, String notificationReportId, String notificationReportUid, String notificationReportDateTime, String notificationReportTitle, String notificationReportDescription, String notificationReportInformerPerson, String notificationReportWantedPerson, String notificationReportPrizeToWin, String notificationReportNewStatus, String notificationForUserId) {
+        this.notificationDateTime = notificationDateTime;
+        this.notificationType = notificationType;
+        this.notificationReportId = notificationReportId;
+        this.notificationReportUid = notificationReportUid;
+        this.notificationReportDateTime = notificationReportDateTime;
+        this.notificationReportTitle = notificationReportTitle;
+        this.notificationReportDescription = notificationReportDescription;
+        this.notificationReportInformerPerson = notificationReportInformerPerson;
+        this.notificationReportWantedPerson = notificationReportWantedPerson;
+        this.notificationReportPrizeToWin = notificationReportPrizeToWin;
+        this.notificationReportNewStatus = notificationReportNewStatus;
+        this.notificationForUserId = notificationForUserId;
+    }
+
+    public Notifications(String notificationId, String notificationDateTime, String notificationType, String notificationReportId, String notificationReportUid, String notificationReportDateTime, String notificationReportTitle, String notificationReportDescription, String notificationReportInformerPerson, String notificationReportWantedPerson, String notificationReportPrizeToWin, String notificationReportNewStatus, String notificationForUserId) {
         this.notificationId = notificationId;
         this.notificationDateTime = notificationDateTime;
         this.notificationType = notificationType;

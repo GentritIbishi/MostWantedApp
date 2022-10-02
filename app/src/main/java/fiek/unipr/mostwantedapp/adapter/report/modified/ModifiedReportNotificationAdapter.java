@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.models.Notification;
+import fiek.unipr.mostwantedapp.models.Notifications;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 
@@ -28,9 +28,9 @@ public class ModifiedReportNotificationAdapter extends RecyclerView.Adapter<Modi
     private final RecyclerViewInterface recyclerViewInterface;
     private Context context;
     private String time_elapsed;
-    private List<Notification> modifiedReportList;
+    private List<Notifications> modifiedReportList;
 
-    public ModifiedReportNotificationAdapter(Context context, List<Notification> modifiedReportList, RecyclerViewInterface recyclerViewInterface) {
+    public ModifiedReportNotificationAdapter(Context context, List<Notifications> modifiedReportList, RecyclerViewInterface recyclerViewInterface) {
         this.context = context;
         this.modifiedReportList = modifiedReportList;
         this.recyclerViewInterface = recyclerViewInterface;

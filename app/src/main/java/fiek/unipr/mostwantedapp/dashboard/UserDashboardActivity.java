@@ -1,9 +1,13 @@
 package fiek.unipr.mostwantedapp.dashboard;
 
+import static android.content.ContentValues.TAG;
+import static fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity.IS_LOGGED;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.USER_INFORMER_PREFS;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,6 +21,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -30,9 +35,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -47,7 +58,11 @@ import fiek.unipr.mostwantedapp.fragment.user.NotificationFragment;
 import fiek.unipr.mostwantedapp.fragment.user.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.user.SearchFragment;
 import fiek.unipr.mostwantedapp.fragment.user.SettingsFragment;
+import fiek.unipr.mostwantedapp.models.Notifications;
+import fiek.unipr.mostwantedapp.models.NotificationState;
+import fiek.unipr.mostwantedapp.services.ServiceNotification;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 import fiek.unipr.mostwantedapp.utils.WindowHelper;
 
@@ -55,7 +70,7 @@ public class UserDashboardActivity extends AppCompatActivity {
 
     private int selectedTab = 1;
     private Integer balance;
-    private String fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
+    private String userID, fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
     private Uri photoURL;
     private String user_anonymousID = null;
 
@@ -80,14 +95,12 @@ public class UserDashboardActivity extends AppCompatActivity {
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
-
+    private ListenerRegistration registration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_dashboard);
-
-        WindowHelper.setFullScreenActivity(getWindow());
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -116,7 +129,56 @@ public class UserDashboardActivity extends AppCompatActivity {
         topImageProfile = findViewById(R.id.topImageProfile);
         user_menu_group_logout = findViewById(R.id.user_menu_group_logout);
 
+        userID = firebaseAuth.getUid();
+
         setHomeDefaultConfig();
+
+        Query query = firebaseFirestore.collection(LOCATION_REPORTS).whereEqualTo("uID", userID);
+        registration = query.addSnapshotListener(
+                new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "listen:error", e);
+                            return;
+                        }
+
+                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+
+                            String notificationReportId = dc.getDocument().getString("docId");
+                            String notificationReportUid = dc.getDocument().getString("uID");
+                            String notificationReportDateTime = dc.getDocument().getString("date_time");
+                            String notificationReportTitle = dc.getDocument().getString("title");
+                            String notificationReportDescription = dc.getDocument().getString("description");
+                            String notificationReportInformerPerson = dc.getDocument().getString("informer_person");
+                            String notificationReportWantedPerson = dc.getDocument().getString("wanted_person");
+                            String notificationReportPrizeToWin = dc.getDocument().getString("prizeToWin");
+                            String notificationReportNewStatus = dc.getDocument().getString("status");
+
+                            Notifications notificationsModified = new Notifications(
+                                    DateHelper.getDateTime(),
+                                    String.valueOf(NotificationState.MODIFIED),
+                                    notificationReportId,
+                                    notificationReportUid,
+                                    notificationReportDateTime,
+                                    notificationReportTitle,
+                                    notificationReportDescription,
+                                    notificationReportInformerPerson,
+                                    notificationReportWantedPerson,
+                                    notificationReportPrizeToWin,
+                                    notificationReportNewStatus,
+                                    firebaseAuth.getUid()
+                            );
+
+                            switch (dc.getType()) {
+                                case MODIFIED:
+                                    final Intent intentModified = new Intent(UserDashboardActivity.this, ServiceNotification.class);
+                                    ServiceCaller(intentModified, notificationsModified);
+                                    break;
+                            }
+                        }
+                    }
+                });
 
         user_menu_group_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,6 +313,40 @@ public class UserDashboardActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void ServiceCaller(Intent intent, Notifications notifications) {
+        stopService(intent);
+
+        intent.putExtra("notificationDateTime", notifications.getNotificationDateTime());
+        intent.putExtra("notificationType", notifications.getNotificationType());
+        intent.putExtra("notificationReportId", notifications.getNotificationReportId());
+        intent.putExtra("notificationReportUid", notifications.getNotificationReportUid());
+        intent.putExtra("notificationReportDateTime", notifications.getNotificationReportDateTime());
+        intent.putExtra("notificationReportTitle", notifications.getNotificationReportTitle());
+        intent.putExtra("notificationReportInformerPerson", notifications.getNotificationReportInformerPerson());
+        intent.putExtra("notificationReportWantedPerson", notifications.getNotificationReportWantedPerson());
+        intent.putExtra("notificationReportPrizeToWin", notifications.getNotificationReportPrizeToWin());
+        intent.putExtra("notificationReportNewStatus", notifications.getNotificationReportNewStatus());
+        intent.putExtra("notificationForUserId", notifications.getNotificationForUserId());
+
+        startService(intent);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(firebaseAuth != null)
+        {
+            SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
+            editor.putBoolean("isLogged", true);
+            editor.apply();
+        }else {
+            SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
+            editor.putBoolean("isLogged", false);
+            editor.apply();
+        }
+        super.onDestroy();
     }
 
     private void setHomeSelected() {

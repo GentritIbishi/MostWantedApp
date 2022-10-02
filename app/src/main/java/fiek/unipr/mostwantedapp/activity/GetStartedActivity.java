@@ -15,9 +15,9 @@ import fiek.unipr.mostwantedapp.utils.OnSwipeTouchListener;
 
 public class GetStartedActivity extends AppCompatActivity {
 
-    TextView tvgetStarted1, dot1, dot2;
-    Button bt_getStarted;
-    RelativeLayout view_getStarted;
+    private TextView tvgetStarted1, dot1, dot2;
+    private Button bt_getStarted;
+    private RelativeLayout view_getStarted;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
