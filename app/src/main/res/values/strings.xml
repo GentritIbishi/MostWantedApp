@@ -498,6 +498,7 @@
     <string name="error_not_allowed_same_investigator">Error not allowed same investigator!</string>
     <string name="uploading">Uploading...</string>
     <string name="you_need_permissions">You need location permission if u want your location!</string>
+    <string name="default_location">Default Location</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

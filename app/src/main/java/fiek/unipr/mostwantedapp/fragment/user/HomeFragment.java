@@ -3,6 +3,7 @@ package fiek.unipr.mostwantedapp.fragment.user;
 import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
 import static fiek.unipr.mostwantedapp.utils.Constants.FAKE;
 import static fiek.unipr.mostwantedapp.utils.Constants.HOME_USER_PREF;
+import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_PERMISSION_REQUEST_CODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.NA;
 import static fiek.unipr.mostwantedapp.utils.Constants.UNVERIFIED;
@@ -139,7 +140,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         super.onStart();
         if(firebaseAuth != null){
             if(ContextHelper.checkContext(getContext())){
-                getLocationPermission();
                 loadInfoFromFirebase(firebaseAuth);
                 loadInfoAnonymousFirebase();
                 loadInfoPhoneFirebase();
@@ -313,19 +313,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                         user_tv_balance.setText(balance);
                     }
                 });
-    }
-
-    private void getLocationPermission() {
-        String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_BACKGROUND_LOCATION};
-        if(ContextCompat.checkSelfPermission(getContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            if(ContextCompat.checkSelfPermission(getContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                locationPermissionGranted = true;
-            }else {
-                ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
-            }
-        }else {
-            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
-        }
     }
 
     @Override
@@ -567,6 +554,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void onItemClick(int position) {
+//        getLocationPermission();
         Intent intent=new Intent(getContext(), MapsInformerActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle viewBundle = new Bundle();
         viewBundle.putString("personId", personArrayList.get(position).getPersonId());
@@ -584,5 +572,32 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         viewBundle.putString("weight", personArrayList.get(position).getWeight());
         intent.putExtras(viewBundle);
         startActivity(intent);
+    }
+
+    private void getLocationPermission()
+    {
+        try {
+            if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            {
+                //if not FINE
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+            }else
+            {
+                //if fine
+                locationPermissionGranted = true;
+                if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+                {
+                    //if not coarse
+                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+                }
+                else
+                {
+                    //if coarse
+                    locationPermissionGranted = true;
+                }
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

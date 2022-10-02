@@ -65,9 +65,6 @@ public class Constants {
 
     //permissions
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
-    public static final int LOCATION_PERMISSION_REQUEST_CODE_FINE = 21;
-    public static final int LOCATION_PERMISSION_REQUEST_CODE_COURSE = 22;
-    public static final int LOCATION_PERMISSION_REQUEST_CODE_BACKGROUND = 23;
     public static final int PICK_IMAGE = 15;
     public static final int IMPORTANCE = NotificationManager.IMPORTANCE_DEFAULT;
     public static final String FOREGROUND_SERVICE = Manifest.permission.FOREGROUND_SERVICE;

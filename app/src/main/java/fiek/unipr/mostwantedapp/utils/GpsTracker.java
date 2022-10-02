@@ -216,4 +216,15 @@ public class GpsTracker extends Service implements LocationListener {
     public IBinder onBind(Intent arg0) {
         return null;
     }
+
+    //usuage
+//    gpsTracker = new GpsTracker(MapsInformerActivity.this);
+//                if(gpsTracker.canGetLocation()){
+//        double latitude = gpsTracker.getLatitude();
+//        double longitude = gpsTracker.getLongitude();
+//        setMarkerLocation(latitude, longitude);
+//    }else{
+//        gpsTracker.showSettingsAlert();
+//        setMarkerLocation(LATITUDE_DEFAULT, LONGITUDE_DEFAULT);
+//    }
 }

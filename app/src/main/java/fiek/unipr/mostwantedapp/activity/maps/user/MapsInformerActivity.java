@@ -4,9 +4,6 @@ import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
 import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
 import static fiek.unipr.mostwantedapp.utils.Constants.LATITUDE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_PERMISSION_REQUEST_CODE;
-import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_PERMISSION_REQUEST_CODE_BACKGROUND;
-import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_PERMISSION_REQUEST_CODE_COURSE;
-import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_PERMISSION_REQUEST_CODE_FINE;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.LONGITUDE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.PHONE_USER;
@@ -71,6 +68,7 @@ import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.models.ReportStatus;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
+import fiek.unipr.mostwantedapp.utils.GpsTracker;
 
 public class MapsInformerActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
@@ -78,6 +76,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private int upload_count = 0;
     private FusedLocationProviderClient mfusedLocationProviderClient;
     private GoogleMap mMap;
+    private GpsTracker gpsTracker;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
@@ -98,13 +97,61 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private boolean locationPermissionGranted = false;
 
     @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setOnMapClickListener(this);
+        mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        try {
+            if (locationPermissionGranted)
+            {
+                Task location = mfusedLocationProviderClient.getLastLocation();
+                if (location != null)
+                {
+                    location.addOnCompleteListener(new OnCompleteListener()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task task)
+                        {
+                            if (task.isSuccessful())
+                            {
+                                Location currentLocation = (Location) task.getResult();
+                                if(currentLocation != null)
+                                {
+                                    latitude = currentLocation.getLatitude();
+                                    longitude = currentLocation.getLongitude();
+                                    setMarkerLocation(latitude, longitude);
+                                }else
+                                {
+                                    setMarkerLocation(LATITUDE_DEFAULT, LONGITUDE_DEFAULT);
+                                    gpsTracker.showSettingsAlert();
+                                }
+                                mMap.setMyLocationEnabled(true);
+                            } else
+                            {
+                                Toast.makeText(MapsInformerActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else
+                {
+                    gpsTracker.showSettingsAlert();
+                    setMarkerLocation(LATITUDE_DEFAULT, LONGITUDE_DEFAULT);
+                }
+            } else {
+                setMarkerLocation(LATITUDE_DEFAULT, LONGITUDE_DEFAULT);
+            }
+        } catch (SecurityException e) {
+            Toast.makeText(this, "MAPS INFORMER EXCEPTION: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = ActivityMapsInformerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        getLocationPermission();
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage(this.getText(R.string.report_is_saving) + "");
@@ -116,6 +163,8 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
+
+        gpsTracker = new GpsTracker(MapsInformerActivity.this);
 
         mapsInformerBundle = new Bundle();
         getFromBundle(mapsInformerBundle);
@@ -200,7 +249,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     @Override
     public void onStart() {
-        super.onStart();
+        getLocationPermission();
         if(firebaseAuth != null)
         {
             if(firebaseAuth.getCurrentUser().isAnonymous())
@@ -215,55 +264,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             }
 
         }
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-        mMap.setOnMapClickListener(this);
-        mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        try {
-            if (locationPermissionGranted)
-            {
-                Task location = mfusedLocationProviderClient.getLastLocation();
-                if (location != null)
-                {
-                    location.addOnCompleteListener(new OnCompleteListener()
-                    {
-                        @Override
-                        public void onComplete(@NonNull Task task)
-                        {
-                            if (task.isSuccessful())
-                            {
-                                Location currentLocation = (Location) task.getResult();
-                                if(currentLocation != null)
-                                {
-                                    latitude = currentLocation.getLatitude();
-                                    longitude = currentLocation.getLongitude();
-                                    setMarkerLocation(latitude, longitude);
-                                }else
-                                {
-                                    setMarkerLocation(LATITUDE_DEFAULT, LONGITUDE_DEFAULT);
-                                }
-                                mMap.setMyLocationEnabled(true);
-                            } else
-                            {
-                                Toast.makeText(MapsInformerActivity.this, getApplicationContext().getText(R.string.no_location_found_tap_on_map_for_manual_location), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                } else
-                {
-                    Toast.makeText(this, R.string.please_turn_on_location_on_your_phone, Toast.LENGTH_LONG).show();
-                    setMarkerLocation(LATITUDE_DEFAULT, LONGITUDE_DEFAULT);
-                }
-            } else {
-                setMarkerLocation(LATITUDE_DEFAULT, LONGITUDE_DEFAULT);
-            }
-        } catch (SecurityException e) {
-            Toast.makeText(this, "MAPS INFORMER EXCEPTION: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-
+        super.onStart();
     }
 
     private void setMarkerLocation(Double latitude, Double longitude) {
@@ -279,34 +280,27 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         try {
             if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             {
-                //nese nuk eshte FINE
+                //if not FINE
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
             }else
             {
-                //nese o fine
+                //if fine
                 locationPermissionGranted = true;
                 if(ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
                 {
-                    //nese nuk o course
+                    //if not coarse
                     ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
                 }
                 else
                 {
-                    //nese o course
+                    //if coarse
                     locationPermissionGranted = true;
-                    if(ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                    {
-                        //nese nuk o background
-                        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_BACKGROUND_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-                    }else {
-                        //nese o background
-                        locationPermissionGranted = true;
-                    }
+                    initMap();
                 }
             }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void initMap()
@@ -317,24 +311,22 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         locationPermissionGranted = false;
         switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE: {
-                if (grantResults.length > 0) {
-                    for (int i = 0; i < grantResults.length; i++) {
-                        locationPermissionGranted = false;
-                        return;
+            case LOCATION_PERMISSION_REQUEST_CODE:{
+                if(grantResults.length>0){
+                    for(int i=0; i < grantResults.length;i++){
+                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            locationPermissionGranted = false;
+                            return;
+                        }
                     }
-
-                } else {
                     locationPermissionGranted = true;
-                    Intent intent = getIntent();
-                    finish();
-                    startActivity(intent);
+                    initMap();
                 }
             }
         }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void moveCamera(LatLng latLng, float zoom) {
