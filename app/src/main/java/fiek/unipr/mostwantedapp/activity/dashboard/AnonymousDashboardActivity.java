@@ -40,19 +40,6 @@ import fiek.unipr.mostwantedapp.fragment.user.SettingsFragment;
 public class AnonymousDashboardActivity extends AppCompatActivity {
 
     private String anonymousID;
-    private DrawerLayout anonymous_drawerLayout_real;
-    private ActionBarDrawerToggle anonymous_toggle;
-    private Toolbar anonymous_toolbar;
-    private NavigationView anonymous_nav_view;
-    private Button anonymous_menu_group_logout;
-    private ProgressBar anonymous_logout_progressBar;
-    private ImageView anonymous_homeImage, anonymous_searchImage, anonymous_notificationImage, anonymous_profileImage;
-    private LinearLayout anonymous_homeLayout, anonymous_searchLayout, anonymous_notificationLayout, anonymous_profileLayout;
-
-    //nav header
-    private TextView nav_header_name;
-    private ImageView verifiedBadge;
-    private CircleImageView nav_header_image_view, topImageProfile;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -73,49 +60,9 @@ public class AnonymousDashboardActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
-        anonymous_nav_view = findViewById(R.id.anonymous_nav_view);
-        View nav_header_view = anonymous_nav_view.getHeaderView(0);
-        nav_header_name = nav_header_view.findViewById(R.id.nav_header_name);
-        verifiedBadge = nav_header_view.findViewById(R.id.verifiedBadge);
-        nav_header_image_view = nav_header_view.findViewById(R.id.nav_header_image_view);
-
-        anonymous_drawerLayout_real = findViewById(R.id.anonymous_drawerLayout_real);
-        anonymous_logout_progressBar = findViewById(R.id.anonymous_logout_progressBar);
-        anonymous_toolbar = findViewById(R.id.anonymous_toolbar);
-        topImageProfile = findViewById(R.id.topImageProfile);
-        anonymous_menu_group_logout = findViewById(R.id.anonymous_menu_group_logout);
-
         anonymousID = firebaseAuth.getUid();
-
         setHomeDefaultConfig();
 
-        anonymous_nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                int id = menuItem.getItemId();
-                Fragment fragment = null;
-                switch (id)
-                {
-                    case R.id.anonymous_menu_group_logout:
-                        anonymous_logout_progressBar.setVisibility(View.VISIBLE);
-                        Logout();
-                        break;
-                    default:
-                        return true;
-                }
-                return true;
-            }
-        });
-        
-    }
-
-    private void Logout() {
-        //check for phone authentication
-        if(firebaseAuth != null){
-            firebaseAuth.signOut();
-            sendAnonymousToLogin();
-        }
-        anonymous_logout_progressBar.setVisibility(View.GONE);
     }
 
     public void sendAnonymousToLogin() {
@@ -127,19 +74,9 @@ public class AnonymousDashboardActivity extends AppCompatActivity {
     }
 
     private void setHomeDefaultConfig() {
-        setSupportActionBar(anonymous_toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        anonymous_toolbar.setTitle("");
-        anonymous_toolbar.setSubtitle("");
-
-        anonymous_toggle = new ActionBarDrawerToggle(AnonymousDashboardActivity.this, anonymous_drawerLayout_real, anonymous_toolbar, R.string.open, R.string.close);
-        anonymous_drawerLayout_real.addDrawerListener(anonymous_toggle);
-        anonymous_toggle.syncState();
-
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
                 .replace(R.id.anonymous_fragmentContainer, MapsFragment.class, null)
                 .commit();
-
     }
 }
