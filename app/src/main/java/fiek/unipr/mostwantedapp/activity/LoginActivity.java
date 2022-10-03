@@ -45,6 +45,7 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.activity.auth.ForgotPasswordActivity;
 import fiek.unipr.mostwantedapp.activity.auth.PhoneSignInActivity;
 import fiek.unipr.mostwantedapp.activity.dashboard.AdminDashboardActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.AnonymousDashboardActivity;
 import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.SecurityHelper;
@@ -311,7 +312,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     seLoginHistoryAnonymous(loginHistory);
                     setSharedPreferenceInformer(firebaseAuth.getCurrentUser().getUid());
                     setSharedPreferenceAnonymous(ANONYMOUS);
-                    goToInformerDashboard();
+                    goToAnonymousDashboard();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -323,6 +324,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } else {
             Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void goToAnonymousDashboard() {
+        Intent intent = new Intent(LoginActivity.this, AnonymousDashboardActivity.class);
+        startActivity(intent);
+        progressDialog.dismiss();
+        finish();
     }
 
     private void seLoginHistoryAnonymous(LoginHistory loginHistory) {
