@@ -62,12 +62,14 @@ public class SplashActivity extends AppCompatActivity {
                                     if(role !=null && role.matches(ADMIN_ROLE))
                                     {
                                         // start AdminDashboardActivity
-                                        startActivity(new Intent(SplashActivity.this, AdminDashboardActivity.class));
+                                        Intent intent = new Intent(SplashActivity.this, AdminDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
                                     }
                                     else
                                     {
                                         // start UserDashboardActivity
-                                        startActivity(new Intent(SplashActivity.this, UserDashboardActivity.class));
+                                        Intent intent = new Intent(SplashActivity.this, UserDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
                                     }
                                 }
                             }

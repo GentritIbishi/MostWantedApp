@@ -312,8 +312,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     seLoginHistoryAnonymous(loginHistory);
                     setSharedPreferenceInformer(firebaseAuth.getCurrentUser().getUid());
                     setSharedPreferenceAnonymous(ANONYMOUS);
-                    goToInformerDashboard();
-                    //nymousDashboard();
+                    //goToInformerDashboard();
+                    goToAnonymousDashboard();
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override

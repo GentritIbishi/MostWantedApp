@@ -14,6 +14,7 @@ import com.google.firebase.storage.StorageReference;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.activity.LoginActivity;
 import fiek.unipr.mostwantedapp.fragment.anonymous.MapsFragment;
+import fiek.unipr.mostwantedapp.fragment.anonymous.SearchFragment;
 
 public class AnonymousDashboardActivity extends AppCompatActivity {
 
@@ -53,7 +54,7 @@ public class AnonymousDashboardActivity extends AppCompatActivity {
     private void setHomeDefaultConfig() {
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(R.id.anonymous_fragmentContainer, MapsFragment.class, null)
+                .replace(R.id.anonymous_fragmentContainer, SearchFragment.class, null)
                 .commit();
     }
 }

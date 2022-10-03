@@ -1,4 +1,6 @@
-package fiek.unipr.mostwantedapp.fragment.admin.search;
+package fiek.unipr.mostwantedapp.fragment.anonymous;
+
+import static android.view.View.GONE;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
@@ -6,71 +8,89 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.activity.maps.user.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
-import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.activity.maps.admin.MapsActivity;
 import fiek.unipr.mostwantedapp.models.Person;
+import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 
 public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
-    private View search_admin_view;
-    private RecyclerView lvPersons;
-    private LinearLayout search_admin_list_view1, search_admin_list_view2;
-    private TextView tv_search_admin_userListEmpty;
-    private ViewSwitcher search_admin_list_switcher;
-    private MapsInformerPersonListAdapter mapsInformerPersonListAdapter;
+    private View view;
+    private TextInputEditText anonymous_search_filter;
+    private RecyclerView anonymous_lvPersons;
+    private LinearLayout search_anonymous_list_view1, search_anonymous_list_view2;
+    private ViewSwitcher search_anonymous_list_switcher;
+    private MapsInformerPersonListAdapter mapsInformerAnonymousPersonListAdapter;
     private ArrayList<Person> personArrayList;
+
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
-    private TextInputEditText admin_search_filter;
+    private DocumentReference documentReference;
+    private StorageReference storageReference;
+    private FirebaseStorage firebaseStorage;
+
+    private String userID, fullName;
+
+    public SearchFragment() {}
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+        firebaseStorage = FirebaseStorage.getInstance();
+        userID = firebaseAuth.getUid();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        search_admin_view = inflater.inflate(R.layout.fragment_search_admin, container, false);
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        InitializeFields();
+        view = inflater.inflate(R.layout.fragment_search, container, false);
+
+        initializeFields();
+
         loadDatainListview();
 
-        final SwipeRefreshLayout admin_pullToRefreshInSearch = search_admin_view.findViewById(R.id.admin_pullToRefreshInSearch);
-        admin_pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Reload current fragment
-                personArrayList.clear();
-                loadDatainListview();
-                admin_pullToRefreshInSearch.setRefreshing(false);
-            }
-        });
+        search_anonymous_list_switcher.setVisibility(GONE);
 
-        admin_search_filter.requestFocus();
-
-        admin_search_filter.addTextChangedListener(new TextWatcher() {
+        anonymous_search_filter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -78,7 +98,15 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                filter(charSequence.toString());
+                if(charSequence.length() != 0)
+                {
+                    search_anonymous_list_switcher.setVisibility(View.VISIBLE);
+                    filter(charSequence.toString());
+                }else if(charSequence.length() == 0)
+                {
+                    search_anonymous_list_switcher.setVisibility(View.GONE);
+                }
+                //filter(charSequence.toString());
             }
 
             @Override
@@ -86,27 +114,27 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
             }
         });
 
+        onBackPressed();
 
-        return search_admin_view;
+        return view;
     }
 
-    private void InitializeFields() {
-        admin_search_filter = search_admin_view.findViewById(R.id.admin_search_filter);
-        search_admin_list_view1 = search_admin_view.findViewById(R.id.search_admin_list_view1);
-        search_admin_list_view2 = search_admin_view.findViewById(R.id.search_admin_list_view2);
-        tv_search_admin_userListEmpty = search_admin_view.findViewById(R.id.tv_search_admin_userListEmpty);
-        search_admin_list_switcher = search_admin_view.findViewById(R.id.search_admin_list_switcher);
-        lvPersons = search_admin_view.findViewById(R.id.lvPersons);
+    private void initializeFields() {
+        anonymous_search_filter = view.findViewById(R.id.anonymous_search_filter);
+        search_anonymous_list_switcher = view.findViewById(R.id.search_anonymous_list_switcher);
+        anonymous_lvPersons = view.findViewById(R.id.anonymous_lvPersons);
         personArrayList = new ArrayList<>();
-        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getContext(), personArrayList, this);
-        lvPersons.setAdapter(mapsInformerPersonListAdapter);
-        lvPersons.setLayoutManager(new LinearLayoutManager(getContext()));
+        mapsInformerAnonymousPersonListAdapter = new MapsInformerPersonListAdapter(getContext(), personArrayList, this);
+        anonymous_lvPersons.setAdapter(mapsInformerAnonymousPersonListAdapter);
+        anonymous_lvPersons.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private void loadDatainListview() {
         // below line is use to get data from Firebase
         // firestore using collection in android.
         firebaseFirestore.collection(WANTED_PERSONS)
+                .limit(5)
+                .orderBy("registration_date", Query.Direction.ASCENDING)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -117,23 +145,26 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
-                            if(search_admin_list_switcher.getCurrentView() == search_admin_list_view2){
-                                search_admin_list_switcher.showNext();
+                            if(search_anonymous_list_switcher.getCurrentView() == search_anonymous_list_view2){
+                                search_anonymous_list_switcher.showNext();
                             }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
                                 // after getting this list we are passing
                                 // that list to our object class.
                                 Person person = d.toObject(Person.class);
+
+                                fullName = person.getFullName();
+
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
                                 personArrayList.add(person);
                             }
 
-                            mapsInformerPersonListAdapter.notifyDataSetChanged();
+                            mapsInformerAnonymousPersonListAdapter.notifyDataSetChanged();
                         } else {
-                            if(search_admin_list_switcher.getCurrentView() == search_admin_list_view1){
-                                search_admin_list_switcher.showNext();
+                            if(search_anonymous_list_switcher.getCurrentView() == search_anonymous_list_view1){
+                                search_anonymous_list_switcher.showNext();
                             }
                         }
                     }
@@ -146,7 +177,6 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                     }
                 });
     }
-
 
     public void filter(String s) {
         personArrayList.clear();
@@ -164,8 +194,8 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
-                            if(search_admin_list_switcher.getCurrentView() == search_admin_list_view2){
-                                search_admin_list_switcher.showNext();
+                            if(search_anonymous_list_switcher.getCurrentView() == search_anonymous_list_view2){
+                                search_anonymous_list_switcher.showNext();
                             }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
@@ -176,10 +206,10 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                                 // storing that data in our array list
                                 personArrayList.add(person);
                             }
-                            mapsInformerPersonListAdapter.notifyDataSetChanged();
+                            mapsInformerAnonymousPersonListAdapter.notifyDataSetChanged();
                         } else {
-                            if(search_admin_list_switcher.getCurrentView() == search_admin_list_view1){
-                                search_admin_list_switcher.showNext();
+                            if(search_anonymous_list_switcher.getCurrentView() == search_anonymous_list_view1){
+                                search_anonymous_list_switcher.showNext();
                             }
                         }
                     }
@@ -196,8 +226,9 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void onItemClick(int position) {
-        Intent intent=new Intent(getContext(), MapsActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent=new Intent(getContext(), MapsInformerActivity.class);
         Bundle viewBundle = new Bundle();
+        viewBundle.putString("personId", personArrayList.get(position).getPersonId());
         viewBundle.putString("fullName", personArrayList.get(position).getFullName());
         viewBundle.putStringArrayList("acts", (ArrayList<String>) personArrayList.get(position).getActs());
         viewBundle.putString("address", personArrayList.get(position).getAddress());
@@ -214,4 +245,31 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
         startActivity(intent);
     }
 
+    private void onBackPressed() {
+        view.setFocusableInTouchMode(true);
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
+                {
+                    firebaseAuth.signOut();
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        firebaseAuth.signOut();
+        super.onDestroy();
+    }
+
+    @Override
+    public void onStop() {
+        firebaseAuth.signOut();
+        super.onStop();
+    }
 }
