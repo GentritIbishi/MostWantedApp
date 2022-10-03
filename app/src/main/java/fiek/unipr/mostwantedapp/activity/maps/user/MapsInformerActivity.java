@@ -535,6 +535,11 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                             @Override
                                             public void onSuccess(Uri uri) {
                                                 storeLink(docId, uri, finalI);
+                                                if(progress<90)
+                                                {
+                                                    progress+=10;
+                                                    updateProgressBar();
+                                                }
                                             }
                                         });
                                     }
@@ -545,9 +550,13 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                     }
                                 });
                             }
+                            progress = 100;
+                            updateProgressBar();
                             dismissProgressBar();
                             binding.reportProgressBar.setVisibility(View.INVISIBLE);
                         }else {
+                            progress = 100;
+                            updateProgressBar();
                             dismissProgressBar();
                             binding.reportProgressBar.setVisibility(View.INVISIBLE);
                         }
@@ -606,6 +615,11 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                                                 @Override
                                                                 public void onSuccess(Uri uri) {
                                                                     storeLink(docId, uri, finalI);
+                                                                    if(progress<90)
+                                                                    {
+                                                                        progress+=10;
+                                                                        updateProgressBar();
+                                                                    }
                                                                 }
                                                             });
                                                         }
@@ -618,9 +632,13 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                                 }
                                                 ImageList.clear();
                                                 imageListMap.clear();
+                                                progress = 100;
+                                                updateProgressBar();
                                                 dismissProgressBar();
                                                 binding.reportProgressBar.setVisibility(View.INVISIBLE);
                                             }else {
+                                                progress = 100;
+                                                updateProgressBar();
                                                 dismissProgressBar();
                                                 binding.reportProgressBar.setVisibility(View.INVISIBLE);
                                             }
