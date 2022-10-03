@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:padding="10dp"
     tools:context=".fragment.anonymous.SearchFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -18,40 +19,66 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:theme="@style/Theme.MaterialComponents.Light"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@drawable/et_corners_getstarted"
+            android:theme="@style/Theme.MaterialComponents.Light">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:src="@drawable/ic_app" />
+
+            <TextView
+                android:id="@+id/tv_anonymous_hello"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hi, Anonymous"
+                android:textAllCaps="false"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/tv_anonymous_helper"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:minLines="2"
+                android:text="@string/tap_on_search_and_enter_full_name_of_person_that_you_want_to_report"
+                android:textAlignment="center"
+                android:textSize="20sp" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/anonymous_search_filter_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
-                android:text="@string/search"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="32dp"
                 android:hint="@string/search"
+                android:text="@string/search"
                 android:textColorHint="@color/gray"
                 android:textDirection="firstStrong"
                 app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/gray"
                 app:boxStrokeColor="@android:color/transparent"
+                app:endIconMode="clear_text"
+                app:helperTextTextColor="@color/gray"
                 app:hintTextColor="@color/gray"
-                app:startIconDrawable="@drawable/ic_baseline_person_search_24"
-                app:endIconMode="clear_text">
+                app:startIconDrawable="@drawable/ic_baseline_person_search_24">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/anonymous_search_filter"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray"
-                    android:imeOptions="actionDone"
                     android:ems="10"
-                    android:textColorHint="@color/gray"
+                    android:imeOptions="actionDone"
                     android:inputType="textCapSentences"
+                    android:textColor="@color/gray"
+                    android:textColorHint="@color/gray"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -59,45 +86,54 @@
             <ViewSwitcher
                 android:id="@+id/search_anonymous_list_switcher"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone"
+                android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:inAnimation="@android:anim/slide_in_left">
+                android:inAnimation="@android:anim/slide_in_left"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/search_anonymous_list_view1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/anonymous_lvPersons"
-                        android:elevation="6dp"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="5.0sp"
-                        android:clickable="true"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
                         android:background="@drawable/bg_listview_item"
+                        android:clickable="true"
                         android:divider="@android:color/transparent"
                         android:dividerHeight="5.0sp"
+                        android:elevation="6dp"
                         android:focusable="true"
-                        />
+                        android:focusableInTouchMode="false"
+                        android:isScrollContainer="false" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/search_anonymous_list_view2"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content">
 
-                    <TextView android:id="@+id/tv_search_anonymous_userListEmpty"
+                    <TextView
+                        android:id="@+id/tv_search_anonymous_userListEmpty"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="@string/no_data"
-                        android:textColor="@color/gray"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="5.0sp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="10dp"
                         android:fontFamily="@font/open_sans"
                         android:gravity="center"
-                        />
+                        android:text="@string/no_data"
+                        android:textColor="@color/gray"
+                        android:textSize="22sp" />
 
                 </LinearLayout>
 

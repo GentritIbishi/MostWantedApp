@@ -309,7 +309,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onSuccess(AuthResult authResult) {
                     LoginHistory loginHistory = new LoginHistory(firebaseAuth.getUid(), ANONYMOUS, ANONYMOUS, ANONYMOUS, DateHelper.getDateTime());
-                    seLoginHistoryAnonymous(loginHistory);
+                    setLoginHistoryAnonymous(loginHistory);
                     setSharedPreferenceInformer(firebaseAuth.getCurrentUser().getUid());
                     setSharedPreferenceAnonymous(ANONYMOUS);
                     //goToInformerDashboard();
@@ -334,7 +334,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
-    private void seLoginHistoryAnonymous(LoginHistory loginHistory) {
+    private void setLoginHistoryAnonymous(LoginHistory loginHistory) {
         firebaseFirestore.collection(LOGIN_HISTORY)
                 .document(loginHistory.getUserID()).collection(loginHistory.getRole())
                 .document(loginHistory.getUserID()+" "+loginHistory.getDate_time()).set(loginHistory);

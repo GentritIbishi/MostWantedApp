@@ -507,6 +507,8 @@
     <string name="image">image</string>
     <string name="error_no_internet_connection">No internet connection!</string>
     <string name="cancel">Cancel</string>
+    <string name="tap_on_search_and_enter_full_name_of_person_that_you_want_to_report">Tap search and enter the full name of the person you want to report</string>
+    <string name="now_tap_on_desired_person">Now, tap on the desired person</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
