@@ -29,8 +29,12 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -95,6 +99,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private Map<String, Object> imageListMap = new HashMap<>();
     private Uri ImageUri;
     private boolean locationPermissionGranted = false;
+    private int progress;
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -159,9 +164,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         binding = ActivityMapsInformerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(this.getText(R.string.report_is_saving) + "");
-
         binding.LocationReport.setVisibility(View.VISIBLE);
         binding.OtherReports.setVisibility(View.GONE);
 
@@ -176,13 +178,14 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         getFromBundle(mapsInformerBundle);
 
         initMap();
+        updateProgressBar();
 
         binding.btnContinue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //lat long i din ni check if not null eshte mire
                 if (latitude != null && longitude != null) {
-                    binding.LocationReport.setVisibility(View.GONE);
+                    binding.btnContinue.setVisibility(View.GONE);
                     binding.OtherReports.setVisibility(View.VISIBLE);
                 } else {
                     Toast.makeText(MapsInformerActivity.this, R.string.location_not_set_please_set_new_location, Toast.LENGTH_SHORT).show();
@@ -203,11 +206,12 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         binding.btReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progress += 5;
+                updateProgressBar();
                 binding.btReport.setEnabled(false);
+                binding.OtherReports.setVisibility(View.GONE);
                 binding.reportProgressBar.setVisibility(View.VISIBLE);
-
-                progressDialog.show();
-                binding.alert.setText(getApplicationContext().getText(R.string.if_loading_takes_too_long_please_press_the_button_again));
+                binding.constrainProgress.setVisibility(View.VISIBLE);
                 save(informer_person, personId, wanted_person, longitude, latitude, DateHelper.getDateTime());
             }
         });
@@ -216,14 +220,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             @Override
             public void onClick(View view) {
                 finish();
-            }
-        });
-
-        binding.btnLocationSkip.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.LocationReport.setVisibility(View.GONE);
-                binding.OtherReports.setVisibility(View.VISIBLE);
             }
         });
 
@@ -252,6 +248,12 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         }
 
     }
+
+    private void updateProgressBar() {
+        binding.progressBarReport.setProgress(progress);
+        binding.tvProgressBarReport.setText(this.progress+"%");
+    }
+
 
     @Override
     public void onStart() {
@@ -358,7 +360,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             }else if(data.getData() != null) {
                 ImageUri = data.getData();
                 ImageList.add(ImageUri);
-                binding.alert.setText(this.getText(R.string.you_have_selected)+" "+ ImageList.size() +" "+this.getText(R.string.images));
+                binding.alert.setText(this.getText(R.string.you_have_selected)+" "+ ImageList.size() +" "+this.getText(R.string.image));
             }
         }
     }
@@ -422,12 +424,13 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                         Toast.makeText(MapsInformerActivity.this, "ERROR UPDATING Images!"+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
-        progressDialog.setMessage(getApplicationContext().getString(R.string.thank_you_for_collaboration));
     }
 
     private void save(String informer_person, String personId, String wanted_person, Double longitude, Double latitude, String dateNtime) {
         CollectionReference collRef = firebaseFirestore.collection(LOCATION_REPORTS);
         String docId = collRef.document().getId();
+        progress += 10;
+        updateProgressBar();
         if(informer_person.equals(ANONYMOUS))
         {
             DocumentReference docRef = firebaseFirestore
@@ -447,15 +450,15 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     longitude,
                     latitude,
                     null);
-
             docRef.set(report).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful() && task !=null) {
-                        // Toast.makeText(MapsInformerActivity.this, R.string.successfully, Toast.LENGTH_SHORT).show();
                         setLastSeenLocation(latitude, longitude, personId);
-                        if(ImageList.size() != 0){
-                            for(upload_count = 0; upload_count < ImageList.size(); upload_count++){
+                        if(ImageList.size() != 0)
+                        {
+                            for(upload_count = 0; upload_count < ImageList.size(); upload_count++)
+                            {
                                 Uri IndividualImage = ImageList.get(upload_count);
                                 StorageReference fileRef = storageReference.child(WANTED_PERSONS+"/"+LOCATION_REPORTS+"/"+dateNtime+"/Image"+upload_count+".jpg");
                                 int finalI = upload_count;
@@ -466,6 +469,11 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                             @Override
                                             public void onSuccess(Uri uri) {
                                                 storeLink(docId, uri, finalI);
+                                                if(progress<90)
+                                                {
+                                                    progress+=10;
+                                                    updateProgressBar();
+                                                }
                                             }
                                         });
                                     }
@@ -476,14 +484,13 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                     }
                                 });
                             }
-                            progressDialog.dismiss();
-                            finish();
-                            binding.reportProgressBar.setVisibility(View.INVISIBLE);
+                            progress = 100;
+                            updateProgressBar();
+                            dismissProgressBar();
                         }else {
-                            progressDialog.setMessage(getApplicationContext().getString(R.string.thank_you_for_collaboration)+"");
-                            progressDialog.dismiss();
-                            finish();
-                            binding.reportProgressBar.setVisibility(View.INVISIBLE);
+                            progress = 100;
+                            updateProgressBar();
+                            dismissProgressBar();
                         }
                     }
                 }
@@ -491,7 +498,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(MapsInformerActivity.this, getApplicationContext().getText(R.string.failed_to_save_report)+" "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    finish();
                 }
             });
         }else if(informer_person.startsWith("+"))
@@ -539,13 +545,10 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                     }
                                 });
                             }
-                            progressDialog.dismiss();
-                            finish();
+                            dismissProgressBar();
                             binding.reportProgressBar.setVisibility(View.INVISIBLE);
                         }else {
-                            progressDialog.setMessage(getApplicationContext().getString(R.string.thank_you_for_collaboration)+"");
-                            progressDialog.dismiss();
-                            finish();
+                            dismissProgressBar();
                             binding.reportProgressBar.setVisibility(View.INVISIBLE);
                         }
                     }
@@ -554,7 +557,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    finish();
                 }
             });
         }else if(!informer_person.equals(ANONYMOUS) && !informer_person.startsWith("+"))
@@ -568,7 +570,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                             if(task.isSuccessful() && task.getResult().size() != 0)
                             {
                                 informer_person_urlOfProfile = task.getResult().getDocuments().get(0).getString("urlOfProfile");
-
                                 DocumentReference docRef = firebaseFirestore
                                         .collection(LOCATION_REPORTS)
                                         .document(docId);
@@ -617,13 +618,10 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                                 }
                                                 ImageList.clear();
                                                 imageListMap.clear();
-                                                progressDialog.dismiss();
-                                                finish();
+                                                dismissProgressBar();
                                                 binding.reportProgressBar.setVisibility(View.INVISIBLE);
                                             }else {
-                                                progressDialog.setMessage(getApplicationContext().getString(R.string.thank_you_for_collaboration)+"");
-                                                progressDialog.dismiss();
-                                                finish();
+                                                dismissProgressBar();
                                                 binding.reportProgressBar.setVisibility(View.INVISIBLE);
                                             }
                                         }
@@ -632,13 +630,30 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
                                         Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                        finish();
                                     }
                                 });
                             }
                         }
                     });
         }
+    }
+
+    private void dismissProgressBar() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                binding.constrainProgress.setVisibility(View.GONE);
+                clean();
+                binding.reportProgressBar.setVisibility(View.GONE);
+            }
+        }, 3000);
+    }
+
+    private void clean() {
+        binding.btnContinue.setVisibility(View.VISIBLE);
+        binding.etReportTitle.setText("");
+        binding.etDescription.setText("");
+        binding.btReport.setEnabled(true);
     }
 
     @Override

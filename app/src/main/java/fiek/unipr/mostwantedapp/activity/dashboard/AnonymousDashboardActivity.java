@@ -1,24 +1,9 @@
 package fiek.unipr.mostwantedapp.activity.dashboard;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -26,16 +11,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.activity.LoginActivity;
 import fiek.unipr.mostwantedapp.fragment.anonymous.MapsFragment;
-import fiek.unipr.mostwantedapp.fragment.user.AboutFragment;
-import fiek.unipr.mostwantedapp.fragment.user.HelpFragment;
-import fiek.unipr.mostwantedapp.fragment.user.HomeFragment;
-import fiek.unipr.mostwantedapp.fragment.user.ProfileFragment;
-import fiek.unipr.mostwantedapp.fragment.user.SettingsFragment;
 
 public class AnonymousDashboardActivity extends AppCompatActivity {
 
@@ -62,7 +40,6 @@ public class AnonymousDashboardActivity extends AppCompatActivity {
 
         anonymousID = firebaseAuth.getUid();
         setHomeDefaultConfig();
-
     }
 
     public void sendAnonymousToLogin() {

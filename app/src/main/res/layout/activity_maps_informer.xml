@@ -2,6 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mapsInformer"
     android:visibility="visible"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -33,46 +34,29 @@
             android:layout_marginStart="32dp"
             android:layout_marginEnd="32dp"
             android:gravity="center"
-            android:text="@string/tap_on_map_to_set_location"
+            android:text="@string/tap_on_map_to_set_location_or_just_continue"
             android:textColor="@color/lighter_75"
             android:textSize="20dp"
             android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/btnLocationSkip"
+            app:layout_constraintBottom_toTopOf="@+id/btnContinue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/map"
-            app:layout_constraintVertical_bias="0.837" />
+            app:layout_constraintVertical_bias="0.95" />
 
         <Button
             android:id="@+id/btnContinue"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/button_sign_in_phone"
-            android:text="@string/generate_continue"
-            android:textSize="18sp"
-            android:textAllCaps="false"
-            android:textColor="@color/gray"
-            android:elevation="6dp"
-            android:textStyle="bold"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/btnLocationSkip"
-            app:layout_constraintEnd_toEndOf="@+id/btnLocationSkip"
-            app:layout_constraintStart_toStartOf="@+id/btnLocationSkip" />
-
-        <Button
-            android:id="@+id/btnLocationSkip"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:layout_marginLeft="64dp"
             android:layout_marginRight="64dp"
-            android:layout_marginBottom="24dp"
-            android:background="@drawable/button_sign_in_phone"
+            android:layout_marginBottom="64dp"
+            android:background="@drawable/button"
             android:elevation="6dp"
-            android:text="@string/skip"
+            android:text="@string/generate_continue"
             android:textAllCaps="false"
-            android:textColor="@color/gray"
+            android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -157,12 +141,11 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="4dp"
-            android:background="@drawable/image_upload_bg"
             android:fontFamily="@font/open_sans"
             android:hint="@string/add_any_additional_info_optional"
             android:text="@string/upload_any_media_optional"
             android:textAlignment="center"
-            android:textColor="@android:color/holo_red_light"
+            android:textColor="@color/gray"
             android:textSize="16sp"
             android:visibility="visible"
             app:layout_constraintBottom_toTopOf="@+id/choose"
@@ -251,6 +234,44 @@
             app:layout_constraintBottom_toBottomOf="@+id/choose"
             app:layout_constraintEnd_toEndOf="@+id/choose"
             app:layout_constraintTop_toTopOf="@+id/choose" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constrainProgress"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_progress_dialog"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ProgressBar
+            android:id="@+id/progressBarReport"
+            android:visibility="visible"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:indeterminateOnly="false"
+            android:progressDrawable="@drawable/circle"
+            android:progress="60"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_progressBarReport"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="60%"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:layout_constraintBottom_toBottomOf="@+id/progressBarReport"
+            app:layout_constraintEnd_toEndOf="@+id/progressBarReport"
+            app:layout_constraintStart_toStartOf="@+id/progressBarReport"
+            app:layout_constraintTop_toTopOf="@+id/progressBarReport" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

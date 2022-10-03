@@ -137,7 +137,7 @@
     <string name="reset_password">Reset Password</string>
     <string name="check_your_email_to_reset_password">Check your email to reset password!</string>
     <string name="error_try_again_something_wrong_happened">Try again! Something wrong happened!</string>
-    <string name="error_no_internet_connection_check_wifi_or_mobile_data">No internet connection! Check wifi or mobile data!</string>
+    <string name="error_no_internet_connection_check_wifi_or_mobile_data">Check wifi or mobile data, Do you want to go to settings menu?"</string>
     <string name="search">Search</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
@@ -149,14 +149,14 @@
     <string name="please_type_name_like_hint">Please type name like hint with cap words!</string>
     <string name="remember">Remember?</string>
     <string name="report">Report</string>
-    <string name="tap_on_map_to_set_location">Tap on map to set location</string>
+    <string name="tap_on_map_to_set_location_or_just_continue">Tap on the map to set the location or just continue</string>
     <string name="set_current_location">Set current location</string>
     <string name="location_set_tap_if_u_want_to_change">Location is set, tap long if you want to change!</string>
     <string name="add_any_additional_info_optional">Add any additional info (optional)</string>
     <string name="choose">Choose</string>
     <string name="upload_any_media_optional">Upload any media (Optional)</string>
     <string name="you_have_selected">You have selected</string>
-    <string name="images">Images</string>
+    <string name="images">images</string>
     <string name="location_not_set_please_set_new_location">Location not set, please set new location!</string>
     <string name="failed_to_register">Failed to register</string>
     <string name="position">Position</string>
@@ -500,9 +500,13 @@
     <string name="you_need_permissions">You need location permission if u want your location!</string>
     <string name="default_location">Default Location</string>
     <string name="appearance">Appearance</string>
+    <string name="dark_mode">Dark mode</string>
     <string name="system_mode">System mode</string>
     <string name="light_mode">Light mode</string>
     <string name="logo_app">Logo of application!</string>
+    <string name="image">image</string>
+    <string name="error_no_internet_connection">No internet connection!</string>
+    <string name="cancel">Cancel</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
