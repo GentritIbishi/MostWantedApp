@@ -42,10 +42,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.auth.ForgotPasswordActivity;
-import fiek.unipr.mostwantedapp.auth.PhoneSignInActivity;
-import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
-import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
+import fiek.unipr.mostwantedapp.activity.auth.ForgotPasswordActivity;
+import fiek.unipr.mostwantedapp.activity.auth.PhoneSignInActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.AdminDashboardActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.SecurityHelper;
 import fiek.unipr.mostwantedapp.models.LoginHistory;

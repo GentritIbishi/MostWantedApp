@@ -499,6 +499,11 @@
     <string name="uploading">Uploading...</string>
     <string name="you_need_permissions">You need location permission if u want your location!</string>
     <string name="default_location">Default Location</string>
+    <string name="appearance">Appearance</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="system_mode">System mode</string>
+    <string name="light_mode">Light mode</string>
+    <string name="logo_app">Logo of application!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

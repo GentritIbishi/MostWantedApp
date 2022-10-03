@@ -146,6 +146,12 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     }
 
+    private void initMap()
+    {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(MapsInformerActivity.this);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -303,12 +309,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         }
     }
 
-    private void initMap()
-    {
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(MapsInformerActivity.this);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         locationPermissionGranted = false;
@@ -331,15 +331,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     private void moveCamera(LatLng latLng, float zoom) {
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
-    }
-
-    private void goToApplicationDetailsSettings() {
-        Toast.makeText(this, getResources().getText(R.string.you_need_permissions), Toast.LENGTH_LONG).show();
-        Intent intent = new Intent();
-        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getPackageName(), null);
-        intent.setData(uri);
-        startActivity(intent);
     }
 
     @Override

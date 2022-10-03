@@ -284,7 +284,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                 });
     }
 
-
     private void test(String statusStateChange, String prizeToWin) {
         if(statusStateChange.equals(VERIFIED)) {
             if(prizeToWin != null) {
@@ -554,7 +553,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void onItemClick(int position) {
-//        getLocationPermission();
         Intent intent=new Intent(getContext(), MapsInformerActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle viewBundle = new Bundle();
         viewBundle.putString("personId", personArrayList.get(position).getPersonId());
@@ -574,30 +572,4 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         startActivity(intent);
     }
 
-    private void getLocationPermission()
-    {
-        try {
-            if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            {
-                //if not FINE
-                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-            }else
-            {
-                //if fine
-                locationPermissionGranted = true;
-                if(ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-                {
-                    //if not coarse
-                    ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
-                }
-                else
-                {
-                    //if coarse
-                    locationPermissionGranted = true;
-                }
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 }

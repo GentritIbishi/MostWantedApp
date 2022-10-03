@@ -92,7 +92,7 @@
         android:background="@drawable/report_persistent_bg"
         android:elevation="14dp"
         android:padding="10dp"
-        android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+        android:theme="@style/Theme.MaterialComponents.Light"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

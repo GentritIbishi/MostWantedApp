@@ -5,8 +5,7 @@
     android:id="@+id/admin_drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".dashboard.AdminDashboardActivity">
+    tools:context=".activity.dashboard.AdminDashboardActivity">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/admin_drawerLayout_real"
@@ -28,12 +27,11 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/admin_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:elevation="0dp"
                 android:gravity="center"
                 app:titleTextColor="@color/gray"
-                android:background="@color/white"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay">
 
@@ -51,7 +49,6 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/admin_fragmentContainer"
-                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

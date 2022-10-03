@@ -25,7 +25,7 @@
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_report_info"
                 android:elevation="6dp"
-                android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+                android:theme="@style/Theme.MaterialComponents.Light"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

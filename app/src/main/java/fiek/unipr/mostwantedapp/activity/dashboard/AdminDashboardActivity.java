@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.dashboard;
+package fiek.unipr.mostwantedapp.activity.dashboard;
 
 import static android.content.ContentValues.TAG;
 import static fiek.unipr.mostwantedapp.utils.Constants.FOREGROUND_SERVICE;

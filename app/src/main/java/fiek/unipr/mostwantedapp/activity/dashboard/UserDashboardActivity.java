@@ -1,7 +1,7 @@
-package fiek.unipr.mostwantedapp.dashboard;
+package fiek.unipr.mostwantedapp.activity.dashboard;
 
 import static android.content.ContentValues.TAG;
-import static fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity.IS_LOGGED;
+import static fiek.unipr.mostwantedapp.activity.dashboard.AdminDashboardActivity.IS_LOGGED;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.USER_INFORMER_PREFS;
@@ -64,7 +64,6 @@ import fiek.unipr.mostwantedapp.services.ServiceNotification;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
-import fiek.unipr.mostwantedapp.utils.WindowHelper;
 
 public class UserDashboardActivity extends AppCompatActivity {
 

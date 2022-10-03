@@ -10,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,9 +21,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.activity.LoginActivity;
-import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
-import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.AdminDashboardActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
 
 public class SplashActivity extends AppCompatActivity {
 

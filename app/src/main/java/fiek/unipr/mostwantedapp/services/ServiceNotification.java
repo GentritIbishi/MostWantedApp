@@ -13,7 +13,6 @@ import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_NUMBER_4;
 import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_USER;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -42,8 +41,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.dashboard.AdminDashboardActivity;
-import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.AdminDashboardActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.models.Notifications;
 import fiek.unipr.mostwantedapp.models.NotificationState;
 

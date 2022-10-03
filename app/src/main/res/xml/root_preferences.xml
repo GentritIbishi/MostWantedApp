@@ -1,4 +1,5 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory app:title="@string/messages_header">
 
@@ -29,6 +30,25 @@
             app:summaryOff="@string/attachment_summary_off"
             app:summaryOn="@string/attachment_summary_on"
             app:title="@string/attachment_title" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/appearance">
+
+        <SwitchPreferenceCompat
+            app:key="appearance"
+            app:title="@string/dark_mode" />
+
+        <SwitchPreferenceCompat
+            app:key="appearance"
+            app:title="@string/system_mode" />
+
+        <SwitchPreferenceCompat
+            app:key="appearance"
+            app:track="@drawable/track"
+            android:thumb="@drawable/thumb"
+            app:title="@string/light_mode" />
+
 
     </PreferenceCategory>
 

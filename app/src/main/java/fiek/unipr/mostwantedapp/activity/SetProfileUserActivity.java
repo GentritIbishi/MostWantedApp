@@ -35,7 +35,7 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.utils.CircleTransform;
 
 public class SetProfileUserActivity extends AppCompatActivity {

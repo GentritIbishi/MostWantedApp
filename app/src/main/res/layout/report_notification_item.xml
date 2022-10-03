@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
+        android:textColor="@color/gray"
         android:layout_toStartOf="@id/user_report_time"
         android:layout_toEndOf="@+id/user_reported_image"
         android:orientation="vertical">
@@ -41,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
+            android:textColor="@color/gray"
             android:maxLines="@integer/material_motion_duration_long_2"
             android:text="@string/get_started_description2" />
 
@@ -56,6 +58,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="15dp"
         android:text="1h"
+        android:textColor="@color/gray"
         android:textAlignment="center"
         android:textSize="14sp" />
 

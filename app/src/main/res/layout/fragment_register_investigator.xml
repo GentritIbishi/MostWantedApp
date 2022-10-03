@@ -7,7 +7,6 @@
     android:fitsSystemWindows="true"
     android:layout_gravity="center"
     android:gravity="center"
-    android:background="@color/white"
     tools:context=".fragment.admin.register.investigator.RegisterInvestigatorFragment">
 
     <ScrollView
@@ -24,7 +23,7 @@
             android:elevation="6dp"
             android:fitsSystemWindows="true"
             android:padding="10dp"
-            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar">
+            android:theme="@style/Theme.MaterialComponents.Light">
 
             <TextView
                 android:id="@+id/investigator_tv_regPerson"

@@ -6,9 +6,9 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
-    <color name="textInCardView">#000000</color>
+    <color name="textInCardView">#FFFFFF</color>
     <color name="loginTextInputColor">#808080</color>
-    <color name="boxStrokeColorInputLogin">#808080</color>
+    <color name="boxStrokeColorInputLogin">#FFFFFF</color>
     <color name="white">#FFFFFFFF</color>
     <color name="secondary_color">#246EE9</color>
     <color name="primary_color">#2911ba</color>
@@ -67,6 +67,6 @@
     <color name="blue_analytics2">#1a53ff</color>
     <color name="perfect_blue">#1b2577</color>
     <color name="red_fixed">#FF3C30</color>
-    <color name="notificationTextColor">#808080</color>
-    <color name="textSplashScreen">#808080</color>
+    <color name="notificationTextColor">#ffffff</color>
+    <color name="textSplashScreen">#FFFFFF</color>
 </resources>

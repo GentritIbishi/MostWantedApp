@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:fitsSystemWindows="true"
     tools:context=".fragment.admin.search.SearchManageLocationReportsFragment">
 
@@ -19,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+            android:theme="@style/Theme.MaterialComponents.Light"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical">
@@ -93,6 +92,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="@string/no_data"
+                        android:textColor="@color/gray"
                         android:fontFamily="@font/open_sans"
                         android:gravity="center"
                         />

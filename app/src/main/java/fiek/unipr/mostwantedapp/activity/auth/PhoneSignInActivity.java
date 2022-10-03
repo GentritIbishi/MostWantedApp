@@ -1,4 +1,4 @@
-package fiek.unipr.mostwantedapp.auth;
+package fiek.unipr.mostwantedapp.activity.auth;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.MAIN_TAG;
 import static fiek.unipr.mostwantedapp.utils.Constants.PHONE_INFORMER_PREFS;
@@ -33,7 +33,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.dashboard.UserDashboardActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.databinding.ActivityPhoneSignInBinding;
 
 public class PhoneSignInActivity extends AppCompatActivity {

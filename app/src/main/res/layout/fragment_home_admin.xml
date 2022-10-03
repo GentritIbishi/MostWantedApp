@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
     android:fitsSystemWindows="true"
     tools:context=".fragment.admin.HomeFragment">
 
@@ -20,7 +19,7 @@
             <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cons_dashboard_top"
@@ -43,7 +42,6 @@
                         app:layout_constraintBottom_toTopOf="@+id/hiDashboard"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
-
 
                     <TextView
                         android:id="@+id/hiDashboard"
@@ -109,7 +107,7 @@
                                 android:layout_height="80dp" />
                             <TextView
                                 android:layout_marginTop="12dp"
-                                android:textColor="@color/black"
+                                android:textColor="@color/textInCardView"
                                 android:text="@string/profile_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
@@ -141,7 +139,7 @@
 
                             <TextView
                                 android:layout_marginTop="12dp"
-                                android:textColor="@color/black"
+                                android:textColor="@color/textInCardView"
                                 android:text="@string/register_label"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
@@ -171,7 +169,7 @@
                                 android:layout_height="80dp" />
                             <TextView
                                 android:layout_marginTop="12dp"
-                                android:textColor="@color/black"
+                                android:textColor="@color/textInCardView"
                                 android:textAllCaps="true"
                                 android:text="@string/assign"
                                 android:layout_width="wrap_content"
@@ -202,7 +200,7 @@
                                 android:layout_height="80dp" />
                             <TextView
                                 android:layout_marginTop="12dp"
-                                android:textColor="@color/black"
+                                android:textColor="@color/textInCardView"
                                 android:text="@string/analytics"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
@@ -232,7 +230,7 @@
                                 android:layout_height="80dp" />
                             <TextView
                                 android:layout_marginTop="12dp"
-                                android:textColor="@color/black"
+                                android:textColor="@color/textInCardView"
                                 android:text="@string/manage"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
@@ -262,7 +260,7 @@
                                 android:layout_height="80dp" />
                             <TextView
                                 android:layout_marginTop="12dp"
-                                android:textColor="@color/black"
+                                android:textColor="@color/textInCardView"
                                 android:text="@string/update"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />

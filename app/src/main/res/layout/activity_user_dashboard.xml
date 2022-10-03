@@ -5,8 +5,7 @@
     android:id="@+id/user_drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".dashboard.UserDashboardActivity">
+    tools:context=".activity.dashboard.UserDashboardActivity">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/user_drawerLayout_real"
@@ -28,7 +27,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/user_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:elevation="0dp"
                 android:gravity="center"
@@ -51,7 +50,6 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/user_fragmentContainer"
-                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 

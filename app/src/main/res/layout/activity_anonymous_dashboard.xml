@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/anonymous_drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.dashboard.AnonymousDashboardActivity">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/anonymous_drawerLayout_real"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:fitsSystemWindows="true"
+        android:layout_above="@+id/anonymous_bottomBar"
+        tools:openDrawer="start">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/anonymous_appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="6dp"
+            android:fitsSystemWindows="true"
+            android:theme="@style/Theme.MostWantedApp.AppBarOverlay">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/anonymous_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:elevation="0dp"
+                android:gravity="center"
+                app:titleTextColor="@color/gray"
+                android:background="@color/white"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/topImageProfile"
+                    android:visibility="invisible"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:src="@drawable/ic_profile_picture_default"
+                    />
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/anonymous_fragmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/anonymous_nav_view"
+            android:padding="10dp"
+            android:theme="@style/NavigationTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:layout_gravity="start"
+            android:layout_marginBottom="3dp"
+            app:drawerLayoutCornerSize="10dp"
+            app:headerLayout="@layout/nav_header"
+            app:menu="@menu/user_nav_menu"
+            app:itemTextColor="@color/color_text_state"
+            app:itemBackground="@drawable/menu_back_state"
+            app:itemTextAppearance="@style/TextViewStyle"
+            app:itemIconTint="@color/secondary_color">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:padding="5dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/anonymous_menu_group_logout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_red"
+                    android:fontFamily="@font/open_sans_light"
+                    android:gravity="center"
+                    android:text="@string/logout"
+                    android:textColor="@color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:padding="10dp"
+                    android:drawableLeft="@drawable/ic_baseline_logout_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ProgressBar
+                    android:id="@+id/anonymous_logout_progressBar"
+                    style="?android:attr/progressBarStyle"
+                    android:visibility="gone"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/menu_group_logout"
+                    app:layout_constraintEnd_toEndOf="@+id/menu_group_logout"
+                    app:layout_constraintTop_toTopOf="@+id/menu_group_logout" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.navigation.NavigationView>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</RelativeLayout>
