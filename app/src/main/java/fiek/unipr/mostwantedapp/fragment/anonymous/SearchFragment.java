@@ -60,9 +60,7 @@ import fiek.unipr.mostwantedapp.utils.StringHelper;
 public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     private View view;
-    private ScrollView scroll_anonymous;
     private TextView tv_anonymous_helper, tv_anonymous_hello;
-    private TextView intro, anonymous_dot1, anonymous_dot2;
     private TextInputEditText anonymous_search_filter;
     private RecyclerView anonymous_lvPersons;
     private LinearLayout search_anonymous_list_view1, search_anonymous_list_view2;
@@ -128,19 +126,6 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
             }
         });
 
-        scroll_anonymous.setOnTouchListener(new OnSwipeTouchListener(getContext()){
-            public void onSwipeRight() {
-                intro.setText(R.string.get_started_description);
-                anonymous_dot1.setBackgroundResource(R.drawable.ic_dot_clicked);
-                anonymous_dot2.setBackgroundResource(R.drawable.ic_dot_unclicked);
-            }
-            public void onSwipeLeft() {
-                intro.setText(R.string.get_started_description2);
-                anonymous_dot2.setBackgroundResource(R.drawable.ic_dot_clicked);
-                anonymous_dot1.setBackgroundResource(R.drawable.ic_dot_unclicked);
-            }
-        });
-
         onBackPressed();
 
         return view;
@@ -177,12 +162,8 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     private void initializeFields() {
         anonymous_search_filter = view.findViewById(R.id.anonymous_search_filter);
-        scroll_anonymous = view.findViewById(R.id.scroll_anonymous);
         tv_anonymous_hello = view.findViewById(R.id.tv_anonymous_hello);
         tv_anonymous_helper = view.findViewById(R.id.tv_anonymous_helper);
-        anonymous_dot1 = view.findViewById(R.id.anonymous_dot1);
-        anonymous_dot2 = view.findViewById(R.id.anonymous_dot2);
-        intro = view.findViewById(R.id.intro);
         search_anonymous_list_view1 = view.findViewById(R.id.search_anonymous_list_view1);
         search_anonymous_list_view2 = view.findViewById(R.id.search_anonymous_list_view2);
         search_anonymous_list_switcher = view.findViewById(R.id.search_anonymous_list_switcher);

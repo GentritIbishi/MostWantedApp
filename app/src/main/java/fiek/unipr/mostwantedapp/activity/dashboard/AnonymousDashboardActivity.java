@@ -57,4 +57,11 @@ public class AnonymousDashboardActivity extends AppCompatActivity {
                 .replace(R.id.anonymous_fragmentContainer, SearchFragment.class, null)
                 .commit();
     }
+
+    @Override
+    public void onBackPressed() {
+        firebaseAuth.signOut();
+        sendAnonymousToLogin();
+        super.onBackPressed();
+    }
 }

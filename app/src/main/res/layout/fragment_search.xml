@@ -23,13 +23,14 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:layout_gravity="center"
             android:orientation="vertical"
             android:theme="@style/Theme.MaterialComponents.Light">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_marginTop="16dp"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
                 android:src="@drawable/ic_app" />
 
             <TextView
@@ -42,52 +43,6 @@
                 android:text="Hi, Anonymous"
                 android:textAllCaps="false"
                 android:textSize="22sp" />
-
-            <TextView
-                android:id="@+id/intro"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/kpLogo"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
-                android:maxLines="4"
-                android:lineSpacingExtra="4sp"
-                android:text="@string/get_started_description"
-                android:textAlignment="center"
-                android:textSize="20sp" />
-
-            <RelativeLayout
-                android:id="@+id/anonymous_dots"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/intro"
-                android:layout_centerHorizontal="true"
-                android:gravity="center_horizontal">
-
-                <TextView
-                    android:id="@+id/anonymous_dot1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/intro"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="20dp"
-                    android:layout_toLeftOf="@id/anonymous_dot2"
-                    android:background="@drawable/ic_dot_clicked"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/anonymous_dot2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/tvgetStarted1"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/ic_dot_unclicked"
-                    android:textSize="20sp" />
-
-            </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_anonymous_helper"
@@ -107,9 +62,9 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="16dp"
                 android:hint="@string/search"
                 android:text="@string/search"
                 android:textColorHint="@color/gray"
