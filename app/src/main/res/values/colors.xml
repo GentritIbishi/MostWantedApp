@@ -70,4 +70,5 @@
     <color name="notificationTextColor">#808080</color>
     <color name="textSplashScreen">#808080</color>
     <color name="color_nav_header_name">#808080</color>
+    <color name="dark_light_color">#808080</color>
 </resources>

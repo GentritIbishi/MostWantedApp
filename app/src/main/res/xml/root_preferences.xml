@@ -1,56 +1,67 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
+    <PreferenceCategory
+        app:title="@string/payment_information">
 
         <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
+            app:key="full_name_payment_information"
+            app:icon="@drawable/ic_person_bank_information"
+            app:title="@string/full_name_payment_information"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="address_payment_information"
+            app:icon="@drawable/ic_address_bank_information"
+            app:title="@string/address_payment_information"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="bank_account_payment_information"
+            app:icon="@drawable/ic_bank_account_payment_information"
+            app:title="@string/bank_name_payment_information"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="account_number_payment_information"
+            app:icon="@drawable/ic_payment_information"
+            app:title="@string/account_number_payment_information"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="paypal_email_payment_information"
+            app:icon="@drawable/ic_paypal"
+            app:title="@string/your_paypal_email"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+            app:defaultValue=""
+            app:entries="@array/payment_methods"
+            app:entryValues="@array/payment_values"
+            app:key="payment_method"
+            app:title="@string/payment_method"
             app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
 
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/notifications">
         <SwitchPreferenceCompat
-            app:key="@string/notifications"
+            app:key="notifications"
             app:title="@string/turn_on_notification" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/appearance">
 
         <SwitchPreferenceCompat
-            app:key="appearance"
+            app:key="dark_mode"
             app:title="@string/dark_mode" />
 
         <SwitchPreferenceCompat
-            app:key="appearance"
+            app:key="system_mode"
             app:title="@string/system_mode" />
 
         <SwitchPreferenceCompat
-            app:key="appearance"
+            app:key="light_mode"
             app:title="@string/light_mode"/>
 
 

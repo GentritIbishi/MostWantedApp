@@ -509,6 +509,14 @@
     <string name="cancel">Cancel</string>
     <string name="tap_on_search_and_enter_full_name_of_person_that_you_want_to_report">Tap search and enter the full name of the person you want to report</string>
     <string name="now_tap_on_desired_person">Now, tap on the desired person</string>
+    <string name="payment_information">Payment Information</string>
+    <string name="your_paypal_email">Paypal Email</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="full_name_payment_information">Full Name</string>
+    <string name="last_name_payment_information">Last Name</string>
+    <string name="account_number_payment_information">Account Number</string>
+    <string name="address_payment_information">Address</string>
+    <string name="bank_name_payment_information">Bank Name</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
