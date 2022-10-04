@@ -230,8 +230,6 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        loadImage(userID);
-
         return view;
     }
 

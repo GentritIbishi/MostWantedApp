@@ -284,6 +284,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        progressDialog.dismiss();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -297,6 +298,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             });
         }else {
             Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
         }
     }
 
@@ -316,6 +318,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             });
         } else {
             Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+            progressDialog.dismiss();
         }
     }
 
@@ -388,10 +391,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onSuccess(Void unused) {
                     login_progressBar.setVisibility(View.INVISIBLE);
                     bt_Login.setEnabled(true);
+                    progressDialog.dismiss();
                     Toast.makeText(LoginActivity.this, R.string.please_verify_email_to_login_check_in_email_we_sent_link_for_verification, Toast.LENGTH_SHORT).show();
                 }
             });
         }else {
+            progressDialog.dismiss();
             Toast.makeText(LoginActivity.this, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
         }
     }
