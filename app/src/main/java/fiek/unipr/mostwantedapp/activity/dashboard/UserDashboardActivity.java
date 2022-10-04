@@ -58,6 +58,7 @@ import fiek.unipr.mostwantedapp.fragment.user.NotificationFragment;
 import fiek.unipr.mostwantedapp.fragment.user.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.user.SearchFragment;
 import fiek.unipr.mostwantedapp.fragment.user.SettingsFragment;
+import fiek.unipr.mostwantedapp.fragment.user.WithdrawFragment;
 import fiek.unipr.mostwantedapp.models.Notifications;
 import fiek.unipr.mostwantedapp.models.NotificationState;
 import fiek.unipr.mostwantedapp.services.ServiceNotification;
@@ -191,8 +192,7 @@ public class UserDashboardActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int id = menuItem.getItemId();
                 Fragment fragment = null;
-                switch (id)
-                {
+                switch (id) {
                     case R.id.user_menu_group_home:
                         fragment = new HomeFragment();
                         loadFragment(fragment);
@@ -227,6 +227,12 @@ public class UserDashboardActivity extends AppCompatActivity {
                         user_logout_progressBar.setVisibility(View.VISIBLE);
                         Logout();
                         break;
+                    case R.id.user_menu_group_withdraw:
+                        fragment = new WithdrawFragment();
+                        loadFragment(fragment);
+                        setHomeSelected();
+                        user_nav_view.setCheckedItem(id);
+                        break;
                     default:
                         return true;
                 }
@@ -237,14 +243,14 @@ public class UserDashboardActivity extends AppCompatActivity {
         user_homeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(selectedTab != 1){
+                if (selectedTab != 1) {
                     setHomeSelected();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.user_fragmentContainer, HomeFragment.class, null)
                             .commit();
                 }
-                if(selectedTab == 1){
+                if (selectedTab == 1) {
                     setHomeSelected();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
@@ -257,14 +263,14 @@ public class UserDashboardActivity extends AppCompatActivity {
         user_searchLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(selectedTab != 2){
+                if (selectedTab != 2) {
                     setSearchSelected();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.user_fragmentContainer, SearchFragment.class, null)
                             .commit();
                 }
-                if(selectedTab == 2){
+                if (selectedTab == 2) {
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.user_fragmentContainer, SearchFragment.class, null)
@@ -276,14 +282,14 @@ public class UserDashboardActivity extends AppCompatActivity {
         user_notificationLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(selectedTab != 3){
+                if (selectedTab != 3) {
                     setNotificationSelected();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.user_fragmentContainer, NotificationFragment.class, null)
                             .commit();
                 }
-                if(selectedTab == 3){
+                if (selectedTab == 3) {
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.user_fragmentContainer, NotificationFragment.class, null)
@@ -296,14 +302,14 @@ public class UserDashboardActivity extends AppCompatActivity {
         user_profileLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(selectedTab != 4){
+                if (selectedTab != 4) {
                     setProfileSelected();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.user_fragmentContainer, ProfileFragment.class, null)
                             .commit();
                 }
-                if(selectedTab == 4){
+                if (selectedTab == 4) {
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
                             .replace(R.id.user_fragmentContainer, ProfileFragment.class, null)
@@ -335,12 +341,11 @@ public class UserDashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if(firebaseAuth != null)
-        {
+        if (firebaseAuth != null) {
             SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
             editor.putBoolean("isLogged", true);
             editor.apply();
-        }else {
+        } else {
             SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
             editor.putBoolean("isLogged", false);
             editor.apply();
@@ -365,7 +370,7 @@ public class UserDashboardActivity extends AppCompatActivity {
     }
 
     private void unSelectAllItemInMenu() {
-        for(int i = 0; i<user_nav_view.getMenu().size();i++){
+        for (int i = 0; i < user_nav_view.getMenu().size(); i++) {
             user_nav_view.getMenu().getItem(i).setChecked(false);
         }
     }
@@ -408,7 +413,7 @@ public class UserDashboardActivity extends AppCompatActivity {
 
     private void Logout() {
         //check for phone authentication
-        if(firebaseAuth != null){
+        if (firebaseAuth != null) {
             firebaseAuth.signOut();
             sendUserToLogin();
         }
@@ -434,15 +439,15 @@ public class UserDashboardActivity extends AppCompatActivity {
 
     private boolean checkConnection() {
         CheckInternet checkInternet = new CheckInternet();
-        if(!checkInternet.isConnected(UserDashboardActivity.this)){
+        if (!checkInternet.isConnected(UserDashboardActivity.this)) {
             return false;
-        }else {
+        } else {
             return true;
         }
     }
 
     private void setVerifiedBadge(FirebaseUser firebaseUser) {
-        if(firebaseUser.isEmailVerified()){
+        if (firebaseUser.isEmailVerified()) {
             verifiedBadge.setVisibility(View.VISIBLE);
         }
     }
@@ -450,29 +455,28 @@ public class UserDashboardActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        if(firebaseAuth != null){
+        if (firebaseAuth != null) {
             loadInfoFromFirebase(firebaseAuth);
         }
     }
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
-        if(checkConnection()){
+        if (checkConnection()) {
             documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if(task.isSuccessful() && task.getResult() != null)
-                    {
+                    if (task.isSuccessful() && task.getResult() != null) {
                         fullName = task.getResult().getString("fullName");
                         urlOfProfile = task.getResult().getString("urlOfProfile");
                         //set Image, verified if is email verified, name
                         setVerifiedBadge(firebaseAuth.getCurrentUser());
-                        if(urlOfProfile != null){
+                        if (urlOfProfile != null) {
                             Picasso.get().load(urlOfProfile).into(nav_header_image_view);
                             Picasso.get().load(urlOfProfile).into(topImageProfile);
                         }
 
-                        if(fullName != null){
+                        if (fullName != null) {
                             nav_header_name.setText(fullName);
                         }
                     }

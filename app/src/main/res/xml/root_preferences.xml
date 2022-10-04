@@ -39,6 +39,7 @@
             app:entries="@array/payment_methods"
             app:entryValues="@array/payment_values"
             app:key="payment_method"
+            app:icon="@drawable/ic_baseline_attach_money_24"
             app:title="@string/payment_method"
             app:useSimpleSummaryProvider="true" />
 

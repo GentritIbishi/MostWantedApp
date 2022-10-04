@@ -1,10 +1,16 @@
 package fiek.unipr.mostwantedapp.utils;
 
+import static java.util.Calendar.getInstance;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME_STYLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME_STYLE_2;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -81,7 +87,7 @@ public class DateHelper {
     }
 
     public static Date yesterday() {
-        final Calendar cal = Calendar.getInstance();
+        final Calendar cal = getInstance();
         cal.add(Calendar.DATE, -1);
         return cal.getTime();
     }
@@ -113,7 +119,7 @@ public class DateHelper {
     }
 
     public static Date firstDayOfWeek(Date date) {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.DAY_OF_WEEK, 1);
         return calendar.getTime();
@@ -121,7 +127,7 @@ public class DateHelper {
 
     public static String getFirstDayOfLastWeek() {
         try{
-            Calendar calendar = Calendar.getInstance();
+            Calendar calendar = getInstance();
             calendar = firstDayOfLastWeek(calendar);
             SimpleDateFormat sfd = new SimpleDateFormat(DATE);
             sfd.setTimeZone(calendar.getTimeZone());
@@ -139,6 +145,12 @@ public class DateHelper {
         // first day
         c.set(Calendar.DAY_OF_WEEK, c.getFirstDayOfWeek());
         return c;
+    }
+
+    public static String getNextMonthFirstDay() {
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DATE_TIME_STYLE_2);
+        return LocalDate.now().with(TemporalAdjusters.firstDayOfNextMonth())
+                .format(dateTimeFormatter);
     }
 
 }

@@ -6,7 +6,7 @@
     </string-array>
 
     <string-array name="payment_values">
-        <item>paypal</item>
-        <item>bank_account</item>
+        <item>Paypal</item>
+        <item>Bank Account</item>
     </string-array>
 </resources>

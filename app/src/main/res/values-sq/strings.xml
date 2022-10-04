@@ -517,6 +517,12 @@
     <string name="account_number_payment_information">Account Number</string>
     <string name="address_payment_information">Address</string>
     <string name="bank_name_payment_information">Bank Name</string>
+    <string name="payment_processor">Payment Processor</string>
+    <string name="paypal_email">Paypal Email</string>
+    <string name="next_payment">Next Payment</string>
+    <string name="total_paid_out">Total Paid Out: $16.44</string>
+    <string name="withdraw">Withdraw</string>
+    <string name="all_available_earnings">All available earnings</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

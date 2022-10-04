@@ -310,53 +310,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                 });
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        locationPermissionGranted = false;
-        switch (requestCode) {
-            case LOCATION_PERMISSION_REQUEST_CODE: {
-                if(grantResults.length > 0){
-                    for(int i = 0; i < grantResults.length; i++){
-                        locationPermissionGranted = false;
-                        return;
-                    }
-                }else {
-                    locationPermissionGranted = true;
-                    getDeviceLocation();
-                }
-            }
-        }
-    }
-
-    private void getDeviceLocation() {
-        mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        try {
-            if(locationPermissionGranted){
-                Task location = mfusedLocationProviderClient.getLastLocation();
-                if(location != null) {
-                    location.addOnCompleteListener(new OnCompleteListener() {
-                        @Override
-                        public void onComplete(@NonNull Task task) {
-                            if(task.isSuccessful()){
-                                Location currentLocation = (Location) task.getResult();
-                                latitude = currentLocation.getLatitude();
-                                longitude = currentLocation.getLongitude();
-
-                            }else {
-                                Toast.makeText(getContext(), "No location device found!", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-                }else {
-                    Toast.makeText(getContext(), R.string.please_turn_on_location_on_your_phone, Toast.LENGTH_SHORT).show();
-                }
-            }
-        }catch (SecurityException e) {
-            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
     //function that count all locations_reports: VERIFIED, UNVERIFIED, FAKE
     private void setPieChart() {
         if(CheckInternet.isConnected(getContext())) {
@@ -520,13 +473,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                 }
             });
         }
-    }
-
-    public void setSharedPreference(String phone) {
-        SharedPreferences settings = getActivity().getSharedPreferences(HOME_USER_PREF, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("phone", phone);
-        editor.commit();
     }
 
     @Override
