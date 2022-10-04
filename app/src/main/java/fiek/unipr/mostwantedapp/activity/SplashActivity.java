@@ -1,8 +1,10 @@
 package fiek.unipr.mostwantedapp.activity;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.activity.dashboard.AdminDashboardActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.AnonymousDashboardActivity;
 import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 
@@ -64,11 +67,20 @@ public class SplashActivity extends AppCompatActivity {
                                         // start AdminDashboardActivity
                                         Intent intent = new Intent(SplashActivity.this, AdminDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
+                                    }else if(role !=null && role.matches(USER_ROLE))
+                                    {
+                                        // start UserPrivilegesDashboardActivity
+//                                        Intent intent = new Intent(SplashActivity.this, UserDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                        startActivity(intent);
                                     }
-                                    else
+                                    else if(role !=null && role.matches(INFORMER_ROLE))
                                     {
                                         // start UserDashboardActivity
                                         Intent intent = new Intent(SplashActivity.this, UserDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                    }else {
+                                        // start AnonymousDashboardActivity not happen cause logout on destroy
+                                        Intent intent = new Intent(SplashActivity.this, AnonymousDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
                                     }
                                 }

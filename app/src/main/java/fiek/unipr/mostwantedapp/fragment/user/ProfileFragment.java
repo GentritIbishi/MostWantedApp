@@ -168,8 +168,6 @@ public class ProfileFragment extends Fragment {
             public void onRefresh() {
                 // Reload current fragment
                 loadInfoFromFirebase(firebaseAuth);
-                loadInfoPhoneFirebase();
-                loadInfoAnonymousFirebase();
                 pullToRefreshInSearch.setRefreshing(false);
             }
         });
@@ -231,6 +229,8 @@ public class ProfileFragment extends Fragment {
 
             }
         });
+
+        loadImage(userID);
 
         return view;
     }
@@ -534,161 +534,7 @@ public class ProfileFragment extends Fragment {
         super.onStart();
             if(firebaseAuth != null){
                 loadInfoFromFirebase(firebaseAuth);
-                loadInfoAnonymousFirebase();
-                loadInfoPhoneFirebase();
             }
         }
-
-    private void loadInfoPhoneFirebase() {
-        String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-        if(!StringHelper.empty(phone))
-        {
-            //logged in with phone
-            setSharedPreference(phone);
-
-            buttonsConstraint.setVisibility(GONE);
-            bottomConstrainPU.setVisibility(GONE);
-            setDisable();
-
-            profile_user_et_firstName.setText(NA);
-            profile_user_etAddress.setText(NA);
-            profile_user_etEmailToUser.setText(NA);
-            profile_user_et_gender.setText(NA);
-            profile_user_et_lastName.setText(NA);
-            profile_user_et_firstName.setText(NA);
-            profile_user_et_parentName.setText(NA);
-            profile_user_etPasswordToUser.setText(NA);
-            profile_user_etNumPersonal.setText(NA);
-            profile_user_etPhone.setText(phone);
-            profile_user_et_role_autocomplete.setText(NA);
-            profile_user_et_balance_autocomplete.setText(NA);
-            profile_user_et_coins_autocomplete.setText(NA);
-            profile_user_et_fullName.setText(NA);
-            profile_user_et_grade_autocomplete.setText(NA);
-            profile_user_etDateRegistration.setText(NA);
-            profile_user_imageOfProfile.setImageResource(R.drawable.ic_phone_login);
-        }
-    }
-
-    private void setDisable() {
-        profile_user_et_firstName.setEnabled(false);
-        profile_user_etAddress.setEnabled(false);
-        profile_user_etEmailToUser.setEnabled(false);
-        profile_user_et_gender.setEnabled(false);
-        profile_user_et_lastName.setEnabled(false);
-        profile_user_et_firstName.setEnabled(false);
-        profile_user_et_parentName.setEnabled(false);
-        profile_user_etPasswordToUser.setEnabled(false);
-        profile_user_etNumPersonal.setEnabled(false);
-        profile_user_etPhone.setEnabled(false);
-        profile_user_et_role_autocomplete.setEnabled(false);
-        profile_user_et_balance_autocomplete.setEnabled(false);
-        profile_user_et_coins_autocomplete.setEnabled(false);
-        profile_user_et_fullName.setEnabled(false);
-        profile_user_et_grade_autocomplete.setEnabled(false);
-        profile_user_etDateRegistration.setEnabled(false);
-    }
-
-    private void loadInfoAnonymousFirebase() {
-        if(firebaseAuth.getCurrentUser().isAnonymous()){
-            buttonsConstraint.setVisibility(GONE);
-            bottomConstrainPU.setVisibility(GONE);
-            setDisable();
-
-            profile_user_et_firstName.setText(firebaseAuth.getCurrentUser().getUid());
-            profile_user_imageOfProfile.setImageResource(R.drawable.ic_anonymous);
-
-            address = ANONYMOUS;
-            profile_user_etAddress.setText(address);
-
-            email = ANONYMOUS;
-            profile_user_etEmailToUser.setText(email);
-
-            gender = ANONYMOUS;
-            profile_user_et_gender.setText(gender);
-
-            lastname = ANONYMOUS;
-            profile_user_et_lastName.setText(lastname);
-
-            name = ANONYMOUS;
-            profile_user_et_firstName.setText(name);
-
-            parentName = ANONYMOUS;
-            profile_user_et_parentName.setText(parentName);
-
-            password = ANONYMOUS;
-            profile_user_etPasswordToUser.setText(password);
-
-            personal_number = ANONYMOUS;
-            profile_user_etNumPersonal.setText(personal_number);
-
-            phone = ANONYMOUS;
-            profile_user_etPhone.setText(phone);
-
-            role = ANONYMOUS;
-            profile_user_et_role_autocomplete.setText(role);
-
-            balance = ANONYMOUS;
-            profile_user_et_balance_autocomplete.setText(balance);
-
-            coins = ANONYMOUS;
-            profile_user_et_coins_autocomplete.setText(coins);
-
-            fullName = ANONYMOUS;
-            profile_user_et_fullName.setText(fullName);
-
-            grade = ANONYMOUS;
-            profile_user_et_grade_autocomplete.setText(grade);
-
-            //no option for change by default disable
-            register_date_time = ANONYMOUS;
-            profile_user_etDateRegistration.setText(register_date_time);
-        }
-    }
-
-    private void setVisibilityPhone() {
-        profile_user_et_firstName.setVisibility(GONE);
-        profile_user_etAddress.setVisibility(GONE);
-        profile_user_etEmailToUser.setVisibility(GONE);
-        profile_user_et_gender.setVisibility(GONE);
-        profile_user_et_lastName.setVisibility(GONE);
-        profile_user_et_firstName.setVisibility(GONE);
-        profile_user_et_parentName.setVisibility(GONE);
-        profile_user_etPasswordToUser.setVisibility(GONE);
-        profile_user_etNumPersonal.setVisibility(GONE);
-        profile_user_etPhone.setVisibility(View.VISIBLE);
-        profile_user_et_role_autocomplete.setVisibility(GONE);
-        profile_user_et_balance_autocomplete.setVisibility(GONE);
-        profile_user_et_coins_autocomplete.setVisibility(GONE);
-        profile_user_et_fullName.setVisibility(GONE);
-        profile_user_et_grade_autocomplete.setVisibility(GONE);
-        profile_user_etDateRegistration.setVisibility(GONE);
-    }
-
-    private void setVisibilityAnonymous() {
-        profile_user_et_firstName.setVisibility(View.VISIBLE);
-        profile_user_etAddress.setVisibility(GONE);
-        profile_user_etEmailToUser.setVisibility(GONE);
-        profile_user_et_gender.setVisibility(GONE);
-        profile_user_et_lastName.setVisibility(GONE);
-        profile_user_et_firstName.setVisibility(GONE);
-        profile_user_et_parentName.setVisibility(GONE);
-        profile_user_etPasswordToUser.setVisibility(GONE);
-        profile_user_etNumPersonal.setVisibility(GONE);
-        profile_user_etPhone.setVisibility(GONE);
-        profile_user_et_role_autocomplete.setVisibility(GONE);
-        profile_user_et_balance_autocomplete.setVisibility(GONE);
-        profile_user_et_coins_autocomplete.setVisibility(GONE);
-        profile_user_et_fullName.setVisibility(GONE);
-        profile_user_et_grade_autocomplete.setVisibility(GONE);
-        profile_user_etDateRegistration.setVisibility(GONE);
-    }
-
-    public void setSharedPreference(String phone) {
-        SharedPreferences settings = getActivity().getSharedPreferences(PROFILE_USER_PREFS, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("phone", phone);
-        editor.commit();
-    }
 
 }

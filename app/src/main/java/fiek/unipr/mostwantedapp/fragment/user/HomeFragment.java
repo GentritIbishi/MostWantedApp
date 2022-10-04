@@ -141,8 +141,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         if(firebaseAuth != null){
             if(ContextHelper.checkContext(getContext())){
                 loadInfoFromFirebase(firebaseAuth);
-                loadInfoAnonymousFirebase();
-                loadInfoPhoneFirebase();
             }
         }
     }
@@ -171,8 +169,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                     loadDatainListview();
 
                     loadInfoFromFirebase(firebaseAuth);
-                    loadInfoPhoneFirebase();
-                    loadInfoAnonymousFirebase();
 
                     setupPieChart();
                     setPieChart();
@@ -493,13 +489,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         l.setEnabled(true);
     }
 
-    private void loadInfoAnonymousFirebase() {
-        if(firebaseAuth.getCurrentUser().isAnonymous()){
-            user_hiDashboard.setText(getActivity().getText(R.string.hi)+" "+ANONYMOUS);
-            user_imageOfDashboard.setImageResource(R.drawable.ic_anonymous);
-        }
-    }
-
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(CheckInternet.isConnected(getContext())){
             documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
@@ -530,17 +519,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                     }
                 }
             });
-        }
-    }
-
-    private void loadInfoPhoneFirebase() {
-        String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-        if(!StringHelper.empty(phone))
-        {
-            //logged in with phone
-            user_hiDashboard.setText(getActivity().getText(R.string.hi)+" "+phone);
-            setSharedPreference(phone);
-            user_imageOfDashboard.setImageResource(R.drawable.ic_phone_login);
         }
     }
 

@@ -1,5 +1,5 @@
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory app:title="@string/messages_header">
 
@@ -33,6 +33,12 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/notifications">
+        <SwitchPreferenceCompat
+            app:key="@string/notifications"
+            app:title="@string/turn_on_notification" />
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/appearance">
 
         <SwitchPreferenceCompat
@@ -45,9 +51,7 @@
 
         <SwitchPreferenceCompat
             app:key="appearance"
-            app:track="@drawable/track"
-            android:thumb="@drawable/thumb"
-            app:title="@string/light_mode" />
+            app:title="@string/light_mode"/>
 
 
     </PreferenceCategory>

@@ -33,6 +33,8 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.activity.LoginActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.AnonymousDashboardActivity;
 import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.databinding.ActivityPhoneSignInBinding;
 
@@ -172,7 +174,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
         binding.etCode6.addTextChangedListener(textWatcher);
 
 //        //by default open keyboard at etCode1
-//        showKeyboard(binding.etCode1);
+        showKeyboard(binding.etCode1);
 
     }
 
@@ -273,7 +275,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
                         Toast.makeText(PhoneSignInActivity.this, getText(R.string.logged_in_as)+" "+phone, Toast.LENGTH_SHORT).show();
                         //start informer activity
                         setSharedPreference(phone);
-                        goToInformerDashboard();
+                        goToAnonymousDashboard();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -285,9 +287,9 @@ public class PhoneSignInActivity extends AppCompatActivity {
             }
         });
     }
-    
-    private void goToInformerDashboard() {
-        Intent intent = new Intent(PhoneSignInActivity.this, UserDashboardActivity.class);
+
+    private void goToAnonymousDashboard() {
+        Intent intent = new Intent(PhoneSignInActivity.this, AnonymousDashboardActivity.class);
         startActivity(intent);
         finish();
     }

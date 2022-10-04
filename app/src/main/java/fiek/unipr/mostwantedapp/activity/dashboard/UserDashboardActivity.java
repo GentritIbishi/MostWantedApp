@@ -447,24 +447,14 @@ public class UserDashboardActivity extends AppCompatActivity {
         }
     }
 
-    public void setSharedPreference(String phone) {
-        SharedPreferences settings = getSharedPreferences(USER_INFORMER_PREFS, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("phone", phone);
-        editor.commit();
-    }
-
     @Override
     public void onStart() {
         super.onStart();
         if(firebaseAuth != null){
             loadInfoFromFirebase(firebaseAuth);
-            loadInfoAnonymousFirebase();
-            loadInfoPhoneFirebase();
         }
     }
 
-    //firebase logical function
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(checkConnection()){
             documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
@@ -488,26 +478,6 @@ public class UserDashboardActivity extends AppCompatActivity {
                     }
                 }
             });
-        }
-    }
-
-    private void loadInfoAnonymousFirebase() {
-        if(firebaseAuth.getCurrentUser().isAnonymous()){
-            nav_header_name.setText(firebaseAuth.getCurrentUser().getUid());
-            nav_header_image_view.setImageResource(R.drawable.ic_anonymous);
-            topImageProfile.setImageResource(R.drawable.ic_anonymous);
-        }
-    }
-
-    private void loadInfoPhoneFirebase() {
-        String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-        if(!StringHelper.empty(phone))
-        {
-            //logged in with phone
-            nav_header_name.setText(phone);
-            setSharedPreference(phone);
-            nav_header_image_view.setImageResource(R.drawable.ic_phone_login);
-            topImageProfile.setImageResource(R.drawable.ic_phone_login);
         }
     }
 

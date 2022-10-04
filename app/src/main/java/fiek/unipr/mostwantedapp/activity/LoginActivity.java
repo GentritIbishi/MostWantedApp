@@ -111,9 +111,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 setVerifiedTrue(firebaseUser.getUid());
                 checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid());
             }else if(firebaseUser.getPhoneNumber() != null){
-                LoginHistory loginHistory = new LoginHistory(firebaseUser.getUid(), PHONE_USER, PHONE_USER, PHONE_USER, DateHelper.getDateTime());
-                setLoginHistoryPhone(loginHistory);
-                goToInformerDashboard();
+                goToAnonymousDashboard();
             }
         }
     }
@@ -269,7 +267,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             login_progressBar.setVisibility(View.INVISIBLE);
                             bt_Login.setEnabled(true);
                             progressDialog.setMessage(getApplicationContext().getText(R.string.logins_successfully));
-                            //Toast.makeText(LoginActivity.this, R.string.logins_successfully, Toast.LENGTH_SHORT).show();
                             goToAdminDashboard();
                             progressDialog.dismiss();
                         } else if(role != null && role.matches(USER_ROLE)){
@@ -308,11 +305,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             firebaseAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                 @Override
                 public void onSuccess(AuthResult authResult) {
-                    LoginHistory loginHistory = new LoginHistory(firebaseAuth.getUid(), ANONYMOUS, ANONYMOUS, ANONYMOUS, DateHelper.getDateTime());
-                    setLoginHistoryAnonymous(loginHistory);
-                    setSharedPreferenceInformer(firebaseAuth.getCurrentUser().getUid());
-                    setSharedPreferenceAnonymous(ANONYMOUS);
-                    //goToInformerDashboard();
                     goToAnonymousDashboard();
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -334,12 +326,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
-    private void setLoginHistoryAnonymous(LoginHistory loginHistory) {
-        firebaseFirestore.collection(LOGIN_HISTORY)
-                .document(loginHistory.getUserID()).collection(loginHistory.getRole())
-                .document(loginHistory.getUserID()+" "+loginHistory.getDate_time()).set(loginHistory);
-    }
-
     public void setSharedPreference(String currentUserId, String role, String fullName, String email) {
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
@@ -347,20 +333,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         editor.putString("Role", role);
         editor.putString("fullName", fullName);
         editor.putString("email", email);
-        editor.commit();
-    }
-
-    public void setSharedPreferenceInformer(String currentUserId) {
-        SharedPreferences settings = getSharedPreferences(LOGIN_INFORMER_PREFS, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("userID", currentUserId);
-        editor.commit();
-    }
-
-    public void setSharedPreferenceAnonymous(String name) {
-        SharedPreferences settings = getSharedPreferences(LOGIN_INFORMER_PREFS, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("anonymous", name);
         editor.commit();
     }
 
@@ -384,14 +356,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             }
                     }
                 });
-    }
-
-    public void setLoginHistoryPhone(LoginHistory loginHistory) {
-
-        documentReference = firebaseFirestore.collection(LOGIN_HISTORY)
-                .document(loginHistory.getUserID()).collection(loginHistory.getRole())
-                .document(firebaseAuth.getUid()+" "+loginHistory.getDate_time());
-        documentReference.set(loginHistory);
     }
 
     private void goToInformerDashboard() {

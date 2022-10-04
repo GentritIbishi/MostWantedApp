@@ -101,10 +101,7 @@ public class HomeFragment extends Fragment {
         storageReference = FirebaseStorage.getInstance().getReference();
         userID = firebaseUser.getUid();
         getGrade(firebaseAuth);
-        loadInfoAnonymousFirebase();
         loadInfoFromFirebase(firebaseAuth);
-        loadInfoPhoneFirebase();
-
     }
 
     @Override
@@ -155,9 +152,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        loadInfoAnonymousFirebase();
         loadInfoFromFirebase(firebaseAuth);
-        loadInfoPhoneFirebase();
 
         final LinearLayout l_admin_myAccount = admin_dashboard_view.findViewById(R.id.l_admin_myAccount);
         l_admin_myAccount.setOnClickListener(new View.OnClickListener() {
@@ -246,22 +241,6 @@ public class HomeFragment extends Fragment {
         fragmentTransaction.replace(R.id.admin_fragmentContainer, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-    }
-
-    private void loadInfoAnonymousFirebase() {
-        if(firebaseAuth.getCurrentUser().isAnonymous()){
-            imageOfAccount.setImageResource(R.drawable.ic_anonymous);
-            imageOfDashboard.setImageResource(R.drawable.ic_anonymous);
-        }
-    }
-
-    private void loadInfoPhoneFirebase() {
-        String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-        if(!StringHelper.empty(phone))
-        {
-            imageOfAccount.setImageResource(R.drawable.ic_phone_login);
-            imageOfDashboard.setImageResource(R.drawable.ic_phone_login);
-        }
     }
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
@@ -444,9 +423,7 @@ public class HomeFragment extends Fragment {
         if(firebaseAuth != null){
             if(checkContext(getContext())){
                 loadInfoAndSayHiFromFirebase(firebaseAuth, getContext());
-                loadInfoAnonymousFirebase();
                 loadInfoFromFirebase(firebaseAuth);
-                loadInfoPhoneFirebase();
             }
         }
     }

@@ -349,18 +349,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("Service status", "Running");
-                return true;
-            }
-        }
-        Log.i ("Service status", "Not running");
-        return false;
-    }
-
     private void setHomeDefaultConfig() {
         setSupportActionBar(admin_toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -422,7 +410,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     private void Logout()
     {
-        //check for phone authentication
         if(firebaseAuth != null){
             firebaseAuth.signOut();
             sendUserToLogin();
@@ -459,12 +446,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
         super.onStart();
         if(firebaseAuth != null){
             loadInfoFromFirebase(firebaseAuth);
-            loadInfoAnonymousFirebase();
-            loadInfoPhoneFirebase();
         }
     }
 
-    //firebase logical function
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(CheckInternet.isConnected(getApplicationContext())){
             documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getUid());
@@ -491,25 +475,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
                     }
                 }
             });
-        }
-    }
-
-    private void loadInfoAnonymousFirebase() {
-        if(firebaseAuth.getCurrentUser().isAnonymous()){
-            nav_header_name.setText(firebaseAuth.getCurrentUser().getUid());
-            nav_header_image_view.setImageResource(R.drawable.ic_anonymous);
-            topImageProfile.setImageResource(R.drawable.ic_anonymous);
-        }
-    }
-
-    private void loadInfoPhoneFirebase() {
-        String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-        if(!StringHelper.empty(phone))
-        {
-            //logged in with phone
-            nav_header_name.setText(phone);
-            nav_header_image_view.setImageResource(R.drawable.ic_phone_login);
-            topImageProfile.setImageResource(R.drawable.ic_phone_login);
         }
     }
 
