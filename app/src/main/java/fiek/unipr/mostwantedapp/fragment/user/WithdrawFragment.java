@@ -2,6 +2,7 @@ package fiek.unipr.mostwantedapp.fragment.user;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.PAYMENT_INFORMATION;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.content.SharedPreferences;
@@ -36,16 +37,18 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.models.PaymentInformation;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 
-public class WithdrawFragment extends Fragment {
+public class WithdrawFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private View view;
     private PieChart availableEarningPieChart;
@@ -224,4 +227,38 @@ public class WithdrawFragment extends Fragment {
         l.setEnabled(true);
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        full_name_payment_information = sharedPreferences.getString("full_name_payment_information", "");
+        address_payment_information = sharedPreferences.getString("address_payment_information","");
+        bank_account_payment_information = sharedPreferences.getString("bank_account_payment_information", "");
+        account_number_payment_information = sharedPreferences.getString("account_number_payment_information","");
+        paypal_email_payment_information = sharedPreferences.getString("paypal_email_payment_information","");
+        payment_method = sharedPreferences.getString("payment_method","");
+
+        save(full_name_payment_information, address_payment_information, bank_account_payment_information,
+                account_number_payment_information, paypal_email_payment_information, payment_method);
+    }
+
+    private void save(String full_name_payment_information, String address_payment_information, String bank_account_payment_information,
+                      String account_number_payment_information, String paypal_email_payment_information, String payment_method)
+    {
+        PaymentInformation paymentInformation = new PaymentInformation(
+                userID,
+                full_name_payment_information,
+                address_payment_information,
+                bank_account_payment_information,
+                account_number_payment_information,
+                paypal_email_payment_information,
+                payment_method
+        );
+        firebaseFirestore.collection(PAYMENT_INFORMATION)
+                .document(userID)
+                .set(paymentInformation, SetOptions.merge()).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 }

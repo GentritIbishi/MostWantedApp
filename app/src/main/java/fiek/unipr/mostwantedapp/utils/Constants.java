@@ -60,6 +60,7 @@ public class Constants {
     public static final String NOTIFICATION_HELPER_ADMIN = "notifications_helper_admin";
     public static final String NOTIFICATION_ADMIN = "notifications_admin";
     public static final String NOTIFICATION_USER = "notifications_user";
+    public static final String PAYMENT_INFORMATION = "payment_information";
     public static final String PERSONS = "persons";
     public static final String PROFILE_PICTURE = "profile_picture.jpg";
     public static final String DYNAMIC_DOMAIN = "https://fiek.page.link";

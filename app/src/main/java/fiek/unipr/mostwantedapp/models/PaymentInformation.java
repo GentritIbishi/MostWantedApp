@@ -5,18 +5,18 @@ public class PaymentInformation {
             fullName,
             address,
             bankName,
+            accountNumber,
             paypalEmail,
             paymentMethod;
-    private Integer accountNumber;
 
-    public PaymentInformation(String userID, String fullName, String address, String bankName, String paypalEmail, String paymentMethod, Integer accountNumber) {
+    public PaymentInformation(String userID, String fullName, String address, String bankName, String accountNumber, String paypalEmail, String paymentMethod) {
         this.userID = userID;
         this.fullName = fullName;
         this.address = address;
         this.bankName = bankName;
+        this.accountNumber = accountNumber;
         this.paypalEmail = paypalEmail;
         this.paymentMethod = paymentMethod;
-        this.accountNumber = accountNumber;
     }
 
     public String getUserID() {
@@ -51,6 +51,14 @@ public class PaymentInformation {
         this.bankName = bankName;
     }
 
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
     public String getPaypalEmail() {
         return paypalEmail;
     }
@@ -65,13 +73,5 @@ public class PaymentInformation {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
-    }
-
-    public Integer getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(Integer accountNumber) {
-        this.accountNumber = accountNumber;
     }
 }

@@ -212,7 +212,7 @@
     <string name="exists_in_database_please_add_example">exists in database, please add for example: Filan Fisteku 1</string>
     <string name="about_header">MostWanted App is an android application, which was created to help find persons wanted by the \"Kosovo Police\" for committing criminal offenses.</string>
     <string name="about_contain">So the application is simple to use as people almost most of the time are active in the social network \"Facebook\" where the official fanpage of the Kosovo police every day publishes photos of wanted persons and that the citizens of Kosovo can help find those people so with a button \"Send Location\" takes the location where the citizen is stored in the firestore database taking the latitude and longitude of the location reported by the citizen.</string>
-    <string name="turn_on_notification">Turn on Notification</string>
+    <string name="allow_notification">Allow Notification</string>
     <string name="need_some_helps">Need some helps?</string>
     <string name="contact_us">Contact Us</string>
     <string name="email_us">Email Us</string>

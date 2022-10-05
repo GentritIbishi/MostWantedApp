@@ -55,6 +55,7 @@ public class ServiceNotification extends Service {
     private PendingIntent pendingIntent;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private boolean allowNotification;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -209,32 +210,39 @@ public class ServiceNotification extends Service {
                         Log.d("SAVED", "SUCCESS SAVED"+ notifications.getNotificationType());
 
                         try {
-                            Intent notificationIntent = new Intent(getApplicationContext(), AdminDashboardActivity.class);
-                            pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
+                            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                            allowNotification = sharedPreferences.getBoolean("allowNotification", true);
 
-                            Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID);
-                            notificationBuilder.setContentTitle(notificationType+": "+notificationReportTitle);
-                            notificationBuilder.setContentText(notificationReportDescription);
-                            notificationBuilder.setSmallIcon(R.drawable.ic_app);
-                            notificationBuilder.setPriority(IMPORTANCE);
-                            notificationBuilder.setContentIntent(pendingIntent);
-                            notificationBuilder.setSound(new_defaultSoundUri);
-                            notificationBuilder.setAutoCancel(true);
+                            if(allowNotification)
+                            {
+                                Intent notificationIntent = new Intent(getApplicationContext(), AdminDashboardActivity.class);
+                                pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
 
-                            sharedPreferences = PreferenceManager
-                                    .getDefaultSharedPreferences(getApplicationContext());
-                            int number = sharedPreferences.getInt(sharedPrefName, default_number);
+                                Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID);
+                                notificationBuilder.setContentTitle(notificationType+": "+notificationReportTitle);
+                                notificationBuilder.setContentText(notificationReportDescription);
+                                notificationBuilder.setSmallIcon(R.drawable.ic_app);
+                                notificationBuilder.setPriority(IMPORTANCE);
+                                notificationBuilder.setContentIntent(pendingIntent);
+                                notificationBuilder.setSound(new_defaultSoundUri);
+                                notificationBuilder.setAutoCancel(true);
 
-                            startForeground(number, notificationBuilder.build());
+                                sharedPreferences = PreferenceManager
+                                        .getDefaultSharedPreferences(getApplicationContext());
+                                int number = sharedPreferences.getInt(sharedPrefName, default_number);
 
-                            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                            notificationManager.notify(number, notificationBuilder.build());
+                                startForeground(number, notificationBuilder.build());
 
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            number++;
-                            editor.putInt(sharedPrefName, number);
-                            editor.apply();
+                                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                                notificationManager.notify(number, notificationBuilder.build());
+
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                number++;
+                                editor.putInt(sharedPrefName, number);
+                                editor.apply();
+                            }
+
 
                         }catch (Exception e)
                         {
@@ -327,32 +335,38 @@ public class ServiceNotification extends Service {
                         Log.d("SAVED", "SUCCESS SAVED"+ notifications.getNotificationType());
 
                         try {
-                            Intent notificationIntent = new Intent(getApplicationContext(), UserDashboardActivity.class);
-                            pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
+                            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+                            allowNotification = sharedPreferences.getBoolean("allowNotification", true);
 
-                            Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID);
-                            notificationBuilder.setContentTitle(notificationType+": "+notificationReportTitle);
-                            notificationBuilder.setContentText(notificationReportDescription);
-                            notificationBuilder.setSmallIcon(R.drawable.ic_app);
-                            notificationBuilder.setPriority(IMPORTANCE);
-                            notificationBuilder.setContentIntent(pendingIntent);
-                            notificationBuilder.setSound(new_defaultSoundUri);
-                            notificationBuilder.setAutoCancel(true);
+                            if(allowNotification)
+                            {
+                                Intent notificationIntent = new Intent(getApplicationContext(), UserDashboardActivity.class);
+                                pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
 
-                            sharedPreferences = PreferenceManager
-                                    .getDefaultSharedPreferences(getApplicationContext());
-                            int number = sharedPreferences.getInt(sharedPrefName, default_number);
+                                Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID);
+                                notificationBuilder.setContentTitle(notificationType+": "+notificationReportTitle);
+                                notificationBuilder.setContentText(notificationReportDescription);
+                                notificationBuilder.setSmallIcon(R.drawable.ic_app);
+                                notificationBuilder.setPriority(IMPORTANCE);
+                                notificationBuilder.setContentIntent(pendingIntent);
+                                notificationBuilder.setSound(new_defaultSoundUri);
+                                notificationBuilder.setAutoCancel(true);
 
-                            startForeground(number, notificationBuilder.build());
+                                sharedPreferences = PreferenceManager
+                                        .getDefaultSharedPreferences(getApplicationContext());
+                                int number = sharedPreferences.getInt(sharedPrefName, default_number);
 
-                            NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                            notificationManager.notify(number, notificationBuilder.build());
+                                startForeground(number, notificationBuilder.build());
 
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            number++;
-                            editor.putInt(sharedPrefName, number);
-                            editor.apply();
+                                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                                notificationManager.notify(number, notificationBuilder.build());
+
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                number++;
+                                editor.putInt(sharedPrefName, number);
+                                editor.apply();
+                            }
 
                         }catch (Exception e)
                         {
