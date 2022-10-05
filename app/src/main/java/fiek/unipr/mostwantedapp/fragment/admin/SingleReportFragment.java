@@ -336,7 +336,6 @@ public class SingleReportFragment extends Fragment {
                                                            addresses = geocoder.getFromLocation(latitude, longitude, 1);
                                                            String address = addresses.get(0).getAddressLine(0);
                                                            String city = addresses.get(0).getLocality();
-                                                           String state = addresses.get(0).getAdminArea();
                                                            String country = addresses.get(0).getCountryName();
                                                            String postalCode = addresses.get(0).getPostalCode();
                                                            String knownName = addresses.get(0).getFeatureName();
