@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:padding="14dp"
     android:text="TextView"
+    android:fitsSystemWindows="true"
     android:fontFamily="@font/open_sans_bold"
-    android:textColor="@color/gray"
+    android:textColor="@color/dark_light_color"
     android:textStyle="bold"
     android:textSize="16sp"/>

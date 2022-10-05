@@ -307,15 +307,4 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
         });
     }
 
-    @Override
-    public void onDestroy() {
-        firebaseAuth.signOut();
-        super.onDestroy();
-    }
-
-    @Override
-    public void onStop() {
-        firebaseAuth.signOut();
-        super.onStop();
-    }
 }

@@ -347,6 +347,7 @@ public class SingleReportFragment extends Fragment {
                                                                    .snippet(address + ", "+ city+ ", "+ postalCode)
                                                                    .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
                                                            mMap.setMinZoomPreference(DEFAULT_ZOOM);
+                                                           mMap.setMaxZoomPreference(DEFAULT_ZOOM);
                                                            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
                                                        } catch (IOException e) {

@@ -260,10 +260,10 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         getLocationPermission();
         if(firebaseAuth != null)
         {
-            if(firebaseAuth.getCurrentUser().isAnonymous())
+            if(firebaseUser.isAnonymous())
             {
                 loadInfoAnonymousFirebase();
-            }else if(!empty(firebaseAuth.getCurrentUser().getPhoneNumber()))
+            }else if(!empty(firebaseUser.getPhoneNumber()))
             {
                 loadInfoPhoneFirebase();
             }else
