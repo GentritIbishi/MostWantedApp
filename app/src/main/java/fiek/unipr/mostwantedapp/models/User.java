@@ -7,15 +7,15 @@ public class User {
             parentName, gender,
             role, phone, personal_number,
             register_date_time, grade,
-            password, urlOfProfile,
-            balance, coins;
+            password, urlOfProfile;
 
+    private Double balance;
     private Boolean isEmailVerified = false;
 
     public User() {
     }
 
-    public User(String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, String urlOfProfile, String balance, String coins, Boolean isEmailVerified) {
+    public User(String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, String urlOfProfile, Double balance, Boolean isEmailVerified) {
         this.userID = userID;
         this.name = name;
         this.lastname = lastname;
@@ -32,7 +32,6 @@ public class User {
         this.password = password;
         this.urlOfProfile = urlOfProfile;
         this.balance = balance;
-        this.coins = coins;
         this.isEmailVerified = isEmailVerified;
     }
 
@@ -156,20 +155,12 @@ public class User {
         this.urlOfProfile = urlOfProfile;
     }
 
-    public String getBalance() {
+    public Double getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
+    public void setBalance(Double balance) {
         this.balance = balance;
-    }
-
-    public String getCoins() {
-        return coins;
-    }
-
-    public void setCoins(String coins) {
-        this.coins = coins;
     }
 
     public Boolean getEmailVerified() {

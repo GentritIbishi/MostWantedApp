@@ -9,6 +9,9 @@ public class PaymentInformation {
             paypalEmail,
             paymentMethod;
 
+    public PaymentInformation() {
+    }
+
     public PaymentInformation(String userID, String fullName, String address, String bankName, String accountNumber, String paypalEmail, String paymentMethod) {
         this.userID = userID;
         this.fullName = fullName;

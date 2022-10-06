@@ -2,23 +2,21 @@ package fiek.unipr.mostwantedapp.fragment.admin;
 
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.addBorder;
 import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
+import static fiek.unipr.mostwantedapp.utils.Constants.FREE;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 import static fiek.unipr.mostwantedapp.utils.EditTextHelper.disableEditable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -67,14 +65,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.gallery.CustomizedGalleryAdapter;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class SingleReportFragment extends Fragment {
 
     private View view;
+    private Context mContext;
     private GoogleMap mMap;
     private Bundle singleReportMapBundle;
 
@@ -102,14 +101,15 @@ public class SingleReportFragment extends Fragment {
 
     private CustomizedGalleryAdapter customGalleryAdapter;
 
-    private OnMapReadyCallback callback = new OnMapReadyCallback() {
+    private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void onMapReady(@NonNull GoogleMap googleMap) {
             mMap = googleMap;
-                if(wanted_person != null && personId != null)
-                {
-                    setMarker(getContext(), personId, wanted_person);
-                }
+            if (wanted_person != null && personId != null) {
+                setMarker(mContext, personId, wanted_person);
+            }else {
+                Log.d("ERROR_NULL", "NULL ON SET MARKER");
+            }
         }
     };
 
@@ -119,7 +119,7 @@ public class SingleReportFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_single_report, container, false);
-
+        mContext = getContext();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -137,7 +137,13 @@ public class SingleReportFragment extends Fragment {
         btnSaveReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                save(auto_complete_report_status.getText().toString(), docId);
+                String status = auto_complete_report_status.getText().toString();
+                if(!StringHelper.empty(status) && !StringHelper.empty(uID)
+                && !StringHelper.empty(latitude.toString()) && !StringHelper.empty(longitude.toString())
+                && !StringHelper.empty(docId) && !StringHelper.empty(personId))
+                {
+                    save(mContext, uID, latitude, longitude, status, docId, personId);
+                }
             }
         });
 
@@ -166,25 +172,25 @@ public class SingleReportFragment extends Fragment {
     }
 
     private void setDropDownOptions() {
-        String[] status_state = getContext().getResources().getStringArray(R.array.status_state);
-        ArrayAdapter<String> statusStateAdapter = new ArrayAdapter<>(getContext(),
+        String[] status_state = mContext.getResources().getStringArray(R.array.status_state);
+        ArrayAdapter<String> statusStateAdapter = new ArrayAdapter<>(mContext,
                 R.layout.drop_down_item_report_status_state, status_state);
         auto_complete_report_status.setAdapter(statusStateAdapter);
         String status_old = auto_complete_report_status.getText().toString();
         auto_complete_report_status.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                autocomplete_report_status_layout.setHintTextColor(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
-                autocomplete_report_status_layout.setBoxStrokeColor(getContext().getResources().getColor(R.color.gray));
-                autocomplete_report_status_layout.setBoxStrokeColorStateList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
-                autocomplete_report_status_layout.setCounterTextColor(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
-                autocomplete_report_status_layout.setEndIconTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.gray)));
+                autocomplete_report_status_layout.setHintTextColor(ColorStateList.valueOf(mContext.getResources().getColor(R.color.gray)));
+                autocomplete_report_status_layout.setBoxStrokeColor(mContext.getResources().getColor(R.color.gray));
+                autocomplete_report_status_layout.setBoxStrokeColorStateList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.gray)));
+                autocomplete_report_status_layout.setCounterTextColor(ColorStateList.valueOf(mContext.getResources().getColor(R.color.gray)));
+                autocomplete_report_status_layout.setEndIconTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.gray)));
 
                 String status_new = auto_complete_report_status.getText().toString();
 
-                if(status_old.equals(status_new)){
+                if (status_old.equals(status_new)) {
                     btnSaveReport.setVisibility(View.GONE);
-                }else {
+                } else {
                     btnSaveReport.setVisibility(View.VISIBLE);
                 }
             }
@@ -192,24 +198,171 @@ public class SingleReportFragment extends Fragment {
 
     }
 
-    private void save(String value, String docId) {
+    private void save(Context context, String uID, Double latitude, Double longitude, String status, String docId, String personId) {
         Map<String, Object> data = new HashMap<>();
-        data.put("status", value);
+        data.put("status", status);
 
         firebaseFirestore.collection(LOCATION_REPORTS)
                 .document(docId)
                 .update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), getContext().getText(R.string.saved_successfully), Toast.LENGTH_SHORT).show();
+                        Log.d("SAVE", "SAVED SUCCESS");
+                        if (status.equals(VERIFIED)) {
+                            //check if user with uid is anonymous or phone or regular
+                            if (!firebaseUser.isAnonymous() && StringHelper.empty(firebaseUser.getPhoneNumber()))
+                            {
+                                Log.d("GG", "U HI");
+                                updateBalance(context, latitude, longitude, uID, personId);
+                            }
+                        }
                         btnSaveReport.setVisibility(View.GONE);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), getContext().getText(R.string.failed_to_save), Toast.LENGTH_SHORT).show();
+                        Log.d("ERROR IN BEGIN", e.getMessage());
                     }
                 });
+    }
+
+    private void updateBalance(Context context, Double latitude, Double longitude, String uID, String personId) {
+        //duhet me marr prize prej wanted person
+        //duhet me marr balance prej userit
+        //duhet me bo check nese ka same reported location with same address nese jo atehere ja shton vlenre full
+        //nese po atehere e pjeston qate vlere me numrin e raportimeve
+        //duhet me ja shtu balance+=vleren qe eka fitu
+
+        firebaseFirestore.collection(WANTED_PERSONS)
+                .document(personId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String prize = documentSnapshot.getString("prize");
+                        Log.d("Prize", prize + "");
+                        if(!StringHelper.empty(prize))
+                        {
+                            if (!prize.equalsIgnoreCase(FREE)) {
+                                Log.d("CALON", "CALON" + prize);
+                                getBalanceFromUser(context, latitude, longitude, uID, prize);
+                            }
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("ErrorNePrize", e.getMessage());
+                    }
+                });
+    }
+
+    private void getBalanceFromUser(Context context, Double latitude, Double longitude, String uID, String prize) {
+        //duhet me marr balance prej userit
+        //duhet me bo check nese ka same reported location with same address
+        firebaseFirestore.collection(USERS)
+                .document(uID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Double balance = documentSnapshot.getDouble("balance");
+
+                        Log.d("balance", balance + "");
+
+                        String[] prizeArray = prize.split(" ");
+                        Double finalPrize = Double.valueOf(prizeArray[0]);
+
+                        Log.d("finalPrize", finalPrize + "");
+
+                        checkIfHaveMoreThanOneReportWithSameLocation(context, personId, latitude, longitude, balance, finalPrize);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("ErrorNeBalance", e.getMessage());
+                    }
+                });
+
+
+    }
+
+    private void checkIfHaveMoreThanOneReportWithSameLocation(Context context, String personId, Double latitude, Double longitude, Double balance, Double prize) {
+        //nese jo atehere ja shton vleren full
+        //nese po atehere e pjeston qate vlere me numrin e raportimeve
+        String address = getAddress(context, latitude, longitude);
+        firebaseFirestore.collection(LOCATION_REPORTS)
+                .whereEqualTo("personId", personId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int count = 0;
+                        for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
+                            String addressInDoc = queryDocumentSnapshots.getDocuments().get(i).getString("address");
+
+                            if (address.equals(addressInDoc)) {
+                                count++;
+                            }
+                        }
+
+                        Log.d("COUNT_VALUE ", count + "");
+
+                        if (count == 0) {
+                            //duhet me ja mbledh balance sa e ka plus prize
+                            double fullPrize = balance + prize;
+                            Log.d("fullPrizeBalance", fullPrize + "");
+                            addPrizeToWinner(context, uID, fullPrize);
+                        } else {
+                            double equal_prize = prize / count;
+                            double notFullPrize = balance + equal_prize;
+                            Log.d("notFullPrize", notFullPrize + "");
+                            addPrizeToWinner(context, uID, notFullPrize);
+                        }
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("ErrorNeKompareAdreses", e.getMessage());
+                    }
+                });
+    }
+
+    private void addPrizeToWinner(Context context, String uID, Double balance) {
+        //duhet me ja shtu balance+=vleren qe eka fitu
+
+        firebaseFirestore.collection(USERS)
+                .document(uID)
+                .update("balance", balance)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Process status", "200 OK");
+                        Toast.makeText(context, context.getText(R.string.saved_successfully), Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("ErrorNeUpdateBalance", e.getMessage());
+                    }
+                });
+
+    }
+
+    public String getAddress(Context ctx, double latitude, double longitude) {
+        String fullAdd = null;
+        try {
+            Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if (addresses.size() > 0) {
+                Address address = addresses.get(0);
+                fullAdd = address.getAddressLine(0);
+            }
+        } catch (IOException e) {
+            Toast.makeText(ctx, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        return fullAdd;
     }
 
     private void setReportInformation(String uID, String date_time, String informer_person, String title, String description, String status) {
@@ -225,25 +378,28 @@ public class SingleReportFragment extends Fragment {
 
         try {
             bundle = getArguments();
-            date_time = bundle.getString("date_time");
-            title = bundle.getString("title");
-            description = bundle.getString("description");
-            informer_person = bundle.getString("informer_person");
-            latitude = bundle.getDouble("latitude");
-            longitude = bundle.getDouble("longitude");
-            status = bundle.getString("status");
-            uID = bundle.getString("uID");
-            docId = bundle.getString("docId");
-            personId = bundle.getString("personId");
-            wanted_person = bundle.getString("wanted_person");
-            totalImages = bundle.getInt("totalImages");
-            images = bundle.getStringArray("images");
+            if(bundle != null)
+            {
+                date_time = bundle.getString("date_time");
+                title = bundle.getString("title");
+                description = bundle.getString("description");
+                informer_person = bundle.getString("informer_person");
+                latitude = bundle.getDouble("latitude");
+                longitude = bundle.getDouble("longitude");
+                status = bundle.getString("status");
+                uID = bundle.getString("uID");
+                docId = bundle.getString("docId");
+                personId = bundle.getString("personId");
+                wanted_person = bundle.getString("wanted_person");
+                totalImages = bundle.getInt("totalImages");
+                images = bundle.getStringArray("images");
+            }
 
-            if(images != null && images.length > 0){
+            if (images != null && images.length > 0) {
                 image_gallery.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.VISIBLE);
                 setFirstImageSelectedInGallery(0);
-                customGalleryAdapter = new CustomizedGalleryAdapter(getContext(), images);
+                customGalleryAdapter = new CustomizedGalleryAdapter(mContext, images);
                 image_gallery.setAdapter(customGalleryAdapter);
 
                 image_gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -251,7 +407,7 @@ public class SingleReportFragment extends Fragment {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         // Whichever image is clicked, that is set in the  selectedImageView
                         // position will indicate the location of image
-                        Glide.with(getContext())
+                        Glide.with(mContext)
                                 .asBitmap()
                                 .load(images[position])
                                 .listener(new RequestListener<Bitmap>() {
@@ -269,7 +425,7 @@ public class SingleReportFragment extends Fragment {
                                 .preload();
                     }
                 });
-            }else {
+            } else {
                 image_gallery.setVisibility(View.GONE);
                 imageView.setVisibility(View.GONE);
             }
@@ -280,7 +436,7 @@ public class SingleReportFragment extends Fragment {
     }
 
     private void setFirstImageSelectedInGallery(int position) {
-        Glide.with(getContext())
+        Glide.with(mContext)
                 .asBitmap()
                 .load(images[position])
                 .listener(new RequestListener<Bitmap>() {
@@ -307,67 +463,63 @@ public class SingleReportFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(queryDocumentSnapshots != null)
-                        {
-                               for (int i = 0; i<queryDocumentSnapshots.size();i++)
-                               {
-                                   urlOfProfile = queryDocumentSnapshots.getDocuments().get(i).getString("urlOfProfile");
-                                   try {
-                                       Glide.with(context)
-                                               .asBitmap()
-                                               .load(urlOfProfile)
-                                               .apply(new RequestOptions().override(200, 200))
-                                               .listener(new RequestListener<Bitmap>() {
-                                                   @Override
-                                                   public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
-                                                       return false;
-                                                   }
+                        if (queryDocumentSnapshots != null) {
+                            for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
+                                urlOfProfile = queryDocumentSnapshots.getDocuments().get(i).getString("urlOfProfile");
+                                try {
+                                    Glide.with(context)
+                                            .asBitmap()
+                                            .load(urlOfProfile)
+                                            .apply(new RequestOptions().override(200, 200))
+                                            .listener(new RequestListener<Bitmap>() {
+                                                @Override
+                                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Bitmap> target, boolean isFirstResource) {
+                                                    return false;
+                                                }
 
-                                                   @Override
-                                                   public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                                                       Bitmap newBitmap = addBorder(resource, getContext(), R.color.white);
-                                                       LatLng latLng = new LatLng(latitude, longitude);
+                                                @Override
+                                                public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
+                                                    Bitmap newBitmap = addBorder(resource, mContext, R.color.white);
+                                                    LatLng latLng = new LatLng(latitude, longitude);
 
-                                                       Geocoder geocoder;
-                                                       List<Address> addresses = null;
-                                                       geocoder = new Geocoder(getContext(), Locale.getDefault());
+                                                    Geocoder geocoder;
+                                                    List<Address> addresses;
+                                                    geocoder = new Geocoder(mContext, Locale.getDefault());
 
-                                                       try {
-                                                           addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                                                           String address = addresses.get(0).getAddressLine(0);
-                                                           String city = addresses.get(0).getLocality();
-                                                           String country = addresses.get(0).getCountryName();
-                                                           String postalCode = addresses.get(0).getPostalCode();
-                                                           String knownName = addresses.get(0).getFeatureName();
+                                                    try {
+                                                        addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                                                        String address = addresses.get(0).getAddressLine(0);
+                                                        String city = addresses.get(0).getLocality();
+                                                        String postalCode = addresses.get(0).getPostalCode();
 
-                                                           mMap.addMarker(new MarkerOptions()
-                                                                   .position(latLng)
-                                                                   .title(wanted_person)
-                                                                   .snippet(address + ", "+ city+ ", "+ postalCode)
-                                                                   .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
-                                                           mMap.setMinZoomPreference(DEFAULT_ZOOM);
-                                                           mMap.setMaxZoomPreference(DEFAULT_ZOOM);
-                                                           mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                                                        mMap.addMarker(new MarkerOptions()
+                                                                .position(latLng)
+                                                                .title(wanted_person)
+                                                                .snippet(address + ", " + city + ", " + postalCode)
+                                                                .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
+                                                        mMap.setMinZoomPreference(DEFAULT_ZOOM);
+                                                        mMap.setMaxZoomPreference(DEFAULT_ZOOM);
+                                                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-                                                       } catch (IOException e) {
-                                                           e.printStackTrace();
-                                                       }
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
 
-                                                       return true;
-                                                   }
-                                               })
-                                               .circleCrop()
-                                               .preload();
-                                   } catch(Exception e) {
-                                       Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                                   }
-                               }
+                                                    return true;
+                                                }
+                                            })
+                                            .circleCrop()
+                                            .preload();
+                                } catch (Exception e) {
+                                    Toast.makeText(mContext, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), getContext().getText(R.string.error_failed_to_get_image_from_database)+"", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, mContext.getText(R.string.error_failed_to_get_image_from_database) + "", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -392,8 +544,7 @@ public class SingleReportFragment extends Fragment {
         view.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if( keyCode == KeyEvent.KEYCODE_BACK )
-                {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
                     Fragment fragment = new NotificationFragment();
                     loadFragment(fragment);
                     return true;
@@ -404,7 +555,7 @@ public class SingleReportFragment extends Fragment {
     }
 
     private void loadFragment(Fragment fragment) {
-        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+        ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction()
                 .replace(R.id.admin_fragmentContainer, fragment)
                 .commit();
     }

@@ -248,7 +248,6 @@ public class RegisterUserFragment extends Fragment {
                                     password,
                                     urlOfProfile,
                                     BALANCE_DEFAULT,
-                                    COINS_DEFAULT,
                                     isEmailVerified);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -284,8 +283,7 @@ public class RegisterUserFragment extends Fragment {
                               String grade,
                               String password,
                               String urlOfProfile,
-                              String balance,
-                              String coins,
+                              Double balance,
                               Boolean isEmailVerified) throws Exception {
         if(CheckInternet.isConnected(getContext())){
             SecurityHelper securityHelper = new SecurityHelper();
@@ -308,7 +306,6 @@ public class RegisterUserFragment extends Fragment {
                     hashPassword,
                     urlOfProfile,
                     balance,
-                    coins,
                     isEmailVerified
             );
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {

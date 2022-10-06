@@ -335,6 +335,7 @@ public class UserDashboardActivity extends AppCompatActivity {
         intent.putExtra("notificationReportPrizeToWin", notifications.getNotificationReportPrizeToWin());
         intent.putExtra("notificationReportNewStatus", notifications.getNotificationReportNewStatus());
         intent.putExtra("notificationForUserId", notifications.getNotificationForUserId());
+        intent.putExtra("notificationReportDescription", notifications.getNotificationReportDescription());
 
         startService(intent);
 

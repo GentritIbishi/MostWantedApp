@@ -571,36 +571,6 @@
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/autocomplete_admin_coins_layout"
-                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="16dp"
-                            android:hint="@string/coins"
-                            android:textColorHint="@color/gray"
-                            android:textDirection="firstStrong"
-                            android:textStyle="bold"
-                            app:boxBackgroundColor="@color/light_gray"
-                            app:layout_constraintEnd_toEndOf="@+id/autocomplete_admin_balance_layout"
-                            app:layout_constraintStart_toStartOf="@+id/autocomplete_admin_balance_layout"
-                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_admin_balance_layout">
-
-                            <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                android:id="@+id/admin_et_coins_autocomplete"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:inputType="none"
-                                android:paddingTop="16dp"
-                                android:paddingBottom="16dp"
-                                android:textColor="@color/gray"
-                                android:textStyle="bold" />
-
-                        </com.google.android.material.textfield.TextInputLayout>
-
-                        <com.google.android.material.textfield.TextInputLayout
                             android:id="@+id/admin_etDateRegistrationLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="0dp"
@@ -620,7 +590,7 @@
                             app:hintTextColor="@color/gray"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_admin_coins_layout"
+                            app:layout_constraintTop_toBottomOf="@+id/autocomplete_admin_balance_layout"
                             app:startIconDrawable="@drawable/ic_baseline_date_range_24">
 
                             <com.google.android.material.textfield.TextInputEditText

@@ -45,6 +45,7 @@ import fiek.unipr.mostwantedapp.activity.dashboard.AdminDashboardActivity;
 import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.models.Notifications;
 import fiek.unipr.mostwantedapp.models.NotificationState;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class ServiceNotification extends Service {
 
@@ -53,119 +54,123 @@ public class ServiceNotification extends Service {
             notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus, notificationForUserId;
     private SharedPreferences sharedPreferences;
     private PendingIntent pendingIntent;
-    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private boolean allowNotification;
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        allowNotification = sharedPreferences.getBoolean("allowNotification", true);
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
         userID = firebaseAuth.getUid();
-        notificationDateTime = intent.getStringExtra("notificationDateTime");
-        notificationType = intent.getStringExtra("notificationType");
-        notificationReportId = intent.getStringExtra("notificationReportId");
-        notificationReportUid = intent.getStringExtra("notificationReportUid");
-        notificationReportDateTime = intent.getStringExtra("notificationReportDateTime");
-        notificationReportTitle = intent.getStringExtra("notificationReportTitle");
-        notificationReportDescription = intent.getStringExtra("notificationReportDescription");
-        notificationReportInformerPerson = intent.getStringExtra("notificationReportInformerPerson");
-        notificationReportWantedPerson = intent.getStringExtra("notificationReportWantedPerson");
-        notificationReportPrizeToWin = intent.getStringExtra("notificationReportPrizeToWin");
-        notificationReportNewStatus = intent.getStringExtra("notificationReportNewStatus");
-        notificationForUserId = intent.getStringExtra("notificationForUserId");
+
+        if(intent != null)
+        {
+            notificationDateTime = intent.getStringExtra("notificationDateTime");
+            notificationType = intent.getStringExtra("notificationType");
+            notificationReportId = intent.getStringExtra("notificationReportId");
+            notificationReportUid = intent.getStringExtra("notificationReportUid");
+            notificationReportDateTime = intent.getStringExtra("notificationReportDateTime");
+            notificationReportTitle = intent.getStringExtra("notificationReportTitle");
+            notificationReportDescription = intent.getStringExtra("notificationReportDescription");
+            notificationReportInformerPerson = intent.getStringExtra("notificationReportInformerPerson");
+            notificationReportWantedPerson = intent.getStringExtra("notificationReportWantedPerson");
+            notificationReportPrizeToWin = intent.getStringExtra("notificationReportPrizeToWin");
+            notificationReportNewStatus = intent.getStringExtra("notificationReportNewStatus");
+            notificationForUserId = intent.getStringExtra("notificationForUserId");
+        }
 
         startMyOwnForeground();
 
+        super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
 
     private void startMyOwnForeground() {
-            firebaseFirestore.collection(USERS)
-                    .document(userID)
-                    .get()
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            String role = documentSnapshot.getString("role");
-                            try {
-                                Intent notificationIntentAdmin = new Intent(getApplicationContext(), AdminDashboardActivity.class);
-                                Intent notificationIntentUser = new Intent(getApplicationContext(), UserDashboardActivity.class);
+        firebaseFirestore.collection(USERS)
+                .document(userID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String role = documentSnapshot.getString("role");
+                        try {
+                            Intent notificationIntentAdmin = new Intent(getApplicationContext(), AdminDashboardActivity.class);
+                            Intent notificationIntentUser = new Intent(getApplicationContext(), UserDashboardActivity.class);
 
-                                if(role != null)
-                                {
-                                    if(role.equals("Admin"))
-                                    {
-                                        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntentAdmin, 0);
-                                        if(notificationType.equals(String.valueOf(NotificationState.ADDED)))
-                                        {
-                                            createAdminNotificationChannelAdded();
-                                            makeNotificationAdmin(notificationDateTime,
-                                                    notificationType,
-                                                    notificationReportId,
-                                                    notificationReportUid,
-                                                    notificationReportDateTime,
-                                                    notificationReportTitle,
-                                                    notificationReportDescription,
-                                                    notificationReportInformerPerson,
-                                                    notificationReportWantedPerson,
-                                                    notificationReportPrizeToWin,
-                                                    notificationReportNewStatus,
-                                                    notificationForUserId,
-                                                    CHANNEL_ID_ADDED, NOTIFICATION_NUMBER_1, 1);
-                                        }else if(notificationType.equals(String.valueOf(NotificationState.MODIFIED)))
-                                        {
-                                            createAdminNotificationChannelModified();
-                                            makeNotificationAdmin(notificationDateTime,
-                                                    notificationType,
-                                                    notificationReportId,
-                                                    notificationReportUid,
-                                                    notificationReportDateTime,
-                                                    notificationReportTitle,
-                                                    notificationReportDescription,
-                                                    notificationReportInformerPerson,
-                                                    notificationReportWantedPerson,
-                                                    notificationReportPrizeToWin,
-                                                    notificationReportNewStatus,
-                                                    notificationForUserId,
-                                                    CHANNEL_ID_MODIFIED, NOTIFICATION_NUMBER_2, 2);
-                                        }else if(notificationType.equals(String.valueOf(NotificationState.REMOVED)))
-                                        {
-                                            createAdminNotificationChannelRemoved();
-                                            makeNotificationAdmin(notificationDateTime,
-                                                    notificationType,
-                                                    notificationReportId,
-                                                    notificationReportUid,
-                                                    notificationReportDateTime,
-                                                    notificationReportTitle,
-                                                    notificationReportDescription,
-                                                    notificationReportInformerPerson,
-                                                    notificationReportWantedPerson,
-                                                    notificationReportPrizeToWin,
-                                                    notificationReportNewStatus,
-                                                    notificationForUserId,
-                                                    CHANNEL_ID_REMOVED, NOTIFICATION_NUMBER_3, 3);
-                                        }
-                                    }else if(role.equals("Informer"))
-                                    {
-                                        pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntentUser, 0);
-                                        createUserNotificationChannelModified();
-                                        makeNotificationUser(notificationDateTime, notificationType,
-                                                notificationReportId, notificationReportUid, notificationReportDateTime,
-                                                notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
-                                                notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus,
-                                                userID,
-                                                CHANNEL_ID_USER_MODIFIED, NOTIFICATION_NUMBER_4, 4);
+                            if (role != null) {
+                                if (role.equals("Admin")) {
+                                    pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntentAdmin, 0);
+                                    if (notificationType.equals(String.valueOf(NotificationState.ADDED))) {
+                                        createAdminNotificationChannelAdded();
+                                        makeNotificationAdmin(notificationDateTime,
+                                                notificationType,
+                                                notificationReportId,
+                                                notificationReportUid,
+                                                notificationReportDateTime,
+                                                notificationReportTitle,
+                                                notificationReportDescription,
+                                                notificationReportInformerPerson,
+                                                notificationReportWantedPerson,
+                                                notificationReportPrizeToWin,
+                                                notificationReportNewStatus,
+                                                notificationForUserId,
+                                                CHANNEL_ID_ADDED, NOTIFICATION_NUMBER_1, 1);
+                                    } else if (notificationType.equals(String.valueOf(NotificationState.MODIFIED))) {
+                                        createAdminNotificationChannelModified();
+                                        makeNotificationAdmin(notificationDateTime,
+                                                notificationType,
+                                                notificationReportId,
+                                                notificationReportUid,
+                                                notificationReportDateTime,
+                                                notificationReportTitle,
+                                                notificationReportDescription,
+                                                notificationReportInformerPerson,
+                                                notificationReportWantedPerson,
+                                                notificationReportPrizeToWin,
+                                                notificationReportNewStatus,
+                                                notificationForUserId,
+                                                CHANNEL_ID_MODIFIED, NOTIFICATION_NUMBER_2, 2);
+                                    } else if (notificationType.equals(String.valueOf(NotificationState.REMOVED))) {
+                                        createAdminNotificationChannelRemoved();
+                                        makeNotificationAdmin(notificationDateTime,
+                                                notificationType,
+                                                notificationReportId,
+                                                notificationReportUid,
+                                                notificationReportDateTime,
+                                                notificationReportTitle,
+                                                notificationReportDescription,
+                                                notificationReportInformerPerson,
+                                                notificationReportWantedPerson,
+                                                notificationReportPrizeToWin,
+                                                notificationReportNewStatus,
+                                                notificationForUserId,
+                                                CHANNEL_ID_REMOVED, NOTIFICATION_NUMBER_3, 3);
                                     }
-                                }else {
-                                    Log.d("ROLE", "NULL");
+                                } else if (role.equals("Informer")) {
+                                    pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntentUser, 0);
+                                    createUserNotificationChannelModified();
+                                    makeNotificationUser(notificationDateTime, notificationType,
+                                            notificationReportId, notificationReportUid, notificationReportDateTime,
+                                            notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
+                                            notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus,
+                                            userID,
+                                            CHANNEL_ID_USER_MODIFIED, NOTIFICATION_NUMBER_4, 4);
                                 }
-
-                            }catch (Exception e)
-                            {
-                                e.printStackTrace();
+                            } else {
+                                Log.d("ROLE", "NULL");
                             }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    });
+                    }
+                });
     }
 
     private void makeNotificationAdmin(String notificationDateTime,
@@ -207,20 +212,17 @@ public class ServiceNotification extends Service {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("SAVED", "SUCCESS SAVED"+ notifications.getNotificationType());
+                        Log.d("SAVED", "SUCCESS SAVED" + notifications.getNotificationType());
 
                         try {
-                            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                            allowNotification = sharedPreferences.getBoolean("allowNotification", true);
 
-                            if(allowNotification)
-                            {
+                            if (allowNotification) {
                                 Intent notificationIntent = new Intent(getApplicationContext(), AdminDashboardActivity.class);
-                                pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
+                                pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                                 Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID);
-                                notificationBuilder.setContentTitle(notificationType+": "+notificationReportTitle);
+                                notificationBuilder.setContentTitle(notificationType + ": " + notificationReportTitle);
                                 notificationBuilder.setContentText(notificationReportDescription);
                                 notificationBuilder.setSmallIcon(R.drawable.ic_app);
                                 notificationBuilder.setPriority(IMPORTANCE);
@@ -228,11 +230,9 @@ public class ServiceNotification extends Service {
                                 notificationBuilder.setSound(new_defaultSoundUri);
                                 notificationBuilder.setAutoCancel(true);
 
-                                sharedPreferences = PreferenceManager
-                                        .getDefaultSharedPreferences(getApplicationContext());
                                 int number = sharedPreferences.getInt(sharedPrefName, default_number);
 
-                                startForeground(number, notificationBuilder.build());
+                                //startForeground(number, notificationBuilder.build());
 
                                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                                 notificationManager.notify(number, notificationBuilder.build());
@@ -243,9 +243,7 @@ public class ServiceNotification extends Service {
                                 editor.apply();
                             }
 
-
-                        }catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
 
@@ -268,20 +266,19 @@ public class ServiceNotification extends Service {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         int count = 0;
-                        for(int i = 0; i < queryDocumentSnapshots.size(); i++)
-                        {
+                        for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                             String notificationForUserId = queryDocumentSnapshots.getDocuments().get(i).getString("notificationForUserId");
                             String notificationType = queryDocumentSnapshots.getDocuments().get(i).getString("notificationType");
 
-                            if(notificationForUserId.equals(userID) && notificationType.equals(notifications.getNotificationType()))
-                            {
-                                count++;
+                            if (!StringHelper.empty(notificationForUserId) && !StringHelper.empty(notificationType)) {
+                                if (notificationForUserId.equals(userID) && notificationType.equals(notifications.getNotificationType())) {
+                                    count++;
+                                }
                             }
                         }
                         //qyty e dim sakt count
-                        System.out.println("COUNT_VALUE "+count);
-                        if(count==0)
-                        {
+                        System.out.println("COUNT_VALUE " + count);
+                        if (count == 0) {
                             saveAndMakeNotificationAdmin(
                                     context,
                                     notificationId,
@@ -332,20 +329,16 @@ public class ServiceNotification extends Service {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("SAVED", "SUCCESS SAVED"+ notifications.getNotificationType());
+                        Log.d("SAVED", "SUCCESS SAVED" + notifications.getNotificationType());
 
                         try {
-                            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-                            allowNotification = sharedPreferences.getBoolean("allowNotification", true);
-
-                            if(allowNotification)
-                            {
+                            if (allowNotification) {
                                 Intent notificationIntent = new Intent(getApplicationContext(), UserDashboardActivity.class);
                                 pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
 
                                 Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                                 NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID);
-                                notificationBuilder.setContentTitle(notificationType+": "+notificationReportTitle);
+                                notificationBuilder.setContentTitle(notificationType + ": " + notificationReportTitle);
                                 notificationBuilder.setContentText(notificationReportDescription);
                                 notificationBuilder.setSmallIcon(R.drawable.ic_app);
                                 notificationBuilder.setPriority(IMPORTANCE);
@@ -357,7 +350,7 @@ public class ServiceNotification extends Service {
                                         .getDefaultSharedPreferences(getApplicationContext());
                                 int number = sharedPreferences.getInt(sharedPrefName, default_number);
 
-                                startForeground(number, notificationBuilder.build());
+//                            startForeground(number, notificationBuilder.build());
 
                                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                                 notificationManager.notify(number, notificationBuilder.build());
@@ -368,8 +361,7 @@ public class ServiceNotification extends Service {
                                 editor.apply();
                             }
 
-                        }catch (Exception e)
-                        {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
@@ -391,18 +383,16 @@ public class ServiceNotification extends Service {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         int count = 0;
-                        for(int i = 0; i < queryDocumentSnapshots.size(); i++)
-                        {
+                        for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                             String notificationForUserId = queryDocumentSnapshots.getDocuments().get(i).getString("notificationForUserId");
                             String notificationType = queryDocumentSnapshots.getDocuments().get(i).getString("notificationType");
-
-                            if(notificationForUserId.equals(userID) && notificationType.equals(notifications.getNotificationType()))
-                            {
-                                count++;
+                            if (!StringHelper.empty(notificationForUserId) && !StringHelper.empty(notificationType)) {
+                                if (notificationForUserId.equals(userID) && notificationType.equals(notifications.getNotificationType())) {
+                                    count++;
+                                }
                             }
                         }
-                        if(count==0)
-                        {
+                        if (count == 0) {
                             saveAndMakeNotificationUser(
                                     context,
                                     notificationId,

@@ -3,11 +3,14 @@ package fiek.unipr.mostwantedapp.fragment.user;
 import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_USER;
 import static fiek.unipr.mostwantedapp.utils.Constants.SEEN;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -40,6 +43,7 @@ import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 
 public class NotificationFragment extends Fragment implements RecyclerViewInterface {
 
+    private Context mContext;
     private View notification_fragment_view;
     private RecyclerView user_lvReportNotification;
     private LinearLayout notification_user_list_view1, notification_user_list_view2;
@@ -63,7 +67,7 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         notification_fragment_view = inflater.inflate(R.layout.fragment_notification_user, container, false);
-
+        mContext = getContext();
         firebaseFirestore = FirebaseFirestore.getInstance();
         InitializeFields();
         loadDatainListview(firebaseAuth.getUid());
@@ -89,9 +93,9 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
         tv_notification_user_userListEmpty = notification_fragment_view.findViewById(R.id.tv_notification_user_userListEmpty);
         notification_user_list_switcher = notification_fragment_view.findViewById(R.id.notification_user_list_switcher);
         reportArrayList = new ArrayList<>();
-        reportNotificationAdapter = new ModifiedReportNotificationAdapter(getContext(), reportArrayList, this);
+        reportNotificationAdapter = new ModifiedReportNotificationAdapter(mContext, reportArrayList, this);
         user_lvReportNotification.setAdapter(reportNotificationAdapter);
-        user_lvReportNotification.setLayoutManager(new LinearLayoutManager(getContext()));
+        user_lvReportNotification.setLayoutManager(new LinearLayoutManager(mContext));
     }
 
     private void loadDatainListview(String notificationReportUID) {
@@ -131,7 +135,7 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Error_"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Error_"+e.getMessage(), Toast.LENGTH_SHORT).show();
                         System.out.println("Error"+e.getMessage());
                     }
                 });
@@ -139,7 +143,7 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
 
     @Override
     public void onItemClick(int position) {
-        ReportInfoFragment reportInfoFragment = new ReportInfoFragment();
+        InformationReportFragment informationReportFragment = new InformationReportFragment();
         Bundle viewBundle = new Bundle();
 
         viewBundle.putString("notificationId", reportArrayList.get(position).getNotificationId());
@@ -156,36 +160,32 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
         viewBundle.putString("notificationReportNewStatus", reportArrayList.get(position).getNotificationReportNewStatus());
         viewBundle.putString("notificationForUserId", reportArrayList.get(position).getNotificationForUserId());
 
-        setSeenNotification(SEEN, reportArrayList.get(position).getNotificationId());
+        setSeenNotification(reportArrayList.get(position).getNotificationId());
 
-        reportInfoFragment.setArguments(viewBundle);
-        loadFragment(reportInfoFragment);
+        informationReportFragment.setArguments(viewBundle);
+        loadFragment(informationReportFragment);
     }
 
-    private void setSeenNotification(String status, String notificationReportId) {
+    private void setSeenNotification(String notificationReportId) {
         Map<String, Object> data = new HashMap<>();
-        data.put("notificationStatus", status);
+        data.put("notificationStatus", SEEN);
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection(NOTIFICATION_USER)
                 .document(notificationReportId)
-                .update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), getContext().getText(R.string.saved_successfully)+"", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+                .update(data).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), getContext().getText(R.string.failed_to_save)+" ", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
     }
 
     private void loadFragment(Fragment fragment) {
-        ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.admin_fragmentContainer, fragment)
+        ((FragmentActivity)getContext()).getSupportFragmentManager()
+                .beginTransaction()
                 .addToBackStack(null)
+                .replace(R.id.user_fragmentContainer, fragment)
                 .commit();
     }
 

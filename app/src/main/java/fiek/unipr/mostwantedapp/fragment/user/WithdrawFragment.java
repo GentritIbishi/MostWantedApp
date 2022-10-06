@@ -5,6 +5,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYMENT_INFORMATION;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -146,11 +147,11 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                     .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                         @Override
                         public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            String balance = "";
+                            Double balance;
 
                             for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                                 DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(i);
-                                balance = doc.getString("balance");
+                                balance = doc.getDouble("balance");
                                 loadPieChartData(balance);
                             }
 
@@ -166,18 +167,15 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         }
     }
 
-    private void loadPieChartData(String balance) {
+    @SuppressLint("SetTextI18n")
+    private void loadPieChartData(Double balance) {
 
         ArrayList<PieEntry> entries = new ArrayList<>();
 
-        String[] justBalance = balance.split(" ");
-        balance = justBalance[0];
         tv_paidOut.setText(balance+"EURO");
 
-        Float finalBalance = Float.valueOf(balance);
-
         try {
-            entries.add(new PieEntry(finalBalance, EURO));
+            entries.add(new PieEntry(Float.parseFloat(String.valueOf(balance)), EURO));
         }catch (Exception e){
             e.getMessage();
         }

@@ -69,13 +69,12 @@ public class UpdateUserFragment extends Fragment {
     private TextInputEditText update_user_et_firstName, update_user_et_lastName,
             update_user_et_parentName, update_user_etPhone, update_user_etAddress, update_user_etNumPersonal,
             update_user_etEmailToUser, update_user_etPasswordToUser, update_user_et_fullName, update_user_etDateRegistration;
-    private MaterialAutoCompleteTextView update_user_et_gender, update_user_et_role_autocomplete, update_user_et_coins_autocomplete,
+    private MaterialAutoCompleteTextView update_user_et_gender, update_user_et_role_autocomplete,
             update_user_et_balance_autocomplete, update_user_et_grade_autocomplete;
     private TextInputLayout update_user_etNumPersonalLayout;
     private ProgressBar update_user_saveChangesProgressBar, update_user_uploadProgressBar;
     private SwipeRefreshLayout update_user_swipeUpToRefresh;
-    private String[] BALANCE_ARRAY = null;
-    private String[] COINS_ARRAY = null;
+    private Integer[] BALANCE_ARRAY = null;
     private Bundle bundle;
 
     public UpdateUserFragment() {}
@@ -110,14 +109,10 @@ public class UpdateUserFragment extends Fragment {
         ArrayAdapter<String> grade_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.grade));
         update_user_et_grade_autocomplete.setAdapter(grade_adapter);
 
-        setBalanceArray(EURO);
-        setCoinsArray(COINS);
+        setBalanceArray();
 
-        ArrayAdapter<String> balance_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, BALANCE_ARRAY);
+        ArrayAdapter<Integer> balance_adapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_list_item_1, BALANCE_ARRAY);
         update_user_et_balance_autocomplete.setAdapter(balance_adapter);
-
-        ArrayAdapter<String> coins_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, COINS_ARRAY);
-        update_user_et_coins_autocomplete.setAdapter(coins_adapter);
 
         bundle = getArguments();
         try {
@@ -221,7 +216,6 @@ public class UpdateUserFragment extends Fragment {
         update_user_saveChangesProgressBar = update_user_view.findViewById(R.id.update_user_saveChangesProgressBar);
         update_user_uploadProgressBar = update_user_view.findViewById(R.id.update_user_uploadProgressBar);
         update_user_swipeUpToRefresh = update_user_view.findViewById(R.id.update_user_swipeUpToRefresh);
-        update_user_et_coins_autocomplete = update_user_view.findViewById(R.id.update_user_et_coins_autocomplete);
         update_user_et_balance_autocomplete = update_user_view.findViewById(R.id.update_user_et_balance_autocomplete);
         update_user_et_grade_autocomplete = update_user_view.findViewById(R.id.update_user_et_grade_autocomplete);
         update_user_etDateRegistration = update_user_view.findViewById(R.id.update_user_etDateRegistration);
@@ -286,9 +280,6 @@ public class UpdateUserFragment extends Fragment {
             balance = bundle.getString("balance");
             update_user_et_balance_autocomplete.setText(balance);
 
-            coins = bundle.getString("coins");
-            update_user_et_coins_autocomplete.setText(coins);
-
             fullName = bundle.getString("fullName");
             update_user_et_fullName.setText(fullName);
 
@@ -318,25 +309,15 @@ public class UpdateUserFragment extends Fragment {
         ArrayAdapter<String> grade_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.grade));
         update_user_et_grade_autocomplete.setAdapter(grade_adapter);
 
-        ArrayAdapter<String> balance_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, BALANCE_ARRAY);
+        ArrayAdapter<Integer> balance_adapter = new ArrayAdapter<Integer>(getContext(), android.R.layout.simple_list_item_1, BALANCE_ARRAY);
         update_user_et_balance_autocomplete.setAdapter(balance_adapter);
 
-        ArrayAdapter<String> coins_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, COINS_ARRAY);
-        update_user_et_coins_autocomplete.setAdapter(coins_adapter);
-
     }
 
-    private void setBalanceArray(String euro) {
-        BALANCE_ARRAY = new String[1000000];
+    private void setBalanceArray() {
+        BALANCE_ARRAY = new Integer[50000];
         for(int i=0; i<1000000; i++) {
-            BALANCE_ARRAY[i] = i+" "+euro;
-        }
-    }
-
-    private void setCoinsArray(String coin) {
-        COINS_ARRAY = new String[1000000];
-        for(int i=0; i<1000000; i++) {
-            COINS_ARRAY[i] = (i+5)+" "+coin;
+            BALANCE_ARRAY[i] = i;
         }
     }
 
@@ -422,8 +403,7 @@ public class UpdateUserFragment extends Fragment {
         String new_personal_number = update_user_etNumPersonal.getText().toString();
         String new_grade = update_user_et_grade_autocomplete.getText().toString();
         String new_password = update_user_etPasswordToUser.getText().toString();
-        String new_balance = update_user_et_balance_autocomplete.getText().toString();
-        String new_coins = update_user_et_coins_autocomplete.getText().toString();
+        Double new_balance = Double.valueOf(update_user_et_balance_autocomplete.getText().toString());
 
         if(TextUtils.isEmpty(new_fullName)){
             update_user_et_fullName.setError(getText(R.string.error_fullname_required));
@@ -477,8 +457,8 @@ public class UpdateUserFragment extends Fragment {
                     hashPassword,
                     urlOfProfile,
                     new_balance,
-                    new_coins,
-                    emailVerified);
+                    emailVerified
+            );
             firebaseFirestore.collection(USERS)
                     .document(userID)
                     .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -518,7 +498,6 @@ public class UpdateUserFragment extends Fragment {
                             grade = documentSnapshot.getString("grade");
                             register_date_time = documentSnapshot.getString("register_date_time");
                             balance = documentSnapshot.getString("balance");
-                            coins = documentSnapshot.getString("coins");
                             update_user_et_firstName.setText(name);
                             update_user_et_parentName.setText(parentName);
                             update_user_et_lastName.setText(lastname);
@@ -539,7 +518,6 @@ public class UpdateUserFragment extends Fragment {
                             update_user_et_grade_autocomplete.setText(grade);
                             update_user_etDateRegistration.setText(register_date_time);
                             update_user_et_balance_autocomplete.setText(balance);
-                            update_user_et_coins_autocomplete.setText(coins);
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {

@@ -41,7 +41,7 @@ public class Constants {
     public static final String EURO = "EURO";
     public static final String PHONE_USER = "PHONE_USER";
     public static final String COINS = "COINS";
-    public static final String BALANCE_DEFAULT = "0 EURO";
+    public static final Double BALANCE_DEFAULT = 0.00000;
     public static final String COINS_DEFAULT = "0 COINS";
     public static final Double LATITUDE_DEFAULT = 42.667542;
     public static final Double LONGITUDE_DEFAULT = 21.166191;
@@ -64,6 +64,7 @@ public class Constants {
     public static final String PERSONS = "persons";
     public static final String PROFILE_PICTURE = "profile_picture.jpg";
     public static final String DYNAMIC_DOMAIN = "https://fiek.page.link";
+    public static final String FREE = "FREE";
 
     //permissions
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 101;

@@ -523,6 +523,7 @@
     <string name="total_paid_out">Total Paid Out: $16.44</string>
     <string name="withdraw">Withdraw</string>
     <string name="all_available_earnings">All available earnings</string>
+    <string name="map_is_null">Map is null!</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

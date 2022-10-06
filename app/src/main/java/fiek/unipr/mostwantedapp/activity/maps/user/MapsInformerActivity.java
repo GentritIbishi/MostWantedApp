@@ -23,8 +23,11 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
@@ -61,8 +64,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -444,6 +450,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     personId,
                     informer_person,
                     wanted_person,
+                    getAddress(getApplicationContext(), latitude, longitude),
                     ANONYMOUS,
                     prize,
                     ReportStatus.UNVERIFIED,
@@ -511,6 +518,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     personId,
                     informer_person,
                     wanted_person,
+                    getAddress(getApplicationContext(), latitude, longitude),
                     PHONE_USER,
                     prize,
                     ReportStatus.UNVERIFIED,
@@ -591,6 +599,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                         personId,
                                         informer_person,
                                         wanted_person,
+                                        getAddress(getApplicationContext(), latitude, longitude),
                                         informer_person_urlOfProfile,
                                         prize,
                                         ReportStatus.UNVERIFIED,
@@ -672,6 +681,21 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         binding.etReportTitle.setText("");
         binding.etDescription.setText("");
         binding.btReport.setEnabled(true);
+    }
+
+    public String getAddress(Context ctx, double latitude, double longitude) {
+        String fullAdd = null;
+        try {
+            Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+            if(addresses.size()>0){
+                Address address = addresses.get(0);
+                fullAdd = address.getAddressLine(0);
+            }
+        }catch (IOException e) {
+            Toast.makeText(ctx, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+        return fullAdd;
     }
 
     @Override

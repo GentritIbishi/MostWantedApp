@@ -226,7 +226,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 hashPassword,
                                 urlOfProfile,
                                 BALANCE_DEFAULT,
-                                COINS_DEFAULT,
                                 isEmailVerified
                         );
                         firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -271,8 +270,7 @@ public class RegisterActivity extends AppCompatActivity {
                               String grade, 
                               String password, 
                               String urlOfProfile,
-                              String balance,
-                              String coins,
+                              Double balance,
                               Boolean isEmailVerified) {
         if(CheckInternet.isConnected(getApplicationContext())){
             documentReference = firebaseFirestore.collection(USERS).document(userID);
@@ -293,7 +291,6 @@ public class RegisterActivity extends AppCompatActivity {
                     password,
                     urlOfProfile,
                     balance,
-                    coins,
                     isEmailVerified
             );
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {

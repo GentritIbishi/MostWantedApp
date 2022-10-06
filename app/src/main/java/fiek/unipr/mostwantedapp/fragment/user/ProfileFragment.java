@@ -1,17 +1,11 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
-import static android.view.View.GONE;
-import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
-import static fiek.unipr.mostwantedapp.utils.Constants.COINS;
-import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
-import static fiek.unipr.mostwantedapp.utils.Constants.NA;
 import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
-import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_USER_PREFS;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -64,7 +58,7 @@ import fiek.unipr.mostwantedapp.utils.StringHelper;
 public class ProfileFragment extends Fragment {
 
     private View view;
-
+    private Context mContext;
     private Boolean emailVerified;
     private String address, email, fullName, gender, lastname, name, parentName, password, personal_number, phone, grade,
             register_date_time, role, userID, urlOfProfile, balance, coins;
@@ -83,13 +77,12 @@ public class ProfileFragment extends Fragment {
     private TextInputEditText profile_user_et_firstName, profile_user_et_lastName,
             profile_user_et_parentName, profile_user_etPhone, profile_user_etAddress, profile_user_etNumPersonal,
             profile_user_etEmailToUser, profile_user_etPasswordToUser, profile_user_et_fullName, profile_user_etDateRegistration;
-    private MaterialAutoCompleteTextView profile_user_et_gender, profile_user_et_role_autocomplete, profile_user_et_coins_autocomplete,
+    private MaterialAutoCompleteTextView profile_user_et_gender, profile_user_et_role_autocomplete,
             profile_user_et_balance_autocomplete, profile_user_et_grade_autocomplete;
     private TextInputLayout profile_user_etNumPersonalLayout;
     private ProgressBar profile_user_saveChangesProgressBar, profile_user_uploadProgressBar;
 
-    private String[] BALANCE_ARRAY = null;
-    private String[] COINS_ARRAY = null;
+    private Integer[] BALANCE_ARRAY = null;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,7 +98,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_profile_user, container, false);
-
+        mContext = getContext();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -117,7 +110,7 @@ public class ProfileFragment extends Fragment {
         profile_user_et_gender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+                ArrayAdapter<String> gender_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
                 profile_user_et_gender.setAdapter(gender_adapter);
                 profile_user_et_gender.showDropDown();
             }
@@ -126,7 +119,7 @@ public class ProfileFragment extends Fragment {
         profile_user_et_role_autocomplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayAdapter<String> role_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.roles));
+                ArrayAdapter<String> role_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.roles));
                 profile_user_et_role_autocomplete.setAdapter(role_adapter);
                 profile_user_et_role_autocomplete.showDropDown();
             }
@@ -135,30 +128,20 @@ public class ProfileFragment extends Fragment {
         profile_user_et_grade_autocomplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayAdapter<String> grade_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.grade));
+                ArrayAdapter<String> grade_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.grade));
                 profile_user_et_grade_autocomplete.setAdapter(grade_adapter);
                 profile_user_et_grade_autocomplete.showDropDown();
             }
         });
 
-        setBalanceArray(EURO);
-        setCoinsArray(COINS);
+        setBalanceArray();
 
         profile_user_et_balance_autocomplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayAdapter<String> balance_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, BALANCE_ARRAY);
+                ArrayAdapter<Integer> balance_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, BALANCE_ARRAY);
                 profile_user_et_balance_autocomplete.setAdapter(balance_adapter);
                 profile_user_et_balance_autocomplete.showDropDown();
-            }
-        });
-
-        profile_user_et_coins_autocomplete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ArrayAdapter<String> coins_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, COINS_ARRAY);
-                profile_user_et_coins_autocomplete.setAdapter(coins_adapter);
-                profile_user_et_coins_autocomplete.showDropDown();
             }
         });
 
@@ -203,7 +186,7 @@ public class ProfileFragment extends Fragment {
         profile_user_etNumPersonalLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), getContext().getText(R.string.info_number_personal_is_ten_digit), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, mContext.getText(R.string.info_number_personal_is_ten_digit), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -216,7 +199,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(charSequence.length()>10){
-                    profile_user_etNumPersonalLayout.setError(getContext().getText(R.string.no_more_than_ten_digits));
+                    profile_user_etNumPersonalLayout.setError(mContext.getText(R.string.no_more_than_ten_digits));
                 }else if(charSequence.length() < 10) {
                     profile_user_etNumPersonalLayout.setError(null);
                 }else if(charSequence.length() == 10){
@@ -249,7 +232,6 @@ public class ProfileFragment extends Fragment {
             profile_user_etPasswordToUser = view.findViewById(R.id.profile_user_etPasswordToUser);
             profile_user_et_gender = view.findViewById(R.id.profile_user_et_gender);
             profile_user_et_role_autocomplete = view.findViewById(R.id.profile_user_et_role_autocomplete);
-            profile_user_et_coins_autocomplete = view.findViewById(R.id.profile_user_et_coins_autocomplete);
             profile_user_et_balance_autocomplete = view.findViewById(R.id.profile_user_et_balance_autocomplete);
             profile_user_et_grade_autocomplete = view.findViewById(R.id.profile_user_et_grade_autocomplete);
             profile_user_etDateRegistration = view.findViewById(R.id.profile_user_etDateRegistration);
@@ -264,51 +246,41 @@ public class ProfileFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        ArrayAdapter<String> gender_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
         profile_user_et_gender.setAdapter(gender_adapter);
 
-        ArrayAdapter<String> role_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.roles));
+        ArrayAdapter<String> role_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.roles));
         profile_user_et_role_autocomplete.setAdapter(role_adapter);
 
-        ArrayAdapter<String> grade_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.grade));
+        ArrayAdapter<String> grade_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.grade));
         profile_user_et_grade_autocomplete.setAdapter(grade_adapter);
 
-        ArrayAdapter<String> balance_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, BALANCE_ARRAY);
+        ArrayAdapter<Integer> balance_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, BALANCE_ARRAY);
         profile_user_et_balance_autocomplete.setAdapter(balance_adapter);
 
-        ArrayAdapter<String> coins_adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, COINS_ARRAY);
-        profile_user_et_coins_autocomplete.setAdapter(coins_adapter);
-
     }
 
-    private void setBalanceArray(String euro) {
-        BALANCE_ARRAY = new String[50000];
+    private void setBalanceArray() {
+        BALANCE_ARRAY = new Integer[50000];
         for(int i=0; i<50000; i++) {
-            BALANCE_ARRAY[i] = i+" "+euro;
-        }
-    }
-
-    private void setCoinsArray(String coin) {
-        COINS_ARRAY = new String[50000];
-        for(int i=0; i<50000; i++) {
-            COINS_ARRAY[i] = (i+5)+" "+coin;
+            BALANCE_ARRAY[i] = i;
         }
     }
 
     private void deletePhoto() {
-        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+PROFILE_PICTURE);
+        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseUser.getUid()+"/"+PROFILE_PICTURE);
         fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
                 profile_user_uploadProgressBar.setVisibility(View.GONE);
                 profile_user_imageOfProfile.setImageResource(R.drawable.ic_profile_picture_default);
-                Toast.makeText(getContext(), R.string.image_deleted_successfully, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.image_deleted_successfully, Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 profile_user_uploadProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -316,7 +288,7 @@ public class ProfileFragment extends Fragment {
     private void uploadImageToFirebase(Uri imageUri) {
         profile_user_uploadProgressBar.setVisibility(View.VISIBLE);
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+PROFILE_PICTURE);
+        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseUser.getUid()+"/"+PROFILE_PICTURE);
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -324,10 +296,10 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(profile_user_imageOfProfile);
-                        DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
+                        DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
                         docRef.update("urlOfProfile", uri.toString());
                         profile_user_uploadProgressBar.setVisibility(View.GONE);
-                        Toast.makeText(getContext(), R.string.images_uploaded_successfully, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, R.string.images_uploaded_successfully, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -335,7 +307,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Exception e) {
                 profile_user_uploadProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -364,8 +336,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
-        if(CheckInternet.isConnected(getContext())){
-            documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
+        if(CheckInternet.isConnected(mContext)){
+            documentReference = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -395,8 +367,7 @@ public class ProfileFragment extends Fragment {
                         profile_user_etNumPersonal.setText(task.getResult().getString("personal_number"));
                         profile_user_etPhone.setText(task.getResult().getString("phone"));
                         profile_user_et_role_autocomplete.setText(task.getResult().getString("role"));
-                        profile_user_et_balance_autocomplete.setText(task.getResult().getString("balance"));
-                        profile_user_et_coins_autocomplete.setText(task.getResult().getString("coins"));
+                        profile_user_et_balance_autocomplete.setText(String.valueOf(task.getResult().getDouble("balance")));
                         profile_user_et_fullName.setText(task.getResult().getString("fullName"));
                         profile_user_et_grade_autocomplete.setText(task.getResult().getString("grade"));
                         profile_user_etDateRegistration.setText(task.getResult().getString("register_date_time"));
@@ -430,8 +401,7 @@ public class ProfileFragment extends Fragment {
         String new_personal_number = profile_user_etNumPersonal.getText().toString();
         String new_grade = profile_user_et_grade_autocomplete.getText().toString();
         String new_password = profile_user_etPasswordToUser.getText().toString();
-        String new_balance = profile_user_et_balance_autocomplete.getText().toString();
-        String new_coins = profile_user_et_coins_autocomplete.getText().toString();
+        Double new_balance = Double.valueOf(profile_user_et_balance_autocomplete.getText().toString());
 
         if(TextUtils.isEmpty(new_name)){
             profile_user_et_firstName.setError(getText(R.string.error_first_name_required));
@@ -451,12 +421,9 @@ public class ProfileFragment extends Fragment {
         }else if(TextUtils.isEmpty(new_grade)){
             profile_user_et_grade_autocomplete.setError(getText(R.string.error_grade_required));
             profile_user_et_grade_autocomplete.requestFocus();
-        }else if(TextUtils.isEmpty(new_balance)){
+        }else if(TextUtils.isEmpty(new_balance.toString())){
             profile_user_et_balance_autocomplete.setError(getText(R.string.error_balance_required));
             profile_user_et_balance_autocomplete.requestFocus();
-        }else if(TextUtils.isEmpty(new_coins)){
-            profile_user_et_coins_autocomplete.setError(getText(R.string.error_coins_required));
-            profile_user_et_coins_autocomplete.requestFocus();
         }else if(TextUtils.isEmpty(new_personal_number)){
             profile_user_etNumPersonal.setError(getText(R.string.error_number_personal_required));
             profile_user_etNumPersonal.requestFocus();
@@ -475,7 +442,7 @@ public class ProfileFragment extends Fragment {
         }else if(TextUtils.isEmpty(new_email)){
             profile_user_etEmailToUser.setError(getText(R.string.error_email_required));
             profile_user_etEmailToUser.requestFocus();
-        }else if(!new_email.matches("^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
+        }else if(!new_email.matches("^[a-z0-9](\\.?[a-z0-9_-])*@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
             profile_user_etEmailToUser.setError(getText(R.string.error_validate_email));
             profile_user_etEmailToUser.requestFocus();
         }else if(!new_password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")){
@@ -506,21 +473,20 @@ public class ProfileFragment extends Fragment {
                     hashPassword,
                     urlOfProfile,
                     new_balance,
-                    new_coins,
                     emailVerified);
 
             firebaseFirestore.collection(USERS)
-                    .document(firebaseAuth.getUid())
+                    .document(firebaseUser.getUid())
                     .set(user, SetOptions.merge())
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if(task.isSuccessful())
                             {
-                                Toast.makeText(getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
                                 loadInfoFromFirebase(firebaseAuth);
                             }else {
-                                Toast.makeText(getContext(), ""+task.getException(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, ""+task.getException(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

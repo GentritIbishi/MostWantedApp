@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Report {
-    private String docId, Title, Description, Date_time, uID, personId, informer_person, wanted_person, informer_person_urlOfProfile, prizeToWin;
+    private String docId, Title, Description, Date_time, uID, personId, informer_person, wanted_person, address, informer_person_urlOfProfile, prizeToWin;
     private ReportStatus status = ReportStatus.UNVERIFIED;
     private Double longitude, latitude;
     private Map<String, Object> images = new HashMap<>();
@@ -15,7 +15,7 @@ public class Report {
     public Report() {
     }
 
-    public Report(String docId, String title, String description, String date_time, String uID, String personId, String informer_person, String wanted_person, String informer_person_urlOfProfile, String prizeToWin, ReportStatus status, Double longitude, Double latitude, Map<String, Object> images) {
+    public Report(String docId, String title, String description, String date_time, String uID, String personId, String informer_person, String wanted_person, String address, String informer_person_urlOfProfile, String prizeToWin, ReportStatus status, Double longitude, Double latitude, Map<String, Object> images) {
         this.docId = docId;
         Title = title;
         Description = description;
@@ -24,6 +24,7 @@ public class Report {
         this.personId = personId;
         this.informer_person = informer_person;
         this.wanted_person = wanted_person;
+        this.address = address;
         this.informer_person_urlOfProfile = informer_person_urlOfProfile;
         this.prizeToWin = prizeToWin;
         this.status = status;
@@ -94,6 +95,14 @@ public class Report {
 
     public void setWanted_person(String wanted_person) {
         this.wanted_person = wanted_person;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getInformer_person_urlOfProfile() {

@@ -490,6 +490,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         intent.putExtra("notificationReportUid", notifications.getNotificationReportUid());
         intent.putExtra("notificationReportDateTime", notifications.getNotificationReportDateTime());
         intent.putExtra("notificationReportTitle", notifications.getNotificationReportTitle());
+        intent.putExtra("notificationReportDescription", notifications.getNotificationReportDescription());
         intent.putExtra("notificationReportInformerPerson", notifications.getNotificationReportInformerPerson());
         intent.putExtra("notificationReportWantedPerson", notifications.getNotificationReportWantedPerson());
         intent.putExtra("notificationReportPrizeToWin", notifications.getNotificationReportPrizeToWin());

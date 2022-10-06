@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -26,9 +28,9 @@ import java.util.Objects;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 
-public class ReportInfoFragment extends Fragment {
+public class InformationReportFragment extends Fragment {
 
-    private Context context;
+    private Context mContext;
     String  notificationId,
             notificationDateTime,
             notificationType,
@@ -47,23 +49,25 @@ public class ReportInfoFragment extends Fragment {
     private FirebaseFirestore firebaseFirestore;
 
     private TextView report_info_title, report_info_description;
+    private FirebaseUser firebaseUser;
 
-    public ReportInfoFragment() {}
+    public InformationReportFragment() {}
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @SuppressLint("SetTextI18n")
+    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_report_info, container, false);
-        context = getContext();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_information_report, container, false);
+        mContext = getContext();
 
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         report_info_title = view.findViewById(R.id.report_info_title);
@@ -72,15 +76,11 @@ public class ReportInfoFragment extends Fragment {
         Bundle reportInfoBundle = new Bundle();
         getFromBundle(reportInfoBundle);
 
-        if(StringHelper.empty(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getPhoneNumber())){
-            setReportTitleFromFirebase(notificationForUserId);
-        }else {
-            report_info_title.setText(context.getText(R.string.hello_dear)+" "+firebaseAuth.getCurrentUser().getPhoneNumber());
-        }
+        setReportTitleFromFirebase(firebaseAuth.getUid());
 
-        report_info_description.setText(context.getText(R.string.your_report_in_datetime)+" "+
-                notificationReportDateTime+ " "+ context.getText(R.string.and_with_title)+" "+notificationReportTitle+" "+getContext().getText(R.string.has_new_status_right_now)+" "
-                + getContext().getText(R.string.update_status_of_report_with)+" "+notificationReportDateTime+" "+getContext().getText(R.string.has_been_changed_to)+" "+notificationReportNewStatus);
+        report_info_description.setText(mContext.getText(R.string.your_report_in_datetime)+" "+
+                notificationReportDateTime+ " "+ mContext.getText(R.string.and_with_title)+" "+notificationReportTitle+" "+mContext.getText(R.string.has_new_status_right_now)+" "
+                + mContext.getText(R.string.update_status_of_report_with)+" "+notificationReportDateTime+" "+mContext.getText(R.string.has_been_changed_to)+" "+notificationReportNewStatus);
 
         return view;
     }
@@ -94,7 +94,7 @@ public class ReportInfoFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         String fullName = documentSnapshot.getString("fullName");
-                        report_info_title.setText(context.getText(R.string.hello_dear)+" "+fullName);
+                        report_info_title.setText(mContext.getText(R.string.hello_dear)+" "+fullName);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

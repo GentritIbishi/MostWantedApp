@@ -219,7 +219,7 @@ public class UpdateUserListFragment extends Fragment implements RecyclerViewInte
         Bundle viewBundle = new Bundle();
         viewBundle.putString("userID", userArrayList.get(position).getUserID());
         viewBundle.putString("address", userArrayList.get(position).getAddress());
-        viewBundle.putString("balance", userArrayList.get(position).getBalance());
+        viewBundle.putDouble("balance", userArrayList.get(position).getBalance());
         viewBundle.putString("email", userArrayList.get(position).getEmail());
         viewBundle.putString("fullName", userArrayList.get(position).getFullName());
         viewBundle.putString("gender", userArrayList.get(position).getGender());
@@ -233,8 +233,6 @@ public class UpdateUserListFragment extends Fragment implements RecyclerViewInte
         viewBundle.putString("role", userArrayList.get(position).getRole());
         viewBundle.putString("userID", userArrayList.get(position).getUserID());
         viewBundle.putString("grade", userArrayList.get(position).getGrade());
-        viewBundle.putString("coins", userArrayList.get(position).getCoins());
-        viewBundle.putString("balance", userArrayList.get(position).getBalance());
         viewBundle.putBoolean("emailVerified", userArrayList.get(position).getEmailVerified());
         if(userArrayList.get(position).getUrlOfProfile() != null) {
             viewBundle.putString("urlOfProfile", userArrayList.get(position).getUrlOfProfile());

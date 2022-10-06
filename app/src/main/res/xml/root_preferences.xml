@@ -48,6 +48,7 @@
     <PreferenceCategory app:title="@string/notifications">
         <SwitchPreferenceCompat
             app:key="allowNotification"
+            android:defaultValue="true"
             app:icon="@drawable/ic_settings_notification"
             app:title="@string/allow_notification" />
     </PreferenceCategory>

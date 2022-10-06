@@ -1,9 +1,6 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
-import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
 import static fiek.unipr.mostwantedapp.utils.Constants.FAKE;
-import static fiek.unipr.mostwantedapp.utils.Constants.HOME_USER_PREF;
-import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_PERMISSION_REQUEST_CODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.NA;
 import static fiek.unipr.mostwantedapp.utils.Constants.UNVERIFIED;
@@ -11,22 +8,15 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.location.Location;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -47,8 +37,6 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -65,9 +53,7 @@ import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
@@ -82,9 +68,8 @@ import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
-    private SharedPreferences sharedPreferences;
-    private Context contextAttach;
-    public String YOUR_REPORT_IN_DATETIME_TRANSLATEABLE;
+    private Context mContext;
+    public String YOUR_REPORT_IN_DATETIME_TRANSLATABLE;
     public String HAS_NEW_STATUS_RIGHT_NOW;
     public String STATUS_OF_REPORT_HAS_CHANGED_TO;
     private View home_fragment_view;
@@ -96,43 +81,34 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     private ArrayList<Person> personArrayList;
 
     private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
 
-    private String userID, fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number, balance;
-    private Uri photoURL;
+    private String userID, fullName, urlOfProfile, name, grade;
+    private Double balance;
 
     private TextView user_home_tv_num_report_verified, user_home_tv_num_report_unverified, user_home_tv_num_report_fake, user_home_tv_gradeOfUser;
     private TextView user_rightNowDateTime, user_hiDashboard, user_tv_balance;
     private CircleImageView user_imageOfDashboard;
     private PieChart user_home_pieChart;
 
-    private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
-    private static final String COURSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private FusedLocationProviderClient mfusedLocationProviderClient;
-    private boolean locationPermissionGranted = false;
-    private Double latitude, longitude;
-    private String notificationTitle;
-
     public HomeFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        mContext = getContext();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
         userID = firebaseAuth.getUid();
-        YOUR_REPORT_IN_DATETIME_TRANSLATEABLE = String.valueOf(getContext().getText(R.string.your_report_in_datetime));
-        HAS_NEW_STATUS_RIGHT_NOW = String.valueOf(getContext().getText(R.string.has_new_status_right_now));
-        STATUS_OF_REPORT_HAS_CHANGED_TO = String.valueOf(getContext().getText(R.string.status_of_report_has_changed_to));
+        YOUR_REPORT_IN_DATETIME_TRANSLATABLE = String.valueOf(mContext.getText(R.string.your_report_in_datetime));
+        HAS_NEW_STATUS_RIGHT_NOW = String.valueOf(mContext.getText(R.string.has_new_status_right_now));
+        STATUS_OF_REPORT_HAS_CHANGED_TO = String.valueOf(mContext.getText(R.string.status_of_report_has_changed_to));
     }
 
     @Override
@@ -140,7 +116,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         super.onStart();
         if(firebaseAuth != null){
             if(ContextHelper.checkContext(getContext())){
-                loadInfoFromFirebase(firebaseAuth);
+                loadInfoFromFirebase();
             }
         }
     }
@@ -150,13 +126,14 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                              Bundle savedInstanceState) {
 
         home_fragment_view = inflater.inflate(R.layout.fragment_home_user, container, false);
+        mContext = getContext();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
         InitializeFields();
-        loadDatainListview();
+        loadDataInListView();
 
         final SwipeRefreshLayout user_home_pullToRefreshProfileDashboard = home_fragment_view.findViewById(R.id.user_home_pullToRefreshProfileDashboard);
         user_home_pullToRefreshProfileDashboard.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -166,9 +143,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                 if(getContext() != null)
                 {
                     personArrayList.clear();
-                    loadDatainListview();
+                    loadDataInListView();
 
-                    loadInfoFromFirebase(firebaseAuth);
+                    loadInfoFromFirebase();
 
                     setupPieChart();
                     setPieChart();
@@ -179,7 +156,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         });
 
         user_rightNowDateTime.setText(DateHelper.getDateTimeStyle());
-        getGrade(firebaseAuth);
+        getGrade();
         setupPieChart();
         setPieChart();
 
@@ -188,9 +165,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
 
     @Override
-    public void onAttach(@NonNull Context contextAttach) {
-        super.onAttach(contextAttach);
-        this.contextAttach = contextAttach;
+    public void onAttach(@NonNull Context mContext) {
+        this.mContext = mContext;
+        super.onAttach(mContext);
     }
 
     private void InitializeFields() {
@@ -214,10 +191,10 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         tv_home_user_userListEmpty = home_fragment_view.findViewById(R.id.tv_home_user_userListEmpty);
     }
 
-    private void getGrade(FirebaseAuth firebaseAuth) {
-        if(CheckInternet.isConnected(getContext())){
+    private void getGrade() {
+        if(CheckInternet.isConnected(mContext)){
             firebaseFirestore.collection(USERS)
-                    .document(firebaseAuth.getCurrentUser().getUid())
+                    .document(firebaseUser.getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -231,9 +208,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         }
     }
 
-    private void loadDatainListview() {
-        // below line is use to get data from Firebase
-        // firestore using collection in android.
+    private void loadDataInListView() {
         firebaseFirestore.collection(WANTED_PERSONS)
                 .limit(5)
                 .orderBy("registration_date", Query.Direction.ASCENDING)
@@ -256,7 +231,10 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                                 // that list to our object class.
                                 Person person = d.toObject(Person.class);
 
-                                fullName = person.getFullName();
+                                if(person != null)
+                                {
+                                    fullName = person.getFullName();
+                                }
 
                                 // after getting data from Firebase we are
                                 // storing that data in our array list
@@ -275,44 +253,14 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                     public void onFailure(@NonNull Exception e) {
                         // we are displaying a toast message
                         // when we get any error from Firebase.
-                        Toast.makeText(getContext(), getContext().getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void test(String statusStateChange, String prizeToWin) {
-        if(statusStateChange.equals(VERIFIED)) {
-            if(prizeToWin != null) {
-                String[] segments = prizeToWin.split(" ");
-                String firstSegment = segments[0];
-                Integer prize = Integer.valueOf(firstSegment.trim());
-                setCoinsToUser(firebaseAuth.getUid(),prize);
-            }
-        }
-    }
-
-    private void setCoinsToUser(String uid, Integer balance) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("balance", balance);
-        data.put("coins", balance);
-        firebaseFirestore.collection(USERS)
-                .document(uid)
-                .update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Toast.makeText(getContext(), getContext().getText(R.string.you_have_earn)+": "+balance+" "+"coins", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        user_tv_balance.setText(balance);
+                        Toast.makeText(mContext, mContext.getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     //function that count all locations_reports: VERIFIED, UNVERIFIED, FAKE
     private void setPieChart() {
-        if(CheckInternet.isConnected(getContext())) {
+        if(CheckInternet.isConnected(mContext)) {
             firebaseFirestore.collection(LOCATION_REPORTS)
                     .whereEqualTo("uID", firebaseAuth.getUid())
                     .get()
@@ -327,47 +275,26 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                                 DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(i);
                                 String status = doc.getString("status");
 
-                                if (status.equals(VERIFIED)) {
-                                    newCountVERIFIED++;
-                                }
+                                if(status != null && !StringHelper.empty(status))
+                                {
+                                    if (status.equals(VERIFIED)) {
+                                        newCountVERIFIED++;
+                                    }
 
-                                if (status.equals(UNVERIFIED)) {
-                                    newCountUNVERIFIED++;
-                                }
+                                    if (status.equals(UNVERIFIED)) {
+                                        newCountUNVERIFIED++;
+                                    }
 
-                                if (status.equals(FAKE)) {
-                                    newCountFAKE++;
+                                    if (status.equals(FAKE)) {
+                                        newCountFAKE++;
+                                    }
                                 }
                             }
 
-                            //set counters in cardview
+                            //set counters in card view
                             user_home_tv_num_report_verified.setText(String.valueOf(newCountVERIFIED));
                             user_home_tv_num_report_unverified.setText(String.valueOf(newCountUNVERIFIED));
                             user_home_tv_num_report_fake.setText(String.valueOf(newCountFAKE));
-
-                            String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-                            if(!StringHelper.empty(phone))
-                            {
-                                //logged in with phone
-                                // A B C D E
-                                if(newCountVERIFIED>10 && newCountVERIFIED<=20){
-                                    user_home_tv_gradeOfUser.setText("D");
-                                }else if(newCountVERIFIED>20 && newCountVERIFIED<=30){
-                                    user_home_tv_gradeOfUser.setText("C");
-                                }else if(newCountVERIFIED>30 && newCountVERIFIED<=50){
-                                    user_home_tv_gradeOfUser.setText("B");
-                                }else if(newCountVERIFIED>50){
-                                    user_home_tv_gradeOfUser.setText("A");
-                                }else if(newCountVERIFIED<=10){
-                                    user_home_tv_gradeOfUser.setText("E");
-                                }
-                            }
-
-                            if(firebaseAuth.getCurrentUser().isAnonymous()){
-                                user_home_tv_gradeOfUser.setText("E");
-                            }
-
-
 
                             loadPieChartData(newCountVERIFIED, newCountUNVERIFIED, newCountFAKE);
 
@@ -388,9 +315,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         ArrayList<PieEntry> entries = new ArrayList<>();
 
         try {
-            String reports_verified = String.valueOf(getContext().getText(R.string.reports_verified));
-            String reports_unverified = String.valueOf(getContext().getText(R.string.reports_pending));
-            String reports_fake = String.valueOf(getContext().getText(R.string.reports_fake));
+            String reports_verified = String.valueOf(mContext.getText(R.string.reports_verified));
+            String reports_unverified = String.valueOf(mContext.getText(R.string.reports_pending));
+            String reports_fake = String.valueOf(mContext.getText(R.string.reports_fake));
 
             entries.add(new PieEntry((float) newCountVERIFIED, reports_verified));
             entries.add(new PieEntry((float) newCountUNVERIFIED, reports_unverified));
@@ -442,10 +369,11 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         l.setEnabled(true);
     }
 
-    private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
-        if(CheckInternet.isConnected(getContext())){
-            documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
+    private void loadInfoFromFirebase() {
+        if(CheckInternet.isConnected(mContext)){
+            documentReference = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if(task.isSuccessful() && task.getResult() != null)
@@ -453,9 +381,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                         fullName = task.getResult().getString("fullName");
                         name = task.getResult().getString("name");
                         urlOfProfile = task.getResult().getString("urlOfProfile");
-                        balance = task.getResult().getString("balance");
+                        balance = task.getResult().getDouble("balance");
                         if(balance != null){
-                                user_tv_balance.setText(balance);
+                                user_tv_balance.setText(String.valueOf(balance));
                         }else {
                             user_tv_balance.setText(NA);
                         }
@@ -467,7 +395,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                         }
 
                         if(fullName != null){
-                            user_hiDashboard.setText(getActivity().getText(R.string.hi)+" "+name);
+                            user_hiDashboard.setText(mContext.getText(R.string.hi)+" "+name);
                         }
                     }
                 }
