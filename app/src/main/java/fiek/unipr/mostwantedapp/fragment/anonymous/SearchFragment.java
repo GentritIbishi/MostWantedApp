@@ -138,10 +138,10 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                 LoginHistory loginHistory = new LoginHistory(firebaseAuth.getUid(), ANONYMOUS, ANONYMOUS, ANONYMOUS, DateHelper.getDateTime());
                 setLoginHistoryAnonymous(loginHistory);
                 tv_anonymous_hello.setText(getContext().getText(R.string.hi)+" "+"Anonymous");
-            }else if(!StringHelper.empty(firebaseUser.getPhoneNumber())){
-                LoginHistory loginHistory = new LoginHistory(firebaseUser.getUid(), PHONE_USER, PHONE_USER, PHONE_USER, DateHelper.getDateTime());
+            }else if(!StringHelper.empty(firebaseAuth.getCurrentUser().getPhoneNumber())){
+                LoginHistory loginHistory = new LoginHistory(firebaseAuth.getCurrentUser().getUid(), PHONE_USER, PHONE_USER, PHONE_USER, DateHelper.getDateTime());
                 setLoginHistoryPhone(loginHistory);
-                tv_anonymous_hello.setText(getContext().getText(R.string.hi)+" "+firebaseUser.getPhoneNumber());
+                tv_anonymous_hello.setText(getContext().getText(R.string.hi)+" "+firebaseAuth.getCurrentUser().getPhoneNumber());
             }
         }
     }

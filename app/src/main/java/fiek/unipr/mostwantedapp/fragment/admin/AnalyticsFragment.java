@@ -94,7 +94,7 @@ public class AnalyticsFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        uID = firebaseUser.getUid();
+        uID = firebaseAuth.getCurrentUser().getUid();
         getGrade(firebaseAuth);
     }
 
@@ -109,7 +109,7 @@ public class AnalyticsFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
-        uID = firebaseUser.getUid();
+        uID = firebaseAuth.getCurrentUser().getUid();
 
         getGrade(firebaseAuth);
         setupPieChart();

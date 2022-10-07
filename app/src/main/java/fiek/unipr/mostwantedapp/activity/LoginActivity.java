@@ -108,9 +108,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(firebaseUser.isAnonymous()){
                 signInAnonymouslyInformer();
             }else if(firebaseUser.isEmailVerified()){
-                setVerifiedTrue(firebaseUser.getUid());
+                setVerifiedTrue(firebaseAuth.getCurrentUser().getUid());
                 checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid());
-            }else if(firebaseUser.getPhoneNumber() != null){
+            }else if(firebaseAuth.getCurrentUser().getPhoneNumber() != null){
                 goToAnonymousDashboard();
             }
         }

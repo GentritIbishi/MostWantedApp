@@ -124,7 +124,7 @@ public class SingleReportFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        uID = firebaseUser.getUid();
+        uID = firebaseAuth.getCurrentUser().getUid();
 
         initializeFields();
 
@@ -210,7 +210,7 @@ public class SingleReportFragment extends Fragment {
                         Log.d("SAVE", "SAVED SUCCESS");
                         if (status.equals(VERIFIED)) {
                             //check if user with uid is anonymous or phone or regular
-                            if (!firebaseUser.isAnonymous() && StringHelper.empty(firebaseUser.getPhoneNumber()))
+                            if (!firebaseAuth.getCurrentUser().isAnonymous() && StringHelper.empty(firebaseAuth.getCurrentUser().getPhoneNumber()))
                             {
                                 Log.d("GG", "U HI");
                                 updateBalance(context, latitude, longitude, uID, personId);

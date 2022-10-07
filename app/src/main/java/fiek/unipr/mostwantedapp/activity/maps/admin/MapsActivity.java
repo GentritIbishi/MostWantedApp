@@ -4,6 +4,7 @@ import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+import static com.itextpdf.kernel.pdf.PdfName.BaseFont;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.BitmapFromVector;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.addBorder;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.drawableFromUrl;
@@ -86,6 +87,8 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.canvas.parser.listener.ITextChunkLocation;
+import com.itextpdf.kernel.pdf.canvas.parser.listener.TextChunk;
 import com.itextpdf.kernel.pdf.extgstate.PdfExtGState;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Cell;
@@ -166,7 +169,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        uID = firebaseUser.getUid();
+        uID = firebaseAuth.getCurrentUser().getUid();
 
         mapsBundle = new Bundle();
         getFromBundle(mapsBundle);
@@ -272,7 +275,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             String[][] locations = new String[rows][column];
                             List<String> listLocations = new ArrayList<>();
                             // Creating a table
-                            float [] pointColumnWidths = {200F, 200F, 200F, 200F, 200F};
+                            float [] pointColumnWidths = {20F, 200F, 200F, 200F, 200F};
                             Table table = new Table(pointColumnWidths);
                             try {
                                 PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);

@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        userID = firebaseUser.getUid();
+        userID = firebaseAuth.getCurrentUser().getUid();
         getGrade(firebaseAuth);
         loadInfoFromFirebase(firebaseAuth);
     }

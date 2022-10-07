@@ -65,6 +65,12 @@ public class Constants {
     public static final String PROFILE_PICTURE = "profile_picture.jpg";
     public static final String DYNAMIC_DOMAIN = "https://fiek.page.link";
     public static final String FREE = "FREE";
+    public static final String PAYPAL = "Paypal";
+    public static final String BANK_ACCOUNT = "Bank Account";
+    public static final String INVOICE = "invoice";
+    public static final String PAID = "PAID";
+    public static final String PENDING = "PENDING";
+    public static final String REFUSED = "REFUSED";
 
     //permissions
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 101;

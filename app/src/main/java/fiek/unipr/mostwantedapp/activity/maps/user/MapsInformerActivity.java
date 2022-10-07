@@ -269,7 +269,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             if(firebaseUser.isAnonymous())
             {
                 loadInfoAnonymousFirebase();
-            }else if(!empty(firebaseUser.getPhoneNumber()))
+            }else if(!empty(firebaseAuth.getCurrentUser().getPhoneNumber()))
             {
                 loadInfoPhoneFirebase();
             }else

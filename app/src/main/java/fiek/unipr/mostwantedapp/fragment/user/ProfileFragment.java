@@ -268,7 +268,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void deletePhoto() {
-        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseUser.getUid()+"/"+PROFILE_PICTURE);
+        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+PROFILE_PICTURE);
         fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -288,7 +288,7 @@ public class ProfileFragment extends Fragment {
     private void uploadImageToFirebase(Uri imageUri) {
         profile_user_uploadProgressBar.setVisibility(View.VISIBLE);
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseUser.getUid()+"/"+PROFILE_PICTURE);
+        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+PROFILE_PICTURE);
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -296,7 +296,7 @@ public class ProfileFragment extends Fragment {
                     @Override
                     public void onSuccess(Uri uri) {
                         Picasso.get().load(uri).transform(new CircleTransform()).into(profile_user_imageOfProfile);
-                        DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
+                        DocumentReference docRef = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
                         docRef.update("urlOfProfile", uri.toString());
                         profile_user_uploadProgressBar.setVisibility(View.GONE);
                         Toast.makeText(mContext, R.string.images_uploaded_successfully, Toast.LENGTH_SHORT).show();
@@ -337,7 +337,7 @@ public class ProfileFragment extends Fragment {
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
         if(CheckInternet.isConnected(mContext)){
-            documentReference = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
+            documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -476,7 +476,7 @@ public class ProfileFragment extends Fragment {
                     emailVerified);
 
             firebaseFirestore.collection(USERS)
-                    .document(firebaseUser.getUid())
+                    .document(firebaseAuth.getCurrentUser().getUid())
                     .set(user, SetOptions.merge())
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override

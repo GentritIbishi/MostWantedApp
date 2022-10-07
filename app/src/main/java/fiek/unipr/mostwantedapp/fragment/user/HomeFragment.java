@@ -194,7 +194,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     private void getGrade() {
         if(CheckInternet.isConnected(mContext)){
             firebaseFirestore.collection(USERS)
-                    .document(firebaseUser.getUid())
+                    .document(firebaseAuth.getCurrentUser().getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -371,7 +371,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
     private void loadInfoFromFirebase() {
         if(CheckInternet.isConnected(mContext)){
-            documentReference = firebaseFirestore.collection(USERS).document(firebaseUser.getUid());
+            documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @SuppressLint("SetTextI18n")
                 @Override
