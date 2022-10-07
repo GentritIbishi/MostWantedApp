@@ -533,9 +533,11 @@
     <string name="account_longer_than_one_month">Account longer than one month</string>
     <string name="account_details_not_changed_in_last_hours">Account details not changed in last 72 hours</string>
     <string name="cashout_limit_reached_for_paypal_is_five_euros">Cashout limit reached for PAYPAL: $5</string>
-    <string name="cashout_limit_reached_for_bank_account_is_one_hundred_euros">Cashout limit reached for Bank Account: $5</string>
+    <string name="cashout_limit_reached_for_bank_account_is_one_hundred_euros">Cashout limit reached for Bank Account: $100</string>
     <string name="account_need_to_set">Account need to set first before create invoice!</string>
     <string name="require_account_need_to_be_older_than_days">Error account need to be older than 30 days to make request for payment for invoice!</string>
+    <string name="it_has_not_been_fulfilled_as_a_condition">It has not been fulfilled as a condition.</string>
+    <string name="is_met_as_condition">Is met as a condition.</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

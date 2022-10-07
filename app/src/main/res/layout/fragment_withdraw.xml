@@ -42,11 +42,301 @@
            android:textAlignment="center"
            android:layout_marginStart="48dp"
            android:layout_marginEnd="48dp"
-           android:textSize="22sp"
+           android:textSize="16sp"
            android:fontFamily="@font/open_sans_light"
            android:textColor="@color/white"
            android:background="@drawable/bg_payout"
-           android:text="@string/total_paid_out"/>
+           android:text="@string/balance"/>
+
+       <androidx.constraintlayout.widget.ConstraintLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="24dp"
+           android:padding="10dp">
+
+           <TableLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginStart="24dp"
+               android:layout_marginEnd="24dp"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toTopOf="parent">
+
+               <!--Table Heading-->
+
+               <TableRow
+                   android:background="@color/gray_analytics">
+
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center"
+                       android:layout_weight="4"
+                       android:fontFamily="@font/lato"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:text="@string/require_withdrawal_account_set"
+                       android:textAlignment="center"
+                       android:textColor="@color/white"
+                       android:textSize="14sp"
+                       android:textStyle="bold" />
+
+                   <ImageView
+                       android:id="@+id/row1Done"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:background="@color/green"
+                       android:contentDescription="@string/is_met_as_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_done_24"
+                       android:visibility="gone" />
+
+                   <ImageView
+                       android:id="@+id/row1Error"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:textAlignment="center"
+                       android:background="@color/red_fixed"
+                       android:contentDescription="@string/it_has_not_been_fulfilled_as_a_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_error_24"
+                       android:visibility="visible" />
+               </TableRow>
+
+               <TableRow android:background="@color/gray">
+
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center"
+                       android:layout_weight="4"
+                       android:fontFamily="@font/lato"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:text="@string/paid_once_in_monthly_payment"
+                       android:textAlignment="center"
+                       android:textColor="@color/white"
+                       android:textSize="14sp"
+                       android:textStyle="bold" />
+
+                   <ImageView
+                       android:id="@+id/row2Done"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:background="@color/neon_green"
+                       android:contentDescription="@string/is_met_as_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_done_24"
+                       android:visibility="gone" />
+
+                   <ImageView
+                       android:id="@+id/row2Error"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:background="@color/red"
+                       android:contentDescription="@string/it_has_not_been_fulfilled_as_a_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_error_24"
+                       android:visibility="visible" />
+               </TableRow>
+
+               <TableRow android:background="@color/gray_analytics">
+
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center"
+                       android:layout_weight="4"
+                       android:fontFamily="@font/lato"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:text="@string/account_longer_than_one_month"
+                       android:textAlignment="center"
+                       android:textColor="@color/white"
+                       android:textSize="14sp"
+                       android:textStyle="bold" />
+
+                   <ImageView
+                       android:id="@+id/row3Done"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:background="@color/green"
+                       android:contentDescription="@string/is_met_as_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_done_24"
+                       android:visibility="gone" />
+
+                   <ImageView
+                       android:id="@+id/row3Error"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:background="@color/red_fixed"
+                       android:contentDescription="@string/it_has_not_been_fulfilled_as_a_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_error_24"
+                       android:visibility="visible" />
+               </TableRow>
+
+               <TableRow android:background="@color/gray">
+
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center"
+                       android:layout_weight="4"
+                       android:fontFamily="@font/lato"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:text="@string/account_details_not_changed_in_last_hours"
+                       android:textAlignment="center"
+                       android:textColor="@color/white"
+                       android:textSize="14sp"
+                       android:textStyle="bold" />
+
+                   <ImageView
+                       android:id="@+id/row4Done"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:background="@color/neon_green"
+                       android:contentDescription="@string/is_met_as_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_done_24"
+                       android:visibility="gone" />
+
+                   <ImageView
+                       android:id="@+id/row4Error"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:background="@color/red"
+                       android:contentDescription="@string/it_has_not_been_fulfilled_as_a_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_error_24"
+                       android:visibility="visible" />
+               </TableRow>
+
+               <TableRow android:background="@color/gray_analytics">
+
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center"
+                       android:layout_weight="4"
+                       android:fontFamily="@font/lato"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:text="@string/cashout_limit_reached_for_paypal_is_five_euros"
+                       android:textAlignment="center"
+                       android:textColor="@color/white"
+                       android:textSize="14sp"
+                       android:textStyle="bold" />
+
+                   <ImageView
+                       android:id="@+id/row5Done"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:background="@color/green"
+                       android:contentDescription="@string/is_met_as_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_done_24"
+                       android:visibility="gone" />
+
+                   <ImageView
+                       android:id="@+id/row5Error"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:background="@color/red_fixed"
+                       android:contentDescription="@string/it_has_not_been_fulfilled_as_a_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_error_24"
+                       android:visibility="visible" />
+               </TableRow>
+
+               <TableRow android:background="@color/gray">
+
+                   <TextView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_gravity="center"
+                       android:layout_weight="4"
+                       android:fontFamily="@font/lato"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:text="@string/cashout_limit_reached_for_bank_account_is_one_hundred_euros"
+                       android:textAlignment="center"
+                       android:textColor="@color/white"
+                       android:textSize="14sp"
+                       android:textStyle="bold" />
+
+                   <ImageView
+                       android:id="@+id/row6Done"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:background="@color/neon_green"
+                       android:contentDescription="@string/is_met_as_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_done_24"
+                       android:visibility="gone" />
+
+                   <ImageView
+                       android:id="@+id/row6Error"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_weight="4"
+                       android:background="@color/red"
+                       android:contentDescription="@string/it_has_not_been_fulfilled_as_a_condition"
+                       android:gravity="center_horizontal"
+                       android:padding="10sp"
+                       android:src="@drawable/ic_baseline_error_24"
+                       android:visibility="visible" />
+               </TableRow>
+
+           </TableLayout>
+       </androidx.constraintlayout.widget.ConstraintLayout>
+
+       <androidx.constraintlayout.widget.ConstraintLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:padding="10dp">
+           <Button
+               android:id="@+id/btnMakeRequestForPayment"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:text="@string/withdraw"
+               android:layout_marginTop="16dp"
+               android:layout_marginStart="24dp"
+               android:layout_marginEnd="24dp"
+               android:textAlignment="center"
+               android:textColor="@color/white"
+               android:background="@drawable/button"
+               android:enabled="false"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintTop_toTopOf="parent"
+               app:layout_constraintBottom_toBottomOf="parent"/>
+       </androidx.constraintlayout.widget.ConstraintLayout>
 
        <androidx.constraintlayout.widget.ConstraintLayout
            android:theme="@style/Theme.MaterialComponents.Light"

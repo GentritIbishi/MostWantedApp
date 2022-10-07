@@ -25,6 +25,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,6 +70,14 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
     private View view;
     private PieChart availableEarningPieChart;
     private TextView tv_paidOut;
+    private ImageView
+            row1Done, row1Error,
+            row2Done, row2Error,
+            row3Done, row3Error,
+            row4Done, row4Error,
+            row5Done, row5Error,
+            row6Done, row6Error;
+    private Button btnMakeRequestForPayment;
     private TextInputEditText etPaymentMethod, etPaypalEmail, etFullNamePaymentInformation, etAddressPaymentInformation, etBankNamePaymentInformation,
             etAccountNumberPaymentInformation, etDateNextPayment;
     private ConstraintLayout paypalConstraint, bankAccountConstraint;
@@ -104,6 +114,23 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         getAndSetFromSharedPreference();
         setupPieChart();
         setPieChart();
+
+        btnMakeRequestForPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // me i rregullu me nike krejt
+                if(!StringHelper.empty(payment_method) || !StringHelper.empty(full_name_payment_information) ||
+                !StringHelper.empty(address_payment_information) || !StringHelper.empty(bank_account_payment_information) || !StringHelper.empty(account_number_payment_information))
+                {
+                    row1Done.setVisibility(View.VISIBLE);
+                }else if(!StringHelper.empty(paypal_email_payment_information))
+                {
+                    row1Done.setVisibility(View.VISIBLE);
+                }
+
+                checkAndCreateInvoice();
+            }
+        });
         return view;
     }
 
@@ -120,6 +147,19 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         etDateNextPayment = view.findViewById(R.id.etDateNextPayment);
         paypalConstraint = view.findViewById(R.id.paypalConstraint);
         bankAccountConstraint = view.findViewById(R.id.bankAccountConstraint);
+        btnMakeRequestForPayment = view.findViewById(R.id.btnMakeRequestForPayment);
+        row1Done = view.findViewById(R.id.row1Done);
+        row1Error = view.findViewById(R.id.row1Error);
+        row2Done = view.findViewById(R.id.row2Done);
+        row2Error = view.findViewById(R.id.row2Error);
+        row3Done = view.findViewById(R.id.row3Done);
+        row3Error = view.findViewById(R.id.row3Error);
+        row4Done = view.findViewById(R.id.row4Done);
+        row4Error = view.findViewById(R.id.row4Error);
+        row5Done = view.findViewById(R.id.row5Done);
+        row5Error = view.findViewById(R.id.row5Error);
+        row6Done = view.findViewById(R.id.row6Done);
+        row6Error = view.findViewById(R.id.row6Error);
     }
 
     private void getAndSetFromSharedPreference() {
@@ -142,10 +182,10 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         etDateNextPayment.setText(DateHelper.getNextMonthFirstDay());
 
 
-        if (payment_method.equals("Paypal")) {
+        if (payment_method.equals(PAYPAL)) {
             paypalConstraint.setVisibility(View.VISIBLE);
             bankAccountConstraint.setVisibility(View.GONE);
-        } else if (payment_method.equals("Bank Account")) {
+        } else if (payment_method.equals(BANK_ACCOUNT)) {
             paypalConstraint.setVisibility(View.GONE);
             bankAccountConstraint.setVisibility(View.VISIBLE);
         }
