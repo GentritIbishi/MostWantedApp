@@ -39,6 +39,7 @@ import android.os.Environment;
 import android.os.StrictMode;
 import android.text.Layout;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -73,9 +74,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.Color;
+import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
@@ -98,8 +104,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsBinding;
@@ -111,6 +119,7 @@ import fiek.unipr.mostwantedapp.utils.WindowHelper;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private Context mContext;
     private static final int PERMISSION_REQUEST_CODE = 200;
     private static final String NO_LOCATION_REPORT = "";
 
@@ -121,6 +130,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double last_seen_latitude, last_seen_longitude, lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4;
 
     private List<String> acts;
+
+    private ArrayList<ArrayList<ArrayList<String>>> input;
+    private String[][][] output;
+    private String[][] tmp;
+    private ArrayList<ArrayList<String>> lvl2;
+    private ArrayList<String> lvl3;
 
 
     private GoogleMap mMap;
@@ -145,6 +160,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        mContext = getApplicationContext();
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -157,8 +174,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         initMap();
 
         int SDK_INT = android.os.Build.VERSION.SDK_INT;
-        if (SDK_INT > 8)
-        {
+        if (SDK_INT > 8) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                     .permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -189,7 +205,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding.btnShareUrlOfPdf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(urlOfPdfUploaded != null){
+                if (urlOfPdfUploaded != null) {
                     btnShare(urlOfPdfUploaded);
                 }
             }
@@ -203,43 +219,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String first_investigator = binding.theFirstInvestigator.getText().toString();
                 String second_investigator = binding.theSecondInvestigator.getText().toString();
 
-                if(TextUtils.isEmpty(first_investigator)){
+                if (TextUtils.isEmpty(first_investigator)) {
                     binding.theFirstInvestigator.setError(getText(R.string.error_first_investigator_required));
                     binding.theFirstInvestigator.requestFocus();
                     binding.generateReportProgressBar.setVisibility(View.INVISIBLE);
                     binding.btnGenerateReport.setEnabled(true);
-                }else if(TextUtils.isEmpty(second_investigator)){
+                } else if (TextUtils.isEmpty(second_investigator)) {
                     binding.theSecondInvestigator.setError(getText(R.string.error_second_investigator_required));
                     binding.theSecondInvestigator.requestFocus();
                     binding.generateReportProgressBar.setVisibility(View.INVISIBLE);
                     binding.btnGenerateReport.setEnabled(true);
-                }else if(first_investigator.equals(second_investigator)){
+                } else if (first_investigator.equals(second_investigator)) {
                     binding.theSecondInvestigator.setError(getText(R.string.error_not_allowed_same_investigator));
                     binding.theSecondInvestigator.requestFocus();
                     binding.generateReportProgressBar.setVisibility(View.INVISIBLE);
                     binding.btnGenerateReport.setEnabled(true);
-                }else
-                {
-                    new Thread(new Runnable()
-                    {
+                } else {
+                    new Thread(new Runnable() {
                         public void run()
                         {
-                            CollectionReference collRef = firebaseFirestore.collection(ASSIGNED_REPORTS);
-                            String reportAssigned_id = collRef.document().getId();
-
-                            assignedReport(getApplicationContext(), reportAssigned_id, last_seen_latitude, last_seen_longitude,
-                                    lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4, first_investigator, second_investigator, fullName);
-
-                            //create pdf file and upload in firestore and add link option for share
-                            Uri uri = null;
                             try {
-                                uri = generatePDF(first_investigator, second_investigator, last_seen_address, first_address,
-                                        second_address, third_address, forth_address);
+                                saveAndGeneratePDF(first_investigator, second_investigator);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-
-                            uploadPDFtoFirebase(uri, reportAssigned_id);
                         }
                     }).start();
                 }
@@ -248,6 +251,84 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         setInvestigatorInArray();
 
+    }
+
+    private void saveAndGeneratePDF(String first_investigator, String second_investigator) throws IOException{
+        CollectionReference collRef = firebaseFirestore.collection(ASSIGNED_REPORTS);
+        String reportAssigned_id = collRef.document().getId();
+
+        //qyty duhet me i marr prap locations report
+        firebaseFirestore.collection(LOCATION_REPORTS)
+                .whereEqualTo("personId", personId)
+                .orderBy("date_time", Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(queryDocumentSnapshots.size() != 0)
+                        {
+                            int rows = queryDocumentSnapshots.size();
+                            int column = 5;
+                            String[][] locations = new String[rows][column];
+                            List<String> listLocations = new ArrayList<>();
+                            // Creating a table
+                            float [] pointColumnWidths = {200F, 200F, 200F, 200F, 200F};
+                            Table table = new Table(pointColumnWidths);
+                            try {
+                                PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+                                table.addCell(new Cell().add(new Paragraph(String.valueOf(mContext.getText(R.string.num)))).setFont(font).setBackgroundColor(ColorConstants.BLUE).setFontColor(ColorConstants.WHITE).setTextAlignment(TextAlignment.CENTER));
+                                table.addCell(new Cell().add(new Paragraph(String.valueOf(mContext.getText(R.string.latitude_cell)))).setFont(font).setBackgroundColor(ColorConstants.BLUE).setFontColor(ColorConstants.WHITE).setTextAlignment(TextAlignment.CENTER));
+                                table.addCell(new Cell().add(new Paragraph(String.valueOf(mContext.getText(R.string.longitude_cell)))).setFont(font).setBackgroundColor(ColorConstants.BLUE).setFontColor(ColorConstants.WHITE).setTextAlignment(TextAlignment.CENTER));
+                                table.addCell(new Cell().add(new Paragraph(String.valueOf(mContext.getText(R.string.address_cell)))).setFont(font).setBackgroundColor(ColorConstants.BLUE).setFontColor(ColorConstants.WHITE)).setTextAlignment(TextAlignment.CENTER);
+                                table.addCell(new Cell().add(new Paragraph(String.valueOf(mContext.getText(R.string.document_id)))).setFont(font).setBackgroundColor(ColorConstants.BLUE).setFontColor(ColorConstants.WHITE)).setTextAlignment(TextAlignment.CENTER);
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            for (int i = 0; i < queryDocumentSnapshots.size(); i++)
+                            {
+
+                                String number = i+"";
+                                String latitude = String.valueOf(queryDocumentSnapshots.getDocuments().get(i).getDouble("latitude"));
+                                String longitude = String.valueOf(queryDocumentSnapshots.getDocuments().get(i).getDouble("longitude"));
+                                String address = getAddress(mContext, Double.parseDouble(latitude), Double.parseDouble(longitude));
+                                String docId = queryDocumentSnapshots.getDocuments().get(i).getString("docId");
+
+                                // i marrum krejt lokacionet i shtim ni list edhe ja qojm assigned report si list
+                                // edhe gjenerate pdf ja qojm si list
+                                // 0, latitude, longitude, address, docId
+                                // 1. latitude, longitude, address, docId
+                                // 2. latitude longitude, address, docId
+                                locations[i][0] = number;
+                                locations[i][1] = latitude;
+                                locations[i][2] = longitude;
+                                locations[i][3] = address;
+                                locations[i][4] = docId;
+
+                                Log.d("TABLE"," "+ locations[i][0]+" "+locations[i][1]+" "+locations[i][2]+" "+locations[i][3]+" "+locations[i][4]);
+                                table.addCell(new Cell().add(new Paragraph(locations[i][0])));
+                                table.addCell(new Cell().add(new Paragraph(locations[i][1])));
+                                table.addCell(new Cell().add(new Paragraph(locations[i][2])));
+                                table.addCell(new Cell().add(new Paragraph(locations[i][3])));
+                                table.addCell(new Cell().add(new Paragraph(locations[i][4])));
+
+                                listLocations.add(mContext.getText(R.string.location)+locations[i][0]+", "+locations[i][1]+", "+locations[i][2]+", "+locations[i][3]+", "+locations[i][4]);
+                            }
+
+                            assignedReport(mContext, listLocations, reportAssigned_id, first_investigator, second_investigator, fullName, rows, column);
+
+                            //create pdf file and upload in firestore and add link option for share
+                            Uri uri = null;
+                            try {
+                                uri = generatePDF(first_investigator, second_investigator, table);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                            uploadPDFtoFirebase(uri, reportAssigned_id);
+                        }
+                    }
+                });
     }
 
     private void getFromBundle(Bundle bundle) {
@@ -289,10 +370,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         List<String> investigatorList = new ArrayList<>();
-                        for (int i=0; i<queryDocumentSnapshots.getDocuments().size();i++){
+                        for (int i = 0; i < queryDocumentSnapshots.getDocuments().size(); i++) {
                             investigatorList.add(queryDocumentSnapshots.getDocuments().get(i).getString("fullName"));
                         }
-                        ArrayAdapter<String> investigator_adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, investigatorList);
+                        ArrayAdapter<String> investigator_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, investigatorList);
                         binding.theFirstInvestigator.setAdapter(investigator_adapter);
                         binding.theSecondInvestigator.setAdapter(investigator_adapter);
                     }
@@ -300,7 +381,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
 
         setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_REXHEP_LUCI_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_REXHEP_LUCI_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_RR_REXHEP_LUCI_TITLE)));
@@ -315,64 +396,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_PERLINE_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_PERLINE_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_PERLINE_TITLE)));
         setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_TITLE)));
 
-        setLocations(fullName);
+        setLocations(personId);
     }
 
-    private void setLocations(String fullName) {
+    private void setLocations(String personId) {
         //ky function i merr locations_reports te wanted person qe nuk jon equal me latest latitude
         firebaseFirestore.collection(LOCATION_REPORTS)
-                .whereEqualTo("wanted_person", fullName)
+                .whereEqualTo("personId", personId)
                 .orderBy("date_time", Query.Direction.DESCENDING)
-                .limit(5)
                 .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for(int i = 0; i < queryDocumentSnapshots.size(); i++)
-                        {
+                        for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                             DocumentSnapshot doc = queryDocumentSnapshots.getDocuments().get(i);
                             Double latitude = doc.getDouble("latitude");
                             Double longitude = doc.getDouble("longitude");
                             String date_time = doc.getString("date_time");
                             String description = doc.getString("description");
 
-                            if(i==0 && latitude != null && longitude != null)
-                            {
+                            if (i == 0 && latitude != null && longitude != null) {
                                 last_seen_latitude = latitude;
                                 last_seen_longitude = longitude;
-                                setBorderOnPointWithMoveCamera(getApplicationContext(),
+                                setBorderOnPointWithMoveCamera(mContext,
                                         urlOfProfile, 200, 200,
-                                        latitude, longitude, getApplicationContext().getString(R.string.last_seen), description, fullName,
-                                        R.color.yellow);
-                            }
-                            else if(i==1 && latitude != null && longitude != null)
-                            {
+                                        latitude, longitude, mContext.getString(R.string.last_seen), description, fullName,
+                                        R.color.white);
+                            } else if (latitude != null && longitude != null) {
                                 lat1 = latitude;
                                 lon1 = longitude;
-                                setBorderOnPointWithOutMoveCamera(getApplicationContext(),
-                                        urlOfProfile, 100, 100,
-                                        latitude, longitude, date_time, description, fullName,
-                                        R.color.white);
-                            }else if(i==2 && latitude != null && longitude != null)
-                            {
-                                lat2 = latitude;
-                                lon2 = longitude;
-                                setBorderOnPointWithOutMoveCamera(getApplicationContext(),
-                                        urlOfProfile, 100, 100,
-                                        latitude, longitude, date_time, description, fullName,
-                                        R.color.white);
-                            }else if(i==3 && latitude != null && longitude != null)
-                            {
-                                lat3 = latitude;
-                                lon3 = longitude;
-                                setBorderOnPointWithOutMoveCamera(getApplicationContext(),
-                                        urlOfProfile, 100, 100,
-                                        latitude, longitude, date_time, description, fullName,
-                                        R.color.white);
-                            }else if(i==4 && latitude != null && longitude != null)
-                            {
-                                lat4 = latitude;
-                                lon4 = longitude;
-                                setBorderOnPointWithOutMoveCamera(getApplicationContext(),
+                                setBorderOnPointWithOutMoveCamera(mContext,
                                         urlOfProfile, 100, 100,
                                         latitude, longitude, date_time, description, fullName,
                                         R.color.white);
@@ -384,7 +436,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapsActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -403,11 +455,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     @Override
                     public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                        Bitmap newBitmap = addBorder(resource, getApplicationContext(), borderColorId);
+                        Bitmap newBitmap = addBorder(resource, mContext, borderColorId);
                         LatLng latLng = new LatLng(latitude, longitude);
                         mMap.addMarker(new MarkerOptions()
                                 .position(latLng)
-                                .title(title+" "+fullName)
+                                .title(title + " " + fullName)
                                 .snippet(description)
                                 .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
@@ -431,11 +483,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     @Override
                     public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
-                        Bitmap newBitmap = addBorder(resource, getApplicationContext(), borderColorId);
+                        Bitmap newBitmap = addBorder(resource, mContext, borderColorId);
                         LatLng latLng = new LatLng(latitude, longitude);
                         mMap.addMarker(new MarkerOptions()
                                 .position(latLng)
-                                .title(title+" "+fullName)
+                                .title(title + " " + fullName)
                                 .snippet(description)
                                 .icon(BitmapDescriptorFactory.fromBitmap(newBitmap)));
                         return true;
@@ -450,34 +502,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions()
                 .position(latLng)
                 .title(police_station_title)
-                .icon(BitmapFromVector(getApplicationContext(), R.drawable.ic_police_google)));
+                .icon(BitmapFromVector(mContext, R.drawable.ic_police_google)));
     }
 
-    private void assignedReport(Context ctx,
+    private void assignedReport(Context context,
+                                List<String> listLocations,
                                 String reportAssigned_id,
-                                double lat1, double lon1,
-                                double lat2, double lon2,
-                                double lat3, double lon3,
-                                double lat4, double lon4,
-                                double lat5, double lon5,
                                 String first_investigator, String second_investigator,
-                                String fullNameOfWantedPerson) {
+                                String fullNameOfWantedPerson, int rows, int column) {
 
-        last_seen_address = getAddress(ctx, lat1, lon1);
-        first_address = getAddress(ctx, lat2, lon2);
-        second_address = getAddress(ctx, lat3, lon3);
-        third_address = getAddress(ctx, lat4, lon4);
-        forth_address = getAddress(ctx, lat5, lon5);
-        date = DateHelper.getDateTime();
-
-        ReportAssigned reportAssigned = new ReportAssigned(reportAssigned_id, first_investigator, second_investigator, fullNameOfWantedPerson
-                ,last_seen_address, first_address, second_address, third_address, forth_address, date);
+        ReportAssigned reportAssigned = new ReportAssigned(
+                reportAssigned_id,
+                first_investigator,
+                second_investigator,
+                fullNameOfWantedPerson,
+                DateHelper.getDateTime(),
+                listLocations
+        );
 
         firebaseFirestore.collection(ASSIGNED_REPORTS).document(reportAssigned_id).set(reportAssigned)
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(ctx, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -487,19 +534,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         try {
             Geocoder geocoder = new Geocoder(ctx, Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-            if(addresses.size()>0){
+            if (addresses.size() > 0) {
                 Address address = addresses.get(0);
                 fullAdd = address.getAddressLine(0);
             }
-        }catch (IOException e) {
-            Toast.makeText(ctx, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            Toast.makeText(ctx, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
         return fullAdd;
     }
 
     private void uploadPDFtoFirebase(Uri pdfUri, String reportAssigned_id) {
         //upload image to storage in firebase
-        StorageReference profRef = storageReference.child(ASSIGNED_REPORTS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+fullName+"/"+reportAssigned_id+"/"+ASSIGNED_REPORTS_PDF);
+        StorageReference profRef = storageReference.child(ASSIGNED_REPORTS + "/" + firebaseAuth.getCurrentUser().getUid() + "/" + fullName + "/" + reportAssigned_id + "/" + ASSIGNED_REPORTS_PDF);
         profRef.putFile(pdfUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -509,29 +556,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         //save uri of pdf uploaded file
                         urlOfPdfUploaded = uri.toString();
                         saveReportUrlToUserCollection(reportAssigned_id, urlOfPdfUploaded);
-                        saveReportUrlToReportCollection(reportAssigned_id, assigned_report_doc, firebaseFirestore, urlOfPdfUploaded, ASSIGNED_REPORTS);
+                        saveReportUrlToReportCollection(reportAssigned_id, assigned_report_doc, firebaseFirestore, urlOfPdfUploaded);
                         binding.generateConstraint.setVisibility(View.GONE);
                         binding.generatedSuccessfully.setVisibility(View.VISIBLE);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapsActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
     }
 
-    private void saveReportUrlToReportCollection(String reportAssigned_id, DocumentReference documentReference, FirebaseFirestore firebaseFirestore, String urlOfPdfUploaded,
-                                                 String collection) {
-        if(date!=null) {
-            documentReference = firebaseFirestore.collection(collection).document(reportAssigned_id);
+    private void saveReportUrlToReportCollection(String reportAssigned_id, DocumentReference documentReference, FirebaseFirestore firebaseFirestore, String urlOfPdfUploaded) {
+        if (date != null) {
+            documentReference = firebaseFirestore.collection(ASSIGNED_REPORTS).document(reportAssigned_id);
             documentReference.update("assigned_report_url", urlOfPdfUploaded).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if(!task.isSuccessful()){
-                        Toast.makeText(MapsActivity.this, ""+task.getException(), Toast.LENGTH_SHORT).show();
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(MapsActivity.this, "" + task.getException(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -549,16 +595,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MapsActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapsActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private boolean checkPermissionForPDF() {
         // checking of permissions.
-        int permission1 = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
-        int permission2 = ContextCompat.checkSelfPermission(getApplicationContext(), READ_EXTERNAL_STORAGE);
-        int permission3 = ContextCompat.checkSelfPermission(getApplicationContext(), MANAGE_EXTERNAL_STORAGE);
+        int permission1 = ContextCompat.checkSelfPermission(mContext, WRITE_EXTERNAL_STORAGE);
+        int permission2 = ContextCompat.checkSelfPermission(mContext, READ_EXTERNAL_STORAGE);
+        int permission3 = ContextCompat.checkSelfPermission(mContext, MANAGE_EXTERNAL_STORAGE);
         return permission1 == PackageManager.PERMISSION_GRANTED && permission2 == PackageManager.PERMISSION_GRANTED && permission3 == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -567,10 +613,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ActivityCompat.requestPermissions(this, new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE, MANAGE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
     }
 
-    private Uri generatePDF(String first_investigator, String second_investigator,
-                            String last_seen_address, String first_address,
-                            String second_address, String third_address,
-                            String forth_address) throws IOException {
+    private Uri generatePDF(String first_investigator, String second_investigator, Table table) throws IOException {
 
         String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
         // File directory = getFilesDir();
@@ -587,10 +630,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Document document = new Document(pdfDocument, PageSize.A4);
         pdfDocument.setDefaultPageSize(PageSize.A4);
 
-        document.setMargins(15,15,15,15);
+        document.setMargins(15, 15, 15, 15);
 
-        Drawable ic_republic_of_kosovo = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_republic_of_kosovo);
-        Bitmap bmp_ic_republic_of_kosovo = ((BitmapDrawable)ic_republic_of_kosovo).getBitmap();
+        Drawable ic_republic_of_kosovo = ContextCompat.getDrawable(mContext, R.drawable.ic_republic_of_kosovo);
+        Bitmap bmp_ic_republic_of_kosovo = ((BitmapDrawable) ic_republic_of_kosovo).getBitmap();
         ByteArrayOutputStream stream_ic_republic_of_kosovo = new ByteArrayOutputStream();
         bmp_ic_republic_of_kosovo.compress(Bitmap.CompressFormat.PNG, 100, stream_ic_republic_of_kosovo);
         byte[] bitmap_data_ic_republic_of_kosovo = stream_ic_republic_of_kosovo.toByteArray();
@@ -598,8 +641,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ImageData image_data_ic_republic_of_kosovo = ImageDataFactory.create(bitmap_data_ic_republic_of_kosovo);
         Image image_ic_republic_of_kosovo = new Image(image_data_ic_republic_of_kosovo);
 
-        Drawable ic_kp = ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_kp_10_opacity);
-        Bitmap bmp_ic_kp = ((BitmapDrawable)ic_kp).getBitmap();
+        Drawable ic_kp = ContextCompat.getDrawable(mContext, R.drawable.ic_kp_10_opacity);
+        Bitmap bmp_ic_kp = ((BitmapDrawable) ic_kp).getBitmap();
         ByteArrayOutputStream stream_ic_kp = new ByteArrayOutputStream();
         bmp_ic_kp.compress(Bitmap.CompressFormat.PNG, 100, stream_ic_kp);
         byte[] bitmap_data_ic_kp = stream_ic_kp.toByteArray();
@@ -608,7 +651,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Image image_ic_kp = new Image(image_data_ic_kp);
 
         Drawable profile = drawableFromUrl(urlOfProfile);
-        Bitmap bmp_profile = ((BitmapDrawable)profile).getBitmap();
+        Bitmap bmp_profile = ((BitmapDrawable) profile).getBitmap();
         Bitmap bmp_circle_profile = getCroppedBitmap(bmp_profile);
         ByteArrayOutputStream stream_profile = new ByteArrayOutputStream();
         bmp_circle_profile.compress(Bitmap.CompressFormat.PNG, 100, stream_profile);
@@ -617,62 +660,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ImageData image_data_profile = ImageDataFactory.create(bitmap_data_profile);
         Image image_profile = new Image(image_data_profile);
 
-        // Initial point of the line in begin
-        canvas.moveTo(0, pdfDocument.getDefaultPageSize().getHeight()/1.225);
-
-        // Drawing the line in begin
-        canvas.lineTo(pdfDocument.getDefaultPageSize().getWidth(), pdfDocument.getDefaultPageSize().getHeight()/1.225);
+//        // Initial point of the line in begin
+//        canvas.moveTo(0, pdfDocument.getDefaultPageSize().getHeight() / 1.225);
+//
+//        // Drawing the line in begin
+//        canvas.lineTo(pdfDocument.getDefaultPageSize().getWidth(), pdfDocument.getDefaultPageSize().getHeight() / 1.225);
 
         //image ic_kp as background of pdf
         canvas.addImage(image_data_ic_kp, 0, 0, pdfDocument.getDefaultPageSize().getWidth(), false);
         canvas.restoreState();
 
         DeviceRgb setColor = new DeviceRgb(8, 106, 119);
-        float columnWidth[] = {120, 200, 120, 120};
-        Table table1 = new Table(columnWidth);
-        table1.setMargin(20);
 
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.location_cell)))));
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.address_cell)))));
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.latitude_cell)))));
-        table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.longitude_cell)))));
-
-        for(int i = 0; i<5; i++)
-        {
-            if(i==0 && last_seen_address != null)
-            {
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.last_seen_location)))));
-                table1.addCell(new Cell().add(new Paragraph(last_seen_address)));
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(last_seen_latitude))));
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(last_seen_longitude))));
-            }else if(i==1 && first_address != null)
-            {
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.first_location)))));
-                table1.addCell(new Cell().add(new Paragraph(first_address)));
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat1))));
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon1))));
-            }else if(i==2 && second_address != null)
-            {
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.second_location)))));
-                table1.addCell(new Cell().add(new Paragraph(second_address)));
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat2))));
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon2))));
-            }else if(i==3 && third_address != null)
-            {
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.third_location)))));
-                table1.addCell(new Cell().add(new Paragraph(third_address)));
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat3))));
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon3))));
-            }else if(i==4 && forth_address != null)
-            {
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(this.getText(R.string.forth_location)))));
-                table1.addCell(new Cell().add(new Paragraph(forth_address)));
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lat4))));
-                table1.addCell(new Cell().add(new Paragraph(String.valueOf(lon4))));
-            }
-        }
-
-        table1.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        table.setMargin(5);
+        table.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        table.setTextAlignment(TextAlignment.CENTER);
 
         image_ic_republic_of_kosovo.setWidth(80);
         image_ic_republic_of_kosovo.setHeight(90);
@@ -695,27 +697,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         image_profile.setHorizontalAlignment(HorizontalAlignment.CENTER);
 
         Paragraph p_fullName = new Paragraph(fullName);
-        Paragraph info = new Paragraph(getApplicationContext().getText(R.string.birthday)+": "+birthday+"\n")
-                .add(getApplicationContext().getText(R.string.gender)+": "+gender+"\n")
-                .add(getApplicationContext().getText(R.string.age)+": "+age+"\n")
-                .add(getApplicationContext().getText(R.string.eye_color)+": "+eyeColor+"\n")
-                .add(getApplicationContext().getText(R.string.hair_color)+": "+hairColor+"\n")
-                .add(getApplicationContext().getText(R.string.height)+": "+height+"\n")
-                .add(getApplicationContext().getText(R.string.weight)+": "+weight+"\n")
-                .add(getApplicationContext().getText(R.string.phy_appearance)+": "+phy_appearance+"\n");
+        Paragraph info = new Paragraph(mContext.getText(R.string.birthday) + ": " + birthday + "\n")
+                .add(mContext.getText(R.string.gender) + ": " + gender + "\n")
+                .add(mContext.getText(R.string.age) + ": " + age + "\n")
+                .add(mContext.getText(R.string.eye_color) + ": " + eyeColor + "\n")
+                .add(mContext.getText(R.string.hair_color) + ": " + hairColor + "\n")
+                .add(mContext.getText(R.string.height) + ": " + height + "\n")
+                .add(mContext.getText(R.string.weight) + ": " + weight + "\n")
+                .add(mContext.getText(R.string.phy_appearance) + ": " + phy_appearance + "\n");
 
-        Paragraph _first_investigator = new Paragraph(this.getText(R.string.investigator)+" "+first_investigator);
-        Paragraph _second_investigator = new Paragraph(this.getText(R.string.investigator)+" "+second_investigator);
+        Paragraph _first_investigator = new Paragraph(this.getText(R.string.investigator) + " " + first_investigator);
+        Paragraph _second_investigator = new Paragraph(this.getText(R.string.investigator) + " " + second_investigator);
 
         _first_investigator.setFixedPosition(60, 60, _first_investigator.getWidth());
         _second_investigator.setFixedPosition(430, 60, _second_investigator.getWidth());
 
 
-        canvas.moveTo(55, pdfDocument.getDefaultPageSize().getHeight()-800);
-        canvas.lineTo(160, pdfDocument.getDefaultPageSize().getHeight()-800);
+        canvas.moveTo(55, pdfDocument.getDefaultPageSize().getHeight() - 800);
+        canvas.lineTo(160, pdfDocument.getDefaultPageSize().getHeight() - 800);
 
-        canvas.moveTo(425, pdfDocument.getDefaultPageSize().getHeight()-800);
-        canvas.lineTo(530, pdfDocument.getDefaultPageSize().getHeight()-800);
+        canvas.moveTo(425, pdfDocument.getDefaultPageSize().getHeight() - 800);
+        canvas.lineTo(530, pdfDocument.getDefaultPageSize().getHeight() - 800);
 
 
         republika_e_kosoves.setMultipliedLeading(0.5f);
@@ -739,7 +741,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mpb_three_language.setTextAlignment(TextAlignment.CENTER);
         confidential_report.setTextAlignment(TextAlignment.CENTER);
         p_fullName.setTextAlignment(TextAlignment.CENTER);
-        confidential_report.setMarginTop(pdfDocument.getDefaultPageSize().getHeight()/18);
+        confidential_report.setMarginTop(pdfDocument.getDefaultPageSize().getHeight() / 18);
 
         info.setTextAlignment(TextAlignment.CENTER);
 
@@ -752,7 +754,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         document.add(image_profile);
         document.add(p_fullName);
         document.add(info);
-        document.add(table1);
+        document.add(table);
         document.add(_first_investigator);
         document.add(_second_investigator);
         document.close();
@@ -774,6 +776,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapAdmin);
+        assert mapFragment != null;
         mapFragment.getMapAsync(this);
     }
 

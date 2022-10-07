@@ -524,6 +524,9 @@
     <string name="withdraw">Withdraw</string>
     <string name="all_available_earnings">All available earnings</string>
     <string name="map_is_null">Map is null!</string>
+    <string name="document_id">Document ID</string>
+    <string name="num">Num.</string>
+    <string name="location">Location</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
