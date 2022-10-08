@@ -35,7 +35,7 @@
        </androidx.constraintlayout.widget.ConstraintLayout>
 
        <TextView
-           android:id="@+id/tv_paidOut"
+           android:id="@+id/tv_balance_value"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:textStyle="bold"
@@ -47,6 +47,16 @@
            android:textColor="@color/white"
            android:background="@drawable/bg_payout"
            android:text="@string/balance"/>
+
+       <TextView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:textAlignment="center"
+           android:textSize="22sp"
+           android:textStyle="bold"
+           android:fontFamily="@font/open_sans_light"
+           android:layout_marginTop="24dp"
+           android:text="@string/daily_payment_requirements"/>
 
        <androidx.constraintlayout.widget.ConstraintLayout
            android:layout_width="match_parent"
@@ -105,7 +115,7 @@
                        android:gravity="center_horizontal"
                        android:padding="10sp"
                        android:src="@drawable/ic_baseline_error_24"
-                       android:visibility="visible" />
+                       android:visibility="gone" />
                </TableRow>
 
                <TableRow android:background="@color/gray">
@@ -146,7 +156,7 @@
                        android:gravity="center_horizontal"
                        android:padding="10sp"
                        android:src="@drawable/ic_baseline_error_24"
-                       android:visibility="visible" />
+                       android:visibility="gone" />
                </TableRow>
 
                <TableRow android:background="@color/gray_analytics">
@@ -187,7 +197,7 @@
                        android:gravity="center_horizontal"
                        android:padding="10sp"
                        android:src="@drawable/ic_baseline_error_24"
-                       android:visibility="visible" />
+                       android:visibility="gone" />
                </TableRow>
 
                <TableRow android:background="@color/gray">
@@ -228,10 +238,12 @@
                        android:gravity="center_horizontal"
                        android:padding="10sp"
                        android:src="@drawable/ic_baseline_error_24"
-                       android:visibility="visible" />
+                       android:visibility="gone" />
                </TableRow>
 
-               <TableRow android:background="@color/gray_analytics">
+               <TableRow android:id="@+id/tableRowPaypal"
+                   android:background="@color/gray_analytics"
+                   android:visibility="gone">
 
                    <TextView
                        android:layout_width="match_parent"
@@ -269,10 +281,12 @@
                        android:gravity="center_horizontal"
                        android:padding="10sp"
                        android:src="@drawable/ic_baseline_error_24"
-                       android:visibility="visible" />
+                       android:visibility="gone" />
                </TableRow>
 
-               <TableRow android:background="@color/gray">
+               <TableRow android:id="@+id/tableRowBankAccount"
+                   android:background="@color/gray"
+                   android:visibility="gone">
 
                    <TextView
                        android:layout_width="match_parent"
@@ -305,12 +319,12 @@
                        android:layout_width="match_parent"
                        android:layout_height="match_parent"
                        android:layout_weight="4"
-                       android:background="@color/red"
+                       android:background="@color/red_fixed"
                        android:contentDescription="@string/it_has_not_been_fulfilled_as_a_condition"
                        android:gravity="center_horizontal"
                        android:padding="10sp"
                        android:src="@drawable/ic_baseline_error_24"
-                       android:visibility="visible" />
+                       android:visibility="gone" />
                </TableRow>
 
            </TableLayout>
@@ -580,53 +594,6 @@
                    android:inputType="number"
                    android:textColor="@color/loginTextInputColor"
                    android:textColorHint="@color/loginTextInputColor"
-                   android:textStyle="bold" />
-
-           </com.google.android.material.textfield.TextInputLayout>
-
-       </androidx.constraintlayout.widget.ConstraintLayout>
-
-       <androidx.constraintlayout.widget.ConstraintLayout
-           android:theme="@style/Theme.MaterialComponents.Light"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_marginBottom="24dp"
-           android:padding="10dp">
-
-           <com.google.android.material.textfield.TextInputLayout
-               android:id="@+id/etDateNextPaymentLayout"
-               style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_marginStart="24dp"
-               android:layout_marginEnd="24dp"
-               android:hint="@string/next_payment"
-               android:textColorHint="@color/loginTextInputColor"
-               android:textDirection="firstStrong"
-               app:boxBackgroundColor="@color/white"
-               app:helperTextTextColor="@color/loginTextInputColor"
-               app:boxStrokeColor="@color/loginTextInputColor"
-               app:startIconTint="@color/loginTextInputColor"
-               app:endIconTint="@color/loginTextInputColor"
-               android:elevation="6dp"
-               app:hintTextColor="@color/loginTextInputColor"
-               app:startIconDrawable="@drawable/ic_baseline_attach_money_24"
-               app:endIconMode="clear_text"
-               app:layout_constraintTop_toTopOf="parent"
-               app:layout_constraintBottom_toBottomOf="parent"
-               app:layout_constraintEnd_toEndOf="parent"
-               app:layout_constraintStart_toStartOf="parent">
-
-               <com.google.android.material.textfield.TextInputEditText
-                   android:id="@+id/etDateNextPayment"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:fontFamily="@font/open_sans_bold"
-                   android:textColor="@color/loginTextInputColor"
-                   android:ems="10"
-                   android:enabled="false"
-                   android:textColorHint="@color/loginTextInputColor"
-                   android:inputType="text"
                    android:textStyle="bold" />
 
            </com.google.android.material.textfield.TextInputLayout>

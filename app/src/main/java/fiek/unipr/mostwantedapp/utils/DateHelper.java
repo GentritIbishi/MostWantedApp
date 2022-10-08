@@ -6,6 +6,8 @@ import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME_STYLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME_STYLE_2;
 
+import org.joda.time.DateTime;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -61,6 +63,11 @@ public class DateHelper {
         } else {
             return false;
         }
+    }
+
+    public static boolean checkDayBefore24(Date date) {
+        DateTime dateTime = new DateTime(date); // Convert java.util.Date to Joda-Time DateTime.
+        return dateTime.isBefore(DateTime.now().minusDays(1));
     }
 
     public static boolean isDateInCurrentMonth(String date) throws ParseException {

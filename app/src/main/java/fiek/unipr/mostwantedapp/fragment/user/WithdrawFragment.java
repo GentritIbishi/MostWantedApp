@@ -1,6 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.BANK_ACCOUNT;
+import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
 import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYMENT_INFORMATION;
@@ -8,9 +9,8 @@ import static fiek.unipr.mostwantedapp.utils.Constants.PAYPAL;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -21,12 +21,14 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,13 +55,16 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.activity.SetProfileUserActivity;
+import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.models.Invoice;
 import fiek.unipr.mostwantedapp.models.InvoiceStatus;
 import fiek.unipr.mostwantedapp.models.PaymentInformation;
-import fiek.unipr.mostwantedapp.models.User;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
@@ -69,7 +74,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
     private Context mContext;
     private View view;
     private PieChart availableEarningPieChart;
-    private TextView tv_paidOut;
+    private TextView tv_balance_value;
     private ImageView
             row1Done, row1Error,
             row2Done, row2Error,
@@ -77,23 +82,22 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
             row4Done, row4Error,
             row5Done, row5Error,
             row6Done, row6Error;
+    private TableRow tableRowPaypal, tableRowBankAccount;
     private Button btnMakeRequestForPayment;
     private TextInputEditText etPaymentMethod, etPaypalEmail, etFullNamePaymentInformation, etAddressPaymentInformation, etBankNamePaymentInformation,
-            etAccountNumberPaymentInformation, etDateNextPayment;
+            etAccountNumberPaymentInformation;
     private ConstraintLayout paypalConstraint, bankAccountConstraint;
     private String userID, full_name_payment_information, address_payment_information, bank_account_payment_information, account_number_payment_information,
             paypal_email_payment_information, payment_method;
 
     private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
 
-    public WithdrawFragment() {
-    }
+    public WithdrawFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -115,28 +119,242 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         setupPieChart();
         setPieChart();
 
+        checkWithdrawalAccountSet();
+        checkIfUserMakePaymentThisMonth();
+        checkIfAccountIsLongerThanOneMonth();
+        checkIfUserIsChangedIn24Hours();
+        checkCashOutLimit();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                checkAndEnableDisableButton();
+            }
+        }, 10000);
+
         btnMakeRequestForPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // me i rregullu me nike krejt
-                if(!StringHelper.empty(payment_method) || !StringHelper.empty(full_name_payment_information) ||
-                !StringHelper.empty(address_payment_information) || !StringHelper.empty(bank_account_payment_information) || !StringHelper.empty(account_number_payment_information))
-                {
-                    row1Done.setVisibility(View.VISIBLE);
-                }else if(!StringHelper.empty(paypal_email_payment_information))
-                {
-                    row1Done.setVisibility(View.VISIBLE);
+                //ktu check per krejt rowat
+                if (row1Done.getVisibility() == View.VISIBLE) {
+                    if (row2Done.getVisibility() == View.VISIBLE) {
+                        if (row3Done.getVisibility() == View.VISIBLE) {
+                            if (row4Done.getVisibility() == View.VISIBLE) {
+                                if (row5Done.getVisibility() == View.VISIBLE || row6Done.getVisibility() == View.VISIBLE) {
+                                    createInvoice();
+                                } else {
+                                    Toast.makeText(mContext, mContext.getText(R.string.error_cash_out_limit_not_reached), Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(mContext, mContext.getText(R.string.error_this_account_is_changed_in_24_hours_wait_for_couple_hours_to_make_request_for_payment), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(mContext, mContext.getText(R.string.error_is_no_longer_than_24_hours), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(mContext, mContext.getText(R.string.error_this_account_made_a_payment_this_month), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(mContext, mContext.getText(R.string.error_withdrawal_account_nots_set), Toast.LENGTH_SHORT).show();
                 }
-
-                checkAndCreateInvoice();
             }
         });
+
         return view;
+    }
+
+    private void checkAndEnableDisableButton() {
+        if (row1Done.getVisibility() == View.VISIBLE)
+        {
+            if (row2Done.getVisibility() == View.VISIBLE)
+            {
+                if (row3Done.getVisibility() == View.VISIBLE)
+                {
+                    if (row4Done.getVisibility() == View.VISIBLE)
+                    {
+                        if (row5Done.getVisibility() == View.VISIBLE || row6Done.getVisibility() == View.VISIBLE)
+                        {
+                            btnMakeRequestForPayment.setEnabled(true);
+                        } else
+                        {
+                            Toast.makeText(mContext, mContext.getText(R.string.error_cash_out_limit_not_reached), Toast.LENGTH_SHORT).show();
+                        }
+                    } else
+                    {
+                        Toast.makeText(mContext, mContext.getText(R.string.error_this_account_is_changed_in_24_hours_wait_for_couple_hours_to_make_request_for_payment), Toast.LENGTH_SHORT).show();
+                    }
+                } else
+                {
+                    Toast.makeText(mContext, mContext.getText(R.string.error_is_no_longer_than_24_hours), Toast.LENGTH_SHORT).show();
+                }
+            } else
+            {
+                Toast.makeText(mContext, mContext.getText(R.string.error_this_account_made_a_payment_this_month), Toast.LENGTH_SHORT).show();
+            }
+        } else
+        {
+            Toast.makeText(mContext, mContext.getText(R.string.error_withdrawal_account_nots_set), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void checkWithdrawalAccountSet() {
+        if (!StringHelper.empty(payment_method) || !StringHelper.empty(full_name_payment_information) ||
+                !StringHelper.empty(address_payment_information) || !StringHelper.empty(bank_account_payment_information) || !StringHelper.empty(account_number_payment_information)) {
+            row1Done.setVisibility(View.VISIBLE);
+        } else {
+            row1Error.setVisibility(View.VISIBLE);
+        }
+
+        if (!StringHelper.empty(paypal_email_payment_information)) {
+            row1Done.setVisibility(View.VISIBLE);
+        } else {
+            row1Error.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void checkIfUserMakePaymentThisMonth() {
+        firebaseFirestore.collection(INVOICE)
+                .whereEqualTo("userId", firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            if(queryDocumentSnapshots.size() != 0)
+                            {
+                                for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
+                                    String dateTime = queryDocumentSnapshots.getDocuments().get(i).getString("date_time");
+                                    //duhet me kqyre se kjo date a i perkete ketij muaji
+                                    if(!StringHelper.empty(dateTime))
+                                    {
+                                        String[] arrayDateTime = dateTime.split(" ");
+                                        String date = arrayDateTime[0];
+                                        try {
+                                            if (DateHelper.isDateInCurrentMonth(date)) {
+                                                row2Done.setVisibility(View.VISIBLE);
+                                            } else {
+                                                row2Error.setVisibility(View.VISIBLE);
+                                            }
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    else {
+                                        row2Done.setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }else{
+                                row2Done.setVisibility(View.VISIBLE);
+                            }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("EXCEPTION", e.getMessage());
+                    }
+                });
+    }
+
+    private void checkIfAccountIsLongerThanOneMonth() {
+        firebaseFirestore.collection(USERS)
+                .document(firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String register_date_time = documentSnapshot.getString("register_date_time");
+                        if(!StringHelper.empty(register_date_time))
+                        {
+                            String[] arrayRegisterDateTime = register_date_time.split(" ");
+
+                            String register_date = arrayRegisterDateTime[0];
+
+                            String[] yyyyMMdd = register_date.split("-");
+                            int dd = Integer.parseInt(yyyyMMdd[0]);
+                            int mm = Integer.parseInt(yyyyMMdd[1]);
+                            int yyyy = Integer.parseInt(yyyyMMdd[2]);
+                            if (DateHelper.isAccountOlder(30, yyyy, mm, dd)) {
+                                row3Done.setVisibility(View.VISIBLE);
+                            } else {
+                                row3Error.setVisibility(View.VISIBLE);
+                            }
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("ErrorCheckCreateInvoice", e.getMessage());
+                    }
+                });
+    }
+
+    private void checkIfUserIsChangedIn24Hours() {
+        firebaseFirestore.collection(PAYMENT_INFORMATION)
+                .document(firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        try {
+                        String last_time_update = documentSnapshot.getString("last_time_update");
+                            if(!StringHelper.empty(last_time_update))
+                            {
+                                Date givenDate = new SimpleDateFormat(DATE).parse(last_time_update);
+                                if (DateHelper.checkDayBefore24(givenDate)) {
+                                    row4Done.setVisibility(View.VISIBLE);
+                                } else {
+                                    row4Error.setVisibility(View.VISIBLE);
+                                }
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+    }
+
+    private void checkCashOutLimit() {
+        firebaseFirestore.collection(USERS)
+                .document(firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Double balance = documentSnapshot.getDouble("balance");
+                        if (balance > 5 && payment_method.equals(PAYPAL)) {
+                            row5Done.setVisibility(View.VISIBLE);
+                        }
+
+                        if (balance > 100 && payment_method.equals(BANK_ACCOUNT)) {
+                            row6Done.setVisibility(View.VISIBLE);
+                        }
+
+                        if (payment_method.equals("")) {
+                            row5Error.setVisibility(View.VISIBLE);
+                            row6Error.setVisibility(View.VISIBLE);
+                        }
+
+                        if(balance < 5)
+                        {
+                            row5Error.setVisibility(View.VISIBLE);
+                            row6Error.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("ErrorCheckCashOutLimit", e.getMessage());
+                    }
+                });
     }
 
     private void initializeFields() {
         availableEarningPieChart = view.findViewById(R.id.availableEarningPieChart);
-        tv_paidOut = view.findViewById(R.id.tv_paidOut);
+        tv_balance_value = view.findViewById(R.id.tv_balance_value);
         etPaymentMethod = view.findViewById(R.id.etPaymentMethod);
         etPaypalEmail = view.findViewById(R.id.etPaypalEmail);
         etFullNamePaymentInformation = view.findViewById(R.id.etFullNamePaymentInformation);
@@ -144,7 +362,6 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         etBankNamePaymentInformation = view.findViewById(R.id.etBankNamePaymentInformation);
         etBankNamePaymentInformation = view.findViewById(R.id.etBankNamePaymentInformation);
         etAccountNumberPaymentInformation = view.findViewById(R.id.etAccountNumberPaymentInformation);
-        etDateNextPayment = view.findViewById(R.id.etDateNextPayment);
         paypalConstraint = view.findViewById(R.id.paypalConstraint);
         bankAccountConstraint = view.findViewById(R.id.bankAccountConstraint);
         btnMakeRequestForPayment = view.findViewById(R.id.btnMakeRequestForPayment);
@@ -160,6 +377,8 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         row5Error = view.findViewById(R.id.row5Error);
         row6Done = view.findViewById(R.id.row6Done);
         row6Error = view.findViewById(R.id.row6Error);
+        tableRowPaypal = view.findViewById(R.id.tableRowPaypal);
+        tableRowBankAccount = view.findViewById(R.id.tableRowBankAccount);
     }
 
     private void getAndSetFromSharedPreference() {
@@ -179,17 +398,19 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         etPaypalEmail.setText(paypal_email_payment_information);
         etPaymentMethod.setText(payment_method);
 
-        etDateNextPayment.setText(DateHelper.getNextMonthFirstDay());
+        checkPaymentMethod();
+    }
 
-
+    private void checkPaymentMethod() {
         if (payment_method.equals(PAYPAL)) {
             paypalConstraint.setVisibility(View.VISIBLE);
             bankAccountConstraint.setVisibility(View.GONE);
+            tableRowPaypal.setVisibility(View.VISIBLE);
         } else if (payment_method.equals(BANK_ACCOUNT)) {
             paypalConstraint.setVisibility(View.GONE);
             bankAccountConstraint.setVisibility(View.VISIBLE);
+            tableRowBankAccount.setVisibility(View.VISIBLE);
         }
-
     }
 
     //function that count all locations_reports: VERIFIED, UNVERIFIED, FAKE
@@ -226,7 +447,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
 
         ArrayList<PieEntry> entries = new ArrayList<>();
 
-        tv_paidOut.setText(mContext.getText(R.string.balance) + ": " + balance);
+        tv_balance_value.setText(mContext.getText(R.string.balance) + ": " + balance);
 
         try {
             entries.add(new PieEntry(Float.parseFloat(String.valueOf(balance)), EURO));
@@ -301,7 +522,8 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                 bank_account_payment_information,
                 account_number_payment_information,
                 paypal_email_payment_information,
-                payment_method
+                payment_method,
+                DateHelper.getDateTime()
         );
         firebaseFirestore.collection(PAYMENT_INFORMATION)
                 .document(userID)
@@ -313,221 +535,49 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                 });
     }
 
-    private void checkAndCreateInvoice() {
+    private void createInvoice() {
         firebaseFirestore.collection(USERS)
                 .document(firebaseAuth.getCurrentUser().getUid())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        String userID = documentSnapshot.getString("userID");
-                        String name = documentSnapshot.getString("name");
-                        String lastname = documentSnapshot.getString("lastname");
-                        String fullName = documentSnapshot.getString("fullName");
-                        String address = documentSnapshot.getString("address");
-                        String email = documentSnapshot.getString("email");
-                        String parentName = documentSnapshot.getString("parentName");
-                        String gender = documentSnapshot.getString("gender");
-                        String role = documentSnapshot.getString("role");
-                        String phone = documentSnapshot.getString("phone");
-                        String personal_number = documentSnapshot.getString("personal_number");
-                        String register_date_time = documentSnapshot.getString("register_date_time");
-                        String grade = documentSnapshot.getString("grade");
-                        String password = documentSnapshot.getString("password");
-                        String urlOfProfile = documentSnapshot.getString("urlOfProfile");
                         Double balance = documentSnapshot.getDouble("balance");
-                        Boolean isEmailVerified = documentSnapshot.getBoolean("isEmailVerified");
-
-                        User user = new User(
-                                userID,
-                                name,
-                                lastname,
-                                fullName,
-                                address,
-                                email,
-                                parentName,
-                                gender,
-                                role,
-                                phone,
-                                personal_number,
-                                register_date_time,
-                                grade,
-                                password,
-                                urlOfProfile,
-                                balance,
-                                isEmailVerified
-                        );
-
-                        if (!StringHelper.empty(payment_method)) {
-                            doProcess(payment_method, user);
-                        }
-
+                        processWithInvoice(balance);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("ErrorCheckCreateInvoice", e.getMessage());
+
                     }
                 });
     }
 
-    private void doProcess(String payment_method, User user) {
-        String register_date_time = user.getRegister_date_time();
-        String[] arrayRegisterDateTime = register_date_time.split(" ");
+    private void processWithInvoice(Double balance) {//go create invoice
+        CollectionReference collRef = firebaseFirestore.collection(INVOICE);
+        String transactionID = collRef.document().getId();
+        Invoice invoice = new Invoice(DateHelper.getDateTime(),
+                transactionID,
+                firebaseAuth.getUid(),
+                payment_method,
+                InvoiceStatus.PENDING.toString(),
+                balance
+        );
 
-        String register_date = arrayRegisterDateTime[0];
-
-        String[] yyyyMMdd = register_date.split("-");
-        int dd = Integer.parseInt(yyyyMMdd[0]);
-        int mm = Integer.parseInt(yyyyMMdd[1]);
-        int yyyy = Integer.parseInt(yyyyMMdd[2]);
-
-
-        if (user.getBalance() > 5 && payment_method.equals(PAYPAL)) {
-            continueProcess(payment_method, user.getBalance());
-        } else if (user.getBalance() > 100 && payment_method.equals(BANK_ACCOUNT)) {
-            continueProcess(payment_method, user.getBalance());
-        } else if (user.getBalance() > 5 && payment_method.equals("")) {
-            showAlertInformation((String) mContext.getText(R.string.account_need_to_set));
-        } else if (user.getBalance() > 100 && payment_method.equals("")) {
-            showAlertInformation((String) mContext.getText(R.string.account_need_to_set));
-        } else if (!DateHelper.isAccountOlder(30, yyyy, mm, dd)) {
-            showAlertInformation((String) mContext.getText(R.string.require_account_need_to_be_older_than_days));
-        }
-
-    }
-
-    private void continueProcess(String payment_method, Double balance) {
-        //funksion qe e kontrollon nese ky user ka kriju invoice kete muaj
         firebaseFirestore.collection(INVOICE)
-                .whereEqualTo("userId", firebaseAuth.getCurrentUser().getUid())
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (queryDocumentSnapshots.size() != 0) {
-                            for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
-                                String dateTime = queryDocumentSnapshots.getDocuments().get(i).getString("date_time");
-                                //duhet me kqyre se kjo date a i perkete ketij muaji
-                                String[] arrayDateTime = dateTime.split(" ");
-                                String date = arrayDateTime[0];
-                                try {
-                                    if (DateHelper.isDateInCurrentMonth(date)) {
-                                        //go create invoice
-                                        CollectionReference collRef = firebaseFirestore.collection(INVOICE);
-                                        String transactionID = collRef.document().getId();
-                                        Invoice invoice = new Invoice(DateHelper.getDateTime(),
-                                                transactionID,
-                                                firebaseAuth.getUid(),
-                                                payment_method,
-                                                InvoiceStatus.PENDING.toString(),
-                                                balance
-                                        );
-
-                                        firebaseFirestore.collection(INVOICE)
-                                                .document(firebaseAuth.getUid())
-                                                .set(invoice)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void unused) {
-                                                        //success
-                                                    }
-                                                }).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.d("ErrorNotSet", e.getMessage());
-                                                    }
-                                                });
-
-                                    }
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("EXCEPTION", e.getMessage());
-                    }
-                });
-
-    }
-
-    public void showAlertInformation(String title) {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-
-        // Setting Dialog Title
-        alertDialog.setTitle(title);
-
-        // Setting Dialog Message
-        alertDialog.setMessage(mContext.getText(R.string.require_withdrawal_account_set) + "\n" +
-                mContext.getText(R.string.paid_once_in_monthly_payment) + "\n" +
-                mContext.getText(R.string.account_longer_than_one_month) + "\n" +
-                mContext.getText(R.string.account_details_not_changed_in_last_hours) + "\n" +
-                mContext.getText(R.string.cashout_limit_reached_for_paypal_is_five_euros) + "\n" +
-                mContext.getText(R.string.cashout_limit_reached_for_bank_account_is_one_hundred_euros));
-
-        // On pressing Settings button
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                SettingsFragment settingsFragment = new SettingsFragment();
-                loadFragment(settingsFragment);
-            }
-        });
-
-        // on pressing cancel button
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        alertDialog.show();
-    }
-
-    private void checkAccountIsSet() {
-        firebaseFirestore.collection(PAYMENT_INFORMATION)
                 .document(firebaseAuth.getUid())
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                .set(invoice)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        String fullName = documentSnapshot.getString("fullName");
-                        String address = documentSnapshot.getString("address");
-                        String bankName = documentSnapshot.getString("bankName");
-                        String accountNumber = documentSnapshot.getString("accountNumber");
-                        String paypalEmail = documentSnapshot.getString("paypalEmail");
-                        String paymentMethod = documentSnapshot.getString("paymentMethod");
-
-                        if (!StringHelper.empty(fullName) ||
-                                !StringHelper.empty(address) ||
-                                !StringHelper.empty(bankName) ||
-                                !StringHelper.empty(accountNumber) ||
-                                !StringHelper.empty(paypalEmail) ||
-                                !StringHelper.empty(paymentMethod)) {
-
-                            if (paymentMethod.equals(PAYPAL)) {
-                                if (!StringHelper.empty(paypalEmail)) {
-                                    //create invoice
-                                }
-                            }
-                        }
-
+                    public void onSuccess(Void unused) {
+                        Toast.makeText(mContext, mContext.getText(R.string.you_have_successfully_made_the_request_wait_for_response), Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("ErrorAccountSet", e.getMessage());
+                        Log.d("ErrorNotSet", e.getMessage());
                     }
                 });
     }
 
-    private void loadFragment(Fragment fragment) {
-        ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.user_fragmentContainer, fragment)
-                .addToBackStack(null)
-                .commit();
-
-    }
 }

@@ -120,4 +120,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 
+    implementation 'joda-time:joda-time:2.11.2'
+
 }

@@ -7,12 +7,13 @@ public class PaymentInformation {
             bankName,
             accountNumber,
             paypalEmail,
-            paymentMethod;
+            paymentMethod,
+            last_time_update;
 
     public PaymentInformation() {
     }
 
-    public PaymentInformation(String userID, String fullName, String address, String bankName, String accountNumber, String paypalEmail, String paymentMethod) {
+    public PaymentInformation(String userID, String fullName, String address, String bankName, String accountNumber, String paypalEmail, String paymentMethod, String last_time_update) {
         this.userID = userID;
         this.fullName = fullName;
         this.address = address;
@@ -20,6 +21,7 @@ public class PaymentInformation {
         this.accountNumber = accountNumber;
         this.paypalEmail = paypalEmail;
         this.paymentMethod = paymentMethod;
+        this.last_time_update = last_time_update;
     }
 
     public String getUserID() {
@@ -76,5 +78,13 @@ public class PaymentInformation {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public String getLast_time_update() {
+        return last_time_update;
+    }
+
+    public void setLast_time_update(String last_time_update) {
+        this.last_time_update = last_time_update;
     }
 }

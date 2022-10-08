@@ -33,6 +33,7 @@ import com.google.firebase.storage.StorageReference;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.update.person.UpdatePersonListFragment;
 import fiek.unipr.mostwantedapp.models.PaymentInformation;
+import fiek.unipr.mostwantedapp.utils.DateHelper;
 
 public class SettingsFragment extends PreferenceFragmentCompat {
 
@@ -152,7 +153,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                 bank_account_payment_information,
                 account_number_payment_information,
                 paypal_email_payment_information,
-                payment_method
+                payment_method,
+                DateHelper.getDateTime()
         );
         firebaseFirestore.collection(PAYMENT_INFORMATION)
                 .document(userID)
