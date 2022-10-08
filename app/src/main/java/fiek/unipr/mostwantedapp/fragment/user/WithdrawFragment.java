@@ -237,8 +237,6 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
 
                             invoiceTableLayout.addView(tableRowTableLabel);
 
-                            String[][] invoices = new String[rows][column];
-
                             for(int i = 0; i < queryDocumentSnapshots.size(); i++)
                             {
                                 String date_time = queryDocumentSnapshots.getDocuments().get(i).getString("date_time");
@@ -246,12 +244,6 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                                 String account = queryDocumentSnapshots.getDocuments().get(i).getString("account");
                                 Double amount = queryDocumentSnapshots.getDocuments().get(i).getDouble("amount");
                                 String status = queryDocumentSnapshots.getDocuments().get(i).getString("status");
-
-                                invoices[i][0] = date_time;
-                                invoices[i][1] = transactionID;
-                                invoices[i][2] = account;
-                                invoices[i][3] = String.valueOf(amount);
-                                invoices[i][4] = status;
 
                                 TableRow tvRow = new TableRow(mContext);
                                 TextView t0v = new TextView(mContext);
@@ -291,11 +283,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                                 tvRow.addView(t4v);
 
                                 invoiceTableLayout.addView(tvRow);
-
-                                Log.d("ARRAY:",invoices[i][0]+" "+ invoices[i][1]+ " "+ invoices[i][2]+ " "+ invoices[i][3]+" "+invoices[i][4]);
                             }
-                        }else {
-                            //no data
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -583,29 +571,21 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         tv_balance_value.setText(mContext.getText(R.string.balance) + ": " + balance+" "+EURO);
 
         try {
-            entries.add(new PieEntry(Float.parseFloat(String.valueOf(balance)), EURO));
+            entries.add(new PieEntry(Float.parseFloat(String.valueOf(balance)), String.valueOf(mContext.getText(R.string.your_money_in_balance))));
+            entries.add(new PieEntry(Float.parseFloat(String.valueOf(50000)), String.valueOf(mContext.getText(R.string.maximum))));
         } catch (Exception e) {
             e.getMessage();
         }
 
-        ArrayList<Integer> colors = new ArrayList<>();
-
-        for (int color : ColorTemplate.MATERIAL_COLORS) {
-            colors.add(color);
-        }
-
-        for (int color : ColorTemplate.VORDIPLOM_COLORS) {
-            colors.add(color);
-        }
-
         PieDataSet dataSet = new PieDataSet(entries, null);
-        dataSet.setColors(colors);
+        dataSet.setColors(getResources().getColor(R.color.gray_analytics),
+                getResources().getColor(R.color.graph_color_1));
 
         PieData data = new PieData(dataSet);
         data.setDrawValues(true);
         data.setValueFormatter(new PercentFormatter(availableEarningPieChart));
         data.setValueTextSize(12f);
-        data.setValueTextColor(Color.BLACK);
+        data.setValueTextColor(Color.WHITE);
 
         availableEarningPieChart.setData(data);
         availableEarningPieChart.invalidate();
@@ -618,7 +598,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         availableEarningPieChart.setDrawHoleEnabled(true);
         availableEarningPieChart.setUsePercentValues(true);
         availableEarningPieChart.setEntryLabelTextSize(12);
-        availableEarningPieChart.setEntryLabelColor(Color.BLACK);
+        availableEarningPieChart.setEntryLabelColor(Color.WHITE);
         availableEarningPieChart.setCenterText(getText(R.string.all_available_earnings));
         availableEarningPieChart.setCenterTextSize(16f);
         availableEarningPieChart.getDescription().setEnabled(false);
@@ -627,6 +607,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setTextColor(Color.GRAY);
         l.setTextSize(14f);
         l.setFormSize(14f);
         l.setDrawInside(false);

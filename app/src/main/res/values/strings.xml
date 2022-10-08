@@ -551,6 +551,8 @@
     <string name="column_name_amount">Amount</string>
     <string name="column_name_status">Status</string>
     <string name="withdrawal_history">Withdrawal History</string>
+    <string name="your_money_in_balance">Income</string>
+    <string name="maximum">Maximum</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

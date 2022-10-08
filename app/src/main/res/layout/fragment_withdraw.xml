@@ -51,8 +51,8 @@
                 android:elevation="6dp"
                 android:textAllCaps="false"
                 android:background="@drawable/bg_payout"
-                android:fontFamily="@font/open_sans_bold"
-                android:textColor="@color/dark_light_color"
+                android:fontFamily="@font/open_sans_light"
+                android:textColor="@color/white"
                 android:text="@string/balance_field"/>
 
             <TextView
