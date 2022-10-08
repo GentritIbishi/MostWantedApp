@@ -544,6 +544,7 @@
     <string name="error_this_account_made_a_payment_this_month">Error account has made a payment this month!</string>
     <string name="error_withdrawal_account_nots_set">Error withdrawal account not set</string>
     <string name="you_have_successfully_made_the_request_wait_for_response">You have successfully made the request, wait for a response.</string>
+    <string name="checking">Checking...</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

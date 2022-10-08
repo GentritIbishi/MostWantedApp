@@ -334,22 +334,36 @@
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:padding="10dp">
+           <TextView
+               android:id="@+id/labelCheckingWithdraw"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:textAlignment="center"
+               android:text="@string/checking"
+               android:textStyle="bold"
+               android:textSize="16sp"
+               android:visibility="gone"
+               android:textColor="@color/dark_light_color"
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintEnd_toEndOf="parent"
+               app:layout_constraintTop_toTopOf="parent" />
+
            <Button
                android:id="@+id/btnMakeRequestForPayment"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
-               android:text="@string/withdraw"
-               android:layout_marginTop="16dp"
                android:layout_marginStart="24dp"
                android:layout_marginEnd="24dp"
-               android:textAlignment="center"
-               android:textColor="@color/white"
+               android:layout_marginTop="10dp"
                android:background="@drawable/button"
                android:enabled="false"
-               app:layout_constraintStart_toStartOf="parent"
+               android:text="@string/withdraw"
+               android:textAlignment="center"
+               android:textColor="@color/white"
+               app:layout_constraintBottom_toBottomOf="parent"
                app:layout_constraintEnd_toEndOf="parent"
-               app:layout_constraintTop_toTopOf="parent"
-               app:layout_constraintBottom_toBottomOf="parent"/>
+               app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintTop_toBottomOf="@+id/labelCheckingWithdraw" />
        </androidx.constraintlayout.widget.ConstraintLayout>
 
        <androidx.constraintlayout.widget.ConstraintLayout

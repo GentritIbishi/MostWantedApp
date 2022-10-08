@@ -1,5 +1,6 @@
 package fiek.unipr.mostwantedapp.fragment.user;
 
+import static android.view.View.GONE;
 import static fiek.unipr.mostwantedapp.utils.Constants.BANK_ACCOUNT;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
 import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
@@ -82,6 +83,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
             row4Done, row4Error,
             row5Done, row5Error,
             row6Done, row6Error;
+    private TextView labelCheckingWithdraw;
     private TableRow tableRowPaypal, tableRowBankAccount;
     private Button btnMakeRequestForPayment;
     private TextInputEditText etPaymentMethod, etPaypalEmail, etFullNamePaymentInformation, etAddressPaymentInformation, etBankNamePaymentInformation,
@@ -118,18 +120,20 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         getAndSetFromSharedPreference();
         setupPieChart();
         setPieChart();
-
         checkWithdrawalAccountSet();
         checkIfUserMakePaymentThisMonth();
         checkIfAccountIsLongerThanOneMonth();
         checkIfUserIsChangedIn24Hours();
         checkCashOutLimit();
+
+        labelCheckingWithdraw.setVisibility(View.VISIBLE);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 checkAndEnableDisableButton();
+                labelCheckingWithdraw.setVisibility(GONE);
             }
-        }, 10000);
+        }, 3000);
 
         btnMakeRequestForPayment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,9 +234,9 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                                         String date = arrayDateTime[0];
                                         try {
                                             if (DateHelper.isDateInCurrentMonth(date)) {
-                                                row2Done.setVisibility(View.VISIBLE);
-                                            } else {
                                                 row2Error.setVisibility(View.VISIBLE);
+                                            } else {
+                                                row2Done.setVisibility(View.VISIBLE);
                                             }
                                         } catch (ParseException e) {
                                             e.printStackTrace();
@@ -379,6 +383,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         row6Error = view.findViewById(R.id.row6Error);
         tableRowPaypal = view.findViewById(R.id.tableRowPaypal);
         tableRowBankAccount = view.findViewById(R.id.tableRowBankAccount);
+        labelCheckingWithdraw = view.findViewById(R.id.labelCheckingWithdraw);
     }
 
     private void getAndSetFromSharedPreference() {
@@ -404,10 +409,10 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
     private void checkPaymentMethod() {
         if (payment_method.equals(PAYPAL)) {
             paypalConstraint.setVisibility(View.VISIBLE);
-            bankAccountConstraint.setVisibility(View.GONE);
+            bankAccountConstraint.setVisibility(GONE);
             tableRowPaypal.setVisibility(View.VISIBLE);
         } else if (payment_method.equals(BANK_ACCOUNT)) {
-            paypalConstraint.setVisibility(View.GONE);
+            paypalConstraint.setVisibility(GONE);
             bankAccountConstraint.setVisibility(View.VISIBLE);
             tableRowBankAccount.setVisibility(View.VISIBLE);
         }
