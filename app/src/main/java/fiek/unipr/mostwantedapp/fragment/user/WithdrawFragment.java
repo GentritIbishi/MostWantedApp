@@ -11,24 +11,27 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.preference.PreferenceManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,8 +64,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.activity.SetProfileUserActivity;
-import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
 import fiek.unipr.mostwantedapp.models.Invoice;
 import fiek.unipr.mostwantedapp.models.InvoiceStatus;
 import fiek.unipr.mostwantedapp.models.PaymentInformation;
@@ -74,6 +75,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
 
     private Context mContext;
     private View view;
+    private TableLayout invoiceTableLayout;
     private PieChart availableEarningPieChart;
     private TextView tv_balance_value;
     private ImageView
@@ -83,8 +85,8 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
             row4Done, row4Error,
             row5Done, row5Error,
             row6Done, row6Error;
-    private TextView labelCheckingWithdraw;
-    private TableRow tableRowPaypal, tableRowBankAccount;
+    private TextView labelCheckingWithdraw, tv_date_time, tv_transaction_id, tv_account, tv_amount, tv_status;
+    private TableRow tableRowPaypal, tableRowBankAccount, tableRowTableLabel;
     private Button btnMakeRequestForPayment;
     private TextInputEditText etPaymentMethod, etPaypalEmail, etFullNamePaymentInformation, etAddressPaymentInformation, etBankNamePaymentInformation,
             etAccountNumberPaymentInformation;
@@ -116,7 +118,54 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_withdraw, container, false);
         mContext = getContext();
+
         initializeFields();
+        checking();
+
+        btnMakeRequestForPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                makeRequestForPayment();
+            }
+        });
+
+        final SwipeRefreshLayout swipeToRefreshWithdrawal = view.findViewById(R.id.swipeToRefreshWithdrawal);
+        swipeToRefreshWithdrawal.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                checking();
+                swipeToRefreshWithdrawal.setRefreshing(false);
+            }
+        });
+
+        return view;
+    }
+
+    private void makeRequestForPayment() {
+        if (row1Done.getVisibility() == View.VISIBLE) {
+            if (row2Done.getVisibility() == View.VISIBLE) {
+                if (row3Done.getVisibility() == View.VISIBLE) {
+                    if (row4Done.getVisibility() == View.VISIBLE) {
+                        if (row5Done.getVisibility() == View.VISIBLE || row6Done.getVisibility() == View.VISIBLE) {
+                            createInvoice();
+                        } else {
+                            Toast.makeText(mContext, mContext.getText(R.string.error_cash_out_limit_not_reached), Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(mContext, mContext.getText(R.string.error_this_account_is_changed_in_24_hours_wait_for_couple_hours_to_make_request_for_payment), Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(mContext, mContext.getText(R.string.error_is_no_longer_than_24_hours), Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(mContext, mContext.getText(R.string.error_this_account_made_a_payment_this_month), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(mContext, mContext.getText(R.string.error_withdrawal_account_nots_set), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void checking() {
         getAndSetFromSharedPreference();
         setupPieChart();
         setPieChart();
@@ -125,6 +174,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         checkIfAccountIsLongerThanOneMonth();
         checkIfUserIsChangedIn24Hours();
         checkCashOutLimit();
+        addToTable();
 
         labelCheckingWithdraw.setVisibility(View.VISIBLE);
         new Handler().postDelayed(new Runnable() {
@@ -134,37 +184,126 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                 labelCheckingWithdraw.setVisibility(GONE);
             }
         }, 3000);
+    }
 
-        btnMakeRequestForPayment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // me i rregullu me nike krejt
-                //ktu check per krejt rowat
-                if (row1Done.getVisibility() == View.VISIBLE) {
-                    if (row2Done.getVisibility() == View.VISIBLE) {
-                        if (row3Done.getVisibility() == View.VISIBLE) {
-                            if (row4Done.getVisibility() == View.VISIBLE) {
-                                if (row5Done.getVisibility() == View.VISIBLE || row6Done.getVisibility() == View.VISIBLE) {
-                                    createInvoice();
-                                } else {
-                                    Toast.makeText(mContext, mContext.getText(R.string.error_cash_out_limit_not_reached), Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Toast.makeText(mContext, mContext.getText(R.string.error_this_account_is_changed_in_24_hours_wait_for_couple_hours_to_make_request_for_payment), Toast.LENGTH_SHORT).show();
+    private void addToTable() {
+        firebaseFirestore.collection(INVOICE)
+                .whereEqualTo("userId", firebaseAuth.getCurrentUser().getUid())
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(queryDocumentSnapshots.size() != 0)
+                        {
+                            int rows = queryDocumentSnapshots.size();
+                            int column = 5;
+                            Typeface typeface = ResourcesCompat.getFont(mContext, R.font.open_sans_bold);
+
+                            tableRowTableLabel = new TableRow(mContext);
+                            tv_date_time = new TextView(mContext);
+                            tv_date_time.setText(mContext.getText(R.string.column_date_time)+" ");
+                            tv_date_time.setTextColor(Color.WHITE);
+                            tv_date_time.setTypeface(typeface);
+                            tv_date_time.setBackground(mContext.getResources().getDrawable(R.drawable.bg_header_table));
+                            tableRowTableLabel.addView(tv_date_time);
+
+                            tv_transaction_id = new TextView(mContext);
+                            tv_transaction_id.setText(mContext.getText(R.string.column_transaction_id)+" ");
+                            tv_transaction_id.setTextColor(Color.WHITE);
+                            tv_transaction_id.setTypeface(typeface);
+                            tv_transaction_id.setBackground(mContext.getResources().getDrawable(R.drawable.bg_header_table));
+                            tableRowTableLabel.addView(tv_transaction_id);
+
+                            tv_account = new TextView(mContext);
+                            tv_account.setText(mContext.getText(R.string.column_name_account)+" ");
+                            tv_account.setTextColor(Color.WHITE);
+                            tv_account.setTypeface(typeface);
+                            tv_account.setBackground(mContext.getResources().getDrawable(R.drawable.bg_header_table));
+                            tableRowTableLabel.addView(tv_account);
+
+                            tv_amount = new TextView(mContext);
+                            tv_amount.setText(mContext.getText(R.string.column_name_amount)+" ");
+                            tv_amount.setTextColor(Color.WHITE);
+                            tv_amount.setTypeface(typeface);
+                            tv_amount.setBackground(mContext.getResources().getDrawable(R.drawable.bg_header_table));
+                            tableRowTableLabel.addView(tv_amount);
+
+                            tv_status = new TextView(mContext);
+                            tv_status.setText(mContext.getText(R.string.column_name_status)+" ");
+                            tv_status.setBackground(mContext.getResources().getDrawable(R.drawable.bg_header_table));
+                            tv_status.setTextColor(Color.WHITE);
+                            tv_status.setTypeface(typeface);
+                            tableRowTableLabel.addView(tv_status);
+
+                            invoiceTableLayout.addView(tableRowTableLabel);
+
+                            String[][] invoices = new String[rows][column];
+
+                            for(int i = 0; i < queryDocumentSnapshots.size(); i++)
+                            {
+                                String date_time = queryDocumentSnapshots.getDocuments().get(i).getString("date_time");
+                                String transactionID = queryDocumentSnapshots.getDocuments().get(i).getString("transactionID");
+                                String account = queryDocumentSnapshots.getDocuments().get(i).getString("account");
+                                Double amount = queryDocumentSnapshots.getDocuments().get(i).getDouble("amount");
+                                String status = queryDocumentSnapshots.getDocuments().get(i).getString("status");
+
+                                invoices[i][0] = date_time;
+                                invoices[i][1] = transactionID;
+                                invoices[i][2] = account;
+                                invoices[i][3] = String.valueOf(amount);
+                                invoices[i][4] = status;
+
+                                TableRow tvRow = new TableRow(mContext);
+                                TextView t0v = new TextView(mContext);
+                                t0v.setText(date_time);
+                                t0v.setBackground(mContext.getResources().getDrawable(R.drawable.bg_row_table));
+                                t0v.setTextColor(Color.GRAY);
+                                t0v.setGravity(Gravity.CENTER);
+                                t0v.setTypeface(typeface);
+                                tvRow.addView(t0v);
+                                TextView t1v = new TextView(mContext);
+                                t1v.setText(transactionID);
+                                t1v.setTextColor(Color.GRAY);
+                                t1v.setTypeface(typeface);
+                                t1v.setBackground(mContext.getResources().getDrawable(R.drawable.bg_row_table));
+                                t1v.setGravity(Gravity.CENTER);
+                                tvRow.addView(t1v);
+                                TextView t2v = new TextView(mContext);
+                                t2v.setText(account);
+                                t2v.setTypeface(typeface);
+                                t2v.setBackground(mContext.getResources().getDrawable(R.drawable.bg_row_table));
+                                t2v.setTextColor(Color.GRAY);
+                                t2v.setGravity(Gravity.CENTER);
+                                tvRow.addView(t2v);
+                                TextView t3v = new TextView(mContext);
+                                t3v.setText(String.valueOf(amount));
+                                t3v.setTextColor(Color.GRAY);
+                                t3v.setTypeface(typeface);
+                                t3v.setBackground(mContext.getResources().getDrawable(R.drawable.bg_row_table));
+                                t3v.setGravity(Gravity.CENTER);
+                                tvRow.addView(t3v);
+                                TextView t4v = new TextView(mContext);
+                                t4v.setText(status);
+                                t4v.setTypeface(typeface);
+                                t4v.setBackground(mContext.getResources().getDrawable(R.drawable.bg_row_table));
+                                t4v.setTextColor(Color.GRAY);
+                                t4v.setGravity(Gravity.CENTER);
+                                tvRow.addView(t4v);
+
+                                invoiceTableLayout.addView(tvRow);
+
+                                Log.d("ARRAY:",invoices[i][0]+" "+ invoices[i][1]+ " "+ invoices[i][2]+ " "+ invoices[i][3]+" "+invoices[i][4]);
                             }
-                        } else {
-                            Toast.makeText(mContext, mContext.getText(R.string.error_is_no_longer_than_24_hours), Toast.LENGTH_SHORT).show();
+                        }else {
+                            //no data
                         }
-                    } else {
-                        Toast.makeText(mContext, mContext.getText(R.string.error_this_account_made_a_payment_this_month), Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(mContext, mContext.getText(R.string.error_withdrawal_account_nots_set), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
 
-        return view;
+                    }
+                });
     }
 
     private void checkAndEnableDisableButton() {
@@ -179,25 +318,10 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                         if (row5Done.getVisibility() == View.VISIBLE || row6Done.getVisibility() == View.VISIBLE)
                         {
                             btnMakeRequestForPayment.setEnabled(true);
-                        } else
-                        {
-                            Toast.makeText(mContext, mContext.getText(R.string.error_cash_out_limit_not_reached), Toast.LENGTH_SHORT).show();
                         }
-                    } else
-                    {
-                        Toast.makeText(mContext, mContext.getText(R.string.error_this_account_is_changed_in_24_hours_wait_for_couple_hours_to_make_request_for_payment), Toast.LENGTH_SHORT).show();
                     }
-                } else
-                {
-                    Toast.makeText(mContext, mContext.getText(R.string.error_is_no_longer_than_24_hours), Toast.LENGTH_SHORT).show();
                 }
-            } else
-            {
-                Toast.makeText(mContext, mContext.getText(R.string.error_this_account_made_a_payment_this_month), Toast.LENGTH_SHORT).show();
             }
-        } else
-        {
-            Toast.makeText(mContext, mContext.getText(R.string.error_withdrawal_account_nots_set), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -329,23 +453,26 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Double balance = documentSnapshot.getDouble("balance");
-                        if (balance > 5 && payment_method.equals(PAYPAL)) {
-                            row5Done.setVisibility(View.VISIBLE);
-                        }
-
-                        if (balance > 100 && payment_method.equals(BANK_ACCOUNT)) {
-                            row6Done.setVisibility(View.VISIBLE);
-                        }
-
-                        if (payment_method.equals("")) {
-                            row5Error.setVisibility(View.VISIBLE);
-                            row6Error.setVisibility(View.VISIBLE);
-                        }
-
-                        if(balance < 5)
+                        if(balance != null)
                         {
-                            row5Error.setVisibility(View.VISIBLE);
-                            row6Error.setVisibility(View.VISIBLE);
+                            if (balance > 5 && payment_method.equals(PAYPAL)) {
+                                row5Done.setVisibility(View.VISIBLE);
+                            }
+
+                            if (balance > 100 && payment_method.equals(BANK_ACCOUNT)) {
+                                row6Done.setVisibility(View.VISIBLE);
+                            }
+
+                            if (payment_method.equals("")) {
+                                row5Error.setVisibility(View.VISIBLE);
+                                row6Error.setVisibility(View.VISIBLE);
+                            }
+
+                            if(balance < 5)
+                            {
+                                row5Error.setVisibility(View.VISIBLE);
+                                row6Error.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -384,6 +511,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         tableRowPaypal = view.findViewById(R.id.tableRowPaypal);
         tableRowBankAccount = view.findViewById(R.id.tableRowBankAccount);
         labelCheckingWithdraw = view.findViewById(R.id.labelCheckingWithdraw);
+        invoiceTableLayout = view.findViewById(R.id.invoiceTableLayout);
     }
 
     private void getAndSetFromSharedPreference() {
@@ -452,7 +580,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
 
         ArrayList<PieEntry> entries = new ArrayList<>();
 
-        tv_balance_value.setText(mContext.getText(R.string.balance) + ": " + balance);
+        tv_balance_value.setText(mContext.getText(R.string.balance) + ": " + balance+" "+EURO);
 
         try {
             entries.add(new PieEntry(Float.parseFloat(String.valueOf(balance)), EURO));
@@ -570,7 +698,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         );
 
         firebaseFirestore.collection(INVOICE)
-                .document(firebaseAuth.getUid())
+                .document(transactionID)
                 .set(invoice)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

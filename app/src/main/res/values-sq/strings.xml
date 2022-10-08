@@ -545,6 +545,12 @@
     <string name="error_withdrawal_account_nots_set">Error withdrawal account not set</string>
     <string name="you_have_successfully_made_the_request_wait_for_response">You have successfully made the request, wait for a response.</string>
     <string name="checking">Checking...</string>
+    <string name="column_date_time">DateTime</string>
+    <string name="column_transaction_id">Transaction ID</string>
+    <string name="column_name_account">Account</string>
+    <string name="column_name_amount">Amount</string>
+    <string name="column_name_status">Status</string>
+    <string name="withdrawal_history">Withdrawal History</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
