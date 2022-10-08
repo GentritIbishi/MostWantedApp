@@ -386,7 +386,7 @@
     <string name="title_activity_single_report" translatable="false">SingleReportActivity</string>
     <string name="error_failed_to_get_image_from_database">Failed to get image from database</string>
     <string name="informer_report">Informer Report</string>
-    <string name="status">status</string>
+    <string name="status">Status</string>
     <string name="date_and_time">Date and Time</string>
     <string name="uid">uid</string>
     <string name="informer_person_name">Informer Person Name</string>
@@ -545,7 +545,7 @@
     <string name="error_withdrawal_account_nots_set">Error withdrawal account not set</string>
     <string name="you_have_successfully_made_the_request_wait_for_response">You have successfully made the request, wait for a response.</string>
     <string name="checking">Checking...</string>
-    <string name="column_date_time">DateTime</string>
+    <string name="column_created_date_time">DateTime</string>
     <string name="column_transaction_id">Transaction ID</string>
     <string name="column_name_account">Account</string>
     <string name="column_name_amount">Amount</string>
@@ -553,6 +553,9 @@
     <string name="withdrawal_history">Withdrawal History</string>
     <string name="your_money_in_balance">Income</string>
     <string name="maximum">Maximum</string>
+    <string name="invoice">Invoice</string>
+    <string name="update_date_time">Update DateTime</string>
+    <string name="user_id">User Id</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

@@ -43,7 +43,6 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
@@ -201,7 +200,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
 
                             tableRowTableLabel = new TableRow(mContext);
                             tv_date_time = new TextView(mContext);
-                            tv_date_time.setText(mContext.getText(R.string.column_date_time)+" ");
+                            tv_date_time.setText(mContext.getText(R.string.column_created_date_time)+" ");
                             tv_date_time.setTextColor(Color.WHITE);
                             tv_date_time.setTypeface(typeface);
                             tv_date_time.setBackground(mContext.getResources().getDrawable(R.drawable.bg_header_table));
@@ -675,6 +674,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                 firebaseAuth.getUid(),
                 payment_method,
                 InvoiceStatus.PENDING.toString(),
+                DateHelper.getDateTime(),
                 balance
         );
 

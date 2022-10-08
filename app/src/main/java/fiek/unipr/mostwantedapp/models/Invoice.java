@@ -1,27 +1,28 @@
 package fiek.unipr.mostwantedapp.models;
 
 public class Invoice {
-    private String date_time, transactionID, userId, account, status;
+    private String created_date_time, transactionID, userId, account, status, updated_date_time;
     private Double amount;
 
     public Invoice() {
     }
 
-    public Invoice(String date_time, String transactionID, String userId, String account, String status, Double amount) {
-        this.date_time = date_time;
+    public Invoice(String created_date_time, String transactionID, String userId, String account, String status, String updated_date_time, Double amount) {
+        this.created_date_time = created_date_time;
         this.transactionID = transactionID;
         this.userId = userId;
         this.account = account;
         this.status = status;
+        this.updated_date_time = updated_date_time;
         this.amount = amount;
     }
 
-    public String getDate_time() {
-        return date_time;
+    public String getCreated_date_time() {
+        return created_date_time;
     }
 
-    public void setDate_time(String date_time) {
-        this.date_time = date_time;
+    public void setCreated_date_time(String created_date_time) {
+        this.created_date_time = created_date_time;
     }
 
     public String getTransactionID() {
@@ -54,6 +55,14 @@ public class Invoice {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getUpdated_date_time() {
+        return updated_date_time;
+    }
+
+    public void setUpdated_date_time(String updated_date_time) {
+        this.updated_date_time = updated_date_time;
     }
 
     public Double getAmount() {

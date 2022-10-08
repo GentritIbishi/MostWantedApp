@@ -208,6 +208,15 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        final LinearLayout l_admin_manage_invoices = admin_dashboard_view.findViewById(R.id.l_admin_manage_invoices);
+        l_admin_manage_invoices.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new InvoiceFragment();
+                loadFragment(fragment);
+            }
+        });
+
         return admin_dashboard_view;
     }
 
