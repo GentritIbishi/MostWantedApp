@@ -1,6 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin.search;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE;
+import static fiek.unipr.mostwantedapp.utils.Constants.REFUSED;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -34,25 +35,24 @@ import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.invoice.InvoiceListAdapter;
-import fiek.unipr.mostwantedapp.fragment.admin.InvoiceFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.InvoiceProcessPaymentFragment;
 import fiek.unipr.mostwantedapp.models.Invoice;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 
-public class SearchInvoiceFragment extends Fragment implements RecyclerViewInterface {
+public class SearchInvoiceRefusedFragment extends Fragment implements RecyclerViewInterface {
 
     private Context mContext;
     private View view;
     private RecyclerView lvInvoices;
-    private LinearLayout search_admin_invoice_list_view1, search_admin_invoice_list_view2;
-    private TextView tv_search_admin_invoice_userListEmpty;
-    private ViewSwitcher search_admin_invoice_list_switcher;
+    private LinearLayout search_admin_invoice_refused_list_view1, search_admin_invoice_refused_list_view2;
+    private TextView tv_search_admin_invoice_refused_userListEmpty;
+    private ViewSwitcher search_admin_invoice_refused_list_switcher;
     private InvoiceListAdapter invoiceListAdapter;
     private ArrayList<Invoice> invoiceArrayList;
     private FirebaseFirestore firebaseFirestore;
-    private TextInputEditText admin_invoice_search_filter;
+    private TextInputEditText admin_invoice_refused_search_filter;
 
-    public SearchInvoiceFragment() {
-    }
+    public SearchInvoiceRefusedFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -62,26 +62,26 @@ public class SearchInvoiceFragment extends Fragment implements RecyclerViewInter
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_search_invoice, container, false);
+        view = inflater.inflate(R.layout.fragment_search_invoice_refused, container, false);
         mContext = getContext();
         firebaseFirestore = FirebaseFirestore.getInstance();
         InitializeFields();
         loadDatainListview();
 
-        final SwipeRefreshLayout admin_invoice_pullToRefreshInSearch = view.findViewById(R.id.admin_invoice_pullToRefreshInSearch);
-        admin_invoice_pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        final SwipeRefreshLayout admin_invoice_refused_pullToRefreshInSearch = view.findViewById(R.id.admin_invoice_refused_pullToRefreshInSearch);
+        admin_invoice_refused_pullToRefreshInSearch.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Reload current fragment
                 invoiceArrayList.clear();
                 loadDatainListview();
-                admin_invoice_pullToRefreshInSearch.setRefreshing(false);
+                admin_invoice_refused_pullToRefreshInSearch.setRefreshing(false);
             }
         });
 
-        admin_invoice_search_filter.requestFocus();
+        admin_invoice_refused_search_filter.requestFocus();
 
-        admin_invoice_search_filter.addTextChangedListener(new TextWatcher() {
+        admin_invoice_refused_search_filter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -101,11 +101,11 @@ public class SearchInvoiceFragment extends Fragment implements RecyclerViewInter
     }
 
     private void InitializeFields() {
-        admin_invoice_search_filter = view.findViewById(R.id.admin_invoice_search_filter);
-        search_admin_invoice_list_view1 = view.findViewById(R.id.search_admin_invoice_list_view1);
-        search_admin_invoice_list_view2 = view.findViewById(R.id.search_admin_invoice_list_view2);
-        tv_search_admin_invoice_userListEmpty = view.findViewById(R.id.tv_search_admin_invoice_userListEmpty);
-        search_admin_invoice_list_switcher = view.findViewById(R.id.search_admin_invoice_list_switcher);
+        admin_invoice_refused_search_filter = view.findViewById(R.id.admin_invoice_refused_search_filter);
+        search_admin_invoice_refused_list_view1 = view.findViewById(R.id.search_admin_invoice_refused_list_view1);
+        search_admin_invoice_refused_list_view2 = view.findViewById(R.id.search_admin_invoice_refused_list_view2);
+        tv_search_admin_invoice_refused_userListEmpty = view.findViewById(R.id.tv_search_admin_invoice_refused_userListEmpty);
+        search_admin_invoice_refused_list_switcher = view.findViewById(R.id.search_admin_invoice_refused_list_switcher);
         lvInvoices = view.findViewById(R.id.lvInvoices);
         invoiceArrayList = new ArrayList<>();
         invoiceListAdapter = new InvoiceListAdapter(mContext, invoiceArrayList, this);
@@ -117,6 +117,7 @@ public class SearchInvoiceFragment extends Fragment implements RecyclerViewInter
         // below line is use to get data from Firebase
         // firestore using collection in android.
         firebaseFirestore.collection(INVOICE)
+                .whereEqualTo("status", REFUSED)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -127,8 +128,8 @@ public class SearchInvoiceFragment extends Fragment implements RecyclerViewInter
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
-                            if (search_admin_invoice_list_switcher.getCurrentView() == search_admin_invoice_list_view2) {
-                                search_admin_invoice_list_switcher.showNext();
+                            if (search_admin_invoice_refused_list_switcher.getCurrentView() == search_admin_invoice_refused_list_view2) {
+                                search_admin_invoice_refused_list_switcher.showNext();
                             }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
@@ -142,8 +143,8 @@ public class SearchInvoiceFragment extends Fragment implements RecyclerViewInter
 
                             invoiceListAdapter.notifyDataSetChanged();
                         } else {
-                            if (search_admin_invoice_list_switcher.getCurrentView() == search_admin_invoice_list_view1) {
-                                search_admin_invoice_list_switcher.showNext();
+                            if (search_admin_invoice_refused_list_switcher.getCurrentView() == search_admin_invoice_refused_list_view1) {
+                                search_admin_invoice_refused_list_switcher.showNext();
                             }
                         }
                     }
@@ -174,8 +175,8 @@ public class SearchInvoiceFragment extends Fragment implements RecyclerViewInter
                         if (!queryDocumentSnapshots.isEmpty()) {
                             // if the snapshot is not empty we are hiding
                             // our progress bar and adding our data in a list.
-                            if (search_admin_invoice_list_switcher.getCurrentView() == search_admin_invoice_list_view2) {
-                                search_admin_invoice_list_switcher.showNext();
+                            if (search_admin_invoice_refused_list_switcher.getCurrentView() == search_admin_invoice_refused_list_view2) {
+                                search_admin_invoice_refused_list_switcher.showNext();
                             }
                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
                             for (DocumentSnapshot d : list) {
@@ -188,8 +189,8 @@ public class SearchInvoiceFragment extends Fragment implements RecyclerViewInter
                             }
                             invoiceListAdapter.notifyDataSetChanged();
                         } else {
-                            if (search_admin_invoice_list_switcher.getCurrentView() == search_admin_invoice_list_view1) {
-                                search_admin_invoice_list_switcher.showNext();
+                            if (search_admin_invoice_refused_list_switcher.getCurrentView() == search_admin_invoice_refused_list_view1) {
+                                search_admin_invoice_refused_list_switcher.showNext();
                             }
                         }
                     }
@@ -206,7 +207,7 @@ public class SearchInvoiceFragment extends Fragment implements RecyclerViewInter
 
     @Override
     public void onItemClick(int position) {
-        InvoiceFragment invoiceFragment = new InvoiceFragment();
+        InvoiceProcessPaymentFragment invoiceProcessPaymentFragment = new InvoiceProcessPaymentFragment();
         Bundle viewBundle = new Bundle();
         viewBundle.putString("created_date_time", invoiceArrayList.get(position).getCreated_date_time());
         viewBundle.putString("transactionID", invoiceArrayList.get(position).getTransactionID());
@@ -215,8 +216,8 @@ public class SearchInvoiceFragment extends Fragment implements RecyclerViewInter
         viewBundle.putString("status", invoiceArrayList.get(position).getStatus());
         viewBundle.putString("updated_date_time", invoiceArrayList.get(position).getUpdated_date_time());
         viewBundle.putDouble("amount", invoiceArrayList.get(position).getAmount());
-        invoiceFragment.setArguments(viewBundle);
-        loadFragment(invoiceFragment);
+        invoiceProcessPaymentFragment.setArguments(viewBundle);
+        loadFragment(invoiceProcessPaymentFragment);
     }
 
     private void loadFragment(Fragment fragment) {
@@ -225,4 +226,5 @@ public class SearchInvoiceFragment extends Fragment implements RecyclerViewInter
                 .addToBackStack(null)
                 .commit();
     }
+
 }

@@ -1,242 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:fillViewport="true"
-    android:layout_weight="0.5"
-    android:layout_gravity="center"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".fragment.admin.InvoiceFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:theme="@style/Theme.MaterialComponents.Light"
-            android:layout_marginTop="5dp"
-            android:elevation="6dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_analytics_item"
+            android:elevation="6dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/autocomplete_invoice_status_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_invoice"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="48dp"
-                android:hint="@string/status"
-                android:textColorHint="@color/dark_light_color"
-                android:textDirection="firstStrong"
+                android:elevation="6dp"
+                android:fontFamily="@font/open_sans"
+                android:gravity="left"
+                android:padding="10dp"
+                android:text="@string/invoice"
+                android:textColor="@color/gray"
+                android:textSize="25sp"
                 android:textStyle="bold"
-               
+                app:layout_constraintBottom_toTopOf="@+id/head_constraint_register"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    android:id="@+id/auto_complete_invoice_status"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="none"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:text="test"
-                    android:textColor="@color/dark_light_color"
-                    android:textStyle="bold" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_invoice_transaction_id_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/head_constraint_register"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:textColorHint="@color/dark_light_color"
-                app:counterOverflowTextColor="@color/white"
-                app:helperTextTextColor="@color/white"
-                android:textDirection="firstStrong"
-                android:textStyle="bold"
-                android:hint="@string/column_transaction_id"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/autocomplete_invoice_status_layout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_invoice_transaction_id"
-                    android:textColor="@color/dark_light_color"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/open_sans_bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_invoice_created_date_time_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:textColorHint="@color/dark_light_color"
-                app:counterOverflowTextColor="@color/white"
-                app:helperTextTextColor="@color/white"
-                android:textDirection="firstStrong"
-                android:textStyle="bold"
-                android:hint="@string/column_created_date_time"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_invoice_transaction_id_layout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_invoice_created_date_time"
-                    android:textColor="@color/dark_light_color"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/open_sans_bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_invoice_account_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:textColorHint="@color/dark_light_color"
-                app:counterOverflowTextColor="@color/white"
-                app:helperTextTextColor="@color/white"
-                android:textDirection="firstStrong"
-                android:textStyle="bold"
-                android:hint="@string/column_name_account"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_invoice_created_date_time_layout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_invoice_account"
-                    android:textColor="@color/dark_light_color"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/open_sans_bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_invoice_amount_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:textColorHint="@color/dark_light_color"
-                app:counterOverflowTextColor="@color/white"
-                app:helperTextTextColor="@color/white"
-                android:textDirection="firstStrong"
-                android:textStyle="bold"
-                android:hint="@string/column_name_amount"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_invoice_account_layout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_invoice_amount"
-                    android:textColor="@color/dark_light_color"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/open_sans_bold"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_invoice_userId_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="32dp"
-                android:hint="@string/user_id"
-                android:textColorHint="@color/dark_light_color"
-                android:textDirection="firstStrong"
-                android:textStyle="bold"
-                app:counterOverflowTextColor="@color/white"
-                app:helperTextTextColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_invoice_amount_layout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_invoice_userId"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/dark_light_color"
-                    android:textStyle="bold" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_invoice_updated_date_time_layout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginTop="16dp"
-                android:hint="@string/update_date_time"
-                android:textColorHint="@color/dark_light_color"
-                android:textDirection="firstStrong"
-                android:textStyle="bold"
-                app:counterOverflowTextColor="@color/white"
-                app:helperTextTextColor="@color/white"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_invoice_userId_layout">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/et_invoice_updated_date_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/dark_light_color"
-                    android:textStyle="bold" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-            <Button
-                android:id="@+id/btnSaveinvoice"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="64dp"
-                android:layout_marginEnd="64dp"
-                android:layout_marginTop="24dp"
-                android:background="@drawable/button_rectangle"
-                android:drawableStart="@drawable/ic_check"
-                android:paddingStart="20dp"
-                android:text="@string/save_changes"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:visibility="visible"
+                android:layout_gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_invoice_updated_date_time_layout" />
+                app:layout_constraintStart_toStartOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintPaid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/item_persistent_state"
+                    android:clickable="true"
+                    android:elevation="3dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.8"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/paidImage"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:src="@drawable/ic_invoice_paid"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_invoice_paid"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="@string/paid"
+                        android:textColor="@color/gray"
+                        android:textSize="17sp"
+                        android:textAllCaps="true"
+                        app:layout_constraintEnd_toEndOf="@+id/paidImage"
+                        app:layout_constraintStart_toStartOf="@+id/paidImage"
+                        app:layout_constraintTop_toBottomOf="@+id/paidImage" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintPending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/item_persistent_state"
+                    android:clickable="true"
+                    android:elevation="3dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintPaid">
+
+                    <ImageView
+                        android:id="@+id/pendingImage"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:layout_marginTop="29dp"
+                        android:src="@drawable/ic_invoice_pending"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/update_textView2" />
+
+                    <TextView
+                        android:id="@+id/tv_invoice_pending"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/pending"
+                        android:textAllCaps="true"
+                        android:textColor="@color/gray"
+                        android:textSize="17sp"
+                        app:layout_constraintEnd_toEndOf="@+id/pendingImage"
+                        app:layout_constraintStart_toStartOf="@+id/pendingImage"
+                        app:layout_constraintTop_toBottomOf="@+id/pendingImage" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintRefused"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="13dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/item_persistent_state"
+                    android:clickable="true"
+                    android:elevation="3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintPending">
+
+                    <ImageView
+                        android:id="@+id/refusedImage"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        android:layout_marginTop="29dp"
+                        android:src="@drawable/ic_invoice_refused"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/update_textView2" />
+
+                    <TextView
+                        android:id="@+id/tv_invoice_refused"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="@string/refused"
+                        android:textAllCaps="true"
+                        android:textColor="@color/gray"
+                        android:textSize="17sp"
+                        app:layout_constraintEnd_toEndOf="@+id/refusedImage"
+                        app:layout_constraintStart_toStartOf="@+id/refusedImage"
+                        app:layout_constraintTop_toBottomOf="@+id/refusedImage" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
 </ScrollView>

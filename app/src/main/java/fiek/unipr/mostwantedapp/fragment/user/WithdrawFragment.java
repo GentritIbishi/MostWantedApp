@@ -185,6 +185,16 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         }, 3000);
     }
 
+    private void cleanTable(TableLayout table) {
+
+        int childCount = table.getChildCount();
+
+        // Remove all rows except the first one
+        if (childCount > 1) {
+            table.removeViews(1, childCount - 1);
+        }
+    }
+
     private void addToTable() {
         firebaseFirestore.collection(INVOICE)
                 .whereEqualTo("userId", firebaseAuth.getCurrentUser().getUid())
@@ -194,8 +204,6 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if(queryDocumentSnapshots.size() != 0)
                         {
-                            int rows = queryDocumentSnapshots.size();
-                            int column = 5;
                             Typeface typeface = ResourcesCompat.getFont(mContext, R.font.open_sans_bold);
 
                             tableRowTableLabel = new TableRow(mContext);
@@ -238,20 +246,23 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
 
                             for(int i = 0; i < queryDocumentSnapshots.size(); i++)
                             {
-                                String date_time = queryDocumentSnapshots.getDocuments().get(i).getString("date_time");
+                                cleanTable(invoiceTableLayout);
+                                String created_date_time = queryDocumentSnapshots.getDocuments().get(i).getString("created_date_time");
                                 String transactionID = queryDocumentSnapshots.getDocuments().get(i).getString("transactionID");
                                 String account = queryDocumentSnapshots.getDocuments().get(i).getString("account");
                                 Double amount = queryDocumentSnapshots.getDocuments().get(i).getDouble("amount");
                                 String status = queryDocumentSnapshots.getDocuments().get(i).getString("status");
 
                                 TableRow tvRow = new TableRow(mContext);
+
                                 TextView t0v = new TextView(mContext);
-                                t0v.setText(date_time);
+                                t0v.setText(created_date_time);
                                 t0v.setBackground(mContext.getResources().getDrawable(R.drawable.bg_row_table));
                                 t0v.setTextColor(Color.GRAY);
                                 t0v.setGravity(Gravity.CENTER);
                                 t0v.setTypeface(typeface);
                                 tvRow.addView(t0v);
+
                                 TextView t1v = new TextView(mContext);
                                 t1v.setText(transactionID);
                                 t1v.setTextColor(Color.GRAY);
@@ -259,6 +270,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                                 t1v.setBackground(mContext.getResources().getDrawable(R.drawable.bg_row_table));
                                 t1v.setGravity(Gravity.CENTER);
                                 tvRow.addView(t1v);
+
                                 TextView t2v = new TextView(mContext);
                                 t2v.setText(account);
                                 t2v.setTypeface(typeface);
@@ -266,6 +278,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                                 t2v.setTextColor(Color.GRAY);
                                 t2v.setGravity(Gravity.CENTER);
                                 tvRow.addView(t2v);
+
                                 TextView t3v = new TextView(mContext);
                                 t3v.setText(String.valueOf(amount));
                                 t3v.setTextColor(Color.GRAY);
@@ -273,6 +286,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                                 t3v.setBackground(mContext.getResources().getDrawable(R.drawable.bg_row_table));
                                 t3v.setGravity(Gravity.CENTER);
                                 tvRow.addView(t3v);
+
                                 TextView t4v = new TextView(mContext);
                                 t4v.setText(status);
                                 t4v.setTypeface(typeface);
@@ -337,11 +351,11 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                             if(queryDocumentSnapshots.size() != 0)
                             {
                                 for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
-                                    String dateTime = queryDocumentSnapshots.getDocuments().get(i).getString("date_time");
+                                    String created_date_time = queryDocumentSnapshots.getDocuments().get(i).getString("created_date_time");
                                     //duhet me kqyre se kjo date a i perkete ketij muaji
-                                    if(!StringHelper.empty(dateTime))
+                                    if(!StringHelper.empty(created_date_time))
                                     {
-                                        String[] arrayDateTime = dateTime.split(" ");
+                                        String[] arrayDateTime = created_date_time.split(" ");
                                         String date = arrayDateTime[0];
                                         try {
                                             if (DateHelper.isDateInCurrentMonth(date)) {

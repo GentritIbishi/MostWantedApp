@@ -1,33 +1,31 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.adapter.gallery.CustomizedGalleryAdapter;
+import fiek.unipr.mostwantedapp.fragment.admin.register.investigator.RegisterInvestigatorFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.register.person.RegisterPersonFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.register.user.RegisterUserFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.search.SearchInvoicePaidFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.search.SearchInvoicePendingFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.search.SearchInvoiceRefusedFragment;
 
 public class InvoiceFragment extends Fragment {
 
     private Context mContext;
     private View view;
-    private String created_date_time, transactionID, userId, account, status, updated_date_time;
-    private Double amount;
+    private ConstraintLayout constraintPaid, constraintPending, constraintRefused;
 
     public InvoiceFragment() {}
 
@@ -40,30 +38,48 @@ public class InvoiceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_invoice, container, false);
-        mContext = getContext();
 
-        getFromBundle();
+        initialize();
+
+        constraintPaid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new SearchInvoicePaidFragment();
+                loadFragment(fragment);
+            }
+        });
+
+        constraintPending.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new SearchInvoicePendingFragment();
+                loadFragment(fragment);
+            }
+        });
+
+        constraintRefused.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new SearchInvoiceRefusedFragment();
+                loadFragment(fragment);
+            }
+        });
 
         return view;
     }
 
-    private void getFromBundle() {
+    private void initialize() {
+        constraintPaid = view.findViewById(R.id.constraintPaid);
+        constraintPending = view.findViewById(R.id.constraintPending);
+        constraintRefused = view.findViewById(R.id.constraintRefused);
+    }
 
-        try {
-            Bundle bundle = getArguments();
-            if (bundle != null) {
-                created_date_time = bundle.getString("created_date_time");
-                transactionID = bundle.getString("transactionID");
-                userId = bundle.getString("userId");
-                account = bundle.getString("account");
-                status = bundle.getString("status");
-                updated_date_time = bundle.getString("updated_date_time");
-                amount = bundle.getDouble("amount");
-            }
-
-        }catch (Exception e){
-            Log.d("ERROR", e.getMessage());
-        }
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.admin_fragmentContainer, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }

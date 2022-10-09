@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".fragment.admin.InvoiceFragment">
+    tools:context=".fragment.admin.search.SearchInvoicePaidFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/admin_invoice_pullToRefreshInSearch"
+        android:id="@+id/admin_invoice_paid_pullToRefreshInSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -24,7 +24,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/admin_invoice_search_filter_layout"
+                android:id="@+id/admin_invoice_paid_search_filter_layout"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_height="wrap_content"
                 android:layout_width="fill_parent"
@@ -43,7 +43,7 @@
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/admin_invoice_search_filter"
+                    android:id="@+id/admin_invoice_paid_search_filter"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/gray"
@@ -56,7 +56,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <ViewSwitcher
-                android:id="@+id/search_admin_invoice_list_switcher"
+                android:id="@+id/search_admin_invoice_paid_list_switcher"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
@@ -64,7 +64,7 @@
                 android:inAnimation="@android:anim/slide_in_left">
 
                 <LinearLayout
-                    android:id="@+id/search_admin_invoice_list_view1"
+                    android:id="@+id/search_admin_invoice_paid_list_view1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -84,11 +84,11 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/search_admin_invoice_list_view2"
+                    android:id="@+id/search_admin_invoice_paid_list_view2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <TextView android:id="@+id/tv_search_admin_invoice_userListEmpty"
+                    <TextView android:id="@+id/tv_search_admin_invoice_paid_userListEmpty"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="@string/no_data"
