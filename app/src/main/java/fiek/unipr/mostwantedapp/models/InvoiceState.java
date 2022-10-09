@@ -1,6 +1,6 @@
 package fiek.unipr.mostwantedapp.models;
 
-public enum InvoiceStatus {
+public enum InvoiceState {
     PAID,
     PENDING,
     REFUSED

@@ -121,6 +121,7 @@ dependencies {
     implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 
     implementation 'joda-time:joda-time:2.11.2'
+    implementation 'com.paypal.sdk:paypal-android-sdk:2.14.2'
 
 
 }

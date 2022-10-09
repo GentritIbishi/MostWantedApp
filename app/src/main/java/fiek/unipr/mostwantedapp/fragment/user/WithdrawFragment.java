@@ -64,7 +64,7 @@ import java.util.Date;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.models.Invoice;
-import fiek.unipr.mostwantedapp.models.InvoiceStatus;
+import fiek.unipr.mostwantedapp.models.InvoiceState;
 import fiek.unipr.mostwantedapp.models.PaymentInformation;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
@@ -687,7 +687,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                 transactionID,
                 firebaseAuth.getUid(),
                 payment_method,
-                InvoiceStatus.PENDING.toString(),
+                InvoiceState.PENDING.toString(),
                 DateHelper.getDateTime(),
                 balance
         );

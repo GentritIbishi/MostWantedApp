@@ -560,11 +560,19 @@
     <string name="paid">Paid</string>
     <string name="pending">Pending</string>
     <string name="refused">Refused</string>
+    <string name="credit_card">Credit Card</string>
+    <string name="paypal">Paypal</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>
         <item>UNVERIFIED</item>
         <item>FAKE</item>
+    </string-array>
+
+    <string-array name="invoice_state">
+        <item>PAID</item>
+        <item>PENDING</item>
+        <item>REFUSED</item>
     </string-array>
 
 </resources>

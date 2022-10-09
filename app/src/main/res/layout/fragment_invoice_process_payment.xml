@@ -7,7 +7,7 @@
     android:fillViewport="true"
     android:layout_weight="0.5"
     android:layout_gravity="center"
-    tools:context=".fragment.admin.InvoiceProcessPaymentFragment">
+    tools:context=".fragment.admin.InvoicePaymentProcessFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:theme="@style/Theme.MaterialComponents.Light"
@@ -42,7 +42,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:text="test"
+                    android:text=""
                     android:textColor="@color/dark_light_color"
                     android:textStyle="bold" />
 
@@ -70,6 +70,7 @@
                     android:id="@+id/et_invoice_transaction_id"
                     android:textColor="@color/dark_light_color"
                     android:textStyle="bold"
+                    android:enabled="false"
                     android:fontFamily="@font/open_sans_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -98,6 +99,7 @@
                     android:id="@+id/et_invoice_created_date_time"
                     android:textColor="@color/dark_light_color"
                     android:textStyle="bold"
+                    android:enabled="false"
                     android:fontFamily="@font/open_sans_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -126,6 +128,7 @@
                     android:id="@+id/et_invoice_account"
                     android:textColor="@color/dark_light_color"
                     android:textStyle="bold"
+                    android:enabled="false"
                     android:fontFamily="@font/open_sans_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -154,6 +157,7 @@
                     android:id="@+id/et_invoice_amount"
                     android:textColor="@color/dark_light_color"
                     android:textStyle="bold"
+                    android:enabled="false"
                     android:fontFamily="@font/open_sans_bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
@@ -183,6 +187,7 @@
                     android:id="@+id/et_invoice_userId"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:fontFamily="@font/open_sans_bold"
                     android:textColor="@color/dark_light_color"
                     android:textStyle="bold" />
@@ -211,6 +216,7 @@
                     android:id="@+id/et_invoice_updated_date_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:enabled="false"
                     android:fontFamily="@font/open_sans_bold"
                     android:textColor="@color/dark_light_color"
                     android:textStyle="bold" />
@@ -219,15 +225,17 @@
 
 
             <Button
-                android:id="@+id/btnSaveinvoice"
+                android:id="@+id/btnSaveInvoice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="64dp"
-                android:layout_marginEnd="64dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginEnd="64dp"
+                android:layout_marginBottom="32dp"
                 android:background="@drawable/button_rectangle"
                 android:drawableStart="@drawable/ic_check"
                 android:paddingStart="20dp"
+                android:enabled="false"
                 android:text="@string/process_payment"
                 android:textColor="@color/white"
                 android:textSize="16sp"

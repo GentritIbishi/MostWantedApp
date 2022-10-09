@@ -34,7 +34,7 @@ import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.invoice.InvoiceListAdapter;
-import fiek.unipr.mostwantedapp.fragment.admin.InvoiceProcessPaymentFragment;
+import fiek.unipr.mostwantedapp.fragment.admin.InvoicePaymentProcessFragment;
 import fiek.unipr.mostwantedapp.models.Invoice;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 
@@ -206,7 +206,7 @@ public class SearchInvoicePendingFragment extends Fragment implements RecyclerVi
 
     @Override
     public void onItemClick(int position) {
-        InvoiceProcessPaymentFragment invoiceProcessPaymentFragment = new InvoiceProcessPaymentFragment();
+        InvoicePaymentProcessFragment invoicePaymentProcessFragment = new InvoicePaymentProcessFragment();
         Bundle viewBundle = new Bundle();
         viewBundle.putString("created_date_time", invoiceArrayList.get(position).getCreated_date_time());
         viewBundle.putString("transactionID", invoiceArrayList.get(position).getTransactionID());
@@ -215,8 +215,8 @@ public class SearchInvoicePendingFragment extends Fragment implements RecyclerVi
         viewBundle.putString("status", invoiceArrayList.get(position).getStatus());
         viewBundle.putString("updated_date_time", invoiceArrayList.get(position).getUpdated_date_time());
         viewBundle.putDouble("amount", invoiceArrayList.get(position).getAmount());
-        invoiceProcessPaymentFragment.setArguments(viewBundle);
-        loadFragment(invoiceProcessPaymentFragment);
+        invoicePaymentProcessFragment.setArguments(viewBundle);
+        loadFragment(invoicePaymentProcessFragment);
     }
 
     private void loadFragment(Fragment fragment) {
