@@ -17,10 +17,12 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -55,6 +57,7 @@ import okhttp3.Response;
 
 public class PayoutsFragment extends Fragment {
 
+    public static int responseCode = 0;
     private Context mContext;
     private View view;
 
@@ -75,6 +78,8 @@ public class PayoutsFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     @Override
@@ -174,6 +179,18 @@ public class PayoutsFragment extends Fragment {
                 .addHeader("Authorization", PAYPAL_SANDBOX_KEY_BEARER)
                 .build();
         Response response = client.newCall(request).execute();
+
+        // Reset the response code
+        responseCode = 0;
+
+        if ((responseCode = response.code()) == 201) {
+            // Get response
+            String jsonData = response.body().string();
+            Log.d("RESPONSEwithoutERROR:", jsonData);
+        } else {
+            Log.d("RESPONSE:", response.body().toString());
+        }
+
     }
 
     private void testJson(String transactionID, int itemNumber, String paypalEmail, Double amount, String currency) throws JSONException {
