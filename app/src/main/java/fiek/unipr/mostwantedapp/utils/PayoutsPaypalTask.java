@@ -1,7 +1,8 @@
-package fiek.unipr.mostwantedapp.fragment.admin;
+package fiek.unipr.mostwantedapp.utils;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
+import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAID;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUTS;
@@ -12,16 +13,10 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USD;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.content.Context;
-import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
-import android.os.StrictMode;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,58 +38,34 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimerTask;
 
-import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.models.Invoice;
-import fiek.unipr.mostwantedapp.models.InvoiceState;
-import fiek.unipr.mostwantedapp.utils.DateHelper;
-import fiek.unipr.mostwantedapp.utils.StringHelper;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class PayoutsFragment extends Fragment {
+public class PayoutsPaypalTask extends TimerTask {
 
     public static int responseCode = 0;
     private Context mContext;
-    private View view;
 
-    private FirebaseAuth firebaseAuth;
-    private FirebaseFirestore firebaseFirestore;
-    private FirebaseUser firebaseUser;
-    private DocumentReference documentReference;
-    private StorageReference storageReference;
-
-
-    public PayoutsFragment() {
-    }
+    private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+    private StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference();
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_payouts, container, false);
-
-
+    public void run() {
         try {
-            process(USD);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
 
-        return view;
+            // Your task process
+            process(USD);
+
+        } catch (Exception ex) {
+            System.out.println("error running thread " + ex.getMessage());
+        }
     }
 
     private void process(String currency) throws JSONException {
@@ -175,10 +146,7 @@ public class PayoutsFragment extends Fragment {
                 });
     }
 
-    private void processPayoutsWithPaypal(JSONObject main,
-                                          String[] arrayTransactionId,
-                                          String[] arrayUserId,
-                                          String[] arrayAmount) throws IOException, JSONException {
+    private void processPayoutsWithPaypal(JSONObject main, String[] arrayTransactionId, String[] arrayUserId, String[] arrayAmount) throws IOException, JSONException {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
@@ -199,8 +167,7 @@ public class PayoutsFragment extends Fragment {
                 updateStatusInvoice(PAID, arrayTransactionId[i]);
             }
 
-            for(int i = 0; i < arrayUserId.length; i++)
-            {
+            for (int i = 0; i < arrayUserId.length; i++) {
                 updateBalanceUser(Double.parseDouble(arrayAmount[i]), arrayUserId[i]);
             }
 
@@ -250,39 +217,12 @@ public class PayoutsFragment extends Fragment {
         firebaseFirestore.collection(USERS)
                 .document(userId)
                 .update("balance", BALANCE_DEFAULT,
-                "totalPaid", totalPaidNew).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("UpdatefieldError", e.getMessage());
-            }
-        });
+                        "totalPaid", totalPaidNew).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("UpdatefieldError", e.getMessage());
+                    }
+                });
     }
 
-    private void testJson(String transactionID, int itemNumber, String paypalEmail, Double amount, String currency) throws JSONException {
-        JSONObject main = new JSONObject();
-
-        //static side
-        JSONObject sender_batch_header = new JSONObject();
-        sender_batch_header.put("sender_batch_id", transactionID);
-        sender_batch_header.put("recipient_type", "EMAIL");
-        sender_batch_header.put("email_subject", "You have money!");
-        sender_batch_header.put("email_message", "You received a payment. Thanks for using our service!");
-
-        JSONArray arrayItems = new JSONArray();
-        //dynamic side
-        JSONObject item = new JSONObject();
-        item.put("sender_item_id", "item" + itemNumber);
-        item.put("recipient_wallet", "PAYPAL");
-        item.put("receiver", paypalEmail);
-
-        JSONObject amountObj = new JSONObject();
-        amountObj.put("value", amount);
-        amountObj.put("currency", currency);
-        item.put("amount", amountObj);
-        arrayItems.put(item);
-        //dynamic side
-
-        main.put("sender_batch_header", sender_batch_header);
-        main.put("items", arrayItems);
-    }
 }

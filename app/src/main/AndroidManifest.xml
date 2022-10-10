@@ -118,12 +118,6 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/gray" />
 
-        <service
-            android:name=".services.ServiceNotification"
-            android:enabled="true" />
-
-        <service android:name="com.paypal.android.sdk.payments.PayPalService" android:exported="false"/>
-
         <activity android:name="com.paypal.android.sdk.payments.PaymentActivity"/>
         <activity android:name="com.paypal.android.sdk.payments.LoginActivity"/>
         <activity android:name="com.paypal.android.sdk.payments.PaymentMethodActivity"/>
@@ -131,6 +125,11 @@
         <activity android:name="com.paypal.android.sdk.payments.PayPalFuturePaymentActivity"/>
         <activity android:name="com.paypal.android.sdk.payments.FuturePaymentConsentActivity"/>
         <activity android:name="com.paypal.android.sdk.payments.FuturePaymentInfoActivity"/>
+
+        <service
+            android:name=".services.ServiceNotification"/>
+
+        <service android:name="com.paypal.android.sdk.payments.PayPalService" android:exported="false"/>
 
     </application>
 

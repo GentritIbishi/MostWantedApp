@@ -50,6 +50,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.concurrent.TimeUnit;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.activity.LoginActivity;
 import fiek.unipr.mostwantedapp.fragment.admin.AboutFragment;
@@ -65,6 +69,7 @@ import fiek.unipr.mostwantedapp.models.NotificationState;
 import fiek.unipr.mostwantedapp.services.ServiceNotification;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
+import fiek.unipr.mostwantedapp.utils.PayoutsPaypalTask;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class AdminDashboardActivity extends AppCompatActivity {
@@ -511,6 +516,23 @@ public class AdminDashboardActivity extends AppCompatActivity {
             editor.apply();
         }
         super.onDestroy();
+    }
+
+    public void payoutPaypalRunTask() {
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        calendar.set(Calendar.MILLISECOND, 999);
+
+
+
+        Timer time = new Timer(); // Instantiate Timer Object
+
+        // Start running the task on Monday at 15:40:00, period is set to 8 hours
+        // if you want to run the task immediately, set the 2nd parameter to 0
+        time.schedule(new PayoutsPaypalTask(), calendar.getTime(), TimeUnit.MINUTES.toMillis(8));
     }
 
 }

@@ -87,8 +87,7 @@ public class ServiceNotification extends Service {
 
         startMyOwnForeground();
 
-        super.onStartCommand(intent, flags, startId);
-        return START_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
     private void startMyOwnForeground() {
@@ -350,7 +349,7 @@ public class ServiceNotification extends Service {
                                         .getDefaultSharedPreferences(getApplicationContext());
                                 int number = sharedPreferences.getInt(sharedPrefName, default_number);
 
-//                            startForeground(number, notificationBuilder.build());
+//                                startForeground(number, notificationBuilder.build());
 
                                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                                 notificationManager.notify(number, notificationBuilder.build());
