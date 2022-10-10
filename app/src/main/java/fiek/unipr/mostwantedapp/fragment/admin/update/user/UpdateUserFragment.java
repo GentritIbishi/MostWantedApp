@@ -20,6 +20,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -439,39 +440,54 @@ public class UpdateUserFragment extends Fragment {
             update_user_et_gender.setError(getText(R.string.error_gender_required));
             update_user_et_gender.requestFocus();
         }else {
-            String hashPassword = securityHelper.encrypt(new_password);
-            User user = new User(
-                    userID,
-                    new_name,
-                    new_lastname,
-                    new_fullName,
-                    new_address,
-                    new_email,
-                    new_ParentName,
-                    new_gender,
-                    new_role,
-                    new_phone,
-                    new_personal_number,
-                    register_date_time,
-                    new_grade,
-                    hashPassword,
-                    urlOfProfile,
-                    new_balance,
-                    emailVerified
-            );
             firebaseFirestore.collection(USERS)
                     .document(userID)
-                    .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-                            Fragment fragment = new UpdateUserListFragment();
-                            loadFragment(fragment);
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Double totalPaid = documentSnapshot.getDouble("totalPaid");
+                            String hashPassword = securityHelper.encrypt(new_password);
+                            User user = new User(
+                                    userID,
+                                    new_name,
+                                    new_lastname,
+                                    new_fullName,
+                                    new_address,
+                                    new_email,
+                                    new_ParentName,
+                                    new_gender,
+                                    new_role,
+                                    new_phone,
+                                    new_personal_number,
+                                    register_date_time,
+                                    new_grade,
+                                    hashPassword,
+                                    urlOfProfile,
+                                    new_balance,
+                                    totalPaid,
+                                    emailVerified
+                            );
+                            firebaseFirestore.collection(USERS)
+                                    .document(userID)
+                                    .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(getContext(), R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                                            Fragment fragment = new UpdateUserListFragment();
+                                            loadFragment(fragment);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.d("Error", e.getMessage());
                         }
                     });
         }

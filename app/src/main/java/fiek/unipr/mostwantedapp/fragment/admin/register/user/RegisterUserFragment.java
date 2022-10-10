@@ -7,6 +7,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_A;
 import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_E;
 import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.TOTAL_PAID_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
 
@@ -248,6 +249,7 @@ public class RegisterUserFragment extends Fragment {
                                     password,
                                     urlOfProfile,
                                     BALANCE_DEFAULT,
+                                    TOTAL_PAID_DEFAULT,
                                     isEmailVerified);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -284,6 +286,7 @@ public class RegisterUserFragment extends Fragment {
                               String password,
                               String urlOfProfile,
                               Double balance,
+                              Double totalPaid,
                               Boolean isEmailVerified) throws Exception {
         if(CheckInternet.isConnected(getContext())){
             SecurityHelper securityHelper = new SecurityHelper();
@@ -306,6 +309,7 @@ public class RegisterUserFragment extends Fragment {
                     hashPassword,
                     urlOfProfile,
                     balance,
+                    totalPaid,
                     isEmailVerified
             );
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {

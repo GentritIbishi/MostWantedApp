@@ -5,6 +5,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.COINS_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_E;
 import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.PHONE_USER;
+import static fiek.unipr.mostwantedapp.utils.Constants.TOTAL_PAID_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import androidx.annotation.NonNull;
@@ -226,6 +227,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 hashPassword,
                                 urlOfProfile,
                                 BALANCE_DEFAULT,
+                                TOTAL_PAID_DEFAULT,
                                 isEmailVerified
                         );
                         firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -271,6 +273,7 @@ public class RegisterActivity extends AppCompatActivity {
                               String password, 
                               String urlOfProfile,
                               Double balance,
+                              Double totalPaid,
                               Boolean isEmailVerified) {
         if(CheckInternet.isConnected(getApplicationContext())){
             documentReference = firebaseFirestore.collection(USERS).document(userID);
@@ -291,6 +294,7 @@ public class RegisterActivity extends AppCompatActivity {
                     password,
                     urlOfProfile,
                     balance,
+                    totalPaid,
                     isEmailVerified
             );
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {

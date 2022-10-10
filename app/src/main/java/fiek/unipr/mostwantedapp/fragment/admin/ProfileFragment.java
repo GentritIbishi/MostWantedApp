@@ -468,37 +468,52 @@ public class ProfileFragment extends Fragment {
             admin_et_gender.setError(getText(R.string.error_gender_required));
             admin_et_gender.requestFocus();
         }else {
-            String hashPassword = securityHelper.encrypt(new_password);
-            User user = new User(
-                    userID,
-                    new_name,
-                    new_lastname,
-                    new_fullName,
-                    new_address,
-                    new_email,
-                    new_ParentName,
-                    new_gender,
-                    new_role,
-                    new_phone,
-                    new_personal_number,
-                    register_date_time,
-                    new_grade,
-                    hashPassword,
-                    urlOfProfile,
-                    new_balance,
-                    emailVerified);
             firebaseFirestore.collection(USERS)
                     .document(userID)
-                    .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
-                        public void onSuccess(Void unused) {
-                            Toast.makeText(mContext, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-                            getSetUserData(userID);
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Double totalPaid = documentSnapshot.getDouble("totalPaid");
+                            String hashPassword = securityHelper.encrypt(new_password);
+                            User user = new User(
+                                    userID,
+                                    new_name,
+                                    new_lastname,
+                                    new_fullName,
+                                    new_address,
+                                    new_email,
+                                    new_ParentName,
+                                    new_gender,
+                                    new_role,
+                                    new_phone,
+                                    new_personal_number,
+                                    register_date_time,
+                                    new_grade,
+                                    hashPassword,
+                                    urlOfProfile,
+                                    new_balance,
+                                    totalPaid,
+                                    emailVerified);
+                            firebaseFirestore.collection(USERS)
+                                    .document(userID)
+                                    .set(user, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(mContext, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                                            getSetUserData(userID);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(mContext, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(mContext, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+
                         }
                     });
         }

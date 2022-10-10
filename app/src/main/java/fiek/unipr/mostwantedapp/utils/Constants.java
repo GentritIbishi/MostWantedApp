@@ -43,6 +43,7 @@ public class Constants {
     public static final String PHONE_USER = "PHONE_USER";
     public static final String COINS = "COINS";
     public static final Double BALANCE_DEFAULT = 0.00000;
+    public static final Double TOTAL_PAID_DEFAULT = 0.00000;
     public static final String COINS_DEFAULT = "0 COINS";
     public static final Double LATITUDE_DEFAULT = 42.667542;
     public static final Double LONGITUDE_DEFAULT = 21.166191;

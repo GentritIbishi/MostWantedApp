@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -455,39 +456,54 @@ public class ProfileFragment extends Fragment {
             profile_user_et_gender.setError(getText(R.string.error_gender_required));
             profile_user_et_gender.requestFocus();
         }else {
-            String hashPassword = securityHelper.encrypt(new_password);
-            User user = new User(
-                    userID,
-                    new_name,
-                    new_lastname,
-                    new_fullName,
-                    new_address,
-                    new_email,
-                    new_ParentName,
-                    new_gender,
-                    new_role,
-                    new_phone,
-                    new_personal_number,
-                    register_date_time,
-                    new_grade,
-                    hashPassword,
-                    urlOfProfile,
-                    new_balance,
-                    emailVerified);
-
             firebaseFirestore.collection(USERS)
-                    .document(firebaseAuth.getCurrentUser().getUid())
-                    .set(user, SetOptions.merge())
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    .document(userID)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if(task.isSuccessful())
-                            {
-                                Toast.makeText(mContext, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
-                                loadInfoFromFirebase(firebaseAuth);
-                            }else {
-                                Toast.makeText(mContext, ""+task.getException(), Toast.LENGTH_SHORT).show();
-                            }
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Double totalPaid = documentSnapshot.getDouble("totalPaid");
+                            String hashPassword = securityHelper.encrypt(new_password);
+                            User user = new User(
+                                    userID,
+                                    new_name,
+                                    new_lastname,
+                                    new_fullName,
+                                    new_address,
+                                    new_email,
+                                    new_ParentName,
+                                    new_gender,
+                                    new_role,
+                                    new_phone,
+                                    new_personal_number,
+                                    register_date_time,
+                                    new_grade,
+                                    hashPassword,
+                                    urlOfProfile,
+                                    new_balance,
+                                    totalPaid,
+                                    emailVerified);
+
+                            firebaseFirestore.collection(USERS)
+                                    .document(firebaseAuth.getCurrentUser().getUid())
+                                    .set(user, SetOptions.merge())
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if(task.isSuccessful())
+                                            {
+                                                Toast.makeText(mContext, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
+                                                loadInfoFromFirebase(firebaseAuth);
+                                            }else {
+                                                Toast.makeText(mContext, ""+task.getException(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("Error", e.getMessage());
                         }
                     });
         }

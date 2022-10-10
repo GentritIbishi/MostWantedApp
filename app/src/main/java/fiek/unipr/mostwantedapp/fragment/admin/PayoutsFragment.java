@@ -1,15 +1,15 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
-import static fiek.unipr.mostwantedapp.utils.Constants.BANK_ACCOUNT;
+import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
-import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE;
-import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_ADMIN;
-import static fiek.unipr.mostwantedapp.utils.Constants.PAYMENT_INFORMATION;
+import static fiek.unipr.mostwantedapp.utils.Constants.PAID;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUTS;
-import static fiek.unipr.mostwantedapp.utils.Constants.PAYPAL;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYPAL_SANDBOX_KEY_BEARER;
+import static fiek.unipr.mostwantedapp.utils.Constants.PENDING;
+import static fiek.unipr.mostwantedapp.utils.Constants.REFUSED;
 import static fiek.unipr.mostwantedapp.utils.Constants.USD;
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,10 +42,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.models.Invoice;
+import fiek.unipr.mostwantedapp.models.InvoiceState;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 import okhttp3.MediaType;
@@ -107,6 +107,7 @@ public class PayoutsFragment extends Fragment {
                             if (queryDocumentSnapshots.size() != 0) {
                                 CollectionReference collRef = firebaseFirestore.collection(PAYOUTS);
                                 String sender_batch_id = collRef.document().getId();
+                                int rows = queryDocumentSnapshots.size();
 
                                 JSONObject main = new JSONObject();
 
@@ -117,10 +118,14 @@ public class PayoutsFragment extends Fragment {
                                 sender_batch_header.put("email_subject", "You have money!");
                                 sender_batch_header.put("email_message", "You received a payment. Thanks for using our service!");
 
+                                String[] arrayTransactionId = new String[rows];
+                                String[] arrayUserId = new String[rows];
+                                String[] arrayAmount = new String[rows];
                                 JSONArray arrayItems = new JSONArray();
 
                                 for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                                     String created_date_time = queryDocumentSnapshots.getDocuments().get(i).getString("created_date_time");
+                                    String updated_date_time = queryDocumentSnapshots.getDocuments().get(i).getString("updated_date_time");
                                     String transactionID = queryDocumentSnapshots.getDocuments().get(i).getString("transactionID");
                                     String userId = queryDocumentSnapshots.getDocuments().get(i).getString("userId");
                                     String account = queryDocumentSnapshots.getDocuments().get(i).getString("account");
@@ -131,6 +136,21 @@ public class PayoutsFragment extends Fragment {
                                     String bankName = queryDocumentSnapshots.getDocuments().get(i).getString("bankName");
                                     String accountNumber = queryDocumentSnapshots.getDocuments().get(i).getString("accountNumber");
                                     String paypalEmail = queryDocumentSnapshots.getDocuments().get(i).getString("paypalEmail");
+
+                                    Invoice invoice = new Invoice(
+                                            created_date_time,
+                                            transactionID,
+                                            userId,
+                                            account,
+                                            fullName,
+                                            address,
+                                            bankName,
+                                            accountNumber,
+                                            paypalEmail,
+                                            InvoiceState.PAID.toString(),
+                                            updated_date_time,
+                                            amount
+                                    );
 
                                     if (!StringHelper.empty(created_date_time)) {
                                         Date givenDate = new SimpleDateFormat(DATE).parse(created_date_time);
@@ -145,6 +165,9 @@ public class PayoutsFragment extends Fragment {
                                             amountObj.put("currency", currency);
                                             item.put("amount", amountObj);
                                             arrayItems.put(item);
+                                            arrayTransactionId[i] = transactionID;
+                                            arrayUserId[i] = userId;
+                                            arrayAmount[i] = String.valueOf(amount);
                                         }
                                     }
                                 }
@@ -152,7 +175,7 @@ public class PayoutsFragment extends Fragment {
                                 main.put("items", arrayItems);
 
                                 //process payment when array done
-                                processPayoutsWithPaypal(main);
+                                processPayoutsWithPaypal(main, arrayTransactionId, arrayUserId, arrayAmount);
 
                             }
                         } catch (ParseException | JSONException | IOException e) {
@@ -167,7 +190,7 @@ public class PayoutsFragment extends Fragment {
                 });
     }
 
-    private void processPayoutsWithPaypal(JSONObject main) throws IOException, JSONException {
+    private void processPayoutsWithPaypal(JSONObject main, String[] arrayTransactionId, String[] arrayUserId, String[] arrayAmount) throws IOException, JSONException {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
@@ -184,13 +207,63 @@ public class PayoutsFragment extends Fragment {
         responseCode = 0;
 
         if ((responseCode = response.code()) == 201) {
-            // Get response
-            String jsonData = response.body().string();
-            Log.d("RESPONSEwithoutERROR:", jsonData);
+            for (int i = 0; i < arrayTransactionId.length; i++) {
+                updateStatusInvoice(PAID, arrayTransactionId[i]);
+                updateBalanceUser(Double.parseDouble(arrayAmount[i]), arrayTransactionId[i]);
+            }
+
+        } else if ((responseCode = response.code()) == 204) {
+            for (int i = 0; i < arrayTransactionId.length; i++) {
+                updateStatusInvoice(REFUSED, arrayTransactionId[i]);
+            }
         } else {
-            Log.d("RESPONSE:", response.body().toString());
+            for (int i = 0; i < arrayTransactionId.length; i++) {
+                updateStatusInvoice(PENDING, arrayTransactionId[i]);
+            }
         }
 
+    }
+
+    private void updateStatusInvoice(String status, String transactionId) {
+        firebaseFirestore.collection(INVOICE)
+                .document(transactionId)
+                .update("status", status).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("UpdatefieldError", e.getMessage());
+                    }
+                });
+    }
+
+    private void updateBalanceUser(Double amount, String userId) {
+        firebaseFirestore.collection(USERS)
+                .document(userId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Double totalPaid = documentSnapshot.getDouble("totalPaid");
+                        updateBalanceTotalPaidUser(userId, amount, totalPaid);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("UpdatefieldError", e.getMessage());
+                    }
+                });
+    }
+
+    private void updateBalanceTotalPaidUser(String userId, Double amount, Double totalPaid) {
+        Double totalPaidNew = totalPaid + amount;
+        firebaseFirestore.collection(USERS)
+                .document(userId)
+                .update("balance", BALANCE_DEFAULT,
+                "totalPaid", totalPaidNew).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("UpdatefieldError", e.getMessage());
+            }
+        });
     }
 
     private void testJson(String transactionID, int itemNumber, String paypalEmail, Double amount, String currency) throws JSONException {
