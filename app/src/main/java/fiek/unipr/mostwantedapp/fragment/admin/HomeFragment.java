@@ -217,6 +217,15 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        final LinearLayout l_admin_payouts = admin_dashboard_view.findViewById(R.id.l_admin_payouts);
+        l_admin_payouts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new PayoutsFragment();
+                loadFragment(fragment);
+            }
+        });
+
         return admin_dashboard_view;
     }
 

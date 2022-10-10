@@ -39,6 +39,7 @@ public class Constants {
     public static final String CM = "CM";
     public static final String AGE = "AGE";
     public static final String EURO = "EURO";
+    public static final String USD = "USD";
     public static final String PHONE_USER = "PHONE_USER";
     public static final String COINS = "COINS";
     public static final Double BALANCE_DEFAULT = 0.00000;
@@ -61,6 +62,7 @@ public class Constants {
     public static final String NOTIFICATION_ADMIN = "notifications_admin";
     public static final String NOTIFICATION_USER = "notifications_user";
     public static final String PAYMENT_INFORMATION = "payment_information";
+    public static final String PAYOUTS = "payouts";
     public static final String PERSONS = "persons";
     public static final String PROFILE_PICTURE = "profile_picture.jpg";
     public static final String DYNAMIC_DOMAIN = "https://fiek.page.link";
@@ -71,6 +73,7 @@ public class Constants {
     public static final String PAID = "PAID";
     public static final String PENDING = "PENDING";
     public static final String REFUSED = "REFUSED";
+    public static final String PAYPAL_SANDBOX_KEY_BEARER = "Bearer A21AAJFU4tVje-z-HPc4Yo0VCe-a8xMnolcLhfWoSILvMzhm0QcIDqiVbFafkPb86F342h-P4o9t_GGnkrzWtgotRJa0C7x0w";
 
     //permissions
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 101;

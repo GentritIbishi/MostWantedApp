@@ -63,7 +63,6 @@ public class InvoicePaymentProcessFragment extends Fragment {
 
         initializeFields();
         getAndSetFromBundle();
-        checkStatusState();
         process();
 
         return view;
@@ -73,26 +72,20 @@ public class InvoicePaymentProcessFragment extends Fragment {
         btnSaveInvoice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String new_status = auto_complete_invoice_status.getText().toString();
                 PaymentProcessFragment paymentProcessFragment = new PaymentProcessFragment();
                 Bundle viewBundle = new Bundle();
                 viewBundle.putString("created_date_time", created_date_time);
                 viewBundle.putString("transactionID", transactionID);
                 viewBundle.putString("userId", userId);
                 viewBundle.putString("account", account);
-                viewBundle.putString("status", status);
+                viewBundle.putString("status", new_status);
                 viewBundle.putString("updated_date_time", updated_date_time);
                 viewBundle.putDouble("amount", amount);
                 paymentProcessFragment.setArguments(viewBundle);
                 loadFragment(paymentProcessFragment);
             }
         });
-    }
-
-    private void checkStatusState() {
-        String status = auto_complete_invoice_status.getText().toString();
-        if (status.equals(InvoiceState.PENDING)) {
-            btnSaveInvoice.setEnabled(true);
-        }
     }
 
     private void initializeFields() {

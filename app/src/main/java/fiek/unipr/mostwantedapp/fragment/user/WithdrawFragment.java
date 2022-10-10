@@ -683,10 +683,17 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
     private void processWithInvoice(Double balance) {//go create invoice
         CollectionReference collRef = firebaseFirestore.collection(INVOICE);
         String transactionID = collRef.document().getId();
-        Invoice invoice = new Invoice(DateHelper.getDateTime(),
+
+        Invoice invoice = new Invoice(
+                DateHelper.getDateTime(),
                 transactionID,
                 firebaseAuth.getUid(),
                 payment_method,
+                full_name_payment_information,
+                address_payment_information,
+                bank_account_payment_information,
+                account_number_payment_information,
+                paypal_email_payment_information,
                 InvoiceState.PENDING.toString(),
                 DateHelper.getDateTime(),
                 balance

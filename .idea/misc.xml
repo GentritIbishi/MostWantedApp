@@ -173,6 +173,7 @@
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_notification_admin.xml" value="0.24320652173913043" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_notification_user.xml" value="0.22146739130434784" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_payment_process.xml" value="0.25416666666666665" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_payouts.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_profile.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_profile_admin.xml" value="0.24261603375527427" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/fragment_profile_dashboard.xml" value="0.1" />
@@ -210,6 +211,7 @@
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/modified_notification_item.xml" value="0.22146739130434784" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/nav_header.xml" value="0.24320652173913043" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/paypal.xml" value="0.2" />
+        <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/paypal_testing.xml" value="0.253125" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/persistent_add_user_or_person.xml" value="0.2" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/persistent_report.xml" value="0.24320652173913043" />
         <entry key="..\:/Users/Gentrit Ibishi/StudioProjects/MostWantedApp/app/src/main/res/layout/person_item_single.xml" value="0.25416666666666665" />
