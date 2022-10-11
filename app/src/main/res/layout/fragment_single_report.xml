@@ -228,7 +228,6 @@
                 app:boxBackgroundColor="@color/light_gray"
                 app:counterOverflowTextColor="@color/white"
                 app:helperTextTextColor="@color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_gallery">
@@ -249,18 +248,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="64dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="64dp"
-                android:background="@drawable/button_rectangle"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/button"
                 android:drawableLeft="@drawable/ic_check"
                 android:paddingLeft="20dp"
                 android:text="@string/save_changes"
                 android:textColor="@color/white"
                 android:textSize="16sp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/autocomplete_report_status_layout" />
+                app:layout_constraintTop_toBottomOf="@+id/et_report_uid_layout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

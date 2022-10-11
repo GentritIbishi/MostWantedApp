@@ -1,39 +1,48 @@
 package fiek.unipr.mostwantedapp.services;
 
 import android.app.Service;
-import android.content.Context;
+import android.content.Intent;
+import android.os.IBinder;
 
-import androidx.annotation.NonNull;
-import androidx.work.Constraints;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
+import androidx.annotation.Nullable;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
-public class PayoutPaypalService extends Worker {
+import fiek.unipr.mostwantedapp.utils.PayoutsPaypalTask;
 
-    public PayoutPaypalService(@NonNull Context context, @NonNull WorkerParameters workerParams) {
-        super(context, workerParams);
+public class PayoutPaypalService extends Service {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Timer timer = new Timer();
+                Calendar cal = Calendar.getInstance();
+                cal.set(Calendar.HOUR_OF_DAY, 23);
+                cal.set(Calendar.MINUTE, 59);
+                cal.set(Calendar.SECOND, 59);
+                cal.set(Calendar.MILLISECOND, 999);
+                timer.schedule(new PayoutsPaypalTask(), cal.getTime(), TimeUnit.MINUTES.toMillis(5));
+            }
+        });
+
     }
 
-    @NonNull
     @Override
-    public Result doWork() {
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        return START_STICKY;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
         return null;
     }
 
-    public static void oneOffRequest() {
-        OneTimeWorkRequest oneTimeWorkRequest = new OneTimeWorkRequest.Builder(PayoutPaypalService.class)
-                .setInitialDelay(5, TimeUnit.MINUTES)
-                .setConstraints(setCons())
-                .build();
-        WorkManager.getInstance().enqueue(oneTimeWorkRequest);
-    }
-
-    public static Constraints setCons() {
-        Constraints constraints = new Constraints.Builder().build();
-        return constraints;
-    }
 }

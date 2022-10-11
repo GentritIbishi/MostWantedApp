@@ -11,10 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -198,7 +201,10 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
         viewBundle.putDouble("latitude", reportArrayList.get(position).getLatitude());
         viewBundle.putDouble("longitude", reportArrayList.get(position).getLongitude());
         viewBundle.putString("uID", reportArrayList.get(position).getuID());
+        viewBundle.putString("personId", reportArrayList.get(position).getPersonId());
         viewBundle.putString("wanted_person", reportArrayList.get(position).getWanted_person());
+        viewBundle.putString("address", reportArrayList.get(position).getAddress());
+        viewBundle.putString("prizeToWin", reportArrayList.get(position).getPrizeToWin());
 
         if(reportArrayList.get(position).getImages() == null || reportArrayList.get(position).getImages().equals(null) || reportArrayList.get(position).getImages().isEmpty()) {
             viewBundle.putInt("totalImages", 0);
@@ -221,12 +227,16 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
         }
 
         singleReportFragment.setArguments(viewBundle);
+        //Inflate the fragment
         loadFragment(singleReportFragment);
     }
 
     private void loadFragment(Fragment fragment) {
-        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.admin_fragmentContainer, fragment)
-                .commit();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.admin_fragmentContainer, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
+
 }

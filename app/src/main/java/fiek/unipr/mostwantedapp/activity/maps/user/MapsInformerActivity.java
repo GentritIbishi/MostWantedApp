@@ -453,7 +453,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     getAddress(getApplicationContext(), latitude, longitude),
                     ANONYMOUS,
                     prize,
-                    ReportStatus.UNVERIFIED,
+                    ReportStatus.UNVERIFIED.toString(),
                     longitude,
                     latitude,
                     null);
@@ -521,7 +521,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     getAddress(getApplicationContext(), latitude, longitude),
                     PHONE_USER,
                     prize,
-                    ReportStatus.UNVERIFIED,
+                    ReportStatus.UNVERIFIED.toString(),
                     longitude,
                     latitude,
                     null);
@@ -602,7 +602,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                         getAddress(getApplicationContext(), latitude, longitude),
                                         informer_person_urlOfProfile,
                                         prize,
-                                        ReportStatus.UNVERIFIED,
+                                        ReportStatus.UNVERIFIED.toString(),
                                         longitude,
                                         latitude,
                                         null);

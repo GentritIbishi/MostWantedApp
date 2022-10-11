@@ -13,6 +13,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_NUMBER_4;
 import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_USER;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -39,6 +40,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.io.IOException;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.activity.dashboard.AdminDashboardActivity;
@@ -69,28 +72,34 @@ public class ServiceNotification extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         userID = firebaseAuth.getUid();
 
-        if(intent != null)
-        {
-            notificationDateTime = intent.getStringExtra("notificationDateTime");
-            notificationType = intent.getStringExtra("notificationType");
-            notificationReportId = intent.getStringExtra("notificationReportId");
-            notificationReportUid = intent.getStringExtra("notificationReportUid");
-            notificationReportDateTime = intent.getStringExtra("notificationReportDateTime");
-            notificationReportTitle = intent.getStringExtra("notificationReportTitle");
-            notificationReportDescription = intent.getStringExtra("notificationReportDescription");
-            notificationReportInformerPerson = intent.getStringExtra("notificationReportInformerPerson");
-            notificationReportWantedPerson = intent.getStringExtra("notificationReportWantedPerson");
-            notificationReportPrizeToWin = intent.getStringExtra("notificationReportPrizeToWin");
-            notificationReportNewStatus = intent.getStringExtra("notificationReportNewStatus");
-            notificationForUserId = intent.getStringExtra("notificationForUserId");
+        if (intent != null) {
+            new Thread(new Runnable() {
+                public void run()
+                {
+                    notificationDateTime = intent.getStringExtra("notificationDateTime");
+                    notificationType = intent.getStringExtra("notificationType");
+                    notificationReportId = intent.getStringExtra("notificationReportId");
+                    notificationReportUid = intent.getStringExtra("notificationReportUid");
+                    notificationReportDateTime = intent.getStringExtra("notificationReportDateTime");
+                    notificationReportTitle = intent.getStringExtra("notificationReportTitle");
+                    notificationReportDescription = intent.getStringExtra("notificationReportDescription");
+                    notificationReportInformerPerson = intent.getStringExtra("notificationReportInformerPerson");
+                    notificationReportWantedPerson = intent.getStringExtra("notificationReportWantedPerson");
+                    notificationReportPrizeToWin = intent.getStringExtra("notificationReportPrizeToWin");
+                    notificationReportNewStatus = intent.getStringExtra("notificationReportNewStatus");
+                    notificationForUserId = intent.getStringExtra("notificationForUserId");
+                    startMyOwnForeground(notificationDateTime, notificationType, notificationReportId,
+                            notificationReportUid, notificationReportDateTime, notificationReportTitle, notificationReportDescription,
+                            notificationReportInformerPerson, notificationReportWantedPerson, notificationReportPrizeToWin,
+                            notificationReportNewStatus, notificationForUserId);
+                }
+            }).start();
         }
-
-        startMyOwnForeground();
 
         return START_REDELIVER_INTENT;
     }
 
-    private void startMyOwnForeground() {
+    private void startMyOwnForeground(String notificationDateTime, String notificationType, String notificationReportId, String notificationReportUid, String notificationReportDateTime, String notificationReportTitle, String notificationReportDescription, String notificationReportInformerPerson, String notificationReportWantedPerson, String notificationReportPrizeToWin, String notificationReportNewStatus, String notificationForUserId) {
         firebaseFirestore.collection(USERS)
                 .document(userID)
                 .get()
@@ -106,7 +115,6 @@ public class ServiceNotification extends Service {
                                 if (role.equals("Admin")) {
                                     pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntentAdmin, 0);
                                     if (notificationType.equals(String.valueOf(NotificationState.ADDED))) {
-                                        createAdminNotificationChannelAdded();
                                         makeNotificationAdmin(notificationDateTime,
                                                 notificationType,
                                                 notificationReportId,
@@ -121,7 +129,6 @@ public class ServiceNotification extends Service {
                                                 notificationForUserId,
                                                 CHANNEL_ID_ADDED, NOTIFICATION_NUMBER_1, 1);
                                     } else if (notificationType.equals(String.valueOf(NotificationState.MODIFIED))) {
-                                        createAdminNotificationChannelModified();
                                         makeNotificationAdmin(notificationDateTime,
                                                 notificationType,
                                                 notificationReportId,
@@ -136,7 +143,6 @@ public class ServiceNotification extends Service {
                                                 notificationForUserId,
                                                 CHANNEL_ID_MODIFIED, NOTIFICATION_NUMBER_2, 2);
                                     } else if (notificationType.equals(String.valueOf(NotificationState.REMOVED))) {
-                                        createAdminNotificationChannelRemoved();
                                         makeNotificationAdmin(notificationDateTime,
                                                 notificationType,
                                                 notificationReportId,
@@ -153,7 +159,6 @@ public class ServiceNotification extends Service {
                                     }
                                 } else if (role.equals("Informer")) {
                                     pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntentUser, 0);
-                                    createUserNotificationChannelModified();
                                     makeNotificationUser(notificationDateTime, notificationType,
                                             notificationReportId, notificationReportUid, notificationReportDateTime,
                                             notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
@@ -170,6 +175,7 @@ public class ServiceNotification extends Service {
                         }
                     }
                 });
+        stopSelf();
     }
 
     private void makeNotificationAdmin(String notificationDateTime,
@@ -220,21 +226,19 @@ public class ServiceNotification extends Service {
                                 pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
                                 Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID);
-                                notificationBuilder.setContentTitle(notificationType + ": " + notificationReportTitle);
-                                notificationBuilder.setContentText(notificationReportDescription);
-                                notificationBuilder.setSmallIcon(R.drawable.ic_app);
-                                notificationBuilder.setPriority(IMPORTANCE);
-                                notificationBuilder.setContentIntent(pendingIntent);
-                                notificationBuilder.setSound(new_defaultSoundUri);
-                                notificationBuilder.setAutoCancel(true);
+                                Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+                                        .setContentTitle(notificationType + ": " + notificationReportTitle)
+                                        .setContentText(notificationReportDescription)
+                                        .setSmallIcon(R.drawable.ic_app)
+                                        .setPriority(IMPORTANCE)
+                                        .setContentIntent(pendingIntent)
+                                        .setSound(new_defaultSoundUri)
+                                        .setAutoCancel(true)
+                                        .build();
 
                                 int number = sharedPreferences.getInt(sharedPrefName, default_number);
 
-                                //startForeground(number, notificationBuilder.build());
-
-                                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                                notificationManager.notify(number, notificationBuilder.build());
+                                startForeground(number, notification);
 
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 number++;
@@ -336,23 +340,21 @@ public class ServiceNotification extends Service {
                                 pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
 
                                 Uri new_defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID);
-                                notificationBuilder.setContentTitle(notificationType + ": " + notificationReportTitle);
-                                notificationBuilder.setContentText(notificationReportDescription);
-                                notificationBuilder.setSmallIcon(R.drawable.ic_app);
-                                notificationBuilder.setPriority(IMPORTANCE);
-                                notificationBuilder.setContentIntent(pendingIntent);
-                                notificationBuilder.setSound(new_defaultSoundUri);
-                                notificationBuilder.setAutoCancel(true);
+                                Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+                                        .setContentTitle(notificationType + ": " + notificationReportTitle)
+                                        .setContentText(notificationReportDescription)
+                                        .setSmallIcon(R.drawable.ic_app)
+                                        .setPriority(IMPORTANCE)
+                                        .setContentIntent(pendingIntent)
+                                        .setSound(new_defaultSoundUri)
+                                        .setAutoCancel(true)
+                                        .build();
 
                                 sharedPreferences = PreferenceManager
                                         .getDefaultSharedPreferences(getApplicationContext());
                                 int number = sharedPreferences.getInt(sharedPrefName, default_number);
 
-//                                startForeground(number, notificationBuilder.build());
-
-                                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                                notificationManager.notify(number, notificationBuilder.build());
+                                startForeground(number, notification);
 
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
                                 number++;
@@ -404,75 +406,14 @@ public class ServiceNotification extends Service {
                 });
     }
 
-    private void createAdminNotificationChannelAdded() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "ADMIN NEW REPORT ADDED NOTIFICATION";
-            String description = "This channel is for admin, that send notification when new report added in database!";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_ADDED, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    private void createAdminNotificationChannelModified() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "ADMIN REPORT MODIFIED NOTIFICATION";
-            String description = "This channel is for admin, that send notification when one report modified in database!";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_MODIFIED, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    private void createAdminNotificationChannelRemoved() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "ADMIN REPORT REMOVED NOTIFICATION";
-            String description = "This channel is for admin, that send notification when one report removed from database!";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_REMOVED, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    private void createUserNotificationChannelModified() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String CHANNEL_ID = "NEW_REPORT_MODIFIED";
-            CharSequence name = "USER REPORT MODIFIED NOTIFICATION";
-            String description = "This channel is for user, that send notification when one report state modified in database!";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

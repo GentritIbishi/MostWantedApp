@@ -58,14 +58,17 @@ public class PayoutsPaypalTask extends TimerTask {
 
     @Override
     public void run() {
-        try {
-
             // Your task process
-            process(USD);
-
-        } catch (Exception ex) {
-            System.out.println("error running thread " + ex.getMessage());
-        }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        process(USD);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
     }
 
     private void process(String currency) throws JSONException {

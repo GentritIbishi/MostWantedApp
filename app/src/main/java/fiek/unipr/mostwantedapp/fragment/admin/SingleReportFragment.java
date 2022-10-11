@@ -1,5 +1,6 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import static android.content.ContentValues.TAG;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.addBorder;
 import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
 import static fiek.unipr.mostwantedapp.utils.Constants.FREE;
@@ -13,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -56,6 +59,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -68,6 +72,8 @@ import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.gallery.CustomizedGalleryAdapter;
+import fiek.unipr.mostwantedapp.models.Report;
+import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class SingleReportFragment extends Fragment {
@@ -75,7 +81,6 @@ public class SingleReportFragment extends Fragment {
     private View view;
     private Context mContext;
     private GoogleMap mMap;
-    private Bundle singleReportMapBundle;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -94,21 +99,49 @@ public class SingleReportFragment extends Fragment {
     private MaterialAutoCompleteTextView auto_complete_report_status;
     private Button btnSaveReport;
 
-    private String date_time, title, docId, description, informer_person, status, uID, personId, wanted_person, urlOfProfile;
+    private String date_time, title, docId, description, prizeToWin, address, informer_person_urlOfProfile, informer_person, status, uID, personId, wanted_person, urlOfProfile;
     private Double latitude, longitude;
     private int totalImages;
     private String[] images;
 
     private CustomizedGalleryAdapter customGalleryAdapter;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getFromBundle();
+    }
+
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(@NonNull GoogleMap googleMap) {
             mMap = googleMap;
-            if (wanted_person != null && personId != null) {
-                setMarker(mContext, personId, wanted_person);
+            Bundle bundle = getArguments();
+            if(bundle != null)
+            {
+                String wanted_person = getArguments().getString("wanted_person");
+                String date_time = bundle.getString("date_time");
+                String title = bundle.getString("title");
+                String description = bundle.getString("description");
+                String informer_person = bundle.getString("informer_person");
+                Double latitude = bundle.getDouble("latitude");
+                Double longitude = bundle.getDouble("longitude");
+                String status = bundle.getString("status");
+                String uID = bundle.getString("uID");
+                String docId = bundle.getString("docId");
+                String personId = bundle.getString("personId");
+
+                Log.d("PERSONID", personId);
+
+                if(CheckInternet.isConnected(mContext))
+                {
+                    setMarker(mContext, personId, wanted_person, latitude, longitude);
+                }else {
+                    CheckInternet.showSettingsAlert(mContext);
+                }
+
             }else {
-                Log.d("ERROR_NULL", "NULL ON SET MARKER");
+                Log.e(TAG, "onMapReady: ", new Throwable("NOTSET!"));
             }
         }
     };
@@ -128,7 +161,7 @@ public class SingleReportFragment extends Fragment {
 
         initializeFields();
 
-        getFromBundle(singleReportMapBundle);
+        getFromBundle();
 
         setReportInformation(uID, date_time, informer_person, title, description, status);
 
@@ -137,13 +170,8 @@ public class SingleReportFragment extends Fragment {
         btnSaveReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String status = auto_complete_report_status.getText().toString();
-                if(!StringHelper.empty(status) && !StringHelper.empty(uID)
-                && !StringHelper.empty(latitude.toString()) && !StringHelper.empty(longitude.toString())
-                && !StringHelper.empty(docId) && !StringHelper.empty(personId))
-                {
-                    save(mContext, uID, latitude, longitude, status, docId, personId);
-                }
+                String new_status = auto_complete_report_status.getText().toString();
+                save(mContext, uID, latitude, longitude, new_status, docId, personId);
             }
         });
 
@@ -185,38 +213,42 @@ public class SingleReportFragment extends Fragment {
                 autocomplete_report_status_layout.setBoxStrokeColorStateList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.gray)));
                 autocomplete_report_status_layout.setCounterTextColor(ColorStateList.valueOf(mContext.getResources().getColor(R.color.gray)));
                 autocomplete_report_status_layout.setEndIconTintList(ColorStateList.valueOf(mContext.getResources().getColor(R.color.gray)));
-
-                String status_new = auto_complete_report_status.getText().toString();
-
-                if (status_old.equals(status_new)) {
-                    btnSaveReport.setVisibility(View.GONE);
-                } else {
-                    btnSaveReport.setVisibility(View.VISIBLE);
-                }
             }
         });
 
     }
 
     private void save(Context context, String uID, Double latitude, Double longitude, String status, String docId, String personId) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("status", status);
+
+        Report report = new Report(
+                docId,
+                title,
+                description,
+                date_time,
+                uID,
+                personId,
+                informer_person,
+                wanted_person,
+                address,
+                informer_person_urlOfProfile,
+                prizeToWin,
+                status,
+                longitude,
+                latitude
+        );
 
         firebaseFirestore.collection(LOCATION_REPORTS)
                 .document(docId)
-                .update(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                .set(report, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("SAVE", "SAVED SUCCESS");
                         if (status.equals(VERIFIED)) {
                             //check if user with uid is anonymous or phone or regular
                             if (!firebaseAuth.getCurrentUser().isAnonymous() && StringHelper.empty(firebaseAuth.getCurrentUser().getPhoneNumber()))
                             {
-                                Log.d("GG", "U HI");
                                 updateBalance(context, latitude, longitude, uID, personId);
                             }
                         }
-                        btnSaveReport.setVisibility(View.GONE);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -374,10 +406,10 @@ public class SingleReportFragment extends Fragment {
         auto_complete_report_status.setText(status);
     }
 
-    private void getFromBundle(Bundle bundle) {
+    private void getFromBundle() {
 
         try {
-            bundle = getArguments();
+            Bundle bundle = getArguments();
             if(bundle != null)
             {
                 date_time = bundle.getString("date_time");
@@ -393,6 +425,9 @@ public class SingleReportFragment extends Fragment {
                 wanted_person = bundle.getString("wanted_person");
                 totalImages = bundle.getInt("totalImages");
                 images = bundle.getStringArray("images");
+                address = bundle.getString("address");
+                informer_person_urlOfProfile = bundle.getString("informer_person_urlOfProfile");
+                prizeToWin = bundle.getString("prizeToWin");
             }
 
             if (images != null && images.length > 0) {
@@ -454,7 +489,7 @@ public class SingleReportFragment extends Fragment {
                 .preload();
     }
 
-    private void setMarker(Context context, String personId, String wanted_person) {
+    private void setMarker(Context context, String personId, String wanted_person, Double latitude, Double longitude) {
         firebaseFirestore
                 .collection(WANTED_PERSONS)
                 .whereEqualTo("personId", personId)
@@ -555,9 +590,11 @@ public class SingleReportFragment extends Fragment {
     }
 
     private void loadFragment(Fragment fragment) {
-        ((FragmentActivity) mContext).getSupportFragmentManager().beginTransaction()
-                .replace(R.id.admin_fragmentContainer, fragment)
-                .commit();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.admin_fragmentContainer, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
 }
