@@ -1,6 +1,7 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
 import static android.content.ContentValues.TAG;
+import static android.view.View.GONE;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.addBorder;
 import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
 import static fiek.unipr.mostwantedapp.utils.Constants.FREE;
@@ -13,7 +14,6 @@ import static fiek.unipr.mostwantedapp.utils.EditTextHelper.disableEditable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -33,6 +34,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Gallery;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -104,6 +107,10 @@ public class SingleReportFragment extends Fragment {
     private int totalImages;
     private String[] images;
 
+    private TextView tv_singleReportProgressBar;
+    private ProgressBar singleReportProgressBarReport;
+    private int progress;
+
     private CustomizedGalleryAdapter customGalleryAdapter;
 
     @Override
@@ -117,8 +124,7 @@ public class SingleReportFragment extends Fragment {
         public void onMapReady(@NonNull GoogleMap googleMap) {
             mMap = googleMap;
             Bundle bundle = getArguments();
-            if(bundle != null)
-            {
+            if (bundle != null) {
                 String wanted_person = getArguments().getString("wanted_person");
                 String date_time = bundle.getString("date_time");
                 String title = bundle.getString("title");
@@ -131,16 +137,13 @@ public class SingleReportFragment extends Fragment {
                 String docId = bundle.getString("docId");
                 String personId = bundle.getString("personId");
 
-                Log.d("PERSONID", personId);
-
-                if(CheckInternet.isConnected(mContext))
-                {
+                if (CheckInternet.isConnected(mContext)) {
                     setMarker(mContext, personId, wanted_person, latitude, longitude);
-                }else {
+                } else {
                     CheckInternet.showSettingsAlert(mContext);
                 }
 
-            }else {
+            } else {
                 Log.e(TAG, "onMapReady: ", new Throwable("NOTSET!"));
             }
         }
@@ -170,8 +173,10 @@ public class SingleReportFragment extends Fragment {
         btnSaveReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 String new_status = auto_complete_report_status.getText().toString();
                 save(mContext, uID, latitude, longitude, new_status, docId, personId);
+
             }
         });
 
@@ -186,6 +191,14 @@ public class SingleReportFragment extends Fragment {
         return view;
     }
 
+    private void updateProgressBar() {
+        singleReportProgressBarReport.setProgress(progress);
+        tv_singleReportProgressBar.setText(this.progress + "%");
+        singleReportProgressBarReport.setVisibility(View.VISIBLE);
+        tv_singleReportProgressBar.setVisibility(View.VISIBLE);
+    }
+
+
     private void initializeFields() {
         et_report_uid = view.findViewById(R.id.et_report_uid);
         et_report_informer = view.findViewById(R.id.et_report_informer);
@@ -197,6 +210,8 @@ public class SingleReportFragment extends Fragment {
         auto_complete_report_status = view.findViewById(R.id.auto_complete_report_status);
         btnSaveReport = view.findViewById(R.id.btnSaveReport);
         autocomplete_report_status_layout = view.findViewById(R.id.autocomplete_report_status_layout);
+        tv_singleReportProgressBar = view.findViewById(R.id.tv_singleReportProgressBar);
+        singleReportProgressBarReport = view.findViewById(R.id.singleReportProgressBarReport);
     }
 
     private void setDropDownOptions() {
@@ -219,41 +234,36 @@ public class SingleReportFragment extends Fragment {
     }
 
     private void save(Context context, String uID, Double latitude, Double longitude, String status, String docId, String personId) {
+        progress += 25;
+        updateProgressBar();
+        process(context, uID, latitude, longitude, status, docId, personId);
+    }
 
-        Report report = new Report(
-                docId,
-                title,
-                description,
-                date_time,
-                uID,
-                personId,
-                informer_person,
-                wanted_person,
-                address,
-                informer_person_urlOfProfile,
-                prizeToWin,
-                status,
-                longitude,
-                latitude
-        );
-
+    private void process(Context context, String uID, Double latitude, Double longitude, String status, String docId, String personId) {
         firebaseFirestore.collection(LOCATION_REPORTS)
                 .document(docId)
-                .set(report, SetOptions.merge()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                .update("status", status)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         if (status.equals(VERIFIED)) {
+                            progress += 12.5;
+                            updateProgressBar();
                             //check if user with uid is anonymous or phone or regular
-                            if (!firebaseAuth.getCurrentUser().isAnonymous() && StringHelper.empty(firebaseAuth.getCurrentUser().getPhoneNumber()))
-                            {
+                            if (!firebaseAuth.getCurrentUser().isAnonymous() && StringHelper.empty(firebaseAuth.getCurrentUser().getPhoneNumber())) {
                                 updateBalance(context, latitude, longitude, uID, personId);
                             }
+                        } else {
+                            progress += 75;
+                            updateProgressBar();
+                            dismissProgressBar();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("ERROR IN BEGIN", e.getMessage());
+                        dismissProgressBar();
                     }
                 });
     }
@@ -264,7 +274,8 @@ public class SingleReportFragment extends Fragment {
         //duhet me bo check nese ka same reported location with same address nese jo atehere ja shton vlenre full
         //nese po atehere e pjeston qate vlere me numrin e raportimeve
         //duhet me ja shtu balance+=vleren qe eka fitu
-
+        progress += 12.5;
+        updateProgressBar();
         firebaseFirestore.collection(WANTED_PERSONS)
                 .document(personId)
                 .get()
@@ -272,21 +283,29 @@ public class SingleReportFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         String prize = documentSnapshot.getString("prize");
-                        Log.d("Prize", prize + "");
-                        if(!StringHelper.empty(prize))
-                        {
+                        progress += 12.5;
+                        updateProgressBar();
+                        if (!StringHelper.empty(prize)) {
                             if (!prize.equalsIgnoreCase(FREE)) {
-                                Log.d("CALON", "CALON" + prize);
                                 getBalanceFromUser(context, latitude, longitude, uID, prize);
                             }
+                        } else {
+                            dismissProgressBar();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("ErrorNePrize", e.getMessage());
+                        dismissProgressBar();
                     }
                 });
+    }
+
+    private void dismissProgressBar() {
+        tv_singleReportProgressBar.setVisibility(GONE);
+        singleReportProgressBarReport.setVisibility(GONE);
+        progress = 0;
     }
 
     private void getBalanceFromUser(Context context, Double latitude, Double longitude, String uID, String prize) {
@@ -299,20 +318,17 @@ public class SingleReportFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Double balance = documentSnapshot.getDouble("balance");
-
-                        Log.d("balance", balance + "");
-
                         String[] prizeArray = prize.split(" ");
                         Double finalPrize = Double.valueOf(prizeArray[0]);
-
-                        Log.d("finalPrize", finalPrize + "");
-
+                        progress += 12.5;
+                        updateProgressBar();
                         checkIfHaveMoreThanOneReportWithSameLocation(context, personId, latitude, longitude, balance, finalPrize);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("ErrorNeBalance", e.getMessage());
+                        dismissProgressBar();
                     }
                 });
 
@@ -332,24 +348,21 @@ public class SingleReportFragment extends Fragment {
                         int count = 0;
                         for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                             String addressInDoc = queryDocumentSnapshots.getDocuments().get(i).getString("address");
-
+                            progress += 12.5;
+                            updateProgressBar();
                             if (address.equals(addressInDoc)) {
                                 count++;
                             }
                         }
 
-                        Log.d("COUNT_VALUE ", count + "");
-
                         if (count == 0) {
                             //duhet me ja mbledh balance sa e ka plus prize
                             double fullPrize = balance + prize;
-                            Log.d("fullPrizeBalance", fullPrize + "");
-                            addPrizeToWinner(context, uID, fullPrize);
+                            addPrizeToWinner(uID, fullPrize);
                         } else {
                             double equal_prize = prize / count;
                             double notFullPrize = balance + equal_prize;
-                            Log.d("notFullPrize", notFullPrize + "");
-                            addPrizeToWinner(context, uID, notFullPrize);
+                            addPrizeToWinner(uID, notFullPrize);
                         }
 
                     }
@@ -357,11 +370,12 @@ public class SingleReportFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("ErrorNeKompareAdreses", e.getMessage());
+                        dismissProgressBar();
                     }
                 });
     }
 
-    private void addPrizeToWinner(Context context, String uID, Double balance) {
+    private void addPrizeToWinner(String uID, Double balance) {
         //duhet me ja shtu balance+=vleren qe eka fitu
 
         firebaseFirestore.collection(USERS)
@@ -370,13 +384,21 @@ public class SingleReportFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Log.d("Process status", "200 OK");
-                        Toast.makeText(context, context.getText(R.string.saved_successfully), Toast.LENGTH_SHORT).show();
+                        progress += 12.5;
+                        updateProgressBar();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dismissProgressBar();
+                            }
+                        }, 1500);
+
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("ErrorNeUpdateBalance", e.getMessage());
+                        dismissProgressBar();
                     }
                 });
 
@@ -410,8 +432,7 @@ public class SingleReportFragment extends Fragment {
 
         try {
             Bundle bundle = getArguments();
-            if(bundle != null)
-            {
+            if (bundle != null) {
                 date_time = bundle.getString("date_time");
                 title = bundle.getString("title");
                 description = bundle.getString("description");
@@ -461,8 +482,8 @@ public class SingleReportFragment extends Fragment {
                     }
                 });
             } else {
-                image_gallery.setVisibility(View.GONE);
-                imageView.setVisibility(View.GONE);
+                image_gallery.setVisibility(GONE);
+                imageView.setVisibility(GONE);
             }
         } catch (Exception e) {
             e.getMessage();
