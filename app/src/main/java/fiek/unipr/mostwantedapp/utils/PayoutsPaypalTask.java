@@ -73,6 +73,7 @@ public class PayoutsPaypalTask extends TimerTask {
 
     private void process(String currency) throws JSONException {
         firebaseFirestore.collection(INVOICE)
+                .whereEqualTo("status", PENDING)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override

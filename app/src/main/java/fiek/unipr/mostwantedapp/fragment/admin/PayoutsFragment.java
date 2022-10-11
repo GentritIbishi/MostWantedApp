@@ -1,30 +1,48 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import static android.view.View.GONE;
 import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAID;
+import static fiek.unipr.mostwantedapp.utils.Constants.PAYMENT_STATE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUT_CONFIG;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYPAL_SANDBOX_KEY_BEARER;
 import static fiek.unipr.mostwantedapp.utils.Constants.PENDING;
 import static fiek.unipr.mostwantedapp.utils.Constants.REFUSED;
+import static fiek.unipr.mostwantedapp.utils.Constants.TIME_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.USD;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.ProgressBar;
+import android.widget.Switch;
+import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -32,6 +50,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -42,12 +61,17 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
+import java.util.Timer;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.models.Invoice;
 import fiek.unipr.mostwantedapp.models.InvoiceState;
+import fiek.unipr.mostwantedapp.models.PayoutConfig;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
+import fiek.unipr.mostwantedapp.utils.PayoutsPaypalTask;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -57,9 +81,20 @@ import okhttp3.Response;
 
 public class PayoutsFragment extends Fragment {
 
+    private static Integer[] MINUTE_ARRAY = null;
+    private static Integer[] MILLISECOND_ARRAY = null;
+    private static Integer[] HOUR_ARRAY = null;
     public static int responseCode = 0;
+    private int progress;
     private Context mContext;
     private View view;
+    private Switch switchPayment;
+    private TextView tvInvoiceReport, tv_invoiceProgressBar;
+    private ConstraintLayout constrainProcessPayment, constraintAutomaticPayment, constrainInvoiceProgress;
+    private MaterialAutoCompleteTextView auto_complete_hour_payment, auto_complete_minute_payment,
+            auto_complete_second_payment, auto_complete_millisecond_payment;
+    private Button btnSaveReport, btnProcessPayout;
+    private ProgressBar invoiceProgressBar;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -86,15 +121,274 @@ public class PayoutsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_payouts, container, false);
+        mContext = getContext();
 
+        setHour();
+        setMinuteAndSecond();
+        setMilliseconds();
 
-        try {
-            process(USD);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        switchPayment = view.findViewById(R.id.switchPayment);
+        tvInvoiceReport = view.findViewById(R.id.tvInvoiceReport);
+        constrainProcessPayment = view.findViewById(R.id.constrainProcessPayment);
+        constraintAutomaticPayment = view.findViewById(R.id.constraintAutomaticPayment);
+        auto_complete_hour_payment = view.findViewById(R.id.auto_complete_hour_payment);
+        auto_complete_minute_payment = view.findViewById(R.id.auto_complete_minute_payment);
+        auto_complete_second_payment = view.findViewById(R.id.auto_complete_second_payment);
+        auto_complete_millisecond_payment = view.findViewById(R.id.auto_complete_millisecond_payment);
+        btnSaveReport = view.findViewById(R.id.btnSaveReport);
+        btnProcessPayout = view.findViewById(R.id.btnProcessPayout);
+        invoiceProgressBar = view.findViewById(R.id.invoiceProgressBar);
+        tv_invoiceProgressBar = view.findViewById(R.id.tv_invoiceProgressBar);
+        constrainInvoiceProgress = view.findViewById(R.id.constrainInvoiceProgress);
+
+        ArrayAdapter<Integer> hour_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, HOUR_ARRAY);
+        auto_complete_hour_payment.setAdapter(hour_adapter);
+
+        ArrayAdapter<Integer> minute_second_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MINUTE_ARRAY);
+        auto_complete_minute_payment.setAdapter(minute_second_adapter);
+        auto_complete_second_payment.setAdapter(minute_second_adapter);
+
+        ArrayAdapter<Integer> millisecond_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MILLISECOND_ARRAY);
+        auto_complete_millisecond_payment.setAdapter(millisecond_adapter);
+
+        getFromDatabaseAndCheck();
+
+        analyticsInvoice();
+
+        switchPayment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked)
+                {
+                    switchPaymentCheck(true);
+                }else {
+                    switchPaymentCheck(false);
+                }
+            }
+        });
+
+        btnSaveReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                save();
+            }
+        });
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        ArrayAdapter<Integer> hour_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, HOUR_ARRAY);
+        auto_complete_hour_payment.setAdapter(hour_adapter);
+
+        ArrayAdapter<Integer> minute_second_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MINUTE_ARRAY);
+        auto_complete_minute_payment.setAdapter(minute_second_adapter);
+        auto_complete_second_payment.setAdapter(minute_second_adapter);
+
+        ArrayAdapter<Integer> millisecond_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MILLISECOND_ARRAY);
+        auto_complete_millisecond_payment.setAdapter(millisecond_adapter);
+        super.onResume();
+    }
+
+    private void save() {
+        progress += 25;
+        updateProgressBar();
+        //ktu kina me marr krejt field edhe nese e bon save atehere me ru nshared prefrence automatic dhe hour minute etc.
+        //true i bjen qe o checked false i bjen qe so checked
+        boolean PAYMENT_STATE = switchPayment.isChecked();
+        int HOUR = Integer.parseInt(auto_complete_hour_payment.getText().toString());
+        int MINUTE = Integer.parseInt(auto_complete_minute_payment.getText().toString());
+        int SECOND = Integer.parseInt(auto_complete_second_payment.getText().toString());
+        int MILLISECOND = Integer.parseInt(auto_complete_millisecond_payment.getText().toString());
+
+        PayoutConfig payoutConfig = new PayoutConfig(
+                PAYOUT_CONFIG,
+                PAYMENT_STATE,
+                HOUR,
+                MINUTE,
+                SECOND,
+                MILLISECOND,
+                DateHelper.getDateTime());
+
+        progress += 25;
+        updateProgressBar();
+
+        //qitu kina me i bo save to firebase
+        firebaseFirestore.collection(PAYOUT_CONFIG)
+                .document(PAYOUT_CONFIG)
+                .set(payoutConfig, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        progress += 25;
+                        updateProgressBar();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progress += 25;
+                                updateProgressBar();
+                                dismissProgressBar();
+                            }
+                        }, 1500);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("TAG", "onFailure: " + e.getMessage());
+                    }
+                });
+    }
+
+    private void switchPaymentCheck(Boolean isChecked) {
+        if (isChecked) {
+            //nese o true
+            constraintAutomaticPayment.setVisibility(View.VISIBLE);
+            constrainProcessPayment.setVisibility(GONE);
+
+            firebaseFirestore.collection(PAYOUT_CONFIG)
+                    .document(PAYOUT_CONFIG)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if(!StringHelper.empty(documentSnapshot.getString("HOUR")))
+                            {
+                                auto_complete_hour_payment.setText(documentSnapshot.getString("HOUR"));
+                            }else {
+                                auto_complete_hour_payment.setText(String.valueOf(TIME_DEFAULT));
+                            }
+
+                            if(!StringHelper.empty(documentSnapshot.getString("MINUTE")))
+                            {
+                                auto_complete_minute_payment.setText(documentSnapshot.getString("MINUTE"));
+                            }else {
+                                auto_complete_minute_payment.setText(String.valueOf(TIME_DEFAULT));
+                            }
+
+                            if(!StringHelper.empty(documentSnapshot.getString("SECOND")))
+                            {
+                                auto_complete_second_payment.setText(documentSnapshot.getString("SECOND"));
+                            }else {
+                                auto_complete_second_payment.setText(String.valueOf(TIME_DEFAULT));
+                            }
+
+                            if(!StringHelper.empty(documentSnapshot.getString("MILLISECOND")))
+                            {
+                                auto_complete_millisecond_payment.setText(documentSnapshot.getString("MILLISECOND"));
+                            }else {
+                                auto_complete_millisecond_payment.setText(String.valueOf(TIME_DEFAULT));
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("TAG", e.getMessage());
+                        }
+                    });
+
+        } else {
+            //nese o false
+            constraintAutomaticPayment.setVisibility(GONE);
+            constrainProcessPayment.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void getFromDatabaseAndCheck() {
+        firebaseFirestore.collection(PAYOUT_CONFIG)
+                .document(PAYOUT_CONFIG)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            if (Boolean.TRUE.equals(documentSnapshot.getBoolean("PAYMENT_STATE"))) {
+                                //duhet me kon toogle lshut
+                                switchPayment.setChecked(true);
+                                constraintAutomaticPayment.setVisibility(View.VISIBLE);
+                                constrainProcessPayment.setVisibility(GONE);
+                            } else {
+                                switchPayment.setChecked(false);
+                                constraintAutomaticPayment.setVisibility(GONE);
+                                constrainProcessPayment.setVisibility(View.VISIBLE);
+                            }
+                        }
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", e.getMessage());
+                    }
+                });
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void updateProgressBar() {
+        invoiceProgressBar.setProgress(progress);
+        tv_invoiceProgressBar.setText(this.progress + "%");
+        constrainInvoiceProgress.setVisibility(View.VISIBLE);
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void dismissProgressBar() {
+        constrainInvoiceProgress.setVisibility(GONE);
+        progress = 0;
+        invoiceProgressBar.setProgress(progress);
+        tv_invoiceProgressBar.setText(this.progress + "%");
+    }
+
+    private void setPayOutTask(int hour, int minute, int second, int millisecond) {
+        Timer timer = new Timer();
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, second);
+        cal.set(Calendar.MILLISECOND, millisecond);
+        timer.schedule(new PayoutsPaypalTask(), cal.getTime());
+    }
+
+    private void analyticsInvoice() {
+        String date = DateHelper.getDate();
+        String start = date + " " + "00:00:00";
+        String end = date + " " + "23:59:59";
+        firebaseFirestore.collection(INVOICE)
+                .whereGreaterThan("created_date_time", start)
+                .whereLessThan("created_date_time", end)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int num_of_reports_today = task.getResult().size();
+                            tvInvoiceReport.setText(mContext.getText(R.string.today) + " " +
+                                    mContext.getText(R.string.are_created) + " " + num_of_reports_today + " " +
+                                    mContext.getText(R.string.invoice));
+                        }
+                    }
+                });
+    }
+
+    private void setHour() {
+        HOUR_ARRAY = new Integer[24];
+        for(int i=0; i<24; i++) {
+            HOUR_ARRAY[i] = i;
+        }
+    }
+
+    private void setMinuteAndSecond() {
+        MINUTE_ARRAY = new Integer[60];
+        for(int i=0; i<60; i++) {
+            MINUTE_ARRAY[i] = i;
+        }
+    }
+
+    private void setMilliseconds() {
+        MILLISECOND_ARRAY = new Integer[60];
+        for(int i=0; i<60; i++) {
+            MILLISECOND_ARRAY[i] = i*1000;
+        }
     }
 
     private void process(String currency) throws JSONException {
@@ -199,8 +493,7 @@ public class PayoutsFragment extends Fragment {
                 updateStatusInvoice(PAID, arrayTransactionId[i]);
             }
 
-            for(int i = 0; i < arrayUserId.length; i++)
-            {
+            for (int i = 0; i < arrayUserId.length; i++) {
                 updateBalanceUser(Double.parseDouble(arrayAmount[i]), arrayUserId[i]);
             }
 
@@ -250,12 +543,12 @@ public class PayoutsFragment extends Fragment {
         firebaseFirestore.collection(USERS)
                 .document(userId)
                 .update("balance", BALANCE_DEFAULT,
-                "totalPaid", totalPaidNew).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("UpdatefieldError", e.getMessage());
-            }
-        });
+                        "totalPaid", totalPaidNew).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("UpdatefieldError", e.getMessage());
+                    }
+                });
     }
 
     private void testJson(String transactionID, int itemNumber, String paypalEmail, Double amount, String currency) throws JSONException {

@@ -49,6 +49,8 @@ public class Constants {
     public static final Double LONGITUDE_DEFAULT = 21.166191;
     public static final float DEFAULT_ZOOM = 15f;
     public static final String KEY = "O9b8jboCKh95zYheMD6Wsc7U";
+    public static final Boolean PAYMENT_STATE_DEFAULT = false;
+    public static final Integer TIME_DEFAULT = 0;
 
     //FIREBASE TABLE NAMES
     public static final String USERS = "users";
@@ -64,6 +66,7 @@ public class Constants {
     public static final String NOTIFICATION_USER = "notifications_user";
     public static final String PAYMENT_INFORMATION = "payment_information";
     public static final String PAYOUTS = "payouts";
+    public static final String PAYOUT_CONFIG = "payoutconfig";
     public static final String PERSONS = "persons";
     public static final String PROFILE_PICTURE = "profile_picture.jpg";
     public static final String DYNAMIC_DOMAIN = "https://fiek.page.link";

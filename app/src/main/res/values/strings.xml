@@ -564,6 +564,12 @@
     <string name="paypal">Paypal</string>
     <string name="request_daily_payment">Request for daily payment</string>
     <string name="payouts">Payouts</string>
+    <string name="hour">Hour</string>
+    <string name="minute">Minute</string>
+    <string name="second">Second</string>
+    <string name="millisecond">Millisecond</string>
+    <string name="automatic_payment">Automatic payment</string>
+    <string name="are_created">are created</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

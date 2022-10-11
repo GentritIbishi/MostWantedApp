@@ -1,6 +1,8 @@
 package fiek.unipr.mostwantedapp.fragment.admin.search;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE;
+import static fiek.unipr.mostwantedapp.utils.Constants.PAID;
+import static fiek.unipr.mostwantedapp.utils.Constants.PENDING;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -117,6 +119,7 @@ public class SearchInvoicePendingFragment extends Fragment implements RecyclerVi
         // below line is use to get data from Firebase
         // firestore using collection in android.
         firebaseFirestore.collection(INVOICE)
+                .whereEqualTo("status", PENDING)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override

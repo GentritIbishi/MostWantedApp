@@ -133,91 +133,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_menu_group_logout = findViewById(R.id.admin_menu_group_logout);
 
         setHomeDefaultConfig();
-
-        Query query = firebaseFirestore.collection(LOCATION_REPORTS);
-        registration = query.addSnapshotListener(
-                new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "listen:error", e);
-                            return;
-                        }
-
-                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
-
-                            String notificationReportId = dc.getDocument().getString("docId");
-                            String notificationReportUid = dc.getDocument().getString("uID");
-                            String notificationReportDateTime = dc.getDocument().getString("date_time");
-                            String notificationReportTitle = dc.getDocument().getString("title");
-                            String notificationReportDescription = dc.getDocument().getString("description");
-                            String notificationReportInformerPerson = dc.getDocument().getString("informer_person");
-                            String notificationReportWantedPerson = dc.getDocument().getString("wanted_person");
-                            String notificationReportPrizeToWin = dc.getDocument().getString("prizeToWin");
-                            String notificationReportNewStatus = dc.getDocument().getString("status");
-
-                            Notifications notificationsAdded = new Notifications(
-                                    DateHelper.getDateTime(),
-                                    String.valueOf(NotificationState.ADDED),
-                                    notificationReportId,
-                                    notificationReportUid,
-                                    notificationReportDateTime,
-                                    notificationReportTitle,
-                                    notificationReportDescription,
-                                    notificationReportInformerPerson,
-                                    notificationReportWantedPerson,
-                                    notificationReportPrizeToWin,
-                                    notificationReportNewStatus,
-                                    firebaseAuth.getUid()
-                            );
-
-                            Notifications notificationsModified = new Notifications(
-                                    DateHelper.getDateTime(),
-                                    String.valueOf(NotificationState.MODIFIED),
-                                    notificationReportId,
-                                    notificationReportUid,
-                                    notificationReportDateTime,
-                                    notificationReportTitle,
-                                    notificationReportDescription,
-                                    notificationReportInformerPerson,
-                                    notificationReportWantedPerson,
-                                    notificationReportPrizeToWin,
-                                    notificationReportNewStatus,
-                                    firebaseAuth.getUid()
-                            );
-
-                            Notifications notificationsRemoved = new Notifications(
-                                    DateHelper.getDateTime(),
-                                    String.valueOf(NotificationState.REMOVED),
-                                    notificationReportId,
-                                    notificationReportUid,
-                                    notificationReportDateTime,
-                                    notificationReportTitle,
-                                    notificationReportDescription,
-                                    notificationReportInformerPerson,
-                                    notificationReportWantedPerson,
-                                    notificationReportPrizeToWin,
-                                    notificationReportNewStatus,
-                                    firebaseAuth.getUid()
-                            );
-
-                            switch (dc.getType()) {
-                                case ADDED:
-                                    final Intent intentAdded = new Intent(AdminDashboardActivity.this, ServiceNotification.class);
-                                    ServiceCaller(intentAdded, notificationsAdded);
-                                    break;
-                                case MODIFIED:
-                                    final Intent intentModified = new Intent(AdminDashboardActivity.this, ServiceNotification.class);
-                                    ServiceCaller(intentModified, notificationsModified);
-                                    break;
-                                case REMOVED:
-                                    final Intent intentRemoved = new Intent(AdminDashboardActivity.this, ServiceNotification.class);
-                                    ServiceCaller(intentRemoved, notificationsRemoved);
-                                    break;
-                            }
-                        }
-                    }
-                });
+        listenerAdmin();
 
         admin_menu_group_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -354,6 +270,55 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     }
 
+    private void listenerAdmin() {
+        Query query = firebaseFirestore.collection(LOCATION_REPORTS);
+        registration = query.addSnapshotListener(
+                new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w(TAG, "listen:error", e);
+                            return;
+                        }
+
+                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
+
+                            String notificationReportId = dc.getDocument().getString("docId");
+                            String notificationReportUid = dc.getDocument().getString("uID");
+                            String notificationReportDateTime = dc.getDocument().getString("date_time");
+                            String notificationReportTitle = dc.getDocument().getString("title");
+                            String notificationReportDescription = dc.getDocument().getString("description");
+                            String notificationReportInformerPerson = dc.getDocument().getString("informer_person");
+                            String notificationReportWantedPerson = dc.getDocument().getString("wanted_person");
+                            String notificationReportPrizeToWin = dc.getDocument().getString("prizeToWin");
+                            String notificationReportNewStatus = dc.getDocument().getString("status");
+
+                            Notifications notificationsAdded = new Notifications(
+                                    DateHelper.getDateTime(),
+                                    String.valueOf(NotificationState.ADDED),
+                                    notificationReportId,
+                                    notificationReportUid,
+                                    notificationReportDateTime,
+                                    notificationReportTitle,
+                                    notificationReportDescription,
+                                    notificationReportInformerPerson,
+                                    notificationReportWantedPerson,
+                                    notificationReportPrizeToWin,
+                                    notificationReportNewStatus,
+                                    firebaseAuth.getUid()
+                            );
+
+                            switch (dc.getType()) {
+                                case ADDED:
+                                    final Intent intentAdded = new Intent(getApplicationContext(), ServiceNotification.class);
+                                    ServiceCaller(intentAdded, notificationsAdded);
+                                    break;
+                            }
+                        }
+                    }
+                });
+    }
+
     private void setHomeDefaultConfig() {
         setSupportActionBar(admin_toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -487,23 +452,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(this, new String[] {FOREGROUND_SERVICE}, PackageManager.PERMISSION_GRANTED);
     }
 
-    private void ServiceCaller(Intent intent, Notifications notifications) {
-        stopService(intent);
-        intent.putExtra("notificationDateTime", notifications.getNotificationDateTime());
-        intent.putExtra("notificationType", notifications.getNotificationType());
-        intent.putExtra("notificationReportId", notifications.getNotificationReportId());
-        intent.putExtra("notificationReportUid", notifications.getNotificationReportUid());
-        intent.putExtra("notificationReportDateTime", notifications.getNotificationReportDateTime());
-        intent.putExtra("notificationReportTitle", notifications.getNotificationReportTitle());
-        intent.putExtra("notificationReportDescription", notifications.getNotificationReportDescription());
-        intent.putExtra("notificationReportInformerPerson", notifications.getNotificationReportInformerPerson());
-        intent.putExtra("notificationReportWantedPerson", notifications.getNotificationReportWantedPerson());
-        intent.putExtra("notificationReportPrizeToWin", notifications.getNotificationReportPrizeToWin());
-        intent.putExtra("notificationReportNewStatus", notifications.getNotificationReportNewStatus());
-        intent.putExtra("notificationForUserId", notifications.getNotificationForUserId());
-        startService(intent);
-    }
-
     @Override
     protected void onDestroy() {
         if (firebaseAuth != null) {
@@ -533,6 +481,23 @@ public class AdminDashboardActivity extends AppCompatActivity {
         // Start running the task on Monday at 15:40:00, period is set to 8 hours
         // if you want to run the task immediately, set the 2nd parameter to 0
         time.schedule(new PayoutsPaypalTask(), calendar.getTime(), TimeUnit.MINUTES.toMillis(8));
+    }
+
+    private void ServiceCaller(Intent intent, Notifications notifications) {
+        stopService(intent);
+        intent.putExtra("notificationDateTime", notifications.getNotificationDateTime());
+        intent.putExtra("notificationType", notifications.getNotificationType());
+        intent.putExtra("notificationReportId", notifications.getNotificationReportId());
+        intent.putExtra("notificationReportUid", notifications.getNotificationReportUid());
+        intent.putExtra("notificationReportDateTime", notifications.getNotificationReportDateTime());
+        intent.putExtra("notificationReportTitle", notifications.getNotificationReportTitle());
+        intent.putExtra("notificationReportDescription", notifications.getNotificationReportDescription());
+        intent.putExtra("notificationReportInformerPerson", notifications.getNotificationReportInformerPerson());
+        intent.putExtra("notificationReportWantedPerson", notifications.getNotificationReportWantedPerson());
+        intent.putExtra("notificationReportPrizeToWin", notifications.getNotificationReportPrizeToWin());
+        intent.putExtra("notificationReportNewStatus", notifications.getNotificationReportNewStatus());
+        intent.putExtra("notificationForUserId", notifications.getNotificationForUserId());
+        startService(intent);
     }
 
 }
