@@ -67,9 +67,10 @@ public class ServiceNotification extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        userID = firebaseAuth.getUid();
+        super.onStartCommand(intent, flags, startId);
 
-        if (intent != null) {
+        if (firebaseAuth.getCurrentUser() != null) {
+            userID = firebaseAuth.getUid();
             notificationDateTime = intent.getStringExtra("notificationDateTime");
             notificationType = intent.getStringExtra("notificationType");
             notificationReportId = intent.getStringExtra("notificationReportId");
@@ -82,15 +83,18 @@ public class ServiceNotification extends Service {
             notificationReportPrizeToWin = intent.getStringExtra("notificationReportPrizeToWin");
             notificationReportNewStatus = intent.getStringExtra("notificationReportNewStatus");
             notificationForUserId = intent.getStringExtra("notificationForUserId");
+
+            startMyOwnForeground(notificationDateTime, notificationType,
+                    notificationReportId, notificationReportUid, notificationReportDateTime,
+                    notificationReportTitle, notificationReportDescription, notificationReportInformerPerson,
+                    notificationReportWantedPerson, notificationReportPrizeToWin, notificationReportNewStatus,
+                    notificationForUserId);
+
         }
-
-        startMyOwnForeground();
-
-        super.onStartCommand(intent, flags, startId);
         return START_STICKY;
     }
 
-    private void startMyOwnForeground() {
+    private void startMyOwnForeground(String notificationDateTime, String notificationType, String notificationReportId, String notificationReportUid, String notificationReportDateTime, String notificationReportTitle, String notificationReportDescription, String notificationReportInformerPerson, String notificationReportWantedPerson, String notificationReportPrizeToWin, String notificationReportNewStatus, String notificationForUserId) {
         firebaseFirestore.collection(USERS)
                 .document(userID)
                 .get()

@@ -568,7 +568,7 @@
     <string name="minute">Minute</string>
     <string name="second">Second</string>
     <string name="millisecond">Millisecond</string>
-    <string name="automatic_payment">Automatic payment</string>
+    <string name="automatic_payment">Automatic Payment</string>
     <string name="are_created">are created</string>
     <string name="no_invoice">No invoice!</string>
     <string name="you_must_have_at_least_one_invoice">You must have at least one invoice!</string>

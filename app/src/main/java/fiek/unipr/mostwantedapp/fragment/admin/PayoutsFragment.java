@@ -17,7 +17,10 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USD;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -28,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Environment;
 import android.os.Handler;
@@ -44,10 +48,8 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -96,13 +98,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Timer;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.models.InvoicesPaid;
 import fiek.unipr.mostwantedapp.models.PayoutConfig;
+import fiek.unipr.mostwantedapp.services.AlarmReceiver;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
-import fiek.unipr.mostwantedapp.utils.PayoutsPaypalTask;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 import fiek.unipr.mostwantedapp.utils.UIMessage;
 import okhttp3.MediaType;
@@ -113,12 +114,12 @@ import okhttp3.Response;
 
 public class PayoutsFragment extends Fragment {
 
-    private String TAG = "TAG";
     private Integer[] MINUTE_ARRAY, MILLISECOND_ARRAY, HOUR_ARRAY;
     public static int responseCode = 0;
     private int progress;
     private Context mContext;
     private View view;
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private Switch switchPayment;
     private TextView tvInvoiceReport, tv_invoiceProgressBar;
     private ConstraintLayout constrainProcessPayment, constraintAutomaticPayment, constrainInvoiceProgress;
@@ -134,6 +135,8 @@ public class PayoutsFragment extends Fragment {
     private StorageReference storageReference;
     private String urlOfPdfUploaded;
 
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
 
     public PayoutsFragment() {
     }
@@ -141,12 +144,71 @@ public class PayoutsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getContext();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
+
+        alarmMgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(mContext, AlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
+
+        checkForAutomaticPayment();
+    }
+
+    private void checkForAutomaticPayment() {
+        //here we need to check if payment_state is true
+        // if is true is automatic payment get all time from user
+        // if is not true is manual payment
+
+        firebaseFirestore.collection(PAYOUT_CONFIG)
+                .document(PAYOUT_CONFIG)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Boolean payment_STATE = documentSnapshot.getBoolean("payment_state");
+                        if(payment_STATE != null)
+                        {
+                            if(payment_STATE.equals(true))
+                            {
+                                // Is automatic payment get all time from user
+                                Integer hour = Integer.parseInt(String.valueOf(documentSnapshot.get("hour")));
+                                Integer minute = Integer.parseInt(String.valueOf(documentSnapshot.get("minute")));
+                                Integer second = Integer.parseInt(String.valueOf(documentSnapshot.get("second")));
+                                Integer millisecond = Integer.parseInt(String.valueOf(documentSnapshot.get("millisecond")));
+                                setPaymentAtSpecificTime(hour, minute, second, millisecond);
+
+                            }
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", e.getMessage());
+                    }
+                });
+
+    }
+
+    private void setPaymentAtSpecificTime(int hour, int minute, int second, int millisecond) {
+        //Set the alarm to start at 20:00
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+        calendar.set(Calendar.MILLISECOND, millisecond);
+
+        // setRepeating() lets you specify a precise custom interval--in this case,
+        // 1 day
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
+
+        //in this case AlarmReceiver is the Broadcast Receiver and it already has a context, so you can directly set the ringer mode to silent from the Broadcast
+        //Receiver without starting up
     }
 
     @Override
@@ -172,6 +234,16 @@ public class PayoutsFragment extends Fragment {
         invoiceProgressBar = view.findViewById(R.id.invoiceProgressBar);
         tv_invoiceProgressBar = view.findViewById(R.id.tv_invoiceProgressBar);
         constrainInvoiceProgress = view.findViewById(R.id.constrainInvoiceProgress);
+
+        final SwipeRefreshLayout payoutsSwipe = view.findViewById(R.id.payoutsSwipe);
+        payoutsSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Reload current fragment
+                analyticsInvoice();
+                payoutsSwipe.setRefreshing(false);
+            }
+        });
 
         auto_complete_hour_payment.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,7 +293,7 @@ public class PayoutsFragment extends Fragment {
                 } else {
                     constraintAutomaticPayment.setVisibility(GONE);
                     constrainProcessPayment.setVisibility(View.VISIBLE);
-                    saveEmpty(isChecked);
+                    saveEmpty(false);
                 }
             }
         });
@@ -611,12 +683,12 @@ public class PayoutsFragment extends Fragment {
                                             arrayUserId[i] = userId;
                                             arrayAmount[i] = String.valueOf(amount);
 
-                                            saveInvoices.add(i+transactionID+", "+paypalEmail+", "+created_date_time+", "+account+", "+new_status);
+                                            saveInvoices.add(i+transactionID+", "+paypalEmail+", "+created_date_time+", "+amount+", "+new_status);
 
                                             table.addCell(new Cell().add(new Paragraph(transactionID)));
                                             table.addCell(new Cell().add(new Paragraph(paypalEmail)));
                                             table.addCell(new Cell().add(new Paragraph(created_date_time)));
-                                            table.addCell(new Cell().add(new Paragraph(account)));
+                                            table.addCell(new Cell().add(new Paragraph(String.valueOf(amount))));
                                             table.addCell(new Cell().add(new Paragraph(new_status)));
                                         }
                                     }
@@ -722,7 +794,10 @@ public class PayoutsFragment extends Fragment {
         CollectionReference collRef = firebaseFirestore.collection(INVOICE_PAID);
         String id = collRef.document().getId();
 
-        InvoicesPaid invoicesPaid = new InvoicesPaid(id, paidInvoices);
+        InvoicesPaid invoicesPaid = new InvoicesPaid(
+                id,
+                paidInvoices,
+                DateHelper.getDateTime());
 
         firebaseFirestore.collection(INVOICE_PAID)
                 .document(id)
@@ -812,6 +887,7 @@ public class PayoutsFragment extends Fragment {
         document.setMargins(15, 15, 15, 15);
 
         Drawable ic_republic_of_kosovo = ContextCompat.getDrawable(mContext, R.drawable.ic_republic_of_kosovo);
+        assert ic_republic_of_kosovo != null;
         Bitmap bmp_ic_republic_of_kosovo = ((BitmapDrawable) ic_republic_of_kosovo).getBitmap();
         ByteArrayOutputStream stream_ic_republic_of_kosovo = new ByteArrayOutputStream();
         bmp_ic_republic_of_kosovo.compress(Bitmap.CompressFormat.PNG, 100, stream_ic_republic_of_kosovo);
@@ -821,6 +897,7 @@ public class PayoutsFragment extends Fragment {
         Image image_ic_republic_of_kosovo = new Image(image_data_ic_republic_of_kosovo);
 
         Drawable ic_kp = ContextCompat.getDrawable(mContext, R.drawable.ic_kp_10_opacity);
+        assert ic_kp != null;
         Bitmap bmp_ic_kp = ((BitmapDrawable) ic_kp).getBitmap();
         ByteArrayOutputStream stream_ic_kp = new ByteArrayOutputStream();
         bmp_ic_kp.compress(Bitmap.CompressFormat.PNG, 100, stream_ic_kp);

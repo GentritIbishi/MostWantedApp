@@ -466,23 +466,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    public void payoutPaypalRunTask() {
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 23);
-        calendar.set(Calendar.MINUTE, 59);
-        calendar.set(Calendar.SECOND, 59);
-        calendar.set(Calendar.MILLISECOND, 999);
-
-
-
-        Timer time = new Timer(); // Instantiate Timer Object
-
-        // Start running the task on Monday at 15:40:00, period is set to 8 hours
-        // if you want to run the task immediately, set the 2nd parameter to 0
-        time.schedule(new PayoutsPaypalTask(), calendar.getTime(), TimeUnit.MINUTES.toMillis(8));
-    }
-
     private void ServiceCaller(Intent intent, Notifications notifications) {
         stopService(intent);
         intent.putExtra("notificationDateTime", notifications.getNotificationDateTime());
