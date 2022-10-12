@@ -5,7 +5,6 @@ import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAID;
-import static fiek.unipr.mostwantedapp.utils.Constants.PAYMENT_STATE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUT_CONFIG;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYPAL_SANDBOX_KEY_BEARER;
@@ -17,13 +16,11 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.preference.PreferenceManager;
 
 import android.os.Handler;
 import android.os.StrictMode;
@@ -63,16 +60,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Timer;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.models.Invoice;
-import fiek.unipr.mostwantedapp.models.InvoiceState;
 import fiek.unipr.mostwantedapp.models.PayoutConfig;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.PayoutsPaypalTask;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
+import fiek.unipr.mostwantedapp.utils.UIMessage;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -81,9 +76,7 @@ import okhttp3.Response;
 
 public class PayoutsFragment extends Fragment {
 
-    private static Integer[] MINUTE_ARRAY = null;
-    private static Integer[] MILLISECOND_ARRAY = null;
-    private static Integer[] HOUR_ARRAY = null;
+    private Integer[] MINUTE_ARRAY, MILLISECOND_ARRAY, HOUR_ARRAY;
     public static int responseCode = 0;
     private int progress;
     private Context mContext;
@@ -141,15 +134,37 @@ public class PayoutsFragment extends Fragment {
         tv_invoiceProgressBar = view.findViewById(R.id.tv_invoiceProgressBar);
         constrainInvoiceProgress = view.findViewById(R.id.constrainInvoiceProgress);
 
-        ArrayAdapter<Integer> hour_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, HOUR_ARRAY);
-        auto_complete_hour_payment.setAdapter(hour_adapter);
+        auto_complete_hour_payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayAdapter<Integer> hour_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, HOUR_ARRAY);
+                auto_complete_hour_payment.setAdapter(hour_adapter);
+            }
+        });
 
-        ArrayAdapter<Integer> minute_second_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MINUTE_ARRAY);
-        auto_complete_minute_payment.setAdapter(minute_second_adapter);
-        auto_complete_second_payment.setAdapter(minute_second_adapter);
+        auto_complete_minute_payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayAdapter<Integer> minute_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MINUTE_ARRAY);
+                auto_complete_minute_payment.setAdapter(minute_adapter);
+            }
+        });
 
-        ArrayAdapter<Integer> millisecond_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MILLISECOND_ARRAY);
-        auto_complete_millisecond_payment.setAdapter(millisecond_adapter);
+        auto_complete_second_payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayAdapter<Integer> second_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MINUTE_ARRAY);
+                auto_complete_second_payment.setAdapter(second_adapter);
+            }
+        });
+
+        auto_complete_millisecond_payment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayAdapter<Integer> millisecond_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MILLISECOND_ARRAY);
+                auto_complete_millisecond_payment.setAdapter(millisecond_adapter);
+            }
+        });
 
         getFromDatabaseAndCheck();
 
@@ -174,7 +189,43 @@ public class PayoutsFragment extends Fragment {
             }
         });
 
+        btnProcessPayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkProcess();
+            }
+        });
+
         return view;
+    }
+
+    private void checkProcess() {
+        String date = DateHelper.getDate();
+        String start = date + " " + "00:00:00";
+        String end = date + " " + "23:59:59";
+        firebaseFirestore.collection(INVOICE)
+                .whereGreaterThan("created_date_time", start)
+                .whereLessThan("created_date_time", end)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            int num_of_reports_today = task.getResult().size();
+                            if(num_of_reports_today>0)
+                            {
+                                try {
+                                    process(USD);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }else {
+                                UIMessage.showMessage(mContext, mContext.getText(R.string.no_invoice),
+                                        mContext.getText(R.string.you_must_have_at_least_one_invoice));
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
@@ -182,9 +233,11 @@ public class PayoutsFragment extends Fragment {
         ArrayAdapter<Integer> hour_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, HOUR_ARRAY);
         auto_complete_hour_payment.setAdapter(hour_adapter);
 
-        ArrayAdapter<Integer> minute_second_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MINUTE_ARRAY);
-        auto_complete_minute_payment.setAdapter(minute_second_adapter);
-        auto_complete_second_payment.setAdapter(minute_second_adapter);
+        ArrayAdapter<Integer> minute_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MINUTE_ARRAY);
+        auto_complete_minute_payment.setAdapter(minute_adapter);
+
+        ArrayAdapter<Integer> second_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MINUTE_ARRAY);
+        auto_complete_second_payment.setAdapter(second_adapter);
 
         ArrayAdapter<Integer> millisecond_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, MILLISECOND_ARRAY);
         auto_complete_millisecond_payment.setAdapter(millisecond_adapter);
@@ -392,7 +445,10 @@ public class PayoutsFragment extends Fragment {
     }
 
     private void process(String currency) throws JSONException {
+        progress += 20;
+        updateProgressBar();
         firebaseFirestore.collection(INVOICE)
+                .whereGreaterThan("status", PENDING)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -402,6 +458,8 @@ public class PayoutsFragment extends Fragment {
                                 CollectionReference collRef = firebaseFirestore.collection(PAYOUTS);
                                 String sender_batch_id = collRef.document().getId();
                                 int rows = queryDocumentSnapshots.size();
+                                progress += 20;
+                                updateProgressBar();
 
                                 JSONObject main = new JSONObject();
 
@@ -416,6 +474,9 @@ public class PayoutsFragment extends Fragment {
                                 String[] arrayUserId = new String[rows];
                                 String[] arrayAmount = new String[rows];
                                 JSONArray arrayItems = new JSONArray();
+
+                                progress += 20;
+                                updateProgressBar();
 
                                 for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                                     String created_date_time = queryDocumentSnapshots.getDocuments().get(i).getString("created_date_time");
@@ -453,18 +514,23 @@ public class PayoutsFragment extends Fragment {
                                 main.put("sender_batch_header", sender_batch_header);
                                 main.put("items", arrayItems);
 
+                                progress += 20;
+                                updateProgressBar();
+
                                 //process payment when array done
                                 processPayoutsWithPaypal(main, arrayTransactionId, arrayUserId, arrayAmount);
 
                             }
                         } catch (ParseException | JSONException | IOException e) {
                             e.printStackTrace();
+                            dismissProgressBar();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("TAG", e.getMessage());
+                        dismissProgressBar();
                     }
                 });
     }
@@ -489,6 +555,8 @@ public class PayoutsFragment extends Fragment {
         responseCode = 0;
 
         if ((responseCode = response.code()) == 201) {
+            progress += 20;
+            updateProgressBar();
             for (int i = 0; i < arrayTransactionId.length; i++) {
                 updateStatusInvoice(PAID, arrayTransactionId[i]);
             }
@@ -498,10 +566,14 @@ public class PayoutsFragment extends Fragment {
             }
 
         } else if ((responseCode = response.code()) == 204) {
+            progress += 20;
+            updateProgressBar();
             for (int i = 0; i < arrayTransactionId.length; i++) {
                 updateStatusInvoice(REFUSED, arrayTransactionId[i]);
             }
         } else {
+            progress += 20;
+            updateProgressBar();
             for (int i = 0; i < arrayTransactionId.length; i++) {
                 updateStatusInvoice(PENDING, arrayTransactionId[i]);
             }
@@ -516,6 +588,7 @@ public class PayoutsFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("UpdatefieldError", e.getMessage());
+                        dismissProgressBar();
                     }
                 });
     }
@@ -534,6 +607,7 @@ public class PayoutsFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("UpdatefieldError", e.getMessage());
+                        dismissProgressBar();
                     }
                 });
     }
@@ -547,35 +621,9 @@ public class PayoutsFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.d("UpdatefieldError", e.getMessage());
+                        dismissProgressBar();
                     }
                 });
     }
 
-    private void testJson(String transactionID, int itemNumber, String paypalEmail, Double amount, String currency) throws JSONException {
-        JSONObject main = new JSONObject();
-
-        //static side
-        JSONObject sender_batch_header = new JSONObject();
-        sender_batch_header.put("sender_batch_id", transactionID);
-        sender_batch_header.put("recipient_type", "EMAIL");
-        sender_batch_header.put("email_subject", "You have money!");
-        sender_batch_header.put("email_message", "You received a payment. Thanks for using our service!");
-
-        JSONArray arrayItems = new JSONArray();
-        //dynamic side
-        JSONObject item = new JSONObject();
-        item.put("sender_item_id", "item" + itemNumber);
-        item.put("recipient_wallet", "PAYPAL");
-        item.put("receiver", paypalEmail);
-
-        JSONObject amountObj = new JSONObject();
-        amountObj.put("value", amount);
-        amountObj.put("currency", currency);
-        item.put("amount", amountObj);
-        arrayItems.put(item);
-        //dynamic side
-
-        main.put("sender_batch_header", sender_batch_header);
-        main.put("items", arrayItems);
-    }
 }
