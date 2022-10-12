@@ -4,8 +4,10 @@ import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
 import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE;
+import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE_PAID;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAID;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUT_CONFIG;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYPAL_SANDBOX_KEY_BEARER;
 import static fiek.unipr.mostwantedapp.utils.Constants.PENDING;
 import static fiek.unipr.mostwantedapp.utils.Constants.REFUSED;
@@ -40,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimerTask;
 
+import fiek.unipr.mostwantedapp.models.InvoicesPaid;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -58,17 +61,17 @@ public class PayoutsPaypalTask extends TimerTask {
 
     @Override
     public void run() {
-            // Your task process
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        process(USD);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+        // Your task process
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    process(USD);
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
+            }
+        });
     }
 
     private void process(String currency) throws JSONException {
@@ -97,6 +100,8 @@ public class PayoutsPaypalTask extends TimerTask {
                                 String[] arrayUserId = new String[rows];
                                 String[] arrayAmount = new String[rows];
                                 JSONArray arrayItems = new JSONArray();
+
+                                String[][] saveInvoices = new String[rows][12];
 
                                 for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                                     String created_date_time = queryDocumentSnapshots.getDocuments().get(i).getString("created_date_time");
@@ -128,6 +133,20 @@ public class PayoutsPaypalTask extends TimerTask {
                                             arrayTransactionId[i] = transactionID;
                                             arrayUserId[i] = userId;
                                             arrayAmount[i] = String.valueOf(amount);
+
+                                            saveInvoices[i][0] = created_date_time;
+                                            saveInvoices[i][1] = updated_date_time;
+                                            saveInvoices[i][2] = transactionID;
+                                            saveInvoices[i][3] = userId;
+                                            saveInvoices[i][4] = account;
+                                            saveInvoices[i][5] = PAID;
+                                            saveInvoices[i][6] = String.valueOf(amount);
+                                            saveInvoices[i][7] = fullName;
+                                            saveInvoices[i][8] = address;
+                                            saveInvoices[i][9] = bankName;
+                                            saveInvoices[i][10] = accountNumber;
+                                            saveInvoices[i][11] = paypalEmail;
+
                                         }
                                     }
                                 }
@@ -135,7 +154,7 @@ public class PayoutsPaypalTask extends TimerTask {
                                 main.put("items", arrayItems);
 
                                 //process payment when array done
-                                processPayoutsWithPaypal(main, arrayTransactionId, arrayUserId, arrayAmount);
+                                processPayoutsWithPaypal(main, arrayTransactionId, arrayUserId, arrayAmount, saveInvoices);
 
                             }
                         } catch (ParseException | JSONException | IOException e) {
@@ -150,7 +169,9 @@ public class PayoutsPaypalTask extends TimerTask {
                 });
     }
 
-    private void processPayoutsWithPaypal(JSONObject main, String[] arrayTransactionId, String[] arrayUserId, String[] arrayAmount) throws IOException, JSONException {
+    private void processPayoutsWithPaypal(JSONObject main, String[] arrayTransactionId,
+                                          String[] arrayUserId, String[] arrayAmount,
+                                          String[][] saveInvoices) throws IOException, JSONException {
         OkHttpClient client = new OkHttpClient().newBuilder()
                 .build();
         MediaType mediaType = MediaType.parse("application/json");
@@ -169,6 +190,7 @@ public class PayoutsPaypalTask extends TimerTask {
         if ((responseCode = response.code()) == 201) {
             for (int i = 0; i < arrayTransactionId.length; i++) {
                 updateStatusInvoice(PAID, arrayTransactionId[i]);
+                savePayoutMade(saveInvoices);
             }
 
             for (int i = 0; i < arrayUserId.length; i++) {
@@ -185,6 +207,23 @@ public class PayoutsPaypalTask extends TimerTask {
             }
         }
 
+    }
+
+    private void savePayoutMade(String[][] paidInvoices) {
+        CollectionReference collRef = firebaseFirestore.collection(INVOICE_PAID);
+        String id = collRef.document().getId();
+
+        InvoicesPaid invoicesPaid = new InvoicesPaid(id, paidInvoices);
+
+        firebaseFirestore.collection(PAYOUT_CONFIG)
+                .document(PAYOUT_CONFIG)
+                .set(invoicesPaid)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("BULK INVOICE FAILED", e.getMessage());
+                    }
+                });
     }
 
     private void updateStatusInvoice(String status, String transactionId) {

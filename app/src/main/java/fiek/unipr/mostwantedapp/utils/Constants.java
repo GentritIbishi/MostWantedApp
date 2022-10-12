@@ -74,6 +74,7 @@ public class Constants {
     public static final String PAYPAL = "Paypal";
     public static final String BANK_ACCOUNT = "Bank Account";
     public static final String INVOICE = "invoice";
+    public static final String INVOICE_PAID = "invoice_paid";
     public static final String PAID = "PAID";
     public static final String PENDING = "PENDING";
     public static final String REFUSED = "REFUSED";
