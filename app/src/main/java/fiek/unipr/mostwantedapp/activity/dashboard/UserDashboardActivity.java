@@ -1,13 +1,9 @@
 package fiek.unipr.mostwantedapp.activity.dashboard;
 
-import static android.content.ContentValues.TAG;
 import static fiek.unipr.mostwantedapp.activity.dashboard.AdminDashboardActivity.IS_LOGGED;
-import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
-import static fiek.unipr.mostwantedapp.utils.Constants.USER_INFORMER_PREFS;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,13 +12,11 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.preference.PreferenceManager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -36,15 +30,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -60,12 +49,8 @@ import fiek.unipr.mostwantedapp.fragment.user.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.user.SearchFragment;
 import fiek.unipr.mostwantedapp.fragment.user.SettingsFragment;
 import fiek.unipr.mostwantedapp.fragment.user.WithdrawFragment;
-import fiek.unipr.mostwantedapp.models.Notifications;
-import fiek.unipr.mostwantedapp.models.NotificationState;
-import fiek.unipr.mostwantedapp.services.ServiceNotification;
+import fiek.unipr.mostwantedapp.services.UserNotificationService;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
-import fiek.unipr.mostwantedapp.utils.DateHelper;
-import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class UserDashboardActivity extends AppCompatActivity {
 
@@ -108,6 +93,8 @@ public class UserDashboardActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
+        startService();
+
         user_nav_view = findViewById(R.id.user_nav_view);
         View nav_header_view = user_nav_view.getHeaderView(0);
         nav_header_name = nav_header_view.findViewById(R.id.nav_header_name);
@@ -133,53 +120,6 @@ public class UserDashboardActivity extends AppCompatActivity {
         userID = firebaseAuth.getUid();
 
         setHomeDefaultConfig();
-
-        Query query = firebaseFirestore.collection(LOCATION_REPORTS).whereEqualTo("uID", userID);
-        registration = query.addSnapshotListener(
-                new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "listen:error", e);
-                            return;
-                        }
-
-                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
-
-                            String notificationReportId = dc.getDocument().getString("docId");
-                            String notificationReportUid = dc.getDocument().getString("uID");
-                            String notificationReportDateTime = dc.getDocument().getString("date_time");
-                            String notificationReportTitle = dc.getDocument().getString("title");
-                            String notificationReportDescription = dc.getDocument().getString("description");
-                            String notificationReportInformerPerson = dc.getDocument().getString("informer_person");
-                            String notificationReportWantedPerson = dc.getDocument().getString("wanted_person");
-                            String notificationReportPrizeToWin = dc.getDocument().getString("prizeToWin");
-                            String notificationReportNewStatus = dc.getDocument().getString("status");
-
-                            Notifications notificationsModified = new Notifications(
-                                    DateHelper.getDateTime(),
-                                    String.valueOf(NotificationState.MODIFIED),
-                                    notificationReportId,
-                                    notificationReportUid,
-                                    notificationReportDateTime,
-                                    notificationReportTitle,
-                                    notificationReportDescription,
-                                    notificationReportInformerPerson,
-                                    notificationReportWantedPerson,
-                                    notificationReportPrizeToWin,
-                                    notificationReportNewStatus,
-                                    firebaseAuth.getUid()
-                            );
-
-                            switch (dc.getType()) {
-                                case MODIFIED:
-                                    final Intent intentModified = new Intent(UserDashboardActivity.this, ServiceNotification.class);
-                                    ServiceCaller(intentModified, notificationsModified);
-                                    break;
-                            }
-                        }
-                    }
-                });
 
         user_menu_group_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -321,24 +261,14 @@ public class UserDashboardActivity extends AppCompatActivity {
 
     }
 
-    private void ServiceCaller(Intent intent, Notifications notifications) {
-        stopService(intent);
+    private void startService() {
+        final Intent intentModified = new Intent(UserDashboardActivity.this, UserNotificationService.class);
+        startService(intentModified);
+    }
 
-        intent.putExtra("notificationDateTime", notifications.getNotificationDateTime());
-        intent.putExtra("notificationType", notifications.getNotificationType());
-        intent.putExtra("notificationReportId", notifications.getNotificationReportId());
-        intent.putExtra("notificationReportUid", notifications.getNotificationReportUid());
-        intent.putExtra("notificationReportDateTime", notifications.getNotificationReportDateTime());
-        intent.putExtra("notificationReportTitle", notifications.getNotificationReportTitle());
-        intent.putExtra("notificationReportInformerPerson", notifications.getNotificationReportInformerPerson());
-        intent.putExtra("notificationReportWantedPerson", notifications.getNotificationReportWantedPerson());
-        intent.putExtra("notificationReportPrizeToWin", notifications.getNotificationReportPrizeToWin());
-        intent.putExtra("notificationReportNewStatus", notifications.getNotificationReportNewStatus());
-        intent.putExtra("notificationForUserId", notifications.getNotificationForUserId());
-        intent.putExtra("notificationReportDescription", notifications.getNotificationReportDescription());
-
-        startService(intent);
-
+    private void stopService() {
+        final Intent intentModified = new Intent(UserDashboardActivity.this, UserNotificationService.class);
+        stopService(intentModified);
     }
 
     @Override
@@ -417,6 +347,7 @@ public class UserDashboardActivity extends AppCompatActivity {
         //check for phone authentication
         if (firebaseAuth != null) {
             firebaseAuth.signOut();
+            stopService();
             sendUserToLogin();
         }
         user_logout_progressBar.setVisibility(View.GONE);

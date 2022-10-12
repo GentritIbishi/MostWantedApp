@@ -1,12 +1,9 @@
 package fiek.unipr.mostwantedapp.activity.dashboard;
 
-import static android.content.ContentValues.TAG;
 import static fiek.unipr.mostwantedapp.utils.Constants.FOREGROUND_SERVICE;
-import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -17,13 +14,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.ActivityManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -37,22 +31,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import java.util.Calendar;
-import java.util.Timer;
-import java.util.concurrent.TimeUnit;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.activity.LoginActivity;
@@ -64,13 +49,8 @@ import fiek.unipr.mostwantedapp.fragment.admin.HomeFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.NotificationFragment;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.SettingsFragment;
-import fiek.unipr.mostwantedapp.models.Notifications;
-import fiek.unipr.mostwantedapp.models.NotificationState;
-import fiek.unipr.mostwantedapp.services.ServiceNotification;
+import fiek.unipr.mostwantedapp.services.AdminNotificationService;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
-import fiek.unipr.mostwantedapp.utils.DateHelper;
-import fiek.unipr.mostwantedapp.utils.PayoutsPaypalTask;
-import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
@@ -110,6 +90,8 @@ public class AdminDashboardActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
 
+        startService();
+
         admin_nav_view = findViewById(R.id.admin_nav_view);
         View nav_header_view = admin_nav_view.getHeaderView(0);
         nav_header_name = nav_header_view.findViewById(R.id.nav_header_name);
@@ -133,7 +115,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_menu_group_logout = findViewById(R.id.admin_menu_group_logout);
 
         setHomeDefaultConfig();
-        listenerAdmin();
 
         admin_menu_group_logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,55 +251,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     }
 
-    private void listenerAdmin() {
-        Query query = firebaseFirestore.collection(LOCATION_REPORTS);
-        registration = query.addSnapshotListener(
-                new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.w(TAG, "listen:error", e);
-                            return;
-                        }
-
-                        for (DocumentChange dc : snapshots.getDocumentChanges()) {
-
-                            String notificationReportId = dc.getDocument().getString("docId");
-                            String notificationReportUid = dc.getDocument().getString("uID");
-                            String notificationReportDateTime = dc.getDocument().getString("date_time");
-                            String notificationReportTitle = dc.getDocument().getString("title");
-                            String notificationReportDescription = dc.getDocument().getString("description");
-                            String notificationReportInformerPerson = dc.getDocument().getString("informer_person");
-                            String notificationReportWantedPerson = dc.getDocument().getString("wanted_person");
-                            String notificationReportPrizeToWin = dc.getDocument().getString("prizeToWin");
-                            String notificationReportNewStatus = dc.getDocument().getString("status");
-
-                            Notifications notificationsAdded = new Notifications(
-                                    DateHelper.getDateTime(),
-                                    String.valueOf(NotificationState.ADDED),
-                                    notificationReportId,
-                                    notificationReportUid,
-                                    notificationReportDateTime,
-                                    notificationReportTitle,
-                                    notificationReportDescription,
-                                    notificationReportInformerPerson,
-                                    notificationReportWantedPerson,
-                                    notificationReportPrizeToWin,
-                                    notificationReportNewStatus,
-                                    firebaseAuth.getUid()
-                            );
-
-                            switch (dc.getType()) {
-                                case ADDED:
-                                    final Intent intentAdded = new Intent(getApplicationContext(), ServiceNotification.class);
-                                    ServiceCaller(intentAdded, notificationsAdded);
-                                    break;
-                            }
-                        }
-                    }
-                });
-    }
-
     private void setHomeDefaultConfig() {
         setSupportActionBar(admin_toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -338,6 +270,16 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
         //set default selected
         admin_nav_view.getMenu().getItem(0).setChecked(true);
+    }
+
+    private void startService() {
+        final Intent intentModified = new Intent(AdminDashboardActivity.this, AdminNotificationService.class);
+        startService(intentModified);
+    }
+
+    private void stopService() {
+        final Intent intentModified = new Intent(AdminDashboardActivity.this, AdminNotificationService.class);
+        stopService(intentModified);
     }
 
     private void setHomeSelected() {
@@ -382,6 +324,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     {
         if(firebaseAuth != null){
             firebaseAuth.signOut();
+            stopService();
             sendUserToLogin();
         }
         admin_logout_progressBar.setVisibility(View.GONE);
@@ -466,21 +409,5 @@ public class AdminDashboardActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void ServiceCaller(Intent intent, Notifications notifications) {
-        stopService(intent);
-        intent.putExtra("notificationDateTime", notifications.getNotificationDateTime());
-        intent.putExtra("notificationType", notifications.getNotificationType());
-        intent.putExtra("notificationReportId", notifications.getNotificationReportId());
-        intent.putExtra("notificationReportUid", notifications.getNotificationReportUid());
-        intent.putExtra("notificationReportDateTime", notifications.getNotificationReportDateTime());
-        intent.putExtra("notificationReportTitle", notifications.getNotificationReportTitle());
-        intent.putExtra("notificationReportDescription", notifications.getNotificationReportDescription());
-        intent.putExtra("notificationReportInformerPerson", notifications.getNotificationReportInformerPerson());
-        intent.putExtra("notificationReportWantedPerson", notifications.getNotificationReportWantedPerson());
-        intent.putExtra("notificationReportPrizeToWin", notifications.getNotificationReportPrizeToWin());
-        intent.putExtra("notificationReportNewStatus", notifications.getNotificationReportNewStatus());
-        intent.putExtra("notificationForUserId", notifications.getNotificationForUserId());
-        startService(intent);
-    }
 
 }

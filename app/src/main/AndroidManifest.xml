@@ -126,8 +126,11 @@
         <activity android:name="com.paypal.android.sdk.payments.FuturePaymentConsentActivity"/>
         <activity android:name="com.paypal.android.sdk.payments.FuturePaymentInfoActivity"/>
 
-        <service
-            android:name=".services.ServiceNotification"/>
+        <service android:name=".services.UserNotificationService"/>
+        <service android:name=".services.UserSaveNotificationService"/>
+
+        <service android:name=".services.AdminNotificationService"/>
+        <service android:name=".services.AdminSaveNotificationService"/>
 
         <service android:name="com.paypal.android.sdk.payments.PayPalService" android:exported="false"/>
 

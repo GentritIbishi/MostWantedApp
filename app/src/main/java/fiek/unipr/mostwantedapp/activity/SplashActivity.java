@@ -9,12 +9,9 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.view.WindowManager;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +26,8 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.activity.dashboard.AdminDashboardActivity;
 import fiek.unipr.mostwantedapp.activity.dashboard.AnonymousDashboardActivity;
 import fiek.unipr.mostwantedapp.activity.dashboard.UserDashboardActivity;
+import fiek.unipr.mostwantedapp.services.AdminNotificationService;
+import fiek.unipr.mostwantedapp.services.UserNotificationService;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 
 public class SplashActivity extends AppCompatActivity {
@@ -65,6 +64,7 @@ public class SplashActivity extends AppCompatActivity {
                                     if(role !=null && role.matches(ADMIN_ROLE))
                                     {
                                         // start AdminDashboardActivity
+                                        startServiceAdmin();
                                         Intent intent = new Intent(SplashActivity.this, AdminDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
                                     }else if(role !=null && role.matches(USER_ROLE))
@@ -76,6 +76,7 @@ public class SplashActivity extends AppCompatActivity {
                                     else if(role !=null && role.matches(INFORMER_ROLE))
                                     {
                                         // start UserDashboardActivity
+                                        startServiceUser();
                                         Intent intent = new Intent(SplashActivity.this, UserDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
                                     }else {
@@ -97,6 +98,16 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }
         }, 500);
+    }
+
+    private void startServiceUser() {
+        final Intent intent = new Intent(SplashActivity.this, UserNotificationService.class);
+        startService(intent);
+    }
+
+    private void startServiceAdmin() {
+        final Intent intent = new Intent(SplashActivity.this, AdminNotificationService.class);
+        startService(intent);
     }
 
 }
