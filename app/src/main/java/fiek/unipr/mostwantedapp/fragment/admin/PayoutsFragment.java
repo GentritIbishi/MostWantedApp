@@ -336,7 +336,6 @@ public class PayoutsFragment extends Fragment {
         progress += 25;
         updateProgressBar();
 
-        //qitu kina me i bo save to firebase
         firebaseFirestore.collection(PAYOUT_CONFIG)
                 .document(PAYOUT_CONFIG)
                 .set(payoutConfig, SetOptions.merge())
