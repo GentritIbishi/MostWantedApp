@@ -1,13 +1,15 @@
 package fiek.unipr.mostwantedapp.models;
 
+import java.util.List;
+
 public class InvoicesPaid {
     private String id;
-    private String [][] invoices;
+    private List<String> invoices;
 
     public InvoicesPaid() {
     }
 
-    public InvoicesPaid(String id, String[][] invoices) {
+    public InvoicesPaid(String id, List<String> invoices) {
         this.id = id;
         this.invoices = invoices;
     }
@@ -20,11 +22,11 @@ public class InvoicesPaid {
         this.id = id;
     }
 
-    public String[][] getInvoices() {
+    public List<String> getInvoices() {
         return invoices;
     }
 
-    public void setInvoices(String[][] invoices) {
+    public void setInvoices(List<String> invoices) {
         this.invoices = invoices;
     }
 }

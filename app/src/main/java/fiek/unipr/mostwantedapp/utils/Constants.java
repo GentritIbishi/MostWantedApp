@@ -57,6 +57,7 @@ public class Constants {
     public static final String WANTED_PERSONS = "wanted_persons";
     public static final String ASSIGNED_REPORTS = "assigned_reports";
     public static final String ASSIGNED_REPORTS_PDF = "assign_report.pdf";
+    public static final String PAYOUTS_PDF = "PAYOUTS_PDF.pdf";
     public static final String REPORTS_ASSIGNED = "reports_assigned";
     public static final String INVESTIGATORS = "investigators";
     public static final String LOCATION_REPORTS = "location_reports";
@@ -78,7 +79,7 @@ public class Constants {
     public static final String PAID = "PAID";
     public static final String PENDING = "PENDING";
     public static final String REFUSED = "REFUSED";
-    public static final String PAYPAL_SANDBOX_KEY_BEARER = "Bearer A21AAJFU4tVje-z-HPc4Yo0VCe-a8xMnolcLhfWoSILvMzhm0QcIDqiVbFafkPb86F342h-P4o9t_GGnkrzWtgotRJa0C7x0w";
+    public static final String PAYPAL_SANDBOX_KEY_BEARER = "Bearer A21AAK4Nj-XjIR5MMdMSn8L9hqhRv-3npNz4Xma_elEIo41enIvrgy0Dpcf0kfxqQE35VrFf0jv54gCZScd_Pn5gX-PFHucYw";
 
     //permissions
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 101;

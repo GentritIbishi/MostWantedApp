@@ -4,8 +4,10 @@ import static android.view.View.GONE;
 import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE;
+import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE_PAID;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAID;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUTS_PDF;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUT_CONFIG;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYPAL_SANDBOX_KEY_BEARER;
 import static fiek.unipr.mostwantedapp.utils.Constants.PENDING;
@@ -16,12 +18,18 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
@@ -34,6 +42,7 @@ import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -50,19 +59,47 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.io.source.ByteArrayOutputStream;
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
+import com.itextpdf.kernel.pdf.extgstate.PdfExtGState;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.HorizontalAlignment;
+import com.itextpdf.layout.property.TextAlignment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Timer;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.models.InvoicesPaid;
 import fiek.unipr.mostwantedapp.models.PayoutConfig;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.PayoutsPaypalTask;
@@ -76,6 +113,7 @@ import okhttp3.Response;
 
 public class PayoutsFragment extends Fragment {
 
+    private String TAG = "TAG";
     private Integer[] MINUTE_ARRAY, MILLISECOND_ARRAY, HOUR_ARRAY;
     public static int responseCode = 0;
     private int progress;
@@ -94,6 +132,7 @@ public class PayoutsFragment extends Fragment {
     private FirebaseUser firebaseUser;
     private DocumentReference documentReference;
     private StorageReference storageReference;
+    private String urlOfPdfUploaded;
 
 
     public PayoutsFragment() {
@@ -170,21 +209,19 @@ public class PayoutsFragment extends Fragment {
 
         analyticsInvoice();
 
-        //merre gjendjen qysh o
         getPaymentState();
 
         switchPayment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(isChecked)
-                {
+                if (isChecked) {
                     //nese o true
                     constraintAutomaticPayment.setVisibility(View.VISIBLE);
                     constrainProcessPayment.setVisibility(GONE);
-                }else {
+                } else {
                     constraintAutomaticPayment.setVisibility(GONE);
                     constrainProcessPayment.setVisibility(View.VISIBLE);
-                    save();
+                    saveEmpty(isChecked);
                 }
             }
         });
@@ -214,8 +251,10 @@ public class PayoutsFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Boolean payment_STATE = documentSnapshot.getBoolean("payment_state");
-                        assert payment_STATE != null;
-                        switchPaymentCheck(payment_STATE);
+                        if(payment_STATE != null)
+                        {
+                            switchPaymentCheck(payment_STATE);
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -232,24 +271,28 @@ public class PayoutsFragment extends Fragment {
         firebaseFirestore.collection(INVOICE)
                 .whereGreaterThan("created_date_time", start)
                 .whereLessThan("created_date_time", end)
+                .whereEqualTo("status", "PENDING")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            int num_of_reports_today = task.getResult().size();
-                            if(num_of_reports_today>0)
-                            {
-                                try {
-                                    process(USD);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }else {
-                                UIMessage.showMessage(mContext, mContext.getText(R.string.no_invoice),
-                                        mContext.getText(R.string.you_must_have_at_least_one_invoice));
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int num_of_reports_today = queryDocumentSnapshots.size();
+                        if (num_of_reports_today > 0) {
+                            try {
+                                process(USD);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
+                        } else {
+                            UIMessage.showMessage(mContext, mContext.getText(R.string.no_invoice),
+                                    mContext.getText(R.string.you_must_have_at_least_one_invoice));
                         }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("CHECKPROCESS_ERROR", e.getMessage());
+                        dismissProgressBar();
                     }
                 });
     }
@@ -320,8 +363,7 @@ public class PayoutsFragment extends Fragment {
     }
 
     private void saveEmpty(Boolean payment_STATE) {
-        progress += 50;
-        updateProgressBar();
+        growProgressBar(50);
         PayoutConfig payoutConfig = new PayoutConfig(
                 PAYOUT_CONFIG,
                 payment_STATE,
@@ -331,22 +373,25 @@ public class PayoutsFragment extends Fragment {
                 null,
                 DateHelper.getDateTime()
         );
+
         firebaseFirestore.collection(PAYOUT_CONFIG)
                 .document(PAYOUT_CONFIG)
                 .set(payoutConfig)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        progress += 50;
-                        updateProgressBar();
+                        growProgressBar(50);
+                        dismissProgressBar();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         dismissProgressBar();
                         Log.d("TAG", e.getMessage());
+                        dismissProgressBar();
                     }
                 });
+        dismissProgressBar();
     }
 
     private void switchPaymentCheck(Boolean isChecked) {
@@ -361,31 +406,27 @@ public class PayoutsFragment extends Fragment {
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if(!StringHelper.empty(String.valueOf(documentSnapshot.get("hour"))))
-                            {
+                            if (!StringHelper.empty(String.valueOf(documentSnapshot.get("hour")))) {
                                 auto_complete_hour_payment.setText(String.valueOf(documentSnapshot.get("hour")));
-                            }else {
+                            } else {
                                 auto_complete_hour_payment.setText(String.valueOf(TIME_DEFAULT));
                             }
 
-                            if(!StringHelper.empty(String.valueOf(documentSnapshot.get("minute"))))
-                            {
+                            if (!StringHelper.empty(String.valueOf(documentSnapshot.get("minute")))) {
                                 auto_complete_minute_payment.setText(String.valueOf(documentSnapshot.get("minute")));
-                            }else {
+                            } else {
                                 auto_complete_minute_payment.setText(String.valueOf(TIME_DEFAULT));
                             }
 
-                            if(!StringHelper.empty(String.valueOf(documentSnapshot.get("second"))))
-                            {
+                            if (!StringHelper.empty(String.valueOf(documentSnapshot.get("second")))) {
                                 auto_complete_second_payment.setText(String.valueOf(documentSnapshot.get("second")));
-                            }else {
+                            } else {
                                 auto_complete_second_payment.setText(String.valueOf(TIME_DEFAULT));
                             }
 
-                            if(!StringHelper.empty(String.valueOf(documentSnapshot.get("millisecond"))))
-                            {
+                            if (!StringHelper.empty(String.valueOf(documentSnapshot.get("millisecond")))) {
                                 auto_complete_millisecond_payment.setText(String.valueOf(documentSnapshot.get("millisecond")));
-                            }else {
+                            } else {
                                 auto_complete_millisecond_payment.setText(String.valueOf(TIME_DEFAULT));
                             }
                         }
@@ -455,75 +496,92 @@ public class PayoutsFragment extends Fragment {
         firebaseFirestore.collection(INVOICE)
                 .whereGreaterThan("created_date_time", start)
                 .whereLessThan("created_date_time", end)
+                .whereEqualTo("status", "PENDING")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @SuppressLint("SetTextI18n")
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            int num_of_reports_today = task.getResult().size();
-                            tvInvoiceReport.setText(mContext.getText(R.string.today) + " " +
-                                    mContext.getText(R.string.are_created) + " " + num_of_reports_today + " " +
-                                    mContext.getText(R.string.invoice));
-                        }
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        int num_of_reports_today = queryDocumentSnapshots.size();
+                        tvInvoiceReport.setText(mContext.getText(R.string.today) + " " +
+                                mContext.getText(R.string.are_created) + " " + num_of_reports_today + " " +
+                                mContext.getText(R.string.invoice));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
                     }
                 });
     }
 
     private void setHour() {
         HOUR_ARRAY = new Integer[24];
-        for(int i=0; i<24; i++) {
+        for (int i = 0; i < 24; i++) {
             HOUR_ARRAY[i] = i;
         }
     }
 
     private void setMinuteAndSecond() {
         MINUTE_ARRAY = new Integer[60];
-        for(int i=0; i<60; i++) {
+        for (int i = 0; i < 60; i++) {
             MINUTE_ARRAY[i] = i;
         }
     }
 
     private void setMilliseconds() {
         MILLISECOND_ARRAY = new Integer[60];
-        for(int i=0; i<60; i++) {
-            MILLISECOND_ARRAY[i] = i*1000;
+        for (int i = 0; i < 60; i++) {
+            MILLISECOND_ARRAY[i] = i * 1000;
         }
     }
 
     private void process(String currency) throws JSONException {
-        progress += 20;
-        updateProgressBar();
+        growProgressBar(25);
+        String date = DateHelper.getDate();
+        String start = date + " " + "00:00:00";
+        String end = date + " " + "23:59:59";
         firebaseFirestore.collection(INVOICE)
-                .whereGreaterThan("status", PENDING)
+                .whereGreaterThan("created_date_time", start)
+                .whereLessThan("created_date_time", end)
+                .whereEqualTo("status", "PENDING")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        try {
-                            if (queryDocumentSnapshots.size() != 0) {
+                        if (queryDocumentSnapshots.size() != 0) {
+                            try {
+                                //collection
+                                int rows = queryDocumentSnapshots.size();
+                                List<String> saveInvoices = new ArrayList<>();
+                                String[] arrayTransactionId = new String[rows];
+                                String[] arrayUserId = new String[rows];
+                                String[] arrayAmount = new String[rows];
+
+                                float[] pointColumnWidths = {200F, 200F, 200F, 200F, 200F};
+                                Table table = new Table(pointColumnWidths);
+
+                                PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+                                table.addCell(new Cell().add(new Paragraph(String.valueOf(mContext.getText(R.string.column_transaction_id)))).setFont(font).setBackgroundColor(ColorConstants.BLUE).setFontColor(ColorConstants.WHITE).setTextAlignment(TextAlignment.CENTER));
+                                table.addCell(new Cell().add(new Paragraph(String.valueOf(mContext.getText(R.string.column_name_account)))).setFont(font).setBackgroundColor(ColorConstants.BLUE).setFontColor(ColorConstants.WHITE).setTextAlignment(TextAlignment.CENTER));
+                                table.addCell(new Cell().add(new Paragraph(String.valueOf(mContext.getText(R.string.column_created_date_time)))).setFont(font).setBackgroundColor(ColorConstants.BLUE).setFontColor(ColorConstants.WHITE).setTextAlignment(TextAlignment.CENTER));
+                                table.addCell(new Cell().add(new Paragraph(String.valueOf(mContext.getText(R.string.column_name_amount)))).setFont(font).setBackgroundColor(ColorConstants.BLUE).setFontColor(ColorConstants.WHITE)).setTextAlignment(TextAlignment.CENTER);
+                                table.addCell(new Cell().add(new Paragraph(String.valueOf(mContext.getText(R.string.column_name_status)))).setFont(font).setBackgroundColor(ColorConstants.BLUE).setFontColor(ColorConstants.WHITE)).setTextAlignment(TextAlignment.CENTER);
+
                                 CollectionReference collRef = firebaseFirestore.collection(PAYOUTS);
                                 String sender_batch_id = collRef.document().getId();
-                                int rows = queryDocumentSnapshots.size();
-                                progress += 20;
-                                updateProgressBar();
 
                                 JSONObject main = new JSONObject();
 
-                                //static side
                                 JSONObject sender_batch_header = new JSONObject();
                                 sender_batch_header.put("sender_batch_id", sender_batch_id);
                                 sender_batch_header.put("recipient_type", "EMAIL");
                                 sender_batch_header.put("email_subject", "You have money!");
                                 sender_batch_header.put("email_message", "You received a payment. Thanks for using our service!");
 
-                                String[] arrayTransactionId = new String[rows];
-                                String[] arrayUserId = new String[rows];
-                                String[] arrayAmount = new String[rows];
                                 JSONArray arrayItems = new JSONArray();
 
-                                progress += 20;
-                                updateProgressBar();
+                                growProgressBar(25);
 
                                 for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                                     String created_date_time = queryDocumentSnapshots.getDocuments().get(i).getString("created_date_time");
@@ -531,16 +589,13 @@ public class PayoutsFragment extends Fragment {
                                     String transactionID = queryDocumentSnapshots.getDocuments().get(i).getString("transactionID");
                                     String userId = queryDocumentSnapshots.getDocuments().get(i).getString("userId");
                                     String account = queryDocumentSnapshots.getDocuments().get(i).getString("account");
-                                    String status = queryDocumentSnapshots.getDocuments().get(i).getString("status");
+                                    String new_status = PAID;
                                     Double amount = queryDocumentSnapshots.getDocuments().get(i).getDouble("amount");
-                                    String fullName = queryDocumentSnapshots.getDocuments().get(i).getString("fullName");
-                                    String address = queryDocumentSnapshots.getDocuments().get(i).getString("address");
-                                    String bankName = queryDocumentSnapshots.getDocuments().get(i).getString("bankName");
-                                    String accountNumber = queryDocumentSnapshots.getDocuments().get(i).getString("accountNumber");
                                     String paypalEmail = queryDocumentSnapshots.getDocuments().get(i).getString("paypalEmail");
 
                                     if (!StringHelper.empty(created_date_time)) {
                                         Date givenDate = new SimpleDateFormat(DATE).parse(created_date_time);
+
                                         if (!DateHelper.checkDayBefore24(givenDate)) {
                                             JSONObject item = new JSONObject();
                                             item.put("sender_item_id", "item" + i);
@@ -552,24 +607,43 @@ public class PayoutsFragment extends Fragment {
                                             amountObj.put("currency", currency);
                                             item.put("amount", amountObj);
                                             arrayItems.put(item);
+
                                             arrayTransactionId[i] = transactionID;
                                             arrayUserId[i] = userId;
                                             arrayAmount[i] = String.valueOf(amount);
+
+                                            saveInvoices.add(i+transactionID+", "+paypalEmail+", "+created_date_time+", "+account+", "+new_status);
+
+                                            table.addCell(new Cell().add(new Paragraph(transactionID)));
+                                            table.addCell(new Cell().add(new Paragraph(paypalEmail)));
+                                            table.addCell(new Cell().add(new Paragraph(created_date_time)));
+                                            table.addCell(new Cell().add(new Paragraph(account)));
+                                            table.addCell(new Cell().add(new Paragraph(new_status)));
                                         }
                                     }
                                 }
+
                                 main.put("sender_batch_header", sender_batch_header);
                                 main.put("items", arrayItems);
 
-                                progress += 20;
-                                updateProgressBar();
+                                Log.d("TAG", "onSuccess: JSON DONE, TABLE DONE");
 
-                                //process payment when array done
-                                processPayoutsWithPaypal(main, arrayTransactionId, arrayUserId, arrayAmount);
+                                Log.d("JSON", main.toString(4));
 
+                                growProgressBar(25);
+
+                                processPayoutsWithPaypal(main,
+                                        arrayTransactionId,
+                                        arrayUserId,
+                                        arrayAmount,
+                                        saveInvoices,
+                                        table);
+
+                            } catch (ParseException | JSONException | IOException e) {
+                                e.printStackTrace();
+                                dismissProgressBar();
                             }
-                        } catch (ParseException | JSONException | IOException e) {
-                            e.printStackTrace();
+                        }else {
                             dismissProgressBar();
                         }
                     }
@@ -582,29 +656,38 @@ public class PayoutsFragment extends Fragment {
                 });
     }
 
-    private void processPayoutsWithPaypal(JSONObject main,
-                                          String[] arrayTransactionId,
-                                          String[] arrayUserId,
-                                          String[] arrayAmount) throws IOException, JSONException {
-        OkHttpClient client = new OkHttpClient().newBuilder()
-                .build();
+    private void processPayoutsWithPaypal(JSONObject main, String[] arrayTransactionId,
+                                          String[] arrayUserId, String[] arrayAmount,
+                                          List<String> saveInvoices, Table table) throws IOException, JSONException
+    {
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+
         MediaType mediaType = MediaType.parse("application/json");
+
         RequestBody body = RequestBody.create(mediaType, main.toString(4));
+
         Request request = new Request.Builder()
                 .url("https://api-m.sandbox.paypal.com/v1/payments/payouts")
                 .method("POST", body)
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Authorization", PAYPAL_SANDBOX_KEY_BEARER)
                 .build();
+
         Response response = client.newCall(request).execute();
+
+        Log.d("RESPONSE", response.toString());
 
         // Reset the response code
         responseCode = 0;
 
-        if ((responseCode = response.code()) == 201) {
-            progress += 20;
-            updateProgressBar();
-            for (int i = 0; i < arrayTransactionId.length; i++) {
+        if ((responseCode = response.code()) == 201)
+        {
+            Log.d("TAG", "onSuccess: RESPONSE 201");
+
+            growProgressBar(5);
+
+            for (int i = 0; i < arrayTransactionId.length; i++)
+            {
                 updateStatusInvoice(PAID, arrayTransactionId[i]);
             }
 
@@ -612,23 +695,203 @@ public class PayoutsFragment extends Fragment {
                 updateBalanceUser(Double.parseDouble(arrayAmount[i]), arrayUserId[i]);
             }
 
+            savePayoutMade(saveInvoices, table);
+
         } else if ((responseCode = response.code()) == 204) {
-            progress += 20;
-            updateProgressBar();
+            growProgressBar(25);
             for (int i = 0; i < arrayTransactionId.length; i++) {
                 updateStatusInvoice(REFUSED, arrayTransactionId[i]);
             }
+            dismissProgressBar();
         } else {
-            progress += 20;
-            updateProgressBar();
+            Log.d("TAG", "onSuccess: PENDING");
+            growProgressBar(25);
             for (int i = 0; i < arrayTransactionId.length; i++) {
                 updateStatusInvoice(PENDING, arrayTransactionId[i]);
             }
+            dismissProgressBar();
         }
 
     }
 
+    private void growProgressBar(Integer number) {
+        progress += number;
+        updateProgressBar();
+    }
+
+    private void savePayoutMade(List<String> paidInvoices, Table table) {
+        CollectionReference collRef = firebaseFirestore.collection(INVOICE_PAID);
+        String id = collRef.document().getId();
+
+        InvoicesPaid invoicesPaid = new InvoicesPaid(id, paidInvoices);
+
+        firebaseFirestore.collection(INVOICE_PAID)
+                .document(id)
+                .set(invoicesPaid)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("CREATED DOCUMENT", "TRUE");
+                        Uri uri = null;
+                        try {
+                            uri = generatePDF(table);
+                        } catch (IOException e) {
+                            Log.d("GENERATE_ERROR", e.getMessage());
+                        }
+                        uploadPDFtoFirebase(uri, id);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("BULK INVOICE FAILED", e.getMessage());
+                    }
+                });
+
+    }
+
+    private void uploadPDFtoFirebase(Uri pdfUri, String id) {
+        //upload image to storage in firebase
+        StorageReference profRef = storageReference.child(INVOICE_PAID + "/" + id + "/" + PAYOUTS_PDF);
+        profRef.putFile(pdfUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                profRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        //save uri of pdf uploaded file
+                        urlOfPdfUploaded = uri.toString();
+                        saveReportUrlToPayoutsCollection(id, urlOfPdfUploaded);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("UPLOAD ERROR", e.getMessage());
+                        dismissProgressBar();
+                    }
+                });
+            }
+        });
+    }
+
+    private void saveReportUrlToPayoutsCollection(String id, String urlOfPdfUploaded) {
+        firebaseFirestore.collection(INVOICE_PAID)
+                .document(id)
+                .update("urlOfPdfUploaded", urlOfPdfUploaded)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(mContext, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        growProgressBar(25);
+        dismissProgressBar();
+    }
+
+    private Uri generatePDF(Table table) throws FileNotFoundException {
+
+        String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
+        // File directory = getFilesDir();
+        File file = new File(pdfPath, "Payout.pdf");
+
+        OutputStream outputStream = new FileOutputStream(file);
+
+        PdfWriter writer = new PdfWriter(file);
+
+        PdfDocument pdfDocument = new PdfDocument(writer);
+
+        PdfCanvas canvas = new PdfCanvas(pdfDocument.addNewPage());
+        canvas.saveState();
+
+        PdfExtGState state = new PdfExtGState();
+        state.setFillOpacity(0.6f);
+
+        canvas.setExtGState(state);
+
+        Document document = new Document(pdfDocument, PageSize.A4);
+        pdfDocument.setDefaultPageSize(PageSize.A4);
+
+        document.setMargins(15, 15, 15, 15);
+
+        Drawable ic_republic_of_kosovo = ContextCompat.getDrawable(mContext, R.drawable.ic_republic_of_kosovo);
+        Bitmap bmp_ic_republic_of_kosovo = ((BitmapDrawable) ic_republic_of_kosovo).getBitmap();
+        ByteArrayOutputStream stream_ic_republic_of_kosovo = new ByteArrayOutputStream();
+        bmp_ic_republic_of_kosovo.compress(Bitmap.CompressFormat.PNG, 100, stream_ic_republic_of_kosovo);
+        byte[] bitmap_data_ic_republic_of_kosovo = stream_ic_republic_of_kosovo.toByteArray();
+
+        ImageData image_data_ic_republic_of_kosovo = ImageDataFactory.create(bitmap_data_ic_republic_of_kosovo);
+        Image image_ic_republic_of_kosovo = new Image(image_data_ic_republic_of_kosovo);
+
+        Drawable ic_kp = ContextCompat.getDrawable(mContext, R.drawable.ic_kp_10_opacity);
+        Bitmap bmp_ic_kp = ((BitmapDrawable) ic_kp).getBitmap();
+        ByteArrayOutputStream stream_ic_kp = new ByteArrayOutputStream();
+        bmp_ic_kp.compress(Bitmap.CompressFormat.PNG, 100, stream_ic_kp);
+        byte[] bitmap_data_ic_kp = stream_ic_kp.toByteArray();
+
+        ImageData image_data_ic_kp = ImageDataFactory.create(bitmap_data_ic_kp);
+        Image image_ic_kp = new Image(image_data_ic_kp);
+
+        //image ic_kp as background of pdf
+        canvas.addImage(image_data_ic_kp, 0, 0, pdfDocument.getDefaultPageSize().getWidth(), false);
+        canvas.restoreState();
+
+        DeviceRgb setColor = new DeviceRgb(8, 106, 119);
+
+        table.setMargin(5);
+        table.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        table.setTextAlignment(TextAlignment.CENTER);
+
+        image_ic_republic_of_kosovo.setWidth(80);
+        image_ic_republic_of_kosovo.setHeight(90);
+
+        image_ic_kp.setWidth(100);
+        image_ic_kp.setHeight(100);
+
+        image_ic_republic_of_kosovo.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        image_ic_kp.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        Paragraph republika_e_kosoves = new Paragraph(String.valueOf(mContext.getText(R.string.republika_e_kosoves)));
+        Paragraph republika_kosovo_republic_of_kosovo = new Paragraph(String.valueOf(mContext.getText(R.string.republika_kosovo_republic_of_kosovo)));
+        Paragraph mpb_three_language = new Paragraph(String.valueOf(mContext.getText(R.string.mpb_three_language)));
+        Paragraph empty = new Paragraph("");
+        Paragraph payouts = new Paragraph(String.valueOf(mContext.getText(R.string.payouts)));
+
+        republika_e_kosoves.setMultipliedLeading(0.5f);
+        republika_kosovo_republic_of_kosovo.setMultipliedLeading(0.5f);
+        mpb_three_language.setMultipliedLeading(0.5f);
+
+        republika_e_kosoves.setFontSize(10f);
+        republika_kosovo_republic_of_kosovo.setFontSize(10f);
+        mpb_three_language.setFontSize(10f);
+        payouts.setFontSize(22f);
+
+        republika_e_kosoves.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        republika_kosovo_republic_of_kosovo.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        mpb_three_language.setHorizontalAlignment(HorizontalAlignment.CENTER);
+        payouts.setHorizontalAlignment(HorizontalAlignment.CENTER);
+
+        republika_e_kosoves.setTextAlignment(TextAlignment.CENTER);
+        republika_kosovo_republic_of_kosovo.setTextAlignment(TextAlignment.CENTER);
+        mpb_three_language.setTextAlignment(TextAlignment.CENTER);
+        payouts.setTextAlignment(TextAlignment.CENTER);
+        payouts.setMarginTop(pdfDocument.getDefaultPageSize().getHeight() / 18);
+
+        document.add(image_ic_republic_of_kosovo);
+        document.add(republika_e_kosoves);
+        document.add(republika_kosovo_republic_of_kosovo);
+        document.add(mpb_three_language);
+        document.add(empty);
+        document.add(payouts);
+        document.add(table);
+        document.close();
+
+        Uri uri = Uri.fromFile(file);
+        Log.d("TAG", "generatePDF: " + uri);
+        return uri;
+    }
+
     private void updateStatusInvoice(String status, String transactionId) {
+        Log.d("TAG", "updateStatusInvoice DONE");
         firebaseFirestore.collection(INVOICE)
                 .document(transactionId)
                 .update("status", status).addOnFailureListener(new OnFailureListener() {
@@ -641,6 +904,7 @@ public class PayoutsFragment extends Fragment {
     }
 
     private void updateBalanceUser(Double amount, String userId) {
+        Log.d("TAG", "updateBalanceUser");
         firebaseFirestore.collection(USERS)
                 .document(userId)
                 .get()
@@ -660,6 +924,7 @@ public class PayoutsFragment extends Fragment {
     }
 
     private void updateBalanceTotalPaidUser(String userId, Double amount, Double totalPaid) {
+        Log.d("TAG", "updateBalanceTotalPaidUser");
         Double totalPaidNew = totalPaid + amount;
         firebaseFirestore.collection(USERS)
                 .document(userId)
