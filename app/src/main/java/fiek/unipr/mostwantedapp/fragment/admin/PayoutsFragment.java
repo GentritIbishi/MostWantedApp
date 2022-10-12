@@ -170,14 +170,21 @@ public class PayoutsFragment extends Fragment {
 
         analyticsInvoice();
 
+        //merre gjendjen qysh o
+        getPaymentState();
+
         switchPayment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if(isChecked)
                 {
-                    switchPaymentCheck(true);
+                    //nese o true
+                    constraintAutomaticPayment.setVisibility(View.VISIBLE);
+                    constrainProcessPayment.setVisibility(GONE);
                 }else {
-                    switchPaymentCheck(false);
+                    constraintAutomaticPayment.setVisibility(GONE);
+                    constrainProcessPayment.setVisibility(View.VISIBLE);
+                    save();
                 }
             }
         });
@@ -197,6 +204,25 @@ public class PayoutsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void getPaymentState() {
+        firebaseFirestore.collection(PAYOUT_CONFIG)
+                .document(PAYOUT_CONFIG)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Boolean payment_STATE = documentSnapshot.getBoolean("payment_state");
+                        assert payment_STATE != null;
+                        switchPaymentCheck(payment_STATE);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", e.getMessage());
+                    }
+                });
     }
 
     private void checkProcess() {
@@ -293,42 +319,72 @@ public class PayoutsFragment extends Fragment {
                 });
     }
 
+    private void saveEmpty(Boolean payment_STATE) {
+        progress += 50;
+        updateProgressBar();
+        PayoutConfig payoutConfig = new PayoutConfig(
+                PAYOUT_CONFIG,
+                payment_STATE,
+                null,
+                null,
+                null,
+                null,
+                DateHelper.getDateTime()
+        );
+        firebaseFirestore.collection(PAYOUT_CONFIG)
+                .document(PAYOUT_CONFIG)
+                .set(payoutConfig)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        progress += 50;
+                        updateProgressBar();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        dismissProgressBar();
+                        Log.d("TAG", e.getMessage());
+                    }
+                });
+    }
+
     private void switchPaymentCheck(Boolean isChecked) {
         if (isChecked) {
             //nese o true
             constraintAutomaticPayment.setVisibility(View.VISIBLE);
             constrainProcessPayment.setVisibility(GONE);
-
+            switchPayment.setChecked(true);
             firebaseFirestore.collection(PAYOUT_CONFIG)
                     .document(PAYOUT_CONFIG)
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if(!StringHelper.empty(documentSnapshot.getString("HOUR")))
+                            if(!StringHelper.empty(String.valueOf(documentSnapshot.get("hour"))))
                             {
-                                auto_complete_hour_payment.setText(documentSnapshot.getString("HOUR"));
+                                auto_complete_hour_payment.setText(String.valueOf(documentSnapshot.get("hour")));
                             }else {
                                 auto_complete_hour_payment.setText(String.valueOf(TIME_DEFAULT));
                             }
 
-                            if(!StringHelper.empty(documentSnapshot.getString("MINUTE")))
+                            if(!StringHelper.empty(String.valueOf(documentSnapshot.get("minute"))))
                             {
-                                auto_complete_minute_payment.setText(documentSnapshot.getString("MINUTE"));
+                                auto_complete_minute_payment.setText(String.valueOf(documentSnapshot.get("minute")));
                             }else {
                                 auto_complete_minute_payment.setText(String.valueOf(TIME_DEFAULT));
                             }
 
-                            if(!StringHelper.empty(documentSnapshot.getString("SECOND")))
+                            if(!StringHelper.empty(String.valueOf(documentSnapshot.get("second"))))
                             {
-                                auto_complete_second_payment.setText(documentSnapshot.getString("SECOND"));
+                                auto_complete_second_payment.setText(String.valueOf(documentSnapshot.get("second")));
                             }else {
                                 auto_complete_second_payment.setText(String.valueOf(TIME_DEFAULT));
                             }
 
-                            if(!StringHelper.empty(documentSnapshot.getString("MILLISECOND")))
+                            if(!StringHelper.empty(String.valueOf(documentSnapshot.get("millisecond"))))
                             {
-                                auto_complete_millisecond_payment.setText(documentSnapshot.getString("MILLISECOND"));
+                                auto_complete_millisecond_payment.setText(String.valueOf(documentSnapshot.get("millisecond")));
                             }else {
                                 auto_complete_millisecond_payment.setText(String.valueOf(TIME_DEFAULT));
                             }
@@ -342,6 +398,7 @@ public class PayoutsFragment extends Fragment {
 
         } else {
             //nese o false
+            switchPayment.setChecked(false);
             constraintAutomaticPayment.setVisibility(GONE);
             constrainProcessPayment.setVisibility(View.VISIBLE);
         }
@@ -355,7 +412,7 @@ public class PayoutsFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            if (Boolean.TRUE.equals(documentSnapshot.getBoolean("PAYMENT_STATE"))) {
+                            if (Boolean.TRUE.equals(documentSnapshot.getBoolean("payment_state"))) {
                                 //duhet me kon toogle lshut
                                 switchPayment.setChecked(true);
                                 constraintAutomaticPayment.setVisibility(View.VISIBLE);
@@ -389,16 +446,6 @@ public class PayoutsFragment extends Fragment {
         progress = 0;
         invoiceProgressBar.setProgress(progress);
         tv_invoiceProgressBar.setText(this.progress + "%");
-    }
-
-    private void setPayOutTask(int hour, int minute, int second, int millisecond) {
-        Timer timer = new Timer();
-        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.HOUR_OF_DAY, hour);
-        cal.set(Calendar.MINUTE, minute);
-        cal.set(Calendar.SECOND, second);
-        cal.set(Calendar.MILLISECOND, millisecond);
-        timer.schedule(new PayoutsPaypalTask(), cal.getTime());
     }
 
     private void analyticsInvoice() {

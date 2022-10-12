@@ -1,74 +1,74 @@
 package fiek.unipr.mostwantedapp.models;
 
 public class PayoutConfig {
-    String ID;
-    boolean PAYMENT_STATE;
-    int HOUR, MINUTE, SECOND, MILLISECOND;
-    String DATETIME_UPDATED;
+    String id;
+    boolean payment_state;
+    Integer hour, minute, second, millisecond;
+    String datetime_updated;
 
-    public PayoutConfig(String ID, boolean PAYMENT_STATE, int HOUR, int MINUTE, int SECOND, int MILLISECOND, String DATETIME_UPDATED) {
-        this.ID = ID;
-        this.PAYMENT_STATE = PAYMENT_STATE;
-        this.HOUR = HOUR;
-        this.MINUTE = MINUTE;
-        this.SECOND = SECOND;
-        this.MILLISECOND = MILLISECOND;
-        this.DATETIME_UPDATED = DATETIME_UPDATED;
+    public PayoutConfig(String id, boolean payment_state, Integer hour, Integer minute, Integer second, Integer millisecond, String datetime_updated) {
+        this.id = id;
+        this.payment_state = payment_state;
+        this.hour = hour;
+        this.minute = minute;
+        this.second = second;
+        this.millisecond = millisecond;
+        this.datetime_updated = datetime_updated;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public boolean isPAYMENT_STATE() {
-        return PAYMENT_STATE;
+    public boolean isPayment_state() {
+        return payment_state;
     }
 
-    public void setPAYMENT_STATE(boolean PAYMENT_STATE) {
-        this.PAYMENT_STATE = PAYMENT_STATE;
+    public void setPayment_state(boolean payment_state) {
+        this.payment_state = payment_state;
     }
 
-    public int getHOUR() {
-        return HOUR;
+    public Integer getHour() {
+        return hour;
     }
 
-    public void setHOUR(int HOUR) {
-        this.HOUR = HOUR;
+    public void setHour(Integer hour) {
+        this.hour = hour;
     }
 
-    public int getMINUTE() {
-        return MINUTE;
+    public Integer getMinute() {
+        return minute;
     }
 
-    public void setMINUTE(int MINUTE) {
-        this.MINUTE = MINUTE;
+    public void setMinute(Integer minute) {
+        this.minute = minute;
     }
 
-    public int getSECOND() {
-        return SECOND;
+    public Integer getSecond() {
+        return second;
     }
 
-    public void setSECOND(int SECOND) {
-        this.SECOND = SECOND;
+    public void setSecond(Integer second) {
+        this.second = second;
     }
 
-    public int getMILLISECOND() {
-        return MILLISECOND;
+    public Integer getMillisecond() {
+        return millisecond;
     }
 
-    public void setMILLISECOND(int MILLISECOND) {
-        this.MILLISECOND = MILLISECOND;
+    public void setMillisecond(Integer millisecond) {
+        this.millisecond = millisecond;
     }
 
-    public String getDATETIME_UPDATED() {
-        return DATETIME_UPDATED;
+    public String getDatetime_updated() {
+        return datetime_updated;
     }
 
-    public void setDATETIME_UPDATED(String DATETIME_UPDATED) {
-        this.DATETIME_UPDATED = DATETIME_UPDATED;
+    public void setDatetime_updated(String datetime_updated) {
+        this.datetime_updated = datetime_updated;
     }
 }
