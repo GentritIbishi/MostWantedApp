@@ -1,8 +1,11 @@
 package fiek.unipr.mostwantedapp.services;
 
 import static android.content.ContentValues.TAG;
+import static fiek.unipr.mostwantedapp.utils.Constants.CHANNEL_ID_ADDED;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +14,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,6 +29,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.fragment.admin.NotificationFragment;
 import fiek.unipr.mostwantedapp.models.NotificationState;
 import fiek.unipr.mostwantedapp.models.Notifications;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
@@ -127,9 +133,12 @@ public class AdminNotificationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Intent intent = new Intent();
-        intent.setAction("receiver_admin");
-        sendBroadcast(intent);
+       if(firebaseAuth != null)
+       {
+           Intent intent = new Intent();
+           intent.setAction("receiver_admin");
+           sendBroadcast(intent);
+       }
     }
 
     @Nullable

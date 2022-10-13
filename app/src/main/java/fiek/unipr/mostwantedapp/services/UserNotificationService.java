@@ -132,9 +132,11 @@ public class UserNotificationService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Intent intent = new Intent();
-        intent.setAction("receiver_user");
-        sendBroadcast(intent);
+        if(firebaseAuth != null) {
+            Intent intent = new Intent();
+            intent.setAction("receiver_user");
+            sendBroadcast(intent);
+        }
     }
 
     @Nullable

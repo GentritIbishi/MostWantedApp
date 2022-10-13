@@ -11,11 +11,7 @@ public class ServiceManager {
 
     public static void startServiceAdmin(Context context) {
         Intent serviceIntent = new Intent(context,AdminNotificationService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(serviceIntent);
-        }else {
-            context.startService(serviceIntent);
-        }
+        context.startService(serviceIntent);
     }
 
     public static void stopServiceAdmin(Context context) {
@@ -25,11 +21,7 @@ public class ServiceManager {
 
     public static void startServiceUser(Context context) {
         Intent serviceIntent = new Intent(context,UserNotificationService.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(serviceIntent);
-        }else {
-            context.startService(serviceIntent);
-        }
+        context.startService(serviceIntent);
     }
 
     public static void stopServiceUser(Context context) {
