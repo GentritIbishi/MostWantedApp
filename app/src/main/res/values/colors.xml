@@ -95,10 +95,15 @@
     <color name="bg_profile">#ffffff</color>
     <color name="bg_progress_dialog">#ffffff</color>
     <color name="bg_register">#ffffff</color>
-    <color name="bg_report_info">#ffffff</color>
+    <color name="bg_report_info">#4AB4DE</color>
     <color name="bg_row_table">#ffffff</color>
     <color name="bg_single_report">#ffffff</color>
     <color name="bg_single_report_image">#ffffff</color>
     <color name="bg_top_analytics">#ffffff</color>
+    <color name="bgContainer"></color>
+    <color name="bgGrid"></color>
+    <color name="bgAnalytics">#34568B</color>
+    <color name="bgUpdate">#34568B</color>
+    <color name="edit_text">#FFFFFF</color>
 
 </resources>

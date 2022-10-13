@@ -100,10 +100,10 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginEnd="32dp"
                         android:hint="@string/hour"
-                        android:textColorHint="@color/gray"
+                        android:textColorHint="@color/text"
                         android:textDirection="firstStrong"
                         android:textStyle="bold"
-                        app:boxBackgroundColor="@color/white"
+                        app:boxBackgroundColor="@color/edit_text"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/switchPayment">
@@ -117,7 +117,7 @@
                             android:paddingTop="16dp"
                             android:paddingBottom="16dp"
                             android:text="0"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/text"
                             android:textStyle="bold" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -131,10 +131,10 @@
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="32dp"
                         android:hint="@string/minute"
-                        android:textColorHint="@color/gray"
+                        android:textColorHint="@color/text"
                         android:textDirection="firstStrong"
                         android:textStyle="bold"
-                        app:boxBackgroundColor="@color/white"
+                        app:boxBackgroundColor="@color/edit_text"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/autocomplete_report_hour_layout">
@@ -148,7 +148,7 @@
                             android:paddingTop="16dp"
                             android:paddingBottom="16dp"
                             android:text="0"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/text"
                             android:textStyle="bold" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -162,10 +162,10 @@
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="32dp"
                         android:hint="@string/second"
-                        android:textColorHint="@color/gray"
+                        android:textColorHint="@color/text"
                         android:textDirection="firstStrong"
                         android:textStyle="bold"
-                        app:boxBackgroundColor="@color/white"
+                        app:boxBackgroundColor="@color/edit_text"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/autocomplete_report_minute_layout">
@@ -179,7 +179,7 @@
                             android:paddingTop="16dp"
                             android:paddingBottom="16dp"
                             android:text="0"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/text"
                             android:textStyle="bold" />
 
                     </com.google.android.material.textfield.TextInputLayout>
@@ -193,10 +193,10 @@
                         android:layout_marginTop="24dp"
                         android:layout_marginEnd="32dp"
                         android:hint="@string/millisecond"
-                        android:textColorHint="@color/gray"
+                        android:textColorHint="@color/text"
                         android:textDirection="firstStrong"
                         android:textStyle="bold"
-                        app:boxBackgroundColor="@color/white"
+                        app:boxBackgroundColor="@color/edit_text"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/autocomplete_report_second_layout">
@@ -210,7 +210,7 @@
                             android:paddingTop="16dp"
                             android:paddingBottom="16dp"
                             android:text="0"
-                            android:textColor="@color/gray"
+                            android:textColor="@color/text"
                             android:textStyle="bold" />
 
                     </com.google.android.material.textfield.TextInputLayout>

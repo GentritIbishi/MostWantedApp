@@ -33,12 +33,12 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:hint="@string/search"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
-                app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/gray"
+                app:boxBackgroundColor="@color/edit_text"
+                app:helperTextTextColor="@color/text"
                 app:boxStrokeColor="@android:color/transparent"
-                app:hintTextColor="@color/gray"
+                app:hintTextColor="@color/text"
                 app:startIconDrawable="@drawable/ic_baseline_person_search_24"
                 app:endIconMode="clear_text">
 
@@ -46,10 +46,10 @@
                     android:id="@+id/admin_search_filter"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text"
                     android:imeOptions="actionDone"
                     android:ems="10"
-                    android:textColorHint="@color/gray"
+                    android:textColorHint="@color/text"
                     android:inputType="textCapSentences"
                     android:textStyle="bold" />
 
@@ -92,7 +92,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="@string/no_data"
-                        android:textColor="@color/gray"
+                        android:textColor="@color/text"
                         android:fontFamily="@font/open_sans"
                         android:gravity="center"
                         />

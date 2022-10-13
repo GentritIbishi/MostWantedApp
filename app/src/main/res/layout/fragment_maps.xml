@@ -10,8 +10,7 @@
     android:fitsSystemWindows="true"
     android:layoutDirection="ltr">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <fragment
         android:id="@+id/anonymousMap"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
@@ -26,7 +25,7 @@
         android:layout_marginEnd="32dp"
         android:gravity="center"
         android:text="@string/tap_on_map_to_set_location_or_just_continue"
-        android:textColor="@color/lighter_75"
+        android:textColor="@color/text"
         android:textSize="20dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -15,7 +15,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="5dp"
@@ -36,7 +36,7 @@
                 android:fontFamily="@font/open_sans_bold"
                 android:text="@string/register_investigator"
                 android:textAlignment="center"
-                android:textColor="@color/gray"
+                android:textColor="@color/text"
                 android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -52,13 +52,13 @@
                 android:layout_marginEnd="24dp"
                 android:elevation="6dp"
                 android:hint="@string/register_person_first_name"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
-                app:boxBackgroundColor="@color/white"
-                app:boxStrokeColor="@color/gray"
+                app:boxBackgroundColor="@color/edit_text"
+                app:boxStrokeColor="@color/text"
                 app:endIconMode="clear_text"
-                app:helperTextTextColor="@color/gray"
-                app:hintTextColor="@color/gray"
+                app:helperTextTextColor="@color/text"
+                app:hintTextColor="@color/text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/investigator_tv_regPerson"
@@ -72,8 +72,8 @@
                     android:fontFamily="@font/open_sans_bold"
                     android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
-                    android:textColor="@color/gray"
-                    android:textColorHint="@color/gray"
+                    android:textColor="@color/text"
+                    android:textColorHint="@color/text"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -88,13 +88,13 @@
                 android:layout_marginEnd="24dp"
                 android:elevation="6dp"
                 android:hint="@string/register_person_last_name"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
-                app:boxBackgroundColor="@color/white"
-                app:boxStrokeColor="@color/gray"
+                app:boxBackgroundColor="@color/edit_text"
+                app:boxStrokeColor="@color/text"
                 app:endIconMode="clear_text"
-                app:helperTextTextColor="@color/gray"
-                app:hintTextColor="@color/gray"
+                app:helperTextTextColor="@color/text"
+                app:hintTextColor="@color/text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/investigator_et_firstNameLayout"
@@ -108,8 +108,8 @@
                     android:fontFamily="@font/open_sans_bold"
                     android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
-                    android:textColor="@color/gray"
-                    android:textColorHint="@color/gray"
+                    android:textColor="@color/text"
+                    android:textColorHint="@color/text"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -124,13 +124,13 @@
                 android:layout_marginEnd="24dp"
                 android:elevation="6dp"
                 android:hint="@string/parent_name"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
-                app:boxBackgroundColor="@color/white"
-                app:boxStrokeColor="@color/gray"
+                app:boxBackgroundColor="@color/edit_text"
+                app:boxStrokeColor="@color/text"
                 app:endIconMode="clear_text"
-                app:helperTextTextColor="@color/gray"
-                app:hintTextColor="@color/gray"
+                app:helperTextTextColor="@color/text"
+                app:hintTextColor="@color/text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/investigator_et_lastNameLayout"
@@ -144,8 +144,8 @@
                     android:fontFamily="@font/open_sans_bold"
                     android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
-                    android:textColor="@color/gray"
-                    android:textColorHint="@color/gray"
+                    android:textColor="@color/text"
+                    android:textColorHint="@color/text"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -159,13 +159,13 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/birthday"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
-                app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/gray"
-                app:boxStrokeColor="@color/gray"
+                app:boxBackgroundColor="@color/edit_text"
+                app:helperTextTextColor="@color/text"
+                app:boxStrokeColor="@color/text"
                 android:elevation="6dp"
-                app:hintTextColor="@color/gray"
+                app:hintTextColor="@color/text"
                 app:startIconDrawable="@drawable/ic_baseline_date_range_24"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -177,11 +177,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text"
                     android:text="DD-MM-YYYY"
                     android:imeOptions="actionNext"
                     android:ems="10"
-                    android:textColorHint="@color/gray"
+                    android:textColorHint="@color/text"
                     android:inputType="date"
                     android:textStyle="bold" />
 
@@ -197,13 +197,13 @@
                 android:layout_marginEnd="24dp"
                 android:elevation="6dp"
                 android:hint="@string/address"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
-                app:boxBackgroundColor="@color/white"
-                app:boxStrokeColor="@color/gray"
+                app:boxBackgroundColor="@color/edit_text"
+                app:boxStrokeColor="@color/text"
                 app:endIconMode="clear_text"
-                app:helperTextTextColor="@color/gray"
-                app:hintTextColor="@color/gray"
+                app:helperTextTextColor="@color/text"
+                app:hintTextColor="@color/text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/investigator_et_birthdayLayout"
@@ -217,8 +217,8 @@
                     android:fontFamily="@font/open_sans_bold"
                     android:imeOptions="actionNext"
                     android:inputType="textCapSentences"
-                    android:textColor="@color/gray"
-                    android:textColorHint="@color/gray"
+                    android:textColor="@color/text"
+                    android:textColorHint="@color/text"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -232,10 +232,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_age"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
-                app:boxBackgroundColor="@color/light_gray"
+                app:boxBackgroundColor="@color/edit_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/investigator_et_addressLayout">
@@ -248,7 +248,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -262,10 +262,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_the_gender"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
-                app:boxBackgroundColor="@color/light_gray"
+                app:boxBackgroundColor="@color/edit_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/investigator_autocomplete_et_age_layout">
@@ -278,7 +278,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -292,10 +292,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_height"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
-                app:boxBackgroundColor="@color/light_gray"
+                app:boxBackgroundColor="@color/edit_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/investigator_autocomplete_et_gender_layout">
@@ -308,7 +308,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -322,10 +322,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_weight"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
-                app:boxBackgroundColor="@color/light_gray"
+                app:boxBackgroundColor="@color/edit_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/investigator_autocomplete_et_height_layout">
@@ -338,7 +338,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -352,10 +352,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_eye_color"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
-                app:boxBackgroundColor="@color/light_gray"
+                app:boxBackgroundColor="@color/edit_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/investigator_autocomplete_et_weight_layout">
@@ -368,7 +368,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -382,10 +382,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_hair_color"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
-                app:boxBackgroundColor="@color/light_gray"
+                app:boxBackgroundColor="@color/edit_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/investigator_autocomplete_et_eyeColor_layout">
@@ -398,7 +398,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -413,10 +413,10 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/select_a_physical_appearance"
-                android:textColorHint="@color/gray"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
                 android:textStyle="bold"
-                app:boxBackgroundColor="@color/light_gray"
+                app:boxBackgroundColor="@color/edit_text"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/investigator_autocomplete_et_hairColor_layout">
@@ -429,7 +429,7 @@
                     android:inputType="none"
                     android:paddingTop="16dp"
                     android:paddingBottom="16dp"
-                    android:textColor="@color/gray"
+                    android:textColor="@color/text"
                     android:textStyle="bold" />
 
             </com.google.android.material.textfield.TextInputLayout>

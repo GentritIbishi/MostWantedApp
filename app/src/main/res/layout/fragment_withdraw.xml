@@ -61,6 +61,7 @@
                 android:textAlignment="center"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                android:textColor="@color/text"
                 android:fontFamily="@font/open_sans_light"
                 android:layout_marginTop="24dp"
                 android:text="@string/daily_payment_requirements"/>
@@ -631,6 +632,7 @@
                 android:textAlignment="center"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                android:textColor="@color/text"
                 android:fontFamily="@font/open_sans_light"
                 android:layout_marginTop="24dp"
                 android:text="@string/withdrawal_history"/>

@@ -10,15 +10,12 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#000A0A23"/>
+        android:layout_height="match_parent"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        tools:layout_editor_absoluteX="-25dp"
-        tools:layout_editor_absoluteY="-17dp">
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:theme="@style/Theme.MaterialComponents.Light"
@@ -47,15 +44,15 @@
                 android:layout_marginTop="28dp"
                 android:layout_marginEnd="24dp"
                 android:hint="@string/email"
-                android:textColorHint="@color/loginTextInputColor"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
                 app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/loginTextInputColor"
-                app:boxStrokeColor="@color/loginTextInputColor"
-                app:startIconTint="@color/loginTextInputColor"
-                app:endIconTint="@color/loginTextInputColor"
+                app:helperTextTextColor="@color/text"
+                app:boxStrokeColor="@color/text"
+                app:startIconTint="@color/text"
+                app:endIconTint="@color/text"
                 android:elevation="6dp"
-                app:hintTextColor="@color/loginTextInputColor"
+                app:hintTextColor="@color/text"
                 app:startIconDrawable="@drawable/ic_baseline_email_24"
                 app:endIconMode="clear_text"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -68,9 +65,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/loginTextInputColor"
+                    android:textColor="@color/text"
                     android:ems="10"
-                    android:textColorHint="@color/loginTextInputColor"
+                    android:textColorHint="@color/text"
                     android:inputType="textEmailAddress"
                     android:textStyle="bold" />
 
@@ -83,17 +80,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:hint="@string/password"
-                android:textColorHint="@color/loginTextInputColor"
+                android:textColorHint="@color/text"
                 android:textDirection="firstStrong"
                 app:boxBackgroundColor="@color/white"
-                app:helperTextTextColor="@color/loginTextInputColor"
-                app:boxStrokeColor="@color/loginTextInputColor"
+                app:helperTextTextColor="@color/text"
+                app:boxStrokeColor="@color/text"
                 android:elevation="6dp"
-                app:hintTextColor="@color/loginTextInputColor"
+                app:hintTextColor="@color/text"
                 app:startIconDrawable="@drawable/ic_baseline_security_24"
                 app:endIconMode="password_toggle"
-                app:startIconTint="@color/loginTextInputColor"
-                app:endIconTint="@color/loginTextInputColor"
+                app:startIconTint="@color/text"
+                app:endIconTint="@color/text"
                 app:layout_constraintEnd_toEndOf="@+id/etEmailLayout"
                 app:layout_constraintStart_toStartOf="@+id/etEmailLayout"
                 app:layout_constraintTop_toBottomOf="@+id/etEmailLayout">
@@ -103,9 +100,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/open_sans_bold"
-                    android:textColor="@color/loginTextInputColor"
+                    android:textColor="@color/text"
                     android:ems="10"
-                    android:textColorHint="@color/loginTextInputColor"
+                    android:textColorHint="@color/text"
                     android:inputType="textPassword"
                     android:textStyle="bold" />
 
@@ -117,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/forgot_pass"
-                android:textColor="@color/text_color"
+                android:textColor="@color/text"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="@+id/etPasswordLayout"
                 app:layout_constraintTop_toBottomOf="@+id/etPasswordLayout" />
@@ -144,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/create_new_account"
-                android:textColor="@color/text_color"
+                android:textColor="@color/text"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="@+id/bt_Login"
                 app:layout_constraintStart_toStartOf="@+id/bt_Login"
@@ -156,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="36dp"
                 android:text="@string/or"
-                android:textColor="@color/text_color"
+                android:textColor="@color/text"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -169,7 +166,7 @@
                 android:layout_width="0dp"
                 android:layout_height="2dp"
                 android:layout_marginStart="16dp"
-                android:background="@color/text_color"
+                android:background="@color/text"
                 app:layout_constraintBottom_toBottomOf="@+id/textView4"
                 app:layout_constraintEnd_toEndOf="@+id/bt_Login"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -181,7 +178,7 @@
                 android:layout_width="0dp"
                 android:layout_height="2dp"
                 android:layout_marginEnd="16dp"
-                android:background="@color/text_color"
+                android:background="@color/text"
                 app:layout_constraintBottom_toBottomOf="@+id/textView4"
                 app:layout_constraintEnd_toStartOf="@+id/textView4"
                 app:layout_constraintHorizontal_bias="0.0"

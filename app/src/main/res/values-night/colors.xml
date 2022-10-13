@@ -23,7 +23,7 @@
     <color name="red">#eb4034</color>
     <color name="neon_red">#FF0000</color>
     <color name="neon_blue">#34568B</color>
-    <color name="darkblack">#999999</color>
+    <color name="darkblack">#808080</color>
     <color name="gray">#808080</color>
     <color name="plus_color">#AE000000</color>
     <color name="plus_color_pressed">#cccaca</color>
@@ -100,5 +100,10 @@
     <color name="bg_single_report">#424242</color>
     <color name="bg_single_report_image">#424242</color>
     <color name="bg_top_analytics">#424242</color>
+    <color name="bgContainer">#424242</color>
+    <color name="bgGrid">#424242</color>
+    <color name="bgAnalytics">#FFFFFF</color>
+    <color name="bgUpdate">#FFFFFF</color>
+    <color name="edit_text">#808080</color>
 
 </resources>

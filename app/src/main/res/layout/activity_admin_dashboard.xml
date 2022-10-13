@@ -11,8 +11,8 @@
         android:id="@+id/admin_drawerLayout_real"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
         android:layout_above="@+id/admin_bottomBar"
+        android:fitsSystemWindows="true"
         tools:openDrawer="start">
 
         <com.google.android.material.appbar.AppBarLayout
@@ -28,49 +28,48 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:elevation="0dp"
                 android:background="@color/bg_dashboard_top"
+                android:elevation="0dp"
                 android:gravity="center"
-                app:titleTextColor="@color/gray"
                 app:layout_scrollFlags="scroll|enterAlways"
-                app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay">
+                app:popupTheme="@style/Theme.MostWantedApp.popUpOverlay"
+                app:titleTextColor="@color/text">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/topImageProfile"
-                    android:visibility="gone"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginEnd="10dp"
                     android:src="@drawable/ic_profile_picture_default"
-                    />
+                    android:visibility="gone" />
 
             </androidx.appcompat.widget.Toolbar>
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/admin_fragmentContainer"
-                android:background="@color/bg_dashboard_top"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:background="@color/bgContainer" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/admin_nav_view"
-            android:padding="10dp"
-            android:theme="@style/NavigationTheme"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:layout_marginBottom="3dp"
             android:elevation="6dp"
+            android:padding="10dp"
+            android:theme="@style/NavigationTheme"
             app:drawerLayoutCornerSize="5dp"
             app:headerLayout="@layout/nav_header"
-            app:menu="@menu/admin_nav_menu"
-            app:itemTextColor="@color/color_text_state"
             app:itemBackground="@drawable/menu_back_state"
+            app:itemIconTint="@color/menu_color_text_state"
             app:itemTextAppearance="@style/TextViewStyle"
-            app:itemIconTint="@color/menu_color_text_state">
+            app:itemTextColor="@color/color_text_state"
+            app:menu="@menu/admin_nav_menu">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -83,14 +82,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_red"
+                    android:drawableLeft="@drawable/ic_baseline_logout_24"
                     android:fontFamily="@font/lato"
                     android:gravity="center"
+                    android:padding="10dp"
                     android:text="@string/logout"
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:padding="10dp"
-                    android:drawableLeft="@drawable/ic_baseline_logout_24"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -99,10 +98,10 @@
                 <ProgressBar
                     android:id="@+id/admin_logout_progressBar"
                     style="?android:attr/progressBarStyle"
-                    android:visibility="gone"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="16dp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/menu_group_logout"
                     app:layout_constraintEnd_toEndOf="@+id/menu_group_logout"
                     app:layout_constraintTop_toTopOf="@+id/menu_group_logout" />

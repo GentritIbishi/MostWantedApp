@@ -32,6 +32,7 @@
             android:lineSpacingExtra="4sp"
             android:text="@string/get_started_description"
             android:textAlignment="center"
+            android:textColor="@color/text"
             android:textSize="20sp" />
 
         <RelativeLayout
