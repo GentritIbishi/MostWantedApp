@@ -13,10 +13,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -50,7 +50,6 @@ import fiek.unipr.mostwantedapp.fragment.user.ProfileFragment;
 import fiek.unipr.mostwantedapp.fragment.user.SearchFragment;
 import fiek.unipr.mostwantedapp.fragment.user.SettingsFragment;
 import fiek.unipr.mostwantedapp.fragment.user.WithdrawFragment;
-import fiek.unipr.mostwantedapp.services.UserNotificationService;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.ServiceManager;
 
@@ -58,10 +57,9 @@ public class UserDashboardActivity extends AppCompatActivity {
 
     private Context mContext;
     private int selectedTab = 1;
-    private Integer balance;
-    private String userID, fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
-    private Uri photoURL;
-    private String user_anonymousID = null;
+    private String userID;
+    private String fullName;
+    private String urlOfProfile;
 
     private DrawerLayout user_drawerLayout_real;
     private ActionBarDrawerToggle user_toggle;
@@ -78,13 +76,11 @@ public class UserDashboardActivity extends AppCompatActivity {
     private CircleImageView nav_header_image_view, topImageProfile;
 
     private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
-    private ListenerRegistration registration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,10 +129,11 @@ public class UserDashboardActivity extends AppCompatActivity {
         });
 
         user_nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int id = menuItem.getItemId();
-                Fragment fragment = null;
+                Fragment fragment;
                 switch (id) {
                     case R.id.user_menu_group_home:
                         fragment = new HomeFragment();
@@ -267,16 +264,14 @@ public class UserDashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (firebaseAuth != null) {
-            SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
-            editor.putBoolean("isLogged", true);
-            editor.apply();
-        } else {
-            SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
-            editor.putBoolean("isLogged", false);
-            editor.apply();
-        }
         super.onDestroy();
+        SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
+        if (firebaseAuth != null) {
+            editor.putBoolean("isLogged", true);
+        } else {
+            editor.putBoolean("isLogged", false);
+        }
+        editor.apply();
     }
 
     private void setHomeSelected() {
@@ -364,15 +359,6 @@ public class UserDashboardActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private boolean checkConnection() {
-        CheckInternet checkInternet = new CheckInternet();
-        if (!checkInternet.isConnected(UserDashboardActivity.this)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     private void setVerifiedBadge(FirebaseUser firebaseUser) {
         if (firebaseUser.isEmailVerified()) {
             verifiedBadge.setVisibility(View.VISIBLE);
@@ -388,7 +374,7 @@ public class UserDashboardActivity extends AppCompatActivity {
     }
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
-        if (checkConnection()) {
+        if (CheckInternet.isConnected(mContext)) {
             documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getCurrentUser().getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override

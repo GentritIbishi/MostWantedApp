@@ -12,16 +12,13 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 import static fiek.unipr.mostwantedapp.utils.StringHelper.empty;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -30,14 +27,9 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
-import android.provider.Settings;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -96,7 +88,6 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private String personId, wanted_person, acts, address, eyeColor, hairColor, phy_appearance, status, prize, urlOfProfile, informer_person_urlOfProfile;
     private Integer age, height, weight;
     private Double latitude, longitude;
-    private String description = "No description!";
     private String informer_person = "ANONYMOUS";
     private MarkerOptions markerOptionsDefault;
     private Bundle mapsInformerBundle;
@@ -108,7 +99,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private int progress;
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setOnMapClickListener(this);
         mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -160,7 +151,9 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     private void initMap()
     {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(MapsInformerActivity.this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(MapsInformerActivity.this);
+        }
     }
 
     @Override
@@ -255,6 +248,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void updateProgressBar() {
         binding.progressBarReport.setProgress(progress);
         binding.tvProgressBarReport.setText(this.progress+"%");
@@ -352,6 +346,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         mMap.addMarker(markerOptionsDefault);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -460,7 +455,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             docRef.set(report).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful() && task !=null) {
+                    if(task.isSuccessful()) {
                         setLastSeenLocation(latitude, longitude, personId);
                         if(ImageList.size() != 0)
                         {
@@ -491,14 +486,10 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                     }
                                 });
                             }
-                            progress = 100;
-                            updateProgressBar();
-                            dismissProgressBar();
-                        }else {
-                            progress = 100;
-                            updateProgressBar();
-                            dismissProgressBar();
                         }
+                        progress = 100;
+                        updateProgressBar();
+                        dismissProgressBar();
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -558,16 +549,11 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                     }
                                 });
                             }
-                            progress = 100;
-                            updateProgressBar();
-                            dismissProgressBar();
-                            binding.reportProgressBar.setVisibility(View.INVISIBLE);
-                        }else {
-                            progress = 100;
-                            updateProgressBar();
-                            dismissProgressBar();
-                            binding.reportProgressBar.setVisibility(View.INVISIBLE);
                         }
+                        progress = 100;
+                        updateProgressBar();
+                        dismissProgressBar();
+                        binding.reportProgressBar.setVisibility(View.INVISIBLE);
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -610,7 +596,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                 docRef.set(report).addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful() && task !=null) {
+                                        if(task.isSuccessful()) {
                                             setLastSeenLocation(latitude, longitude, personId);
                                             if(ImageList.size() != 0){
                                                 for(int upload_count = 0; upload_count < ImageList.size(); upload_count++){
@@ -641,16 +627,11 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                                 }
                                                 ImageList.clear();
                                                 imageListMap.clear();
-                                                progress = 100;
-                                                updateProgressBar();
-                                                dismissProgressBar();
-                                                binding.reportProgressBar.setVisibility(View.INVISIBLE);
-                                            }else {
-                                                progress = 100;
-                                                updateProgressBar();
-                                                dismissProgressBar();
-                                                binding.reportProgressBar.setVisibility(View.INVISIBLE);
                                             }
+                                            progress = 100;
+                                            updateProgressBar();
+                                            dismissProgressBar();
+                                            binding.reportProgressBar.setVisibility(View.INVISIBLE);
                                         }
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {

@@ -7,7 +7,7 @@ public class Constants {
     public static final String PREFS_NAME = "loginPreferences";
     public static final String LOGIN_INFORMER_PREFS = "loginInformerPreferences";
     public static final String ADMIN_ROLE = "Admin";
-    public static final String USER_ROLE = "User";
+    public static final String SEMI_ADMIN_ROLE = "Semi-Admin";
     public static final String ROLE = "role";
     public static final String GRADE_A = "A";
     public static final String GRADE_B = "B";

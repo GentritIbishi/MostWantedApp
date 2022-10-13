@@ -2,6 +2,7 @@ package fiek.unipr.mostwantedapp.activity.dashboard;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +19,7 @@ import fiek.unipr.mostwantedapp.fragment.anonymous.SearchFragment;
 
 public class AnonymousDashboardActivity extends AppCompatActivity {
 
+    private Context mContext;
     private String anonymousID;
 
     private FirebaseAuth firebaseAuth;
@@ -33,7 +35,7 @@ public class AnonymousDashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_anonymous_dashboard);
-
+        mContext = getApplicationContext();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();

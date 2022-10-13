@@ -5,6 +5,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,6 +45,7 @@ import fiek.unipr.mostwantedapp.utils.CircleTransform;
 
 public class SetProfilePersonFragment extends Fragment {
 
+    private Context mContext;
     private View view;
     private String fullName;
     private String personId;
@@ -70,6 +72,7 @@ public class SetProfilePersonFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
+        mContext = getContext();
     }
 
     @Override
@@ -160,7 +163,7 @@ public class SetProfilePersonFragment extends Fragment {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
                         progressBarPerson.setVisibility(View.GONE);
                     }
                 });
@@ -176,7 +179,7 @@ public class SetProfilePersonFragment extends Fragment {
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if( keyCode == KeyEvent.KEYCODE_BACK )
                 {
-                    Toast.makeText(getContext(), getContext().getText(R.string.error_you_need_to_add_photo_for_person), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, mContext.getText(R.string.error_you_need_to_add_photo_for_person), Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 return false;
@@ -185,7 +188,7 @@ public class SetProfilePersonFragment extends Fragment {
     }
 
     private void loadFragment(Fragment fragment) {
-        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+        ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
                 .replace(R.id.admin_fragmentContainer, fragment)
                 .commit();
     }

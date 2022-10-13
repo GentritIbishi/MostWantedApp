@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -81,7 +82,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
-    private ListenerRegistration registration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +129,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
         });
 
         admin_nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @SuppressLint("NonConstantResourceId")
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 int id = menuItem.getItemId();
@@ -358,7 +359,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     }
 
     private void loadInfoFromFirebase(FirebaseAuth firebaseAuth) {
-        if(CheckInternet.isConnected(getApplicationContext())){
+        if(CheckInternet.isConnected(mContext)){
             documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
@@ -392,16 +393,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (firebaseAuth != null) {
-            SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
-            editor.putBoolean("isLogged", true);
-            editor.apply();
-        } else {
-            SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
-            editor.putBoolean("isLogged", false);
-            editor.apply();
-        }
         super.onDestroy();
+        SharedPreferences.Editor editor = getSharedPreferences(IS_LOGGED, MODE_PRIVATE).edit();
+        if (firebaseAuth != null) {
+            editor.putBoolean("isLogged", true);
+        } else {
+            editor.putBoolean("isLogged", false);
+        }
+        editor.apply();
     }
 
 

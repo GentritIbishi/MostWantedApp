@@ -3,24 +3,24 @@ package fiek.unipr.mostwantedapp.activity;
 
 import static fiek.unipr.mostwantedapp.utils.CheckInternet.isConnected;
 import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
-import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
 import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
-import static fiek.unipr.mostwantedapp.utils.Constants.LOGIN_INFORMER_PREFS;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOGIN_HISTORY;
-import static fiek.unipr.mostwantedapp.utils.Constants.PHONE_USER;
 import static fiek.unipr.mostwantedapp.utils.Constants.PREFS_NAME;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
-import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.SEMI_ADMIN_ROLE;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
@@ -53,6 +53,7 @@ import fiek.unipr.mostwantedapp.models.LoginHistory;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private Context mContext;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
@@ -68,7 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        mContext = getApplicationContext();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -108,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(firebaseUser.isAnonymous()){
                 signInAnonymouslyInformer();
             }else if(firebaseUser.isEmailVerified()){
-                setVerifiedTrue(firebaseAuth.getCurrentUser().getUid());
+                setVerifiedTrue();
                 checkUserRoleAndGoToDashboard(firebaseAuth.getCurrentUser().getUid());
             }else if(firebaseAuth.getCurrentUser().getPhoneNumber() != null){
                 goToAnonymousDashboard();
@@ -116,12 +117,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void setVerifiedTrue(String userID) {
+    private void setVerifiedTrue() {
         firebaseFirestore.collection(USERS)
-                .document(userID)
-                .update("emailVerified", true);
+                .document(firebaseAuth.getCurrentUser().getUid())
+                .update("emailVerified", true)
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", e.getMessage());
+                    }
+                });
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -218,7 +226,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void signIn(String email, String password) {
-        if(isConnected(getApplicationContext())){
+        if(isConnected(mContext)){
             firebaseAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -244,7 +252,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void checkUserRoleAndGoToDashboard(String userID){
-        if(isConnected(getApplicationContext())){
+        if(isConnected(mContext)){
             documentReference = firebaseFirestore.collection(USERS).document(userID);
             documentReference.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
@@ -266,19 +274,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (role != null && role.matches(ADMIN_ROLE)) {
                             login_progressBar.setVisibility(View.INVISIBLE);
                             bt_Login.setEnabled(true);
-                            progressDialog.setMessage(getApplicationContext().getText(R.string.logins_successfully));
+                            progressDialog.setMessage(mContext.getText(R.string.logins_successfully));
                             goToAdminDashboard();
                             progressDialog.dismiss();
-                        } else if(role != null && role.matches(USER_ROLE)){
+                        } else if(role != null && role.matches(SEMI_ADMIN_ROLE)){
                             login_progressBar.setVisibility(View.INVISIBLE);
                             bt_Login.setEnabled(true);
-                            progressDialog.setMessage(getApplicationContext().getText(R.string.logins_successfully));
-                            goToUserDashboard();
+                            progressDialog.setMessage(mContext.getText(R.string.logins_successfully));
+                            goToSemiAdminDashboard();
                             progressDialog.dismiss();
                         }else if(role != null && role.matches(INFORMER_ROLE)){
                             login_progressBar.setVisibility(View.INVISIBLE);
                             bt_Login.setEnabled(true);
-                            progressDialog.setMessage(getApplicationContext().getText(R.string.logins_successfully));
+                            progressDialog.setMessage(mContext.getText(R.string.logins_successfully));
                             goToInformerDashboard();
                             progressDialog.dismiss();
                         }
@@ -303,7 +311,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void signInAnonymouslyInformer() {
-        if(isConnected(getApplicationContext())){
+        if(isConnected(mContext)){
             firebaseAuth.signInAnonymously().addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                 @Override
                 public void onSuccess(AuthResult authResult) {
@@ -378,14 +386,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         startActivity(new Intent(this, ForgotPasswordActivity.class));
     }
 
-    private void goToUserDashboard() {
-//        Intent intent = new Intent(LoginActivity.this, AdminUserDashboardActivity.class);
-//        startActivity(intent);
-//        finish();
+    private void goToSemiAdminDashboard() {
+        Intent intent = new Intent(LoginActivity.this, AdminDashboardActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void sendEmailVerification() {
-        if(isConnected(getApplicationContext())){
+        if(isConnected(mContext)){
             firebaseAuth.getCurrentUser().sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {

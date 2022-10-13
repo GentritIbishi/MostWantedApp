@@ -2,15 +2,14 @@ package fiek.unipr.mostwantedapp.fragment.admin.register.user;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
-import static fiek.unipr.mostwantedapp.utils.Constants.COINS_DEFAULT;
-import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_A;
 import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_E;
 import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.TOTAL_PAID_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
-import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.SEMI_ADMIN_ROLE;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -41,10 +40,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
@@ -54,6 +49,7 @@ import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterUserFragment extends Fragment {
 
+    private Context mContext;
     private View register_users_view;
     private TextInputEditText admin_etName, admin_etLastName, admin_etParentName, admin_etPhone, admin_etAddress, admin_etNumPersonal,
             admin_etEmailToUser, admin_etPasswordToUser, admin_etConfirmPassword;
@@ -65,7 +61,6 @@ public class RegisterUserFragment extends Fragment {
     private DocumentReference documentReference;
     private StorageReference storageReference;
     private ProgressBar admin_ri_progressBar;
-    private SpinnerAdapter spAdapter;
     private MaterialAutoCompleteTextView et_role_autocomplete, et_gender_users;
 
     public RegisterUserFragment() {}
@@ -78,6 +73,7 @@ public class RegisterUserFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
+        mContext = getContext();
     }
 
     @Override
@@ -105,11 +101,11 @@ public class RegisterUserFragment extends Fragment {
         admin_bt_Register = register_users_view.findViewById(R.id.admin_bt_Register);
 
         et_gender_users = register_users_view.findViewById(R.id.et_gender_users);
-        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
         et_gender_users.setAdapter(gender_adapter);
 
         et_role_autocomplete = register_users_view.findViewById(R.id.et_role_autocomplete);
-        ArrayAdapter<String> role_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.roles));
+        ArrayAdapter<String> role_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.roles));
         et_role_autocomplete.setAdapter(role_adapter);
 
         admin_bt_Register.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +122,7 @@ public class RegisterUserFragment extends Fragment {
         admin_etNumPersonalLayout.setEndIconOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), getContext().getText(R.string.info_number_personal_is_ten_digit), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, mContext.getText(R.string.info_number_personal_is_ten_digit), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -139,7 +135,7 @@ public class RegisterUserFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(charSequence.length()>10){
-                    admin_etNumPersonalLayout.setError(getContext().getText(R.string.no_more_than_ten_digits));
+                    admin_etNumPersonalLayout.setError(mContext.getText(R.string.no_more_than_ten_digits));
                 }else if(charSequence.length() < 10) {
                     admin_etNumPersonalLayout.setError(null);
                 }else if(charSequence.length() == 10){
@@ -156,7 +152,7 @@ public class RegisterUserFragment extends Fragment {
         return register_users_view;
     }
 
-    private void register() throws Exception {
+    private void register() {
         String name = admin_etName.getText().toString().trim();
         String lastName = admin_etLastName.getText().toString().trim();
         String fullName = name + " "+lastName;
@@ -170,7 +166,7 @@ public class RegisterUserFragment extends Fragment {
         String confirm_password = admin_etConfirmPassword.getText().toString();
         String role = et_role_autocomplete.getText().toString();
         String grade = "";
-        if(role.equals(ADMIN_ROLE) || role.equals(USER_ROLE)){
+        if(role.equals(ADMIN_ROLE) || role.equals(SEMI_ADMIN_ROLE)){
             grade = GRADE_A;
         }else if(role.equals(INFORMER_ROLE)){
             grade = GRADE_E;
@@ -201,7 +197,7 @@ public class RegisterUserFragment extends Fragment {
         }else if(TextUtils.isEmpty(email)){
             admin_etEmailToUser.setError(getText(R.string.error_email_required));
             admin_etEmailToUser.requestFocus();
-        }else if(!email.matches("^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
+        }else if(!email.matches("^[a-z0-9](\\.?[a-z0-9_-])*@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
             admin_etEmailToUser.setError(getText(R.string.error_validate_email));
             admin_etEmailToUser.requestFocus();
         }else if(!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")){
@@ -225,7 +221,7 @@ public class RegisterUserFragment extends Fragment {
             admin_ri_progressBar.setVisibility(View.VISIBLE);
             admin_bt_Register.setEnabled(false);
 
-            if(CheckInternet.isConnected(getContext())){
+            if(CheckInternet.isConnected(mContext)){
                 String finalGrade = grade;
 
                 firebaseAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
@@ -260,11 +256,11 @@ public class RegisterUserFragment extends Fragment {
                     public void onFailure(@NonNull Exception e) {
                         admin_ri_progressBar.setVisibility(View.INVISIBLE);
                         admin_bt_Register.setEnabled(true);
-                        Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }else {
-                Toast.makeText(getContext(), R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -288,7 +284,7 @@ public class RegisterUserFragment extends Fragment {
                               Double balance,
                               Double totalPaid,
                               Boolean isEmailVerified) throws Exception {
-        if(CheckInternet.isConnected(getContext())){
+        if(CheckInternet.isConnected(mContext)){
             SecurityHelper securityHelper = new SecurityHelper();
             String hashPassword = securityHelper.encrypt(password);
             documentReference = firebaseFirestore.collection(USERS).document(userID);
@@ -315,7 +311,7 @@ public class RegisterUserFragment extends Fragment {
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
-                    Toast.makeText(getContext(), getContext().getText(R.string.this_user_with_this) + " " + fullName + " " + getContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, mContext.getText(R.string.this_user_with_this) + " " + fullName + " " + mContext.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
                     Bundle viewBundle = new Bundle();
                     viewBundle.putString("userID", userID);
                     viewBundle.putString("fullName", fullName);
@@ -332,11 +328,11 @@ public class RegisterUserFragment extends Fragment {
                 public void onFailure(@NonNull Exception e) {
                     admin_ri_progressBar.setVisibility(View.INVISIBLE);
                     admin_bt_Register.setEnabled(true);
-                    Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, ""+e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
         }else {
-            Toast.makeText(getContext(), getContext().getText(R.string.error_no_internet_connection_check_wifi_or_mobile_data), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, mContext.getText(R.string.error_no_internet_connection_check_wifi_or_mobile_data), Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -353,7 +349,7 @@ public class RegisterUserFragment extends Fragment {
     }
 
     private void loadFragment(Fragment fragment) {
-        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+        ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
                 .replace(R.id.admin_fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit();

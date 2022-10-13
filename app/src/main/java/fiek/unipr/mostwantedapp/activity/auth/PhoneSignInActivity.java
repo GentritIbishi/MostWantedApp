@@ -40,7 +40,7 @@ import fiek.unipr.mostwantedapp.databinding.ActivityPhoneSignInBinding;
 
 public class PhoneSignInActivity extends AppCompatActivity {
 
-    //viewBinding
+    private Context mContext;
     private ActivityPhoneSignInBinding binding;
 
     //if code send failed will used to resend code OTP
@@ -56,16 +56,15 @@ public class PhoneSignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityPhoneSignInBinding.inflate(getLayoutInflater());
-        //Content view set in activity_phone_sign_in
         setContentView(binding.getRoot());
+        mContext = getApplicationContext();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         register_progressBar = findViewById(R.id.register_progressBar);
         verify_phone_progressBar = findViewById(R.id.verify_phone_progressBar);
 
         binding.constrainRegistration.setVisibility(View.VISIBLE); // show register layout
         binding.constrainVerification.setVisibility(View.GONE);     // hide verify layout when otp send show
-
-        firebaseAuth = FirebaseAuth.getInstance();
 
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -123,7 +122,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
                 String phone_number = binding.etPhoneNumber.getText().toString().trim();
                 String phone = country_code + "" + phone_number;
                 if(TextUtils.isEmpty(phone)){
-                    Toast.makeText(PhoneSignInActivity.this, getText(R.string.please_enter_your_country_code_and_phone_number_for_verification), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, mContext.getText(R.string.please_enter_your_country_code_and_phone_number_for_verification), Toast.LENGTH_SHORT).show();
                 }else {
                     startPhoneNumberVerification(phone);
                 }
@@ -137,7 +136,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
                 String phone_number = binding.etPhoneNumber.getText().toString().trim();
                 String phone = country_code + "" + phone_number;
                 if(TextUtils.isEmpty(phone)){
-                    Toast.makeText(PhoneSignInActivity.this, getText(R.string.please_enter_your_country_code_and_phone_number_for_verification), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PhoneSignInActivity.this, mContext.getText(R.string.please_enter_your_country_code_and_phone_number_for_verification), Toast.LENGTH_SHORT).show();
                 }else {
                     resendVerificationCode(phone, forceResendingToken);
                 }
@@ -159,7 +158,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
                 if(TextUtils.isEmpty(code)){
                     verify_phone_progressBar.setVisibility(View.INVISIBLE);
                     binding.btnVerificationCode.setEnabled(true);
-                    Toast.makeText(PhoneSignInActivity.this, getText(R.string.please_enter_verification_code), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PhoneSignInActivity.this, mContext.getText(R.string.please_enter_verification_code), Toast.LENGTH_SHORT).show();
                 }else {
                     verifyPhoneNumberWithCode(mVerificationId, code);
                 }
@@ -173,7 +172,6 @@ public class PhoneSignInActivity extends AppCompatActivity {
         binding.etCode5.addTextChangedListener(textWatcher);
         binding.etCode6.addTextChangedListener(textWatcher);
 
-//        //by default open keyboard at etCode1
         showKeyboard(binding.etCode1);
 
     }
@@ -272,7 +270,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
                         verify_phone_progressBar.setVisibility(View.INVISIBLE);
                         binding.btnVerificationCode.setEnabled(true);
                         String phone = firebaseAuth.getCurrentUser().getPhoneNumber();
-                        Toast.makeText(PhoneSignInActivity.this, getText(R.string.logged_in_as)+" "+phone, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PhoneSignInActivity.this, mContext.getText(R.string.logged_in_as)+" "+phone, Toast.LENGTH_SHORT).show();
                         //start informer activity
                         setSharedPreference(phone);
                         goToAnonymousDashboard();
@@ -298,7 +296,7 @@ public class PhoneSignInActivity extends AppCompatActivity {
         SharedPreferences settings = getSharedPreferences(PHONE_INFORMER_PREFS, 0);
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("phone", phone);
-        editor.commit();
+        editor.apply();
     }
 
     @Override

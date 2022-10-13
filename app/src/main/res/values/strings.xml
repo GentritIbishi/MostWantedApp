@@ -308,6 +308,7 @@
     <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous</string>
     <string-array name="roles">
         <item>Admin</item>
+        <item>Semi-Admin</item>
         <item>User</item>
         <item>Informer</item>
     </string-array>

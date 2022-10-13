@@ -5,6 +5,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ import fiek.unipr.mostwantedapp.utils.CircleTransform;
 
 public class SetProfileUserFragment extends Fragment {
 
+    private Context mContext;
     private View view;
     private String userID;
     private String fullName, role;
@@ -74,7 +76,8 @@ public class SetProfileUserFragment extends Fragment {
         firebaseUser = firebaseAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
         userID = firebaseAuth.getUid();
-        progressDialog = new ProgressDialog(getContext());
+        mContext = getContext();
+        progressDialog = new ProgressDialog(mContext);
     }
 
     @Override
@@ -110,13 +113,13 @@ public class SetProfileUserFragment extends Fragment {
         btnSkipFragSetProfileUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressDialog.setMessage(getContext().getText(R.string.success_redirect_to_login));
+                progressDialog.setMessage(mContext.getText(R.string.success_redirect_to_login));
                 progressDialog.show();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         firebaseAuth.signOut();
-                        Intent intent = new Intent(getContext(), LoginActivity.class);
+                        Intent intent = new Intent(mContext, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // To clean up all activities
                         progressDialog.dismiss();
                         startActivity(intent);
@@ -150,7 +153,7 @@ public class SetProfileUserFragment extends Fragment {
     }
 
     private void uploadImageToFirebase(Uri imageUri) {
-        progressDialog.setMessage(getContext().getText(R.string.loading));
+        progressDialog.setMessage(mContext.getText(R.string.loading));
         progressDialog.show();
         StorageReference profRef = storageReference.child(USERS+"/" + userID + "/"+PROFILE_PICTURE);
         profRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -165,16 +168,16 @@ public class SetProfileUserFragment extends Fragment {
                         docRef.update("urlOfProfile", uri.toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
-                                if (task != null && task.isSuccessful()) {
-                                    progressDialog.setMessage(getContext().getText(R.string.profile_picture_added));
+                                if (task.isSuccessful()) {
+                                    progressDialog.setMessage(mContext.getText(R.string.profile_picture_added));
                                     tv_addprofile_user.setText(R.string.profile_picture_added);
-                                    progressDialog.setMessage(getContext().getText(R.string.success_redirect_to_login));
+                                    progressDialog.setMessage(mContext.getText(R.string.success_redirect_to_login));
                                     new Handler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
                                             progressBarUser.setVisibility(View.GONE);
                                             firebaseAuth.signOut();
-                                            Intent intent = new Intent(getContext(), LoginActivity.class);
+                                            Intent intent = new Intent(mContext, LoginActivity.class);
                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // To clean up all activities
                                             progressDialog.dismiss();
                                             startActivity(intent);
@@ -211,7 +214,7 @@ public class SetProfileUserFragment extends Fragment {
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if( keyCode == KeyEvent.KEYCODE_BACK )
                 {
-                    Toast.makeText(getContext(), getContext().getText(R.string.error_you_need_to_add_photo_for_person), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, mContext.getText(R.string.error_you_need_to_add_photo_for_person), Toast.LENGTH_SHORT).show();
                     return true;
                 }
                 return false;

@@ -12,6 +12,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -697,6 +698,7 @@ public class AnalyticsFragment extends Fragment {
         firebaseFirestore.collection(LOCATION_REPORTS)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                        if(task.isSuccessful() && task.getResult() != null){
@@ -711,6 +713,7 @@ public class AnalyticsFragment extends Fragment {
         firebaseFirestore.collection(USERS)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @SuppressLint("SetTextI18n")
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         int total = queryDocumentSnapshots.size();

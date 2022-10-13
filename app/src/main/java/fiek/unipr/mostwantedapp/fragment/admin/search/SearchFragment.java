@@ -2,10 +2,12 @@ package fiek.unipr.mostwantedapp.fragment.admin.search;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,6 +41,7 @@ import fiek.unipr.mostwantedapp.models.Person;
 
 public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
+    private Context mContext;
     private View search_admin_view;
     private RecyclerView lvPersons;
     private LinearLayout search_admin_list_view1, search_admin_list_view2;
@@ -48,6 +51,12 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
     private ArrayList<Person> personArrayList;
     private FirebaseFirestore firebaseFirestore;
     private TextInputEditText admin_search_filter;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mContext = getContext();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -98,9 +107,9 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
         search_admin_list_switcher = search_admin_view.findViewById(R.id.search_admin_list_switcher);
         lvPersons = search_admin_view.findViewById(R.id.lvPersons);
         personArrayList = new ArrayList<>();
-        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(getContext(), personArrayList, this);
+        mapsInformerPersonListAdapter = new MapsInformerPersonListAdapter(mContext, personArrayList, this);
         lvPersons.setAdapter(mapsInformerPersonListAdapter);
-        lvPersons.setLayoutManager(new LinearLayoutManager(getContext()));
+        lvPersons.setLayoutManager(new LinearLayoutManager(mContext));
     }
 
     private void loadDatainListview() {
@@ -142,7 +151,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                     public void onFailure(@NonNull Exception e) {
                         // we are displaying a toast message
                         // when we get any error from Firebase.
-                        Toast.makeText(getContext(), getContext().getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, mContext.getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -188,7 +197,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                     public void onFailure(@NonNull Exception e) {
                         // we are displaying a toast message
                         // when we get any error from Firebase.
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -196,7 +205,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void onItemClick(int position) {
-        Intent intent=new Intent(getContext(), MapsActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent=new Intent(mContext, MapsActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle viewBundle = new Bundle();
         viewBundle.putString("fullName", personArrayList.get(position).getFullName());
         viewBundle.putStringArrayList("acts", (ArrayList<String>) personArrayList.get(position).getActs());

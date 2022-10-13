@@ -4,7 +4,6 @@ import static android.Manifest.permission.MANAGE_EXTERNAL_STORAGE;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
-import static com.itextpdf.kernel.pdf.PdfName.BaseFont;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.BitmapFromVector;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.addBorder;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.drawableFromUrl;
@@ -12,12 +11,10 @@ import static fiek.unipr.mostwantedapp.utils.BitmapHelper.getCroppedBitmap;
 import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS_PDF;
 import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
-import static fiek.unipr.mostwantedapp.utils.Constants.DYNAMIC_DOMAIN;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVESTIGATORS;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.REPORTS_ASSIGNED;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
-import static fiek.unipr.mostwantedapp.utils.StringHelper.removeFirstLetterAndLastLetter;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,11 +31,9 @@ import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
-import android.text.Layout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -64,8 +59,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.dynamiclinks.FirebaseDynamicLinks;
-import com.google.firebase.dynamiclinks.ShortDynamicLink;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -78,7 +71,6 @@ import com.google.firebase.storage.UploadTask;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.colors.Color;
 import com.itextpdf.kernel.colors.ColorConstants;
 import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
@@ -87,8 +79,6 @@ import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas;
-import com.itextpdf.kernel.pdf.canvas.parser.listener.ITextChunkLocation;
-import com.itextpdf.kernel.pdf.canvas.parser.listener.TextChunk;
 import com.itextpdf.kernel.pdf.extgstate.PdfExtGState;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Cell;
@@ -100,46 +90,34 @@ import com.itextpdf.layout.property.TextAlignment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
 import java.io.OutputStream;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.databinding.ActivityMapsBinding;
 import fiek.unipr.mostwantedapp.models.ReportAssigned;
 import fiek.unipr.mostwantedapp.models.ReportAssignedUser;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
-import fiek.unipr.mostwantedapp.utils.StringHelper;
 import fiek.unipr.mostwantedapp.utils.WindowHelper;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private Context mContext;
     private static final int PERMISSION_REQUEST_CODE = 200;
-    private static final String NO_LOCATION_REPORT = "";
 
-    private String uID, last_seen_address, first_address, second_address, third_address, forth_address,
-            urlOfPdfUploaded, date, shortUrl, personId, firstName, lastName, parentName, fullName, birthday, gender, address, age, eyeColor, hairColor, height,
+    private String uID, urlOfPdfUploaded, date, personId, firstName, lastName, parentName, fullName, birthday, gender, address, age, eyeColor, hairColor, height,
             phy_appearance, status, prize, urlOfProfile, weight, registration_date;
 
-    private double last_seen_latitude, last_seen_longitude, lat1, lon1, lat2, lon2, lat3, lon3, lat4, lon4;
+    private double last_seen_latitude, last_seen_longitude, lat1, lon1;
 
     private List<String> acts;
-
-    private ArrayList<ArrayList<ArrayList<String>>> input;
-    private String[][][] output;
-    private String[][] tmp;
-    private ArrayList<ArrayList<String>> lvl2;
-    private ArrayList<String> lvl3;
-
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
@@ -151,9 +129,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private DocumentReference assigned_report_doc;
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
-    private UploadTask uploadTask;
-    private String urlLongEncoded;
-    private String[] INVESTIGATOR_ARRAY;
     private Bundle mapsBundle;
 
     @Override
@@ -169,7 +144,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
-        uID = firebaseAuth.getCurrentUser().getUid();
+        uID = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid();
 
         mapsBundle = new Bundle();
         getFromBundle(mapsBundle);
@@ -239,8 +214,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     binding.btnGenerateReport.setEnabled(true);
                 } else {
                     new Thread(new Runnable() {
-                        public void run()
-                        {
+                        public void run() {
                             try {
                                 saveAndGeneratePDF(first_investigator, second_investigator);
                             } catch (IOException e) {
@@ -256,7 +230,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    private void saveAndGeneratePDF(String first_investigator, String second_investigator) throws IOException{
+    private void saveAndGeneratePDF(String first_investigator, String second_investigator) throws IOException {
         CollectionReference collRef = firebaseFirestore.collection(ASSIGNED_REPORTS);
         String reportAssigned_id = collRef.document().getId();
 
@@ -268,14 +242,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if(queryDocumentSnapshots.size() != 0)
-                        {
+                        if (queryDocumentSnapshots.size() != 0) {
                             int rows = queryDocumentSnapshots.size();
                             int column = 5;
                             String[][] locations = new String[rows][column];
                             List<String> listLocations = new ArrayList<>();
                             // Creating a table
-                            float [] pointColumnWidths = {20F, 200F, 200F, 200F, 200F};
+                            float[] pointColumnWidths = {20F, 200F, 200F, 200F, 200F};
                             Table table = new Table(pointColumnWidths);
                             try {
                                 PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
@@ -288,10 +261,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            for (int i = 0; i < queryDocumentSnapshots.size(); i++)
-                            {
+                            for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
 
-                                String number = i+"";
+                                String number = i + "";
                                 String latitude = String.valueOf(queryDocumentSnapshots.getDocuments().get(i).getDouble("latitude"));
                                 String longitude = String.valueOf(queryDocumentSnapshots.getDocuments().get(i).getDouble("longitude"));
                                 String address = getAddress(mContext, Double.parseDouble(latitude), Double.parseDouble(longitude));
@@ -308,17 +280,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 locations[i][3] = address;
                                 locations[i][4] = docId;
 
-                                Log.d("TABLE"," "+ locations[i][0]+" "+locations[i][1]+" "+locations[i][2]+" "+locations[i][3]+" "+locations[i][4]);
+                                Log.d("TABLE", " " + locations[i][0] + " " + locations[i][1] + " " + locations[i][2] + " " + locations[i][3] + " " + locations[i][4]);
                                 table.addCell(new Cell().add(new Paragraph(locations[i][0])));
                                 table.addCell(new Cell().add(new Paragraph(locations[i][1])));
                                 table.addCell(new Cell().add(new Paragraph(locations[i][2])));
                                 table.addCell(new Cell().add(new Paragraph(locations[i][3])));
                                 table.addCell(new Cell().add(new Paragraph(locations[i][4])));
 
-                                listLocations.add(mContext.getText(R.string.location)+locations[i][0]+", "+locations[i][1]+", "+locations[i][2]+", "+locations[i][3]+", "+locations[i][4]);
+                                listLocations.add(mContext.getText(R.string.location) + locations[i][0] + ", " + locations[i][1] + ", " + locations[i][2] + ", " + locations[i][3] + ", " + locations[i][4]);
                             }
 
-                            assignedReport(mContext, listLocations, reportAssigned_id, first_investigator, second_investigator, fullName, rows, column);
+                            assignedReport(mContext, listLocations, reportAssigned_id, first_investigator, second_investigator, fullName);
 
                             //create pdf file and upload in firestore and add link option for share
                             Uri uri = null;
@@ -361,7 +333,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             urlOfProfile = bundle.getString("urlOfProfile");
 
         } catch (Exception e) {
-            e.getMessage();
+            Log.d("TAG", e.getMessage());
         }
 
     }
@@ -512,7 +484,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 List<String> listLocations,
                                 String reportAssigned_id,
                                 String first_investigator, String second_investigator,
-                                String fullNameOfWantedPerson, int rows, int column) {
+                                String fullNameOfWantedPerson) {
 
         ReportAssigned reportAssigned = new ReportAssigned(
                 reportAssigned_id,
@@ -591,7 +563,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ReportAssignedUser reportAssignedUser = new ReportAssignedUser(reportAssigned_id, urlOfPdfUploaded);
 
         firebaseFirestore.collection(USERS)
-                .document(firebaseAuth.getUid())
+                .document(firebaseAuth.getCurrentUser().getUid())
                 .collection(REPORTS_ASSIGNED)
                 .document(reportAssigned_id)
                 .set(reportAssignedUser)
@@ -636,6 +608,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         document.setMargins(15, 15, 15, 15);
 
         Drawable ic_republic_of_kosovo = ContextCompat.getDrawable(mContext, R.drawable.ic_republic_of_kosovo);
+        assert ic_republic_of_kosovo != null;
         Bitmap bmp_ic_republic_of_kosovo = ((BitmapDrawable) ic_republic_of_kosovo).getBitmap();
         ByteArrayOutputStream stream_ic_republic_of_kosovo = new ByteArrayOutputStream();
         bmp_ic_republic_of_kosovo.compress(Bitmap.CompressFormat.PNG, 100, stream_ic_republic_of_kosovo);
@@ -645,6 +618,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Image image_ic_republic_of_kosovo = new Image(image_data_ic_republic_of_kosovo);
 
         Drawable ic_kp = ContextCompat.getDrawable(mContext, R.drawable.ic_kp_10_opacity);
+        assert ic_kp != null;
         Bitmap bmp_ic_kp = ((BitmapDrawable) ic_kp).getBitmap();
         ByteArrayOutputStream stream_ic_kp = new ByteArrayOutputStream();
         bmp_ic_kp.compress(Bitmap.CompressFormat.PNG, 100, stream_ic_kp);
@@ -762,8 +736,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         document.add(_second_investigator);
         document.close();
 
-        Uri uri = Uri.fromFile(file);
-        return uri;
+        return Uri.fromFile(file);
     }
 
     private void btnShare(String sub) {

@@ -8,7 +8,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.LIGHT_MODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.SYSTEM_MODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
-import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.SEMI_ADMIN_ROLE;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -104,10 +104,11 @@ public class SplashActivity extends AppCompatActivity {
                                         ServiceManager.startServiceAdmin(mContext);
                                         Intent intent = new Intent(SplashActivity.this, AdminDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
-                                    } else if (role != null && role.matches(USER_ROLE)) {
-                                        // start UserPrivilegesDashboardActivity
-//                                        Intent intent = new Intent(SplashActivity.this, UserDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                        startActivity(intent);
+                                    } else if (role != null && role.matches(SEMI_ADMIN_ROLE)) {
+                                        // start Semi-AdminDashboardActivity with limitation
+                                        ServiceManager.startServiceAdmin(mContext);
+                                        Intent intent = new Intent(SplashActivity.this, AdminDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
                                     } else if (role != null && role.matches(INFORMER_ROLE)) {
                                         // start UserDashboardActivity
                                         ServiceManager.startServiceUser(mContext);

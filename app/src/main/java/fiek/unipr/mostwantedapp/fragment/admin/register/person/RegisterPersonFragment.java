@@ -2,14 +2,16 @@ package fiek.unipr.mostwantedapp.fragment.admin.register.person;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.AGE;
 import static fiek.unipr.mostwantedapp.utils.Constants.CM;
-import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
-import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
+import static fiek.unipr.mostwantedapp.utils.Constants.FREE;
 import static fiek.unipr.mostwantedapp.utils.Constants.KG;
 import static fiek.unipr.mostwantedapp.utils.Constants.LATITUDE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.LONGITUDE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
+import static fiek.unipr.mostwantedapp.utils.StringHelper.empty;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -40,11 +42,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
@@ -54,6 +53,7 @@ import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class RegisterPersonFragment extends Fragment implements View.OnClickListener {
 
+    private Context mContext;
     private View register_person_view;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -79,6 +79,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
+        mContext = getContext();
     }
 
     @Override
@@ -108,44 +109,44 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
         new DateInputMask(et_birthday);
 
         et_age = register_person_view.findViewById(R.id.et_age);
-        ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, AGE_ARRAY);
+        ArrayAdapter<String> age_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, AGE_ARRAY);
         et_age.setAdapter(age_adapter);
 
         et_gender = register_person_view.findViewById(R.id.et_gender);
-        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
         et_gender.setAdapter(gender_adapter);
 
         et_prize = register_person_view.findViewById(R.id.et_prize);
-        ArrayAdapter<String> prize_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, PRIZE_ARRAY);
+        ArrayAdapter<String> prize_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, PRIZE_ARRAY);
         et_prize.setAdapter(prize_adapter);
 
         et_height = register_person_view.findViewById(R.id.et_height);
-        ArrayAdapter<String> height_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, HEIGHT_ARRAY);
+        ArrayAdapter<String> height_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, HEIGHT_ARRAY);
         et_height.setAdapter(height_adapter);
 
         et_weight = register_person_view.findViewById(R.id.et_weight);
-        ArrayAdapter<String> weight_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, WEIGHT_ARRAY);
+        ArrayAdapter<String> weight_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, WEIGHT_ARRAY);
         et_weight.setAdapter(weight_adapter);
 
         et_eyeColor = register_person_view.findViewById(R.id.et_eyeColor);
-        ArrayAdapter<String> eye_color_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.eye_color));
+        ArrayAdapter<String> eye_color_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.eye_color));
         et_eyeColor.setAdapter(eye_color_adapter);
 
         et_hairColor = register_person_view.findViewById(R.id.et_hairColor);
-        ArrayAdapter<String> hair_color_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.hair_color));
+        ArrayAdapter<String> hair_color_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.hair_color));
         et_hairColor.setAdapter(hair_color_adapter);
 
         et_phy_appearance = register_person_view.findViewById(R.id.et_phy_appearance);
-        ArrayAdapter<String> phy_appearance_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.physical_appearance));
+        ArrayAdapter<String> phy_appearance_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.physical_appearance));
         et_phy_appearance.setAdapter(phy_appearance_adapter);
 
         et_acts = register_person_view.findViewById(R.id.et_acts);
-        ArrayAdapter<String> acts_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.acts));
+        ArrayAdapter<String> acts_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.acts));
         et_acts.setAdapter(acts_adapter);
         et_acts.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
 
         et_status = register_person_view.findViewById(R.id.et_status);
-        ArrayAdapter<String> status_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.status_of_person));
+        ArrayAdapter<String> status_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.status_of_person));
         et_status.setAdapter(status_adapter);
 
         progressBar = register_person_view.findViewById(R.id.progressBar);
@@ -158,6 +159,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
         for(int i=0; i<2001; i++) {
             PRIZE_ARRAY[i] = i*500+" "+euro;
         }
+        PRIZE_ARRAY[0] = FREE;
     }
 
     private void setWeightInMeasureArray(String measure) {
@@ -181,6 +183,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId())
@@ -212,7 +215,6 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
     }
 
     private void registerPerson() {
-        Integer checkNull = null;
         String firstName = et_firstName.getText().toString().trim();
         String lastName = et_lastName.getText().toString().trim();
         String parentName = et_parentName.getText().toString().trim();
@@ -264,7 +266,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
             return;
         }
 
-        if (age.equals(checkNull)) {
+        if (empty(age)) {
             et_age.setError(getText(R.string.error_age_required));
             et_age.requestFocus();
             return;
@@ -276,13 +278,13 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
             return;
         }
 
-        if (height.equals(checkNull)) {
+        if (empty(height)) {
             et_height.setError(getText(R.string.error_height_required));
             et_height.requestFocus();
             return;
         }
 
-        if (weight.equals(checkNull)) {
+        if (empty(weight)) {
             et_weight.setError(getText(R.string.error_weight_required));
             et_weight.requestFocus();
             return;
@@ -340,14 +342,14 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.getResult().exists()) {
-                        Toast.makeText(getContext(), getContext().getText(R.string.this_person_with_this) + " " + fullName + " "+ getContext().getText(R.string.exists_in_database_please_add_example), Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, mContext.getText(R.string.this_person_with_this) + " " + fullName + " "+ mContext.getText(R.string.exists_in_database_please_add_example), Toast.LENGTH_LONG).show();
                         progressBar.setVisibility(View.GONE);
                         registerPerson.setEnabled(true);
                     } else {
                         firebaseFirestore.collection(WANTED_PERSONS).document(personId).set(person).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(getContext(), getContext().getText(R.string.this_person_with_this) + " " + fullName + " " + getContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                                Toast.makeText(mContext, mContext.getText(R.string.this_person_with_this) + " " + fullName + " " + mContext.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
                                 Bundle viewBundle = new Bundle();
                                 viewBundle.putString("personId", personId);
                                 viewBundle.putString("fullName", fullName);
@@ -361,7 +363,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getContext(), getContext().getText(R.string.person_failed_to_register), Toast.LENGTH_LONG).show();
+                                Toast.makeText(mContext, mContext.getText(R.string.person_failed_to_register), Toast.LENGTH_LONG).show();
                                 registerPerson.setEnabled(true);
                                 progressBar.setVisibility(View.INVISIBLE);
                             }
@@ -374,7 +376,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
     }
 
     private void loadFragment(Fragment fragment) {
-        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+        ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
                 .replace(R.id.admin_fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit();

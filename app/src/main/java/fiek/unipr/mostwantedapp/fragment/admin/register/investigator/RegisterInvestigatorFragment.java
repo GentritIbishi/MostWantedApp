@@ -1,10 +1,12 @@
 package fiek.unipr.mostwantedapp.fragment.admin.register.investigator;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.CM;
-import static fiek.unipr.mostwantedapp.utils.Constants.DATE_TIME;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVESTIGATORS;
 import static fiek.unipr.mostwantedapp.utils.Constants.KG;
+import static fiek.unipr.mostwantedapp.utils.StringHelper.empty;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -33,10 +35,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.DateInputMask;
@@ -44,6 +42,7 @@ import fiek.unipr.mostwantedapp.models.Investigator;
 
 public class RegisterInvestigatorFragment extends Fragment implements View.OnClickListener {
 
+    private Context mContext;
     private View register_investigator_view;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
@@ -52,8 +51,7 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
     private MaterialAutoCompleteTextView investigator_et_age, investigator_et_gender,
             investigator_et_height, investigator_et_weight,
             investigator_et_eyeColor, investigator_et_hairColor,
-            investigator_et_phy_appearance, investigator_et_acts,
-            investigator_et_status, investigator_et_prize;
+            investigator_et_phy_appearance;
     private TextInputEditText investigator_et_firstName, investigator_et_lastName,
             investigator_et_address, investigator_et_parentName, investigator_et_birthday;
     private Button registerInvestigator;
@@ -73,6 +71,7 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         storageReference = FirebaseStorage.getInstance().getReference();
+        mContext = getContext();
     }
 
     @Override
@@ -102,31 +101,31 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
         new DateInputMask(investigator_et_birthday);
 
         investigator_et_age = register_investigator_view.findViewById(R.id.investigator_et_age);
-        ArrayAdapter<String> age_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, AGE_ARRAY);
+        ArrayAdapter<String> age_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, AGE_ARRAY);
         investigator_et_age.setAdapter(age_adapter);
 
         investigator_et_gender = register_investigator_view.findViewById(R.id.investigator_et_gender);
-        ArrayAdapter<String> gender_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
+        ArrayAdapter<String> gender_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
         investigator_et_gender.setAdapter(gender_adapter);
 
         investigator_et_height = register_investigator_view.findViewById(R.id.investigator_et_height);
-        ArrayAdapter<String> height_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, HEIGHT_ARRAY);
+        ArrayAdapter<String> height_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, HEIGHT_ARRAY);
         investigator_et_height.setAdapter(height_adapter);
 
         investigator_et_weight = register_investigator_view.findViewById(R.id.investigator_et_weight);
-        ArrayAdapter<String> weight_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, WEIGHT_ARRAY);
+        ArrayAdapter<String> weight_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, WEIGHT_ARRAY);
         investigator_et_weight.setAdapter(weight_adapter);
 
         investigator_et_eyeColor = register_investigator_view.findViewById(R.id.investigator_et_eyeColor);
-        ArrayAdapter<String> eye_color_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.eye_color));
+        ArrayAdapter<String> eye_color_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.eye_color));
         investigator_et_eyeColor.setAdapter(eye_color_adapter);
 
         investigator_et_hairColor = register_investigator_view.findViewById(R.id.investigator_et_hairColor);
-        ArrayAdapter<String> hair_color_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.hair_color));
+        ArrayAdapter<String> hair_color_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.hair_color));
         investigator_et_hairColor.setAdapter(hair_color_adapter);
 
         investigator_et_phy_appearance = register_investigator_view.findViewById(R.id.investigator_et_phy_appearance);
-        ArrayAdapter<String> phy_appearance_adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.physical_appearance));
+        ArrayAdapter<String> phy_appearance_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.physical_appearance));
         investigator_et_phy_appearance.setAdapter(phy_appearance_adapter);
 
         investigator_progressBar = register_investigator_view.findViewById(R.id.investigator_progressBar);
@@ -151,10 +150,11 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
     private void setAgeArray() {
         AGE_ARRAY = new String[121];
         for(int i=0; i<121; i++) {
-            AGE_ARRAY[i] = i+" "+getContext().getText(R.string.age);
+            AGE_ARRAY[i] = i+" "+mContext.getText(R.string.age);
         }
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId())
@@ -183,7 +183,6 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
     }
 
     private void register() {
-        Integer checkNull = null;
         String firstName = investigator_et_firstName.getText().toString().trim();
         String lastName = investigator_et_lastName.getText().toString().trim();
         String parentName = investigator_et_parentName.getText().toString().trim();
@@ -228,25 +227,25 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
             return;
         }
 
-        if (age.equals(checkNull)) {
+        if (empty(age)) {
             investigator_et_age.setError(getText(R.string.error_age_required));
             investigator_et_age.requestFocus();
             return;
         }
 
-        if (gender.equals(checkNull)) {
+        if (empty(gender)) {
             investigator_et_gender.setError(getText(R.string.error_gender_required));
             investigator_et_gender.requestFocus();
             return;
         }
 
-        if (height.equals(checkNull)) {
+        if (empty(height)) {
             investigator_et_height.setError(getText(R.string.error_height_required));
             investigator_et_height.requestFocus();
             return;
         }
 
-        if (weight.equals(checkNull)) {
+        if (empty(weight)) {
             investigator_et_weight.setError(getText(R.string.error_weight_required));
             investigator_et_weight.requestFocus();
             return;
@@ -284,14 +283,14 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.getResult().exists()) {
-                        Toast.makeText(getContext(), getContext().getText(R.string.this_investigator_with_name) + " " + fullName + " "+ getContext().getText(R.string.exists_in_database_please_add_example), Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, mContext.getText(R.string.this_investigator_with_name) + " " + fullName + " "+ mContext.getText(R.string.exists_in_database_please_add_example), Toast.LENGTH_LONG).show();
                         investigator_progressBar.setVisibility(View.GONE);
                         registerInvestigator.setEnabled(true);
                     } else {
                         firebaseFirestore.collection(INVESTIGATORS).document(investigator_id).set(investigator).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(getContext(), getContext().getText(R.string.this_investigator_with_name) + " " + fullName + " " + getContext().getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
+                                Toast.makeText(mContext, mContext.getText(R.string.this_investigator_with_name) + " " + fullName + " " + mContext.getText(R.string.was_registered_successfully), Toast.LENGTH_LONG).show();
                                 Bundle viewBundle = new Bundle();
                                 viewBundle.putString("investigator_id", investigator_id);
                                 viewBundle.putString("fullName", fullName);
@@ -305,7 +304,7 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(getContext(), getContext().getText(R.string.investigator_failed_to_register), Toast.LENGTH_LONG).show();
+                                Toast.makeText(mContext, mContext.getText(R.string.investigator_failed_to_register), Toast.LENGTH_LONG).show();
                                 registerInvestigator.setEnabled(true);
                                 investigator_progressBar.setVisibility(View.INVISIBLE);
                             }
@@ -318,7 +317,7 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
     }
 
     private void loadFragment(Fragment fragment) {
-        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+        ((FragmentActivity)mContext).getSupportFragmentManager().beginTransaction()
                 .replace(R.id.admin_fragmentContainer, fragment)
                 .addToBackStack(null)
                 .commit();

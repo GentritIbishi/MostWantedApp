@@ -3,6 +3,7 @@ package fiek.unipr.mostwantedapp.activity.auth;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -20,6 +21,7 @@ import fiek.unipr.mostwantedapp.R;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
 
+    private Context mContext;
     private TextInputEditText etEmailToRecovery;
     private Button btnResetPassword;
     private ProgressBar reset_progressBar;
@@ -31,6 +33,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
+        mContext = getApplicationContext();
+        firebaseAuth = FirebaseAuth.getInstance();
 
         etEmailToRecovery = findViewById(R.id.etEmailToRecovery);
         btnResetPassword = findViewById(R.id.bt_Login);
@@ -38,7 +42,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         reset_progressBar = findViewById(R.id.login_progressBar);
 
-        firebaseAuth = FirebaseAuth.getInstance();
 
         btnResetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,13 +63,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         String email = etEmailToRecovery.getText().toString().trim();
 
         if(email.isEmpty()){
-            etEmailToRecovery.setError(getText(R.string.error_email_required));
+            etEmailToRecovery.setError(mContext.getText(R.string.error_email_required));
             etEmailToRecovery.requestFocus();
             return;
         }
 
         if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            etEmailToRecovery.setError(getText(R.string.error_please_provide_valid_email));
+            etEmailToRecovery.setError(mContext.getText(R.string.error_please_provide_valid_email));
             etEmailToRecovery.requestFocus();
             return;
         }
@@ -79,12 +82,12 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 if(task.isSuccessful()) {
                     reset_progressBar.setVisibility(View.INVISIBLE);
                     btnResetPassword.setEnabled(true);
-                    Toast.makeText(ForgotPasswordActivity.this, R.string.check_your_email_to_reset_password, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, mContext.getText(R.string.check_your_email_to_reset_password), Toast.LENGTH_SHORT).show();
                     finish();
                 }else {
                     reset_progressBar.setVisibility(View.INVISIBLE);
                     btnResetPassword.setEnabled(true);
-                    Toast.makeText(ForgotPasswordActivity.this, R.string.error_try_again_something_wrong_happened, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, mContext.getText(R.string.error_try_again_something_wrong_happened), Toast.LENGTH_SHORT).show();
                     etEmailToRecovery.setText("");
                 }
             }
