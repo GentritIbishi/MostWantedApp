@@ -14,6 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -51,9 +53,11 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.SettingsFragment;
 import fiek.unipr.mostwantedapp.services.AdminNotificationService;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.ServiceManager;
 
 public class AdminDashboardActivity extends AppCompatActivity {
 
+    private Context mContext;
     public static final String IS_LOGGED = "IS_LOGGED";
     private int selectedTab = 1;
     private String fullName, urlOfProfile;
@@ -89,8 +93,9 @@ public class AdminDashboardActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
+        mContext = getApplicationContext();
 
-        startService();
+        ServiceManager.startServiceAdmin(mContext);
 
         admin_nav_view = findViewById(R.id.admin_nav_view);
         View nav_header_view = admin_nav_view.getHeaderView(0);
@@ -272,16 +277,6 @@ public class AdminDashboardActivity extends AppCompatActivity {
         admin_nav_view.getMenu().getItem(0).setChecked(true);
     }
 
-    private void startService() {
-        final Intent intentModified = new Intent(AdminDashboardActivity.this, AdminNotificationService.class);
-        startService(intentModified);
-    }
-
-    private void stopService() {
-        final Intent intentModified = new Intent(AdminDashboardActivity.this, AdminNotificationService.class);
-        stopService(intentModified);
-    }
-
     private void setHomeSelected() {
         admin_homeImage.setImageResource(R.drawable.ic_home_selected);
         admin_profileImage.setImageResource(R.drawable.ic_profile_unselected);
@@ -324,7 +319,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
     {
         if(firebaseAuth != null){
             firebaseAuth.signOut();
-            stopService();
+            ServiceManager.stopServiceAdmin(mContext);
             sendUserToLogin();
         }
         admin_logout_progressBar.setVisibility(View.GONE);

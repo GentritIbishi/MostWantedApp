@@ -6,6 +6,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -27,6 +28,7 @@ import com.google.firebase.storage.StorageReference;
 import fiek.unipr.mostwantedapp.models.NotificationState;
 import fiek.unipr.mostwantedapp.models.Notifications;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
+import fiek.unipr.mostwantedapp.utils.ServiceManager;
 
 public class AdminNotificationService extends Service {
 
@@ -47,7 +49,7 @@ public class AdminNotificationService extends Service {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
         mContext = getApplicationContext();
-
+        ServiceManager.startServiceAdmin(mContext);
         listener();
     }
 
@@ -115,6 +117,19 @@ public class AdminNotificationService extends Service {
         intent.putExtra("notificationReportNewStatus", notifications.getNotificationReportNewStatus());
         intent.putExtra("notificationForUserId", notifications.getNotificationForUserId());
         startService(intent);
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Intent intent = new Intent();
+        intent.setAction("receiver_admin");
+        sendBroadcast(intent);
     }
 
     @Nullable

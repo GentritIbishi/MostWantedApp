@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -51,9 +52,11 @@ import fiek.unipr.mostwantedapp.fragment.user.SettingsFragment;
 import fiek.unipr.mostwantedapp.fragment.user.WithdrawFragment;
 import fiek.unipr.mostwantedapp.services.UserNotificationService;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
+import fiek.unipr.mostwantedapp.utils.ServiceManager;
 
 public class UserDashboardActivity extends AppCompatActivity {
 
+    private Context mContext;
     private int selectedTab = 1;
     private Integer balance;
     private String userID, fullName, urlOfProfile, name, lastname, email, googleID, grade, parentName, address, phone, personal_number;
@@ -92,8 +95,9 @@ public class UserDashboardActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
+        mContext = getApplicationContext();
 
-        startService();
+        ServiceManager.startServiceUser(mContext);
 
         user_nav_view = findViewById(R.id.user_nav_view);
         View nav_header_view = user_nav_view.getHeaderView(0);
@@ -261,16 +265,6 @@ public class UserDashboardActivity extends AppCompatActivity {
 
     }
 
-    private void startService() {
-        final Intent intentModified = new Intent(UserDashboardActivity.this, UserNotificationService.class);
-        startService(intentModified);
-    }
-
-    private void stopService() {
-        final Intent intentModified = new Intent(UserDashboardActivity.this, UserNotificationService.class);
-        stopService(intentModified);
-    }
-
     @Override
     protected void onDestroy() {
         if (firebaseAuth != null) {
@@ -347,7 +341,7 @@ public class UserDashboardActivity extends AppCompatActivity {
         //check for phone authentication
         if (firebaseAuth != null) {
             firebaseAuth.signOut();
-            stopService();
+            ServiceManager.stopServiceUser(mContext);
             sendUserToLogin();
         }
         user_logout_progressBar.setVisibility(View.GONE);

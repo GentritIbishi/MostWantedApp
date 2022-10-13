@@ -134,6 +134,20 @@
 
         <service android:name="com.paypal.android.sdk.payments.PayPalService" android:exported="false"/>
 
+        <receiver android:name=".services.AdminNotificationServiceReceiver" >
+            <intent-filter>
+                <action android:name="receiver_admin" >
+                </action>
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".services.UserNotificationServiceReceiver" >
+            <intent-filter>
+                <action android:name="receiver_user" >
+                </action>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

@@ -28,6 +28,7 @@ import com.google.firebase.storage.StorageReference;
 import fiek.unipr.mostwantedapp.models.NotificationState;
 import fiek.unipr.mostwantedapp.models.Notifications;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
+import fiek.unipr.mostwantedapp.utils.ServiceManager;
 
 public class UserNotificationService extends Service {
 
@@ -48,6 +49,7 @@ public class UserNotificationService extends Service {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
         mContext = getApplicationContext();
+        ServiceManager.startServiceUser(mContext);
 
         listener();
     }
@@ -124,10 +126,15 @@ public class UserNotificationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent);
-        }
         return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Intent intent = new Intent();
+        intent.setAction("receiver_user");
+        sendBroadcast(intent);
     }
 
     @Nullable
