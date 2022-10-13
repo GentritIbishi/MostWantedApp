@@ -61,6 +61,7 @@ import fiek.unipr.mostwantedapp.fragment.admin.search.SearchLocationReportsFragm
 import fiek.unipr.mostwantedapp.fragment.admin.search.SearchManageLocationReportsFragment;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class HomeFragment extends Fragment {
 
@@ -100,8 +101,6 @@ public class HomeFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         userID = firebaseAuth.getCurrentUser().getUid();
-        getGrade(firebaseAuth);
-        loadInfoFromFirebase(firebaseAuth);
     }
 
     @Override
@@ -110,6 +109,9 @@ public class HomeFragment extends Fragment {
         admin_dashboard_view = inflater.inflate(R.layout.fragment_home_admin, container, false);
 
         initializeFields();
+
+        loadInfoFromFirebase(firebaseAuth);
+        getGrade(firebaseAuth);
 
         final SwipeRefreshLayout pullToRefreshInSearch = admin_dashboard_view.findViewById(R.id.admin_home_pullToRefreshProfileDashboard);
 
@@ -425,7 +427,7 @@ public class HomeFragment extends Fragment {
                             if(task.isSuccessful() && task.getResult() != null)
                             {
                                 grade = task.getResult().getString("grade");
-                                if(grade != null)
+                                if(!StringHelper.empty(grade))
                                 {
                                     admin_home_tv_gradeOfUser.setText(grade);
                                 }

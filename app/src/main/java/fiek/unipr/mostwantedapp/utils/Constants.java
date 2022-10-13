@@ -51,6 +51,10 @@ public class Constants {
     public static final String KEY = "O9b8jboCKh95zYheMD6Wsc7U";
     public static final Boolean PAYMENT_STATE_DEFAULT = false;
     public static final Integer TIME_DEFAULT = 0;
+    public static final String APPEARANCE_MODE_PREFERENCE = "appearance_mode";
+    public static final String DARK_MODE = "dark_mode";
+    public static final String SYSTEM_MODE = "system_mode";
+    public static final String LIGHT_MODE = "light_mode";
 
     //FIREBASE TABLE NAMES
     public static final String USERS = "users";

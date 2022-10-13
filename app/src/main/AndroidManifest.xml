@@ -2,11 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="fiek.unipr.mostwantedapp">
 
-    <!--
-         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
-         Google Maps Android API v2, but you must specify either coarse or fine
-         location permissions for the "MyLocation" functionality.
-    -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -19,11 +14,15 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
-    <uses-feature android:name="android.hardware.camera" android:required="false"/>
-    <uses-feature android:name="android.hardware.camera.autofocus" android:required="false"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
 
     <application
         android:name=".utils.ApplicationClass"
@@ -51,62 +50,18 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
 
-        <activity
-            android:name=".activity.dashboard.AnonymousDashboardActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.SplashActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.maps.user.MapsInformerActivity"
-            android:exported="false"
-            android:label="@string/title_activity_maps_informer" />
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
-        <activity
-            android:name=".activity.SetProfileUserActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.auth.ForgotPasswordActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.auth.PhoneSignInActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.dashboard.UserDashboardActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.RegisterActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activity.GetStartedActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity
-            android:name=".activity.maps.admin.MapsActivity"
-            android:exported="true"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".activity.dashboard.AdminDashboardActivity" />
-        <activity android:name=".activity.LoginActivity" />
-
-        <activity android:name="io.card.payment.DataEntryActivity"/>
         <!--
- Set custom default icon. This is used when no icon is set for incoming notifications messages.
-     See README(https://goo.gl/l4GJaQ) for more.
-        -->
+Set custom default icon. This is used when no icon is set for incoming notifications messages.
+See README(https://goo.gl/l4GJaQ) for more.
+ -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_app" />
@@ -118,33 +73,87 @@
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/gray" />
 
-        <activity android:name="com.paypal.android.sdk.payments.PaymentActivity"/>
-        <activity android:name="com.paypal.android.sdk.payments.LoginActivity"/>
-        <activity android:name="com.paypal.android.sdk.payments.PaymentMethodActivity"/>
-        <activity android:name="com.paypal.android.sdk.payments.PaymentConfirmActivity"/>
-        <activity android:name="com.paypal.android.sdk.payments.PayPalFuturePaymentActivity"/>
-        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentConsentActivity"/>
-        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentInfoActivity"/>
+        <activity
+            android:name=".activity.dashboard.AnonymousDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.SplashActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.maps.user.MapsInformerActivity"
+            android:exported="false"
 
-        <service android:name=".services.UserNotificationService"/>
-        <service android:name=".services.UserSaveNotificationService"/>
+            android:label="@string/title_activity_maps_informer" />
 
-        <service android:name=".services.AdminNotificationService"/>
-        <service android:name=".services.AdminSaveNotificationService"/>
+        <activity
+            android:name=".activity.SetProfileUserActivity"
+            android:exported="false" />
 
-        <service android:name="com.paypal.android.sdk.payments.PayPalService" android:exported="false"/>
+        <activity
+            android:name=".activity.auth.ForgotPasswordActivity"
+            android:exported="false" />
 
-        <receiver android:name=".services.AdminNotificationServiceReceiver" >
+        <activity
+            android:name=".activity.auth.PhoneSignInActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.dashboard.UserDashboardActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.RegisterActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.GetStartedActivity"
+            android:exported="true">
             <intent-filter>
-                <action android:name="receiver_admin" >
-                </action>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activity.maps.admin.MapsActivity"
+            android:exported="true"
+
+            android:label="@string/title_activity_maps" />
+
+        <activity android:name=".activity.dashboard.AdminDashboardActivity" />
+
+        <activity android:name=".activity.LoginActivity" />
+
+        <activity android:name="io.card.payment.DataEntryActivity" />
+
+        <activity android:name="com.paypal.android.sdk.payments.PaymentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.LoginActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentMethodActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PaymentConfirmActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.PayPalFuturePaymentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentConsentActivity" />
+        <activity android:name="com.paypal.android.sdk.payments.FuturePaymentInfoActivity" />
+
+        <service android:name=".services.UserNotificationService" />
+        <service android:name=".services.UserSaveNotificationService" />
+
+        <service android:name=".services.AdminNotificationService" />
+        <service android:name=".services.AdminSaveNotificationService" />
+
+        <service
+            android:name="com.paypal.android.sdk.payments.PayPalService"
+            android:exported="false" />
+
+        <receiver android:name=".services.AdminNotificationServiceReceiver">
+            <intent-filter>
+                <action android:name="receiver_admin"></action>
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".services.UserNotificationServiceReceiver" >
+        <receiver android:name=".services.UserNotificationServiceReceiver">
             <intent-filter>
-                <action android:name="receiver_user" >
-                </action>
+                <action android:name="receiver_user"></action>
             </intent-filter>
         </receiver>
 

@@ -572,6 +572,8 @@
     <string name="are_created">are created</string>
     <string name="no_invoice">No invoice!</string>
     <string name="you_must_have_at_least_one_invoice">You must have at least one invoice!</string>
+    <string name="please_select_one_mode">Please select a mode!</string>
+    <string name="you_need_to_enable_one_mode_before_you_change">You must activate a mode before changing.</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

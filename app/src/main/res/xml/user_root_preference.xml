@@ -57,19 +57,24 @@
 
         <SwitchPreferenceCompat
             app:key="dark_mode"
+            android:defaultValue="false"
             app:icon="@drawable/ic_baseline_dark_mode_24"
             app:title="@string/dark_mode" />
 
         <SwitchPreferenceCompat
             app:key="system_mode"
+            android:defaultValue="true"
             app:icon="@drawable/ic_system_mode"
             app:title="@string/system_mode" />
 
         <SwitchPreferenceCompat
             app:key="light_mode"
+            android:defaultValue="false"
             app:icon="@drawable/ic_baseline_light_mode_24"
             app:title="@string/light_mode"/>
 
     </PreferenceCategory>
+
+    <PreferenceCategory app:title=""/>
 
 </PreferenceScreen>
