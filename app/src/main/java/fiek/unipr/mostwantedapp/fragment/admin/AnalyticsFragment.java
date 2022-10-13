@@ -67,6 +67,7 @@ import fiek.unipr.mostwantedapp.utils.DateHelper;
 
 public class AnalyticsFragment extends Fragment {
 
+    private Context mContext;
     private View admin_profile_dashboard_view;
     private PieChart admin_pieChart;
     private PieChart wp_gender_statistic_pieChart, inv_gender_statistic_pieChart, user_gender_statistic_pieChart;
@@ -96,7 +97,7 @@ public class AnalyticsFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         uID = firebaseAuth.getCurrentUser().getUid();
-        getGrade(firebaseAuth);
+        mContext = getContext();
     }
 
     @Override
@@ -245,6 +246,7 @@ public class AnalyticsFragment extends Fragment {
         admin_pieChart.setTransparentCircleRadius(61f);
 
         Legend l = admin_pieChart.getLegend();
+        l.setTextColor(mContext.getResources().getColor(R.color.text));
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
@@ -519,6 +521,7 @@ public class AnalyticsFragment extends Fragment {
                         wp_gender_statistic_pieChart.setTransparentCircleRadius(61f);
 
                         Legend l = wp_gender_statistic_pieChart.getLegend();
+                        l.setTextColor(mContext.getResources().getColor(R.color.text));
                         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
                         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
                         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
@@ -588,6 +591,7 @@ public class AnalyticsFragment extends Fragment {
                         inv_gender_statistic_pieChart.setTransparentCircleRadius(61f);
 
                         Legend l = inv_gender_statistic_pieChart.getLegend();
+                        l.setTextColor(mContext.getResources().getColor(R.color.text));
                         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
                         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
                         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
@@ -657,6 +661,7 @@ public class AnalyticsFragment extends Fragment {
                         user_gender_statistic_pieChart.setTransparentCircleRadius(61f);
 
                         Legend l = user_gender_statistic_pieChart.getLegend();
+                        l.setTextColor(mContext.getResources().getColor(R.color.text));
                         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
                         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
                         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);

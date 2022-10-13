@@ -105,5 +105,7 @@
     <color name="bgAnalytics">#FFFFFF</color>
     <color name="bgUpdate">#FFFFFF</color>
     <color name="edit_text">#808080</color>
+    <color name="icons_nav_bottom">#FFFFFF</color>
+    <color name="item_persistent_normal">#424242</color>
 
 </resources>

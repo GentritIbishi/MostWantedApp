@@ -65,6 +65,7 @@ import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class HomeFragment extends Fragment {
 
+    private Context mContext;
     private SharedPreferences sharedPreferences;
     private Context contextAttach;
     private PieChart admin_home_pieChart;
@@ -101,6 +102,7 @@ public class HomeFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
         userID = firebaseAuth.getCurrentUser().getUid();
+        mContext = getContext();
     }
 
     @Override
@@ -346,6 +348,7 @@ public class HomeFragment extends Fragment {
         admin_home_pieChart.setTransparentCircleRadius(61f);
 
         Legend l = admin_home_pieChart.getLegend();
+        l.setTextColor(mContext.getResources().getColor(R.color.text));
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
