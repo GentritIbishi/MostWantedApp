@@ -71,4 +71,34 @@
     <color name="textSplashScreen">#FFFFFF</color>
     <color name="color_nav_header_name">#FFFFFF</color>
     <color name="dark_light_color">#FFFFFF</color>
+
+    <color name="text">#FFFFFF</color>
+    <color name="bg_analytics">#424242</color>
+    <color name="bg_analytics_item">#424242</color>
+    <color name="bg_counters">#424242</color>
+    <color name="bg_counters_fake">#424242</color>
+    <color name="bg_counters_grade">#424242</color>
+    <color name="bg_counters_unverified">#424242</color>
+    <color name="bg_counters_verified">#424242</color>
+    <color name="bg_counters_white">#424242</color>
+    <color name="bg_dashboard_top">#424242</color>
+    <color name="bg_edit_text">#424242</color>
+    <color name="bg_edit_text_outbox">#424242</color>
+    <color name="bg_gallery">#424242</color>
+    <color name="bg_header_table">#424242</color>
+    <color name="bg_headtitle">#424242</color>
+    <color name="bg_headtitle_rectangle">#424242</color>
+    <color name="bg_listview_item">#424242</color>
+    <color name="bg_navigation_bottom">#424242</color>
+    <color name="bg_payout">#424242</color>
+    <color name="bg_person_list">#424242</color>
+    <color name="bg_profile">#424242</color>
+    <color name="bg_progress_dialog">#424242</color>
+    <color name="bg_register">#424242</color>
+    <color name="bg_report_info">#424242</color>
+    <color name="bg_row_table">#424242</color>
+    <color name="bg_single_report">#424242</color>
+    <color name="bg_single_report_image">#424242</color>
+    <color name="bg_top_analytics">#424242</color>
+
 </resources>
