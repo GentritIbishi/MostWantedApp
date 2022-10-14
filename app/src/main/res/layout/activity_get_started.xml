@@ -78,6 +78,18 @@
             android:text="@string/let_get_started"
             android:textColor="@color/white" />
 
+        <ProgressBar
+            android:id="@+id/progressBarGetStarted"
+            android:visibility="gone"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignTop="@+id/bt_getStarted"
+            android:layout_alignEnd="@+id/bt_getStarted"
+            android:layout_alignBottom="@+id/bt_getStarted"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="12dp" />
+
     </RelativeLayout>
 
 </RelativeLayout>

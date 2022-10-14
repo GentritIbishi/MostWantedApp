@@ -44,7 +44,6 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.SecurityHelper;
-import fiek.unipr.mostwantedapp.utils.SpinnerAdapter;
 import fiek.unipr.mostwantedapp.models.User;
 
 public class RegisterUserFragment extends Fragment {

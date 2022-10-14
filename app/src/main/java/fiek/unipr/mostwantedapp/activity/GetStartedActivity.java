@@ -1,17 +1,21 @@
 package fiek.unipr.mostwantedapp.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.fragment.admin.RegisterFragment;
 import fiek.unipr.mostwantedapp.utils.OnSwipeTouchListener;
 
 public class GetStartedActivity extends AppCompatActivity {
@@ -20,6 +24,8 @@ public class GetStartedActivity extends AppCompatActivity {
     private TextView tvgetStarted1, dot1, dot2;
     private Button bt_getStarted;
     private RelativeLayout view_getStarted;
+    private ProgressBar progressBarGetStarted;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +36,7 @@ public class GetStartedActivity extends AppCompatActivity {
         dot1 = findViewById(R.id.dot1);
         dot2 = findViewById(R.id.dot2);
         bt_getStarted = findViewById(R.id.bt_getStarted);
+        progressBarGetStarted = findViewById(R.id.progressBarGetStarted);
 
         //Check if application is opened for the first time
         SharedPreferences preferences = getSharedPreferences("PREFERENCE", MODE_PRIVATE);
@@ -51,11 +58,18 @@ public class GetStartedActivity extends AppCompatActivity {
         bt_getStarted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(GetStartedActivity.this, SplashActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
+                bt_getStarted.setEnabled(false);
+                progressBarGetStarted.setVisibility(View.VISIBLE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(GetStartedActivity.this, SplashActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                }, 1500);
             }
         });
 
