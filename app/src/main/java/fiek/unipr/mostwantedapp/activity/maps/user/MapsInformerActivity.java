@@ -1,6 +1,8 @@
 package fiek.unipr.mostwantedapp.activity.maps.user;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.ANONYMOUS;
+import static fiek.unipr.mostwantedapp.utils.Constants.APPEARANCE_MODE_PREFERENCE;
+import static fiek.unipr.mostwantedapp.utils.Constants.DARK_MODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
 import static fiek.unipr.mostwantedapp.utils.Constants.LATITUDE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_PERMISSION_REQUEST_CODE;
@@ -8,6 +10,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.LONGITUDE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.PHONE_USER;
 import static fiek.unipr.mostwantedapp.utils.Constants.PICK_IMAGE;
+import static fiek.unipr.mostwantedapp.utils.Constants.SYSTEM_MODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 import static fiek.unipr.mostwantedapp.utils.StringHelper.empty;
@@ -17,11 +20,13 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -40,6 +45,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -74,6 +80,7 @@ import fiek.unipr.mostwantedapp.utils.GpsTracker;
 
 public class MapsInformerActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
+    private Context mContext;
     private ActivityMapsInformerBinding binding;
     private int upload_count = 0;
     private FusedLocationProviderClient mfusedLocationProviderClient;
@@ -101,6 +108,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
+        checkAndSetModeMap(mContext);
         mMap.setOnMapClickListener(this);
         mfusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
         try {
@@ -148,6 +156,14 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     }
 
+    private void checkAndSetModeMap(Context mContext) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String mode = sharedPreferences.getString(APPEARANCE_MODE_PREFERENCE, SYSTEM_MODE);
+        if (mode.equals(DARK_MODE)) {
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mContext, R.raw.map_in_night));
+        }
+    }
+
     private void initMap()
     {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -170,6 +186,8 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
+
+        mContext = getApplicationContext();
 
         gpsTracker = new GpsTracker(MapsInformerActivity.this);
 

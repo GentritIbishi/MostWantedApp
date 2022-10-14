@@ -3,9 +3,12 @@ package fiek.unipr.mostwantedapp.fragment.admin;
 import static android.content.ContentValues.TAG;
 import static android.view.View.GONE;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.addBorder;
+import static fiek.unipr.mostwantedapp.utils.Constants.APPEARANCE_MODE_PREFERENCE;
+import static fiek.unipr.mostwantedapp.utils.Constants.DARK_MODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
 import static fiek.unipr.mostwantedapp.utils.Constants.FREE;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.SYSTEM_MODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
@@ -16,8 +19,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.location.Address;
@@ -50,6 +55,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -62,20 +68,16 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.gallery.CustomizedGalleryAdapter;
-import fiek.unipr.mostwantedapp.models.Report;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 
@@ -117,12 +119,14 @@ public class SingleReportFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getFromBundle();
+        mContext = getContext();
     }
 
     private final OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(@NonNull GoogleMap googleMap) {
             mMap = googleMap;
+            checkAndSetModeMap(mContext);
             Bundle bundle = getArguments();
             if (bundle != null) {
                 String wanted_person = getArguments().getString("wanted_person");
@@ -148,6 +152,14 @@ public class SingleReportFragment extends Fragment {
             }
         }
     };
+
+    private void checkAndSetModeMap(Context mContext) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String mode = sharedPreferences.getString(APPEARANCE_MODE_PREFERENCE, SYSTEM_MODE);
+        if (mode.equals(DARK_MODE)) {
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mContext, R.raw.map_in_night));
+        }
+    }
 
     @Nullable
     @Override

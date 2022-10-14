@@ -8,12 +8,15 @@ import static fiek.unipr.mostwantedapp.utils.BitmapHelper.BitmapFromVector;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.addBorder;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.drawableFromUrl;
 import static fiek.unipr.mostwantedapp.utils.BitmapHelper.getCroppedBitmap;
+import static fiek.unipr.mostwantedapp.utils.Constants.APPEARANCE_MODE_PREFERENCE;
 import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS_PDF;
+import static fiek.unipr.mostwantedapp.utils.Constants.DARK_MODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVESTIGATORS;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.REPORTS_ASSIGNED;
+import static fiek.unipr.mostwantedapp.utils.Constants.SYSTEM_MODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import androidx.annotation.NonNull;
@@ -21,9 +24,11 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.preference.PreferenceManager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -52,6 +57,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -358,7 +364,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-
+        checkAndSetModeMap(mContext);
         setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_REXHEP_LUCI_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_REXHEP_LUCI_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_RR_REXHEP_LUCI_TITLE)));
         setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_NR2_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_NR2_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_NR2_TITLE)));
         setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_SHESHI_I_LIRISE_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_SHESHI_I_LIRISE_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_SHESHI_I_LIRISE_TITLE)));
@@ -372,6 +378,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setStationAsMarker(Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_LATITUDE))), Double.valueOf(String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_LONGITUDE))), String.valueOf(this.getText(R.string.POLICE_STATION_RR_JONI_TITLE)));
 
         setLocations(personId);
+    }
+
+    private void checkAndSetModeMap(Context mContext) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
+        String mode = sharedPreferences.getString(APPEARANCE_MODE_PREFERENCE, SYSTEM_MODE);
+        if (mode.equals(DARK_MODE)) {
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mContext, R.raw.map_in_night));
+        }
     }
 
     private void setLocations(String personId) {
