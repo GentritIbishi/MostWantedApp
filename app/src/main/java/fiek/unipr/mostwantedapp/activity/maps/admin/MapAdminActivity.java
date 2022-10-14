@@ -113,7 +113,7 @@ import fiek.unipr.mostwantedapp.models.ReportAssignedUser;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.WindowHelper;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapAdminActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private Context mContext;
     private static final int PERMISSION_REQUEST_CODE = 200;
@@ -425,7 +425,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MapsActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapAdminActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -552,7 +552,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MapsActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapAdminActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -566,7 +566,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (!task.isSuccessful()) {
-                        Toast.makeText(MapsActivity.this, "" + task.getException(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapAdminActivity.this, "" + task.getException(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -584,7 +584,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MapsActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapAdminActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }

@@ -218,7 +218,7 @@ public class GpsTracker extends Service implements LocationListener {
     }
 
     //usuage
-//    gpsTracker = new GpsTracker(MapsInformerActivity.this);
+//    gpsTracker = new GpsTracker(MapUserActivity.this);
 //                if(gpsTracker.canGetLocation()){
 //        double latitude = gpsTracker.getLatitude();
 //        double longitude = gpsTracker.getLongitude();

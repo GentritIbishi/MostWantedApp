@@ -88,7 +88,7 @@
                     android:layout_marginTop="5dp"
                     android:elevation="6dp"
                     android:paddingBottom="15dp"
-                    android:theme="@style/Theme.MaterialComponents.Light"
+                    android:theme="@style/Theme.MaterialComponents.DayNight"
                     android:visibility="gone">
 
                     <com.google.android.material.textfield.TextInputLayout

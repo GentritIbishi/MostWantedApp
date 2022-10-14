@@ -57,12 +57,12 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.activity.maps.user.MapUserActivity;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.ContextHelper;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.activity.maps.user.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 
@@ -406,7 +406,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void onItemClick(int position) {
-        Intent intent=new Intent(getContext(), MapsInformerActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent=new Intent(getContext(), MapUserActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle viewBundle = new Bundle();
         viewBundle.putString("personId", personArrayList.get(position).getPersonId());
         viewBundle.putString("fullName", personArrayList.get(position).getFullName());

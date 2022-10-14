@@ -375,7 +375,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:theme="@style/Theme.MaterialComponents.Light"
+                android:theme="@style/Theme.MaterialComponents.DayNight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp">
@@ -423,7 +423,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/paypalConstraint"
                 android:visibility="gone"
-                android:theme="@style/Theme.MaterialComponents.Light"
+                android:theme="@style/Theme.MaterialComponents.DayNight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp">
@@ -472,7 +472,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bankAccountConstraint"
                 android:visibility="gone"
-                android:theme="@style/Theme.MaterialComponents.Light"
+                android:theme="@style/Theme.MaterialComponents.DayNight"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp">

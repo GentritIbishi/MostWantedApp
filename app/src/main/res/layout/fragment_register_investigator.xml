@@ -23,7 +23,7 @@
             android:elevation="6dp"
             android:fitsSystemWindows="true"
             android:padding="10dp"
-            android:theme="@style/Theme.MaterialComponents.Light">
+            android:theme="@style/Theme.MaterialComponents.DayNight">
 
             <TextView
                 android:id="@+id/investigator_tv_regPerson"

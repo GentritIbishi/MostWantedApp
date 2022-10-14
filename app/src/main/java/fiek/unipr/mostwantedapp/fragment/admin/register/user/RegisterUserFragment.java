@@ -4,7 +4,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_A;
 import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_E;
-import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.TOTAL_PAID_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.SEMI_ADMIN_ROLE;
@@ -167,7 +167,7 @@ public class RegisterUserFragment extends Fragment {
         String grade = "";
         if(role.equals(ADMIN_ROLE) || role.equals(SEMI_ADMIN_ROLE)){
             grade = GRADE_A;
-        }else if(role.equals(INFORMER_ROLE)){
+        }else if(role.equals(USER_ROLE)){
             grade = GRADE_E;
         }else if(role.isEmpty()){
             grade = "";

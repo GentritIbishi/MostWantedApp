@@ -34,7 +34,7 @@
             android:background="@drawable/bg_single_report"
             android:elevation="6dp"
             android:paddingBottom="15dp"
-            android:theme="@style/Theme.MaterialComponents.Light">
+            android:theme="@style/Theme.MaterialComponents.DayNight">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/autocomplete_report_status_layout"

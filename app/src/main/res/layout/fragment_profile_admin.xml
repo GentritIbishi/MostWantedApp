@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.MaterialComponents.Light"
+    android:theme="@style/Theme.MaterialComponents.DayNight"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.admin.ProfileFragment">
 
@@ -282,6 +282,7 @@
                             android:layout_marginStart="16dp"
                             android:layout_marginTop="8dp"
                             android:layout_marginEnd="16dp"
+                            app:hintTextColor="@color/text"
                             android:hint="@string/select_the_gender"
                             android:textColorHint="@color/text"
                             android:textDirection="firstStrong"
@@ -292,7 +293,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/admin_et_fullNameLayout">
 
                             <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                android:id="@+id/admin_et_gender"
+                                android:id="@+id/admin_et_gender_autocomplete"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"

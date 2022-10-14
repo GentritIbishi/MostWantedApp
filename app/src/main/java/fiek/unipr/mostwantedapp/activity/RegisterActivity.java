@@ -1,10 +1,8 @@
 package fiek.unipr.mostwantedapp.activity;
 
 import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
-import static fiek.unipr.mostwantedapp.utils.Constants.COINS_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.GRADE_E;
-import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
-import static fiek.unipr.mostwantedapp.utils.Constants.PHONE_USER;
+import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.TOTAL_PAID_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
@@ -36,7 +34,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.StorageReference;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.models.LoginHistory;
 import fiek.unipr.mostwantedapp.utils.CheckInternet;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.SecurityHelper;
@@ -219,7 +216,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 email,
                                 parentName,
                                 gender,
-                                INFORMER_ROLE,
+                                USER_ROLE,
                                 phone,
                                 personal_number,
                                 register_date_time,

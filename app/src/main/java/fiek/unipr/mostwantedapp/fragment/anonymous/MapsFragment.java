@@ -4,8 +4,6 @@ import static fiek.unipr.mostwantedapp.utils.Constants.DEFAULT_ZOOM;
 import static fiek.unipr.mostwantedapp.utils.Constants.LATITUDE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_PERMISSION_REQUEST_CODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.LONGITUDE_DEFAULT;
-import static fiek.unipr.mostwantedapp.utils.Constants.PICK_IMAGE;
-import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +12,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
@@ -35,7 +32,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,7 +44,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.activity.maps.user.MapsInformerActivity;
 import fiek.unipr.mostwantedapp.utils.GpsTracker;
 
 public class MapsFragment extends Fragment {

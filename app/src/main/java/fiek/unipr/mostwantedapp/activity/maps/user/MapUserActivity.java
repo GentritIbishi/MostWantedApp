@@ -78,7 +78,7 @@ import fiek.unipr.mostwantedapp.models.ReportStatus;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.GpsTracker;
 
-public class MapsInformerActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
+public class MapUserActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener {
 
     private Context mContext;
     private ActivityMapsInformerBinding binding;
@@ -138,7 +138,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                 mMap.setMyLocationEnabled(true);
                             } else
                             {
-                                Toast.makeText(MapsInformerActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MapUserActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
@@ -166,9 +166,9 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
     private void initMap()
     {
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapUser);
         if (mapFragment != null) {
-            mapFragment.getMapAsync(MapsInformerActivity.this);
+            mapFragment.getMapAsync(MapUserActivity.this);
         }
     }
 
@@ -189,7 +189,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
 
         mContext = getApplicationContext();
 
-        gpsTracker = new GpsTracker(MapsInformerActivity.this);
+        gpsTracker = new GpsTracker(MapUserActivity.this);
 
         mapsInformerBundle = new Bundle();
         getFromBundle(mapsInformerBundle);
@@ -205,7 +205,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                     binding.btnContinue.setVisibility(View.GONE);
                     binding.OtherReports.setVisibility(View.VISIBLE);
                 } else {
-                    Toast.makeText(MapsInformerActivity.this, R.string.location_not_set_please_set_new_location, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapUserActivity.this, R.string.location_not_set_please_set_new_location, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -390,14 +390,14 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
         locationReports.update("latitude", latitude).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MapsInformerActivity.this, R.string.latitude_failed_to_update, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapUserActivity.this, R.string.latitude_failed_to_update, Toast.LENGTH_SHORT).show();
             }
         });
 
         locationReports.update("longitude", longitude).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MapsInformerActivity.this, R.string.longitude_failed_to_update, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapUserActivity.this, R.string.longitude_failed_to_update, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -440,7 +440,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                 .update("images", imageListMap).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MapsInformerActivity.this, "ERROR UPDATING Images!"+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MapUserActivity.this, "ERROR UPDATING Images!"+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -500,7 +500,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(MapsInformerActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MapUserActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
@@ -513,7 +513,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(MapsInformerActivity.this, getApplicationContext().getText(R.string.failed_to_save_report)+" "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapUserActivity.this, getApplicationContext().getText(R.string.failed_to_save_report)+" "+e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }else if(informer_person.startsWith("+"))
@@ -563,7 +563,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MapUserActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }
@@ -577,7 +577,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MapUserActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         }else if(!informer_person.equals(ANONYMOUS) && !informer_person.startsWith("+"))
@@ -639,7 +639,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                                     }).addOnFailureListener(new OnFailureListener() {
                                                         @Override
                                                         public void onFailure(@NonNull Exception e) {
-                                                            Toast.makeText(MapsInformerActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(MapUserActivity.this, R.string.image_failed_to_uplaod, Toast.LENGTH_SHORT).show();
                                                         }
                                                     });
                                                 }
@@ -655,7 +655,7 @@ public class MapsInformerActivity extends FragmentActivity implements OnMapReady
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(MapsInformerActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MapUserActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
                             }

@@ -34,7 +34,7 @@ import java.util.List;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsLocationListAdapter;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
-import fiek.unipr.mostwantedapp.activity.maps.admin.MapsActivity;
+import fiek.unipr.mostwantedapp.activity.maps.admin.MapAdminActivity;
 import fiek.unipr.mostwantedapp.models.Person;
 
 public class SearchLocationReportsFragment extends Fragment implements RecyclerViewInterface {
@@ -195,7 +195,7 @@ public class SearchLocationReportsFragment extends Fragment implements RecyclerV
 
     @Override
     public void onItemClick(int position) {
-        Intent intent =new Intent(getContext(), MapsActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent =new Intent(getContext(), MapAdminActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Bundle viewBundle = new Bundle();
         viewBundle.putString("personId", locationArrayList.get(position).getPersonId());
         viewBundle.putString("firstName", locationArrayList.get(position).getFirstName());

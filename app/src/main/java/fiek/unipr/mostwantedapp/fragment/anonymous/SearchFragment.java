@@ -11,8 +11,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,11 +19,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
@@ -47,13 +43,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.activity.GetStartedActivity;
-import fiek.unipr.mostwantedapp.activity.maps.user.MapsInformerActivity;
+import fiek.unipr.mostwantedapp.activity.maps.user.MapUserActivity;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
 import fiek.unipr.mostwantedapp.models.LoginHistory;
 import fiek.unipr.mostwantedapp.models.Person;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
-import fiek.unipr.mostwantedapp.utils.OnSwipeTouchListener;
 import fiek.unipr.mostwantedapp.utils.RecyclerViewInterface;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 
@@ -272,7 +266,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void onItemClick(int position) {
-        Intent intent=new Intent(getContext(), MapsInformerActivity.class);
+        Intent intent=new Intent(getContext(), MapUserActivity.class);
         Bundle viewBundle = new Bundle();
         viewBundle.putString("personId", personArrayList.get(position).getPersonId());
         viewBundle.putString("fullName", personArrayList.get(position).getFullName());

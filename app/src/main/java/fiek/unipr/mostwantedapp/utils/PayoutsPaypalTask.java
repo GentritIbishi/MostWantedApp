@@ -1,21 +1,15 @@
 package fiek.unipr.mostwantedapp.utils;
 
-import static fiek.unipr.mostwantedapp.utils.BitmapHelper.getCroppedBitmap;
-import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS;
-import static fiek.unipr.mostwantedapp.utils.Constants.ASSIGNED_REPORTS_PDF;
 import static fiek.unipr.mostwantedapp.utils.Constants.BALANCE_DEFAULT;
 import static fiek.unipr.mostwantedapp.utils.Constants.DATE;
-import static fiek.unipr.mostwantedapp.utils.Constants.EURO;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE;
 import static fiek.unipr.mostwantedapp.utils.Constants.INVOICE_PAID;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAID;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUTS;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUTS_PDF;
-import static fiek.unipr.mostwantedapp.utils.Constants.PAYOUT_CONFIG;
 import static fiek.unipr.mostwantedapp.utils.Constants.PAYPAL_SANDBOX_KEY_BEARER;
 import static fiek.unipr.mostwantedapp.utils.Constants.PENDING;
 import static fiek.unipr.mostwantedapp.utils.Constants.REFUSED;
-import static fiek.unipr.mostwantedapp.utils.Constants.REPORTS_ASSIGNED;
 import static fiek.unipr.mostwantedapp.utils.Constants.USD;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
@@ -26,7 +20,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,7 +30,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -49,7 +41,6 @@ import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.kernel.colors.DeviceRgb;
 import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.geom.PageSize;
@@ -80,9 +71,6 @@ import java.util.Date;
 import java.util.TimerTask;
 
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.activity.maps.admin.MapsActivity;
-import fiek.unipr.mostwantedapp.models.InvoicesPaid;
-import fiek.unipr.mostwantedapp.models.ReportAssignedUser;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

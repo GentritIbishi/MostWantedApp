@@ -3,7 +3,7 @@ package fiek.unipr.mostwantedapp.activity;
 import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.APPEARANCE_MODE_PREFERENCE;
 import static fiek.unipr.mostwantedapp.utils.Constants.DARK_MODE;
-import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.LIGHT_MODE;
 import static fiek.unipr.mostwantedapp.utils.Constants.ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.SYSTEM_MODE;
@@ -109,7 +109,7 @@ public class SplashActivity extends AppCompatActivity {
                                         ServiceManager.startServiceAdmin(mContext);
                                         Intent intent = new Intent(SplashActivity.this, AdminDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
-                                    } else if (role != null && role.matches(INFORMER_ROLE)) {
+                                    } else if (role != null && role.matches(USER_ROLE)) {
                                         // start UserDashboardActivity
                                         ServiceManager.startServiceUser(mContext);
                                         Intent intent = new Intent(SplashActivity.this, UserDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -80,7 +80,7 @@ See README(https://goo.gl/l4GJaQ) for more.
             android:name=".activity.SplashActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.maps.user.MapsInformerActivity"
+            android:name=".activity.maps.user.MapUserActivity"
             android:exported="false"
 
             android:label="@string/title_activity_maps_informer" />
@@ -116,7 +116,7 @@ See README(https://goo.gl/l4GJaQ) for more.
         </activity>
 
         <activity
-            android:name=".activity.maps.admin.MapsActivity"
+            android:name=".activity.maps.admin.MapAdminActivity"
             android:exported="true"
 
             android:label="@string/title_activity_maps" />

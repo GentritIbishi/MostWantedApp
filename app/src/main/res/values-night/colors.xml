@@ -108,5 +108,6 @@
     <color name="edit_text">#808080</color>
     <color name="icons_nav_bottom">#FFFFFF</color>
     <color name="item_persistent_normal">#424242</color>
+    <color name="autocomplete_text">#000000</color>
 
 </resources>

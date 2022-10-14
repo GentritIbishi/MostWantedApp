@@ -6,6 +6,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -24,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -69,7 +71,7 @@ public class ProfileFragment extends Fragment {
     private TextInputEditText admin_et_firstName, admin_et_lastName,
             admin_et_parentName, admin_etPhone, admin_etAddress, admin_etNumPersonal,
             admin_etEmailToUser, admin_etPasswordToUser, admin_et_fullName, admin_etDateRegistration;
-    private MaterialAutoCompleteTextView admin_et_gender, admin_et_role_autocomplete,
+    private MaterialAutoCompleteTextView admin_et_gender_autocomplete, admin_et_role_autocomplete,
             admin_et_balance_autocomplete, admin_et_grade_autocomplete;
     private TextInputLayout admin_etNumPersonalLayout;
     private ProgressBar admin_saveChangesProgressBar, admin_uploadProgressBar;
@@ -100,12 +102,12 @@ public class ProfileFragment extends Fragment {
 
         initializeFields();
 
-        admin_et_gender.setOnClickListener(new View.OnClickListener() {
+        admin_et_gender_autocomplete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ArrayAdapter<String> gender_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
-                admin_et_gender.setAdapter(gender_adapter);
-                admin_et_gender.showDropDown();
+                admin_et_gender_autocomplete.setAdapter(gender_adapter);
+                admin_et_gender_autocomplete.showDropDown();
             }
         });
 
@@ -226,7 +228,7 @@ public class ProfileFragment extends Fragment {
         admin_etNumPersonalLayout = admin_account_fragment_view.findViewById(R.id.admin_etNumPersonalLayout);
         admin_etEmailToUser = admin_account_fragment_view.findViewById(R.id.admin_etEmailToUser);
         admin_etPasswordToUser = admin_account_fragment_view.findViewById(R.id.admin_etPasswordToUser);
-        admin_et_gender = admin_account_fragment_view.findViewById(R.id.admin_et_gender);
+        admin_et_gender_autocomplete = admin_account_fragment_view.findViewById(R.id.admin_et_gender_autocomplete);
         admin_et_role_autocomplete = admin_account_fragment_view.findViewById(R.id.admin_et_role_autocomplete);
         admin_saveChangesProgressBar = admin_account_fragment_view.findViewById(R.id.admin_saveChangesProgressBar);
         admin_uploadProgressBar = admin_account_fragment_view.findViewById(R.id.admin_uploadProgressBar);
@@ -240,7 +242,7 @@ public class ProfileFragment extends Fragment {
         super.onResume();
 
         ArrayAdapter<String> gender_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.gender_array));
-        admin_et_gender.setAdapter(gender_adapter);
+        admin_et_gender_autocomplete.setAdapter(gender_adapter);
 
         ArrayAdapter<String> role_adapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, getResources().getStringArray(R.array.roles));
         admin_et_role_autocomplete.setAdapter(role_adapter);
@@ -346,7 +348,7 @@ public class ProfileFragment extends Fragment {
                             admin_etEmailToUser.setText(email);
 
                             gender = documentSnapshot.getString("gender");
-                            admin_et_gender.setText(gender);
+                            admin_et_gender_autocomplete.setText(gender);
 
                             lastname = documentSnapshot.getString("lastname");
                             admin_et_lastName.setText(lastname);
@@ -408,7 +410,7 @@ public class ProfileFragment extends Fragment {
         String new_address = admin_etAddress.getText().toString();
         String new_email = admin_etEmailToUser.getText().toString();
         String new_ParentName = admin_et_parentName.getText().toString();
-        String new_gender = admin_et_gender.getText().toString();
+        String new_gender = admin_et_gender_autocomplete.getText().toString();
         String new_role = admin_et_role_autocomplete.getText().toString();
         String new_phone = admin_etPhone.getText().toString();
         String new_personal_number = admin_etNumPersonal.getText().toString();
@@ -465,8 +467,8 @@ public class ProfileFragment extends Fragment {
             admin_etPasswordToUser.setError(getText(R.string.error_password_required));
             admin_etPasswordToUser.requestFocus();
         }else if (TextUtils.isEmpty(new_gender)) {
-            admin_et_gender.setError(getText(R.string.error_gender_required));
-            admin_et_gender.requestFocus();
+            admin_et_gender_autocomplete.setError(getText(R.string.error_gender_required));
+            admin_et_gender_autocomplete.requestFocus();
         }else {
             firebaseFirestore.collection(USERS)
                     .document(userID)

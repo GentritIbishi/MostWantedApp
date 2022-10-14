@@ -16,7 +16,7 @@ public class Constants {
     public static final String GRADE_E = "E";
     public static final String YES = "Yes";
     public static final String NO = "No";
-    public static final String INFORMER_ROLE = "Informer";
+    public static final String USER_ROLE = "User";
     public static final String VERIFIED = "VERIFIED";
     public static final String UNVERIFIED = "UNVERIFIED";
     public static final String FAKE = "FAKE";

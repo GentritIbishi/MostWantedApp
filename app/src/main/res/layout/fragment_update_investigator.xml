@@ -120,7 +120,7 @@
                         android:layout_below="@+id/update_investigator_imageOfProfile"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="15dp"
-                        android:theme="@style/Theme.MaterialComponents.Light"
+                        android:theme="@style/Theme.MaterialComponents.DayNight"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent">
 

@@ -310,7 +310,6 @@
         <item>Admin</item>
         <item>Semi-Admin</item>
         <item>User</item>
-        <item>Informer</item>
     </string-array>
 
     <string-array name="eye_color">

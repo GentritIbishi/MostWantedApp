@@ -3,7 +3,7 @@ package fiek.unipr.mostwantedapp.activity;
 
 import static fiek.unipr.mostwantedapp.utils.CheckInternet.isConnected;
 import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
-import static fiek.unipr.mostwantedapp.utils.Constants.INFORMER_ROLE;
+import static fiek.unipr.mostwantedapp.utils.Constants.USER_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOGIN_HISTORY;
 import static fiek.unipr.mostwantedapp.utils.Constants.PREFS_NAME;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
@@ -283,11 +283,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             progressDialog.setMessage(mContext.getText(R.string.logins_successfully));
                             goToSemiAdminDashboard();
                             progressDialog.dismiss();
-                        }else if(role != null && role.matches(INFORMER_ROLE)){
+                        }else if(role != null && role.matches(USER_ROLE)){
                             login_progressBar.setVisibility(View.INVISIBLE);
                             bt_Login.setEnabled(true);
                             progressDialog.setMessage(mContext.getText(R.string.logins_successfully));
-                            goToInformerDashboard();
+                            goToUserDashboard();
                             progressDialog.dismiss();
                         }
                     } catch (Exception e) {
@@ -369,7 +369,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    private void goToInformerDashboard() {
+    private void goToUserDashboard() {
         Intent intent = new Intent(LoginActivity.this, UserDashboardActivity.class);
         startActivity(intent);
         progressDialog.dismiss();

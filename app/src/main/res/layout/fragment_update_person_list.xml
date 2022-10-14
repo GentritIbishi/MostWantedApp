@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:theme="@style/Theme.MaterialComponents.Light"
+            android:theme="@style/Theme.MaterialComponents.DayNight"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:orientation="vertical">

@@ -14,7 +14,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:theme="@style/Theme.MaterialComponents.Light"
+            android:theme="@style/Theme.MaterialComponents.DayNight"
             android:elevation="6dp"
             android:layout_marginTop="10dp"
             android:layout_marginStart="5dp"
