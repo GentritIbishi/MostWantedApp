@@ -19,28 +19,39 @@
             android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/user_imageHelp"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:id="@+id/user_ic_app"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
                 android:src="@drawable/ic_app"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/user_tv_need_some_helps"
+                android:id="@+id/user_tv_title_app"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:text="@string/app_name"
+                android:textStyle="bold"
                 android:textColor="@color/text"
                 android:textSize="19sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/user_imageHelp" />
+                app:layout_constraintTop_toBottomOf="@+id/user_ic_app" />
 
             <TextView
-                android:id="@+id/user_about_header"
+                android:id="@+id/user_tv_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/version"
+                android:textStyle="bold"
+                android:textColor="@color/text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/user_tv_title_app" />
+
+            <TextView
+                android:id="@+id/user_tv_about_header"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -49,14 +60,13 @@
                 android:lineSpacingExtra="4sp"
                 android:textColor="@color/text"
                 android:text="@string/about_header"
-                android:textAlignment="center"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/user_tv_need_some_helps" />
+                app:layout_constraintTop_toBottomOf="@+id/user_tv_version" />
 
             <TextView
-                android:id="@+id/user_about_contain"
+                android:id="@+id/user_tv_about_contain"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="32dp"
@@ -65,13 +75,12 @@
                 android:layout_marginBottom="16dp"
                 android:lineSpacingExtra="4sp"
                 android:text="@string/about_contain"
-                android:textAlignment="center"
                 android:textColor="@color/text"
                 android:textSize="20sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/user_about_header" />
+                app:layout_constraintTop_toBottomOf="@+id/user_tv_about_header" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

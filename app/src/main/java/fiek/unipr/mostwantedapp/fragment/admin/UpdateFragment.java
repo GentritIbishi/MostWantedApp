@@ -1,7 +1,10 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
+
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -11,6 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.fragment.admin.update.investigator.UpdateInvestigatorListFragment;
 import fiek.unipr.mostwantedapp.fragment.admin.update.person.UpdatePersonListFragment;
@@ -19,6 +28,8 @@ import fiek.unipr.mostwantedapp.fragment.admin.update.user.UpdateUserListFragmen
 public class UpdateFragment extends Fragment {
 
     private View update_view;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore firebaseFirestore;
     private ConstraintLayout update_constraintPU, update_constraintWP, update_constraintInv;
 
     public UpdateFragment() {}
@@ -26,6 +37,8 @@ public class UpdateFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
     @Override
@@ -33,9 +46,8 @@ public class UpdateFragment extends Fragment {
                              Bundle savedInstanceState) {
         update_view = inflater.inflate(R.layout.fragment_update, container, false);
 
-        update_constraintPU = update_view.findViewById(R.id.update_constraintPU);
-        update_constraintWP = update_view.findViewById(R.id.update_constraintWP);
-        update_constraintInv = update_view.findViewById(R.id.update_constraintInv);
+        initializeFields();
+        checkAdminLevel(firebaseAuth.getUid());
 
         update_constraintPU.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +75,36 @@ public class UpdateFragment extends Fragment {
 
 
         return update_view;
+    }
+
+    private void initializeFields() {
+        update_constraintPU = update_view.findViewById(R.id.update_constraintPU);
+        update_constraintWP = update_view.findViewById(R.id.update_constraintWP);
+        update_constraintInv = update_view.findViewById(R.id.update_constraintInv);
+    }
+
+    private void checkAdminLevel(String userId) {
+        firebaseFirestore.collection(USERS)
+                .document(userId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String role = documentSnapshot.getString("role");
+                        if(role.equals("Semi-Admin"))
+                        {
+                            update_constraintPU.setVisibility(View.GONE);
+                        }else if(role.equals("Admin"))
+                        {
+                            update_constraintPU.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
     }
 
     private void loadFragment(Fragment fragment) {

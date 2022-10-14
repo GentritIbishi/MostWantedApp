@@ -59,6 +59,7 @@
                     android:background="@drawable/item_persistent_state"
                     android:clickable="true"
                     android:elevation="3dp"
+                    android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.8"
                     app:layout_constraintStart_toStartOf="parent"
