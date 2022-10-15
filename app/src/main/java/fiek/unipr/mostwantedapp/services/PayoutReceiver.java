@@ -85,7 +85,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class PayoutReceiver extends BroadcastReceiver {
 
     private FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();

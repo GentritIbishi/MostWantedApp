@@ -52,6 +52,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -355,23 +356,31 @@ public class AnalyticsFragment extends Fragment {
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if(task.isSuccessful()){
                                                 //ki me bo set per 24h sa reporte ne dite jan bo
+                                                //formula
+                                                //   ((todayReports-yesterdayReports)/(todayReports+yesterdayReports)^2)*100
                                                 int todayReports = task.getResult().size();
-                                                double num = (double) yesterdayReports/todayReports;
-                                                double percentage = (double) num * 100;
+                                                double positive = todayReports+yesterdayReports;
+                                                double doublePositive = Math.pow(positive,2);
+                                                double negative = todayReports-yesterdayReports;
+                                                double percentage = (negative/doublePositive)*100;
 
-                                                if(percentage > 0) {
+                                                if(percentage>0)
+                                                {
                                                     imageTrendToday.setImageResource(R.drawable.ic_baseline_trending_up_24);
-                                                    tv_percent_today.setText(percentage+"%");
+                                                    tv_percent_today.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percent_today.setTextColor(getResources().getColor(R.color.neon_green));
-                                                }else if(percentage < 0) {
+                                                }else if(percentage<0)
+                                                {
                                                     imageTrendToday.setImageResource(R.drawable.ic_baseline_trending_down_24);
-                                                    tv_percent_today.setText(percentage+"%");
+                                                    tv_percent_today.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percent_today.setTextColor(getResources().getColor(R.color.neon_red));
-                                                }else if(percentage == 0) {
+                                                }else if(percentage == 0)
+                                                {
                                                     imageTrendToday.setImageResource(R.drawable.ic_baseline_trending_flat_24);
-                                                    tv_percent_today.setText(percentage+"%");
+                                                    tv_percent_today.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percent_today.setTextColor(getResources().getColor(R.color.bluelight));
                                                 }
+
                                             }else {
                                                 System.out.println("ERROR INSIDE VS YESTERDAY: "+task.getException());
                                             }
@@ -427,21 +436,24 @@ public class AnalyticsFragment extends Fragment {
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if(task.isSuccessful()){
                                                 //ki me bo set per 24h sa reporte ne dite jan bo
+                                                //formula ((V1-V2)/((V1+V2)^2))*100
                                                 int thisWeekReport = task.getResult().size();
-                                                double num = (double) lastWeekReports/thisWeekReport;
-                                                double percentage = (double) num * 100;
+                                                double positive = thisWeekReport+lastWeekReports;
+                                                double doublePositive = Math.pow(positive,2);
+                                                double negative = thisWeekReport-lastWeekReports;
+                                                double percentage = (negative/doublePositive)*100;
 
-                                                if(percentage > 0) {
+                                                if(percentage>0) {
                                                     imageTrendWeekly.setImageResource(R.drawable.ic_baseline_trending_up_24);
-                                                    tv_percent_weekly.setText(percentage+"%");
+                                                    tv_percent_weekly.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percent_weekly.setTextColor(getResources().getColor(R.color.neon_green));
-                                                }else if(percentage < 0) {
+                                                }else if(percentage<0) {
                                                     imageTrendWeekly.setImageResource(R.drawable.ic_baseline_trending_down_24);
-                                                    tv_percent_weekly.setText(percentage+"%");
+                                                    tv_percent_weekly.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percent_weekly.setTextColor(getResources().getColor(R.color.neon_red));
                                                 }else if(percentage == 0) {
                                                     imageTrendWeekly.setImageResource(R.drawable.ic_baseline_trending_flat_24);
-                                                    tv_percent_weekly.setText(percentage+"%");
+                                                    tv_percent_weekly.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percent_weekly.setTextColor(getResources().getColor(R.color.bluelight));
                                                 }
                                             }else {

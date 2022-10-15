@@ -239,6 +239,7 @@
                             android:ems="10"
                             android:fontFamily="@font/open_sans_bold"
                             android:imeOptions="actionNext"
+                            android:enabled="false"
                             android:inputType="textCapSentences"
                             android:textColor="@color/text"
                             android:textColorHint="@color/text"
@@ -455,7 +456,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/autocomplete_profile_user_role_layout"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -470,12 +471,13 @@
                         app:layout_constraintStart_toStartOf="@+id/profile_user_etPasswordToUserLayout"
                         app:layout_constraintTop_toBottomOf="@+id/profile_user_etPasswordToUserLayout">
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/profile_user_et_role_autocomplete"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/profile_user_et_role"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:inputType="none"
+                            android:enabled="false"
                             android:paddingTop="16dp"
                             android:paddingBottom="16dp"
                             android:textColor="@color/text"
@@ -485,7 +487,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/autocomplete_profile_user_grade_layout"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -500,12 +502,13 @@
                         app:layout_constraintStart_toStartOf="@+id/autocomplete_profile_user_role_layout"
                         app:layout_constraintTop_toBottomOf="@+id/autocomplete_profile_user_role_layout">
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/profile_user_et_grade_autocomplete"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/profile_user_et_grade"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:inputType="none"
+                            android:enabled="false"
                             android:paddingTop="16dp"
                             android:paddingBottom="16dp"
                             android:textColor="@color/text"
@@ -515,7 +518,7 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/autocomplete_profile_user_balance_layout"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
@@ -530,13 +533,14 @@
                         app:layout_constraintStart_toStartOf="@+id/autocomplete_profile_user_grade_layout"
                         app:layout_constraintTop_toBottomOf="@+id/autocomplete_profile_user_grade_layout">
 
-                        <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                            android:id="@+id/profile_user_et_balance_autocomplete"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/profile_user_et_balance"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:inputType="none"
                             android:paddingTop="16dp"
+                            android:enabled="false"
                             android:paddingBottom="16dp"
                             android:textColor="@color/text"
                             android:textStyle="bold" />

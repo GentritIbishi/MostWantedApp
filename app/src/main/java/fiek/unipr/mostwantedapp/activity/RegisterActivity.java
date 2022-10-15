@@ -143,12 +143,12 @@ public class RegisterActivity extends AppCompatActivity {
         SecurityHelper securityHelper = new SecurityHelper();
         String name = etName.getText().toString().trim();
         String lastName = etLastName.getText().toString().trim();
-        String fullName = name + " "+lastName;
+        String parentName = etParentName.getText().toString().trim();
+        String fullName = name +" " +"("+parentName+")"+" " + lastName;
         String phone = etPhone.getText().toString().trim();
         String address = etAddress.getText().toString().trim();
         String personal_number = etPersonalNumber.getText().toString().trim();
         String gender = et_gender_user.getText().toString().trim();
-        String parentName = etParentName.getText().toString().trim();
         String email = etEmailToInformer.getText().toString().trim();
         String password = etPasswordToInformer.getText().toString();
         String confirm_password = etConfirmPassword.getText().toString();

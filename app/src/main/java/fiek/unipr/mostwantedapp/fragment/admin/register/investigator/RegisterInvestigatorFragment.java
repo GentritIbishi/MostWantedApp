@@ -186,7 +186,7 @@ public class RegisterInvestigatorFragment extends Fragment implements View.OnCli
         String firstName = investigator_et_firstName.getText().toString().trim();
         String lastName = investigator_et_lastName.getText().toString().trim();
         String parentName = investigator_et_parentName.getText().toString().trim();
-        String fullName = firstName+" ("+parentName+") "+lastName;
+        String fullName = firstName+" "+"("+parentName+")"+" "+lastName;
         String birthday = investigator_et_birthday.getText().toString();
         String address = investigator_et_address.getText().toString().trim();
         String age = investigator_et_age.getText().toString().trim();

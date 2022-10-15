@@ -154,11 +154,11 @@ public class RegisterUserFragment extends Fragment {
     private void register() {
         String name = admin_etName.getText().toString().trim();
         String lastName = admin_etLastName.getText().toString().trim();
-        String fullName = name + " "+lastName;
+        String parentName = admin_etParentName.getText().toString().trim();
+        String fullName = name+" "+"("+parentName+")"+" "+lastName;
         String phone = admin_etPhone.getText().toString().trim();
         String address = admin_etAddress.getText().toString().trim();
         String personal_number = admin_etNumPersonal.getText().toString().trim();
-        String parentName = admin_etParentName.getText().toString().trim();
         String gender = et_gender_users.getText().toString().trim();
         String email = admin_etEmailToUser.getText().toString().trim();
         String password = admin_etPasswordToUser.getText().toString();

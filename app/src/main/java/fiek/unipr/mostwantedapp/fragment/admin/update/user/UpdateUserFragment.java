@@ -57,7 +57,8 @@ public class UpdateUserFragment extends Fragment {
     private View update_user_view;
     private Boolean emailVerified;
     private String address, email, fullName, gender, lastname, name, parentName, password, personal_number, phone, grade,
-            register_date_time, role, userID, urlOfProfile, balance, coins;
+            register_date_time, role, userID, urlOfProfile;
+    private Double balance;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -78,7 +79,8 @@ public class UpdateUserFragment extends Fragment {
     private Integer[] BALANCE_ARRAY = null;
     private Bundle bundle;
 
-    public UpdateUserFragment() {}
+    public UpdateUserFragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -176,11 +178,11 @@ public class UpdateUserFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.length()>10){
+                if (charSequence.length() > 10) {
                     update_user_etNumPersonalLayout.setError(getContext().getText(R.string.no_more_than_ten_digits));
-                }else if(charSequence.length() < 10) {
+                } else if (charSequence.length() < 10) {
                     update_user_etNumPersonalLayout.setError(null);
-                }else if(charSequence.length() == 10){
+                } else if (charSequence.length() == 10) {
                     update_user_etNumPersonalLayout.setError(null);
                 }
             }
@@ -228,8 +230,7 @@ public class UpdateUserFragment extends Fragment {
         update_user_view.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
-                if( keyCode == KeyEvent.KEYCODE_BACK )
-                {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
                     Fragment fragment = new UpdateUserListFragment();
                     loadFragment(fragment);
                     return true;
@@ -240,7 +241,7 @@ public class UpdateUserFragment extends Fragment {
     }
 
     private void getAndSetFromBundle(Bundle bundle) throws Exception {
-        if(bundle != null){
+        if (bundle != null) {
 
             //no need to change
             userID = bundle.getString("userID");
@@ -266,7 +267,7 @@ public class UpdateUserFragment extends Fragment {
 
             password = bundle.getString("password");
             SecurityHelper securityHelper = new SecurityHelper();
-            String decryptedPassword  = securityHelper.decrypt(password);
+            String decryptedPassword = securityHelper.decrypt(password);
             update_user_etPasswordToUser.setText(decryptedPassword);
 
             personal_number = bundle.getString("personal_number");
@@ -278,8 +279,8 @@ public class UpdateUserFragment extends Fragment {
             role = bundle.getString("role");
             update_user_et_role_autocomplete.setText(role);
 
-            balance = bundle.getString("balance");
-            update_user_et_balance_autocomplete.setText(balance);
+            balance = bundle.getDouble("balance");
+            update_user_et_balance_autocomplete.setText(String.valueOf(balance));
 
             fullName = bundle.getString("fullName");
             update_user_et_fullName.setText(fullName);
@@ -317,13 +318,13 @@ public class UpdateUserFragment extends Fragment {
 
     private void setBalanceArray() {
         BALANCE_ARRAY = new Integer[50000];
-        for(int i=0; i<1000000; i++) {
+        for (int i = 0; i < 50000; i++) {
             BALANCE_ARRAY[i] = i;
         }
     }
 
     private void deletePhoto() {
-        StorageReference fileRef = storageReference.child(USERS+"/"+userID+"/"+PROFILE_PICTURE);
+        StorageReference fileRef = storageReference.child(USERS + "/" + userID + "/" + PROFILE_PICTURE);
         fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -335,7 +336,7 @@ public class UpdateUserFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Exception e) {
                 update_user_uploadProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -343,7 +344,7 @@ public class UpdateUserFragment extends Fragment {
     private void uploadImageToFirebase(Uri imageUri) {
         update_user_uploadProgressBar.setVisibility(View.VISIBLE);
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child(USERS+"/"+userID+"/"+PROFILE_PICTURE);
+        StorageReference fileRef = storageReference.child(USERS + "/" + userID + "/" + PROFILE_PICTURE);
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -370,8 +371,8 @@ public class UpdateUserFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1000){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == 1000) {
+            if (resultCode == Activity.RESULT_OK) {
                 Uri imageUri = data.getData();
                 uploadImageToFirebase(imageUri);
             }
@@ -380,11 +381,16 @@ public class UpdateUserFragment extends Fragment {
 
     private void loadImage() {
         update_user_uploadProgressBar.setVisibility(View.VISIBLE);
-        StorageReference profileRef = storageReference.child(USERS+"/" + userID + "/"+PROFILE_PICTURE);
+        StorageReference profileRef = storageReference.child(USERS + "/" + userID + "/" + PROFILE_PICTURE);
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).transform(new CircleTransform()).into(update_user_imageOfProfile);
+                update_user_uploadProgressBar.setVisibility(View.GONE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
                 update_user_uploadProgressBar.setVisibility(View.GONE);
             }
         });
@@ -394,10 +400,10 @@ public class UpdateUserFragment extends Fragment {
         SecurityHelper securityHelper = new SecurityHelper();
         String new_name = update_user_et_firstName.getText().toString();
         String new_lastname = update_user_et_lastName.getText().toString();
-        String new_fullName = update_user_et_fullName.getText().toString();
+        String new_ParentName = update_user_et_parentName.getText().toString();
+        String new_fullName = new_name+" "+"("+new_ParentName+")"+" "+new_lastname;
         String new_address = update_user_etAddress.getText().toString();
         String new_email = update_user_etEmailToUser.getText().toString();
-        String new_ParentName = update_user_et_parentName.getText().toString();
         String new_gender = update_user_et_gender.getText().toString();
         String new_role = update_user_et_role_autocomplete.getText().toString();
         String new_phone = update_user_etPhone.getText().toString();
@@ -406,40 +412,40 @@ public class UpdateUserFragment extends Fragment {
         String new_password = update_user_etPasswordToUser.getText().toString();
         Double new_balance = Double.valueOf(update_user_et_balance_autocomplete.getText().toString());
 
-        if(TextUtils.isEmpty(new_fullName)){
+        if (TextUtils.isEmpty(new_fullName)) {
             update_user_et_fullName.setError(getText(R.string.error_fullname_required));
             update_user_et_fullName.requestFocus();
-        } else if(TextUtils.isEmpty(new_personal_number)){
+        } else if (TextUtils.isEmpty(new_personal_number)) {
             update_user_etNumPersonal.setError(getText(R.string.error_number_personal_required));
             update_user_etNumPersonal.requestFocus();
-        }else if(new_personal_number.length()>10){
+        } else if (new_personal_number.length() > 10) {
             update_user_etNumPersonal.setError(getText(R.string.error_number_personal_is_ten_digit));
             update_user_etNumPersonal.requestFocus();
-        }else if(new_personal_number.length()<10){
+        } else if (new_personal_number.length() < 10) {
             update_user_etNumPersonal.setError(getText(R.string.error_number_personal_less_than_ten_digits));
             update_user_etNumPersonal.requestFocus();
-        }else if(TextUtils.isEmpty(new_phone)){
+        } else if (TextUtils.isEmpty(new_phone)) {
             update_user_etPhone.setError(getText(R.string.error_phone_required));
             update_user_etPhone.requestFocus();
-        }else if(TextUtils.isEmpty(new_address)){
+        } else if (TextUtils.isEmpty(new_address)) {
             update_user_etAddress.setError(getText(R.string.error_address_required));
             update_user_etAddress.requestFocus();
-        }else if(TextUtils.isEmpty(new_email)){
+        } else if (TextUtils.isEmpty(new_email)) {
             update_user_etEmailToUser.setError(getText(R.string.error_email_required));
             update_user_etEmailToUser.requestFocus();
-        }else if(!email.matches("^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
+        } else if (!email.matches("^[a-z0-9](\\.?[a-z0-9_-]){0,}@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")) {
             update_user_etEmailToUser.setError(getText(R.string.error_validate_email));
             update_user_etEmailToUser.requestFocus();
-        }else if(!new_password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")){
+        } else if (!new_password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")) {
             update_user_etPasswordToUser.setError(getText(R.string.error_password_weak));
             update_user_etPasswordToUser.requestFocus();
-        } else if(TextUtils.isEmpty(new_password)){
+        } else if (TextUtils.isEmpty(new_password)) {
             update_user_etPasswordToUser.setError(getText(R.string.error_password_required));
             update_user_etPasswordToUser.requestFocus();
-        }else if (TextUtils.isEmpty(new_gender)) {
+        } else if (TextUtils.isEmpty(new_gender)) {
             update_user_et_gender.setError(getText(R.string.error_gender_required));
             update_user_et_gender.requestFocus();
-        }else {
+        } else {
             firebaseFirestore.collection(USERS)
                     .document(userID)
                     .get()
@@ -480,7 +486,7 @@ public class UpdateUserFragment extends Fragment {
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         }
@@ -499,7 +505,7 @@ public class UpdateUserFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot!=null) {
+                        if (documentSnapshot != null) {
                             name = documentSnapshot.getString("name");
                             parentName = documentSnapshot.getString("parentName");
                             lastname = documentSnapshot.getString("lastname");
@@ -513,7 +519,7 @@ public class UpdateUserFragment extends Fragment {
                             fullName = documentSnapshot.getString("fullName");
                             grade = documentSnapshot.getString("grade");
                             register_date_time = documentSnapshot.getString("register_date_time");
-                            balance = documentSnapshot.getString("balance");
+                            balance = documentSnapshot.getDouble("balance");
                             update_user_et_firstName.setText(name);
                             update_user_et_parentName.setText(parentName);
                             update_user_et_lastName.setText(lastname);
@@ -524,7 +530,7 @@ public class UpdateUserFragment extends Fragment {
                             update_user_et_gender.setText(gender);
                             try {
                                 SecurityHelper securityHelper = new SecurityHelper();
-                                String decryptedPassword  = securityHelper.decrypt(password);
+                                String decryptedPassword = securityHelper.decrypt(password);
                                 update_user_etPasswordToUser.setText(decryptedPassword);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -533,19 +539,19 @@ public class UpdateUserFragment extends Fragment {
                             update_user_et_fullName.setText(fullName);
                             update_user_et_grade_autocomplete.setText(grade);
                             update_user_etDateRegistration.setText(register_date_time);
-                            update_user_et_balance_autocomplete.setText(balance);
+                            update_user_et_balance_autocomplete.setText(String.valueOf(balance));
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     private void loadFragment(Fragment fragment) {
-        ((FragmentActivity)getContext()).getSupportFragmentManager().beginTransaction()
+        ((FragmentActivity) getContext()).getSupportFragmentManager().beginTransaction()
                 .replace(R.id.admin_fragmentContainer, fragment)
                 .commit();
     }

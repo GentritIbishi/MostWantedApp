@@ -102,7 +102,7 @@ import java.util.List;
 import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.models.InvoicesPaid;
 import fiek.unipr.mostwantedapp.models.PayoutConfig;
-import fiek.unipr.mostwantedapp.services.AlarmReceiver;
+import fiek.unipr.mostwantedapp.services.PayoutReceiver;
 import fiek.unipr.mostwantedapp.utils.DateHelper;
 import fiek.unipr.mostwantedapp.utils.StringHelper;
 import fiek.unipr.mostwantedapp.utils.UIMessage;
@@ -153,7 +153,7 @@ public class PayoutsFragment extends Fragment {
         StrictMode.setThreadPolicy(policy);
 
         alarmMgr = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(mContext, AlarmReceiver.class);
+        Intent intent = new Intent(mContext, PayoutReceiver.class);
         alarmIntent = PendingIntent.getBroadcast(mContext, 0, intent, 0);
 
         checkForAutomaticPayment();
@@ -207,7 +207,7 @@ public class PayoutsFragment extends Fragment {
         // 1 day
         alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
 
-        //in this case AlarmReceiver is the Broadcast Receiver and it already has a context, so you can directly set the ringer mode to silent from the Broadcast
+        //in this case PayoutReceiver is the Broadcast Receiver and it already has a context, so you can directly set the ringer mode to silent from the Broadcast
         //Receiver without starting up
     }
 

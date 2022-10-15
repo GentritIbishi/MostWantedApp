@@ -47,6 +47,7 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.CircleTransform;
 import fiek.unipr.mostwantedapp.utils.DateInputMask;
 import fiek.unipr.mostwantedapp.models.Investigator;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class UpdateInvestigatorFragment extends Fragment {
 
@@ -192,7 +193,7 @@ public class UpdateInvestigatorFragment extends Fragment {
         String new_firstName = update_investigator_et_firstName.getText().toString();
         String new_lastName = update_investigator_et_lastName.getText().toString();
         String new_parentName = update_investigator_et_parentName.getText().toString();
-        String new_fullName = update_investigator_et_fullName.getText().toString();
+        String new_fullName = new_firstName+" "+"("+new_parentName+")"+" "+new_lastName;
         String new_birthday = update_investigator_et_birthday.getText().toString();
         String new_gender = update_investigator_et_gender_autocomplete.getText().toString();
         String new_address = update_investigator_etAddress.getText().toString();
@@ -435,6 +436,15 @@ public class UpdateInvestigatorFragment extends Fragment {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).transform(new CircleTransform()).into(update_investigator_imageOfProfile);
+                update_investigator_uploadProgressBar.setVisibility(View.GONE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                if(!StringHelper.empty(urlOfProfile))
+                {
+                    Picasso.get().load(urlOfProfile).into(update_investigator_imageOfProfile);
+                }
                 update_investigator_uploadProgressBar.setVisibility(View.GONE);
             }
         });

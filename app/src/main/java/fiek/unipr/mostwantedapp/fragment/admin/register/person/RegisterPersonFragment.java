@@ -218,7 +218,7 @@ public class RegisterPersonFragment extends Fragment implements View.OnClickList
         String firstName = et_firstName.getText().toString().trim();
         String lastName = et_lastName.getText().toString().trim();
         String parentName = et_parentName.getText().toString().trim();
-        String fullName = firstName+" ("+parentName+") "+lastName;
+        String fullName = firstName+" "+"("+parentName+")"+" "+lastName;
         String birthday = et_birthday.getText().toString();
         String address = et_address.getText().toString().trim();
         String age = et_age.getText().toString().trim();

@@ -87,6 +87,7 @@ public class ProfileFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference();
+        userID = firebaseAuth.getUid();
     }
 
     @Override
@@ -406,10 +407,10 @@ public class ProfileFragment extends Fragment {
         SecurityHelper securityHelper = new SecurityHelper();
         String new_name = admin_et_firstName.getText().toString();
         String new_lastname = admin_et_lastName.getText().toString();
-        String new_fullName = admin_et_fullName.getText().toString();
+        String new_ParentName = admin_et_parentName.getText().toString();
+        String new_fullName = new_name+" "+"("+new_ParentName+")"+" "+new_lastname;
         String new_address = admin_etAddress.getText().toString();
         String new_email = admin_etEmailToUser.getText().toString();
-        String new_ParentName = admin_et_parentName.getText().toString();
         String new_gender = admin_et_gender_autocomplete.getText().toString();
         String new_role = admin_et_role_autocomplete.getText().toString();
         String new_phone = admin_etPhone.getText().toString();
@@ -436,7 +437,7 @@ public class ProfileFragment extends Fragment {
         }else if(TextUtils.isEmpty(new_grade)){
             admin_et_grade_autocomplete.setError(getText(R.string.error_grade_required));
             admin_et_grade_autocomplete.requestFocus();
-        }else if(!StringHelper.empty(new_balance.toString())){
+        }else if(StringHelper.empty(new_balance.toString())){
             admin_et_balance_autocomplete.setError(getText(R.string.error_balance_required));
             admin_et_balance_autocomplete.requestFocus();
         }else if(TextUtils.isEmpty(new_personal_number)){
@@ -477,6 +478,8 @@ public class ProfileFragment extends Fragment {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             Double totalPaid = documentSnapshot.getDouble("totalPaid");
+                            String register_date_time = documentSnapshot.getString("register_date_time");
+                            String urlOfProfile = documentSnapshot.getString("urlOfProfile");
                             String hashPassword = securityHelper.encrypt(new_password);
                             User user = new User(
                                     userID,

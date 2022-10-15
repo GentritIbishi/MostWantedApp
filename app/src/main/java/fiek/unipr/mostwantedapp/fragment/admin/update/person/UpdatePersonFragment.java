@@ -55,6 +55,7 @@ import fiek.unipr.mostwantedapp.R;
 import fiek.unipr.mostwantedapp.utils.CircleTransform;
 import fiek.unipr.mostwantedapp.utils.DateInputMask;
 import fiek.unipr.mostwantedapp.models.Person;
+import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class UpdatePersonFragment extends Fragment {
 
@@ -219,7 +220,7 @@ public class UpdatePersonFragment extends Fragment {
         String new_firstName = update_person_et_firstName.getText().toString();
         String new_lastName = update_person_et_lastName.getText().toString();
         String new_parentName = update_person_et_parentName.getText().toString();
-        String new_fullName = update_person_et_fullName.getText().toString();
+        String new_fullName = new_firstName+" "+"("+new_parentName+")"+" "+new_lastName;
         String new_birthday = update_person_et_birthday.getText().toString();
         String new_gender = update_person_et_gender_autocomplete.getText().toString();
         String new_address = update_person_etAddress.getText().toString();
@@ -505,6 +506,16 @@ public class UpdatePersonFragment extends Fragment {
             @Override
             public void onSuccess(Uri uri) {
                 Picasso.get().load(uri).transform(new CircleTransform()).into(update_person_imageOfProfile);
+                update_person_uploadProgressBar.setVisibility(View.GONE);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //check if url exist
+                if(!StringHelper.empty(urlOfProfile))
+                {
+                    Picasso.get().load(urlOfProfile).into(update_person_imageOfProfile);
+                }
                 update_person_uploadProgressBar.setVisibility(View.GONE);
             }
         });
