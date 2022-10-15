@@ -30,7 +30,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -385,6 +387,25 @@ public class MapAdminActivity extends FragmentActivity implements OnMapReadyCall
         String mode = sharedPreferences.getString(APPEARANCE_MODE_PREFERENCE, SYSTEM_MODE);
         if (mode.equals(DARK_MODE)) {
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mContext, R.raw.map_in_night));
+            binding.tvPdfGeneratedSuccesfully.setTextColor(mContext.getResources().getColor(R.color.white));
+            binding.generatedSuccessfully.setBackgroundResource(R.drawable.bg_report_persistent_dark);
+            binding.generateConstraint.setBackgroundResource(R.drawable.bg_report_persistent_dark);
+//
+            binding.theFirstInvestigator.setTextColor(mContext.getResources().getColor(R.color.white));
+            binding.theFirstInvestigator.setHighlightColor(mContext.getResources().getColor(R.color.white));
+            binding.theFirstInvestigator.setLinkTextColor(mContext.getResources().getColor(R.color.white));
+            binding.theFirstInvestigator.setHintTextColor(mContext.getResources().getColor(R.color.white));
+
+            binding.theSecondInvestigator.setTextColor(mContext.getResources().getColor(R.color.white));
+            binding.theSecondInvestigator.setHighlightColor(mContext.getResources().getColor(R.color.white));
+            binding.theSecondInvestigator.setLinkTextColor(mContext.getResources().getColor(R.color.white));
+            binding.theSecondInvestigator.setHintTextColor(mContext.getResources().getColor(R.color.white));
+
+            binding.autocompleteTheFirstInvestigatorLayout.setBoxBackgroundColor(mContext.getResources().getColor(R.color.darkmode));
+            binding.autocompleteTheFirstInvestigatorLayout.setHintTextColor(ColorStateList.valueOf(mContext.getResources().getColor(R.color.white)));
+
+            binding.autocompleteTheSecondInvestigatorLayout.setBoxBackgroundColor(mContext.getResources().getColor(R.color.darkmode));
+            binding.autocompleteTheSecondInvestigatorLayout.setHintTextColor(ColorStateList.valueOf(mContext.getResources().getColor(R.color.white)));
         }
     }
 

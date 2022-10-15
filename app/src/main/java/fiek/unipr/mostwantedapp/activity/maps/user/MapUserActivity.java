@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -161,6 +162,17 @@ public class MapUserActivity extends FragmentActivity implements OnMapReadyCallb
         String mode = sharedPreferences.getString(APPEARANCE_MODE_PREFERENCE, SYSTEM_MODE);
         if (mode.equals(DARK_MODE)) {
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mContext, R.raw.map_in_night));
+            binding.constraintOtherReports.setBackgroundResource(R.drawable.bg_report_persistent_dark);
+            binding.etReportTitleLayout.setBoxBackgroundColor(mContext.getResources().getColor(R.color.darkmode));
+            binding.etReportTitleLayout.setBackgroundColor(mContext.getResources().getColor(R.color.darkmode));
+            binding.etReportTitle.setTextColor(mContext.getResources().getColor(R.color.white));
+            binding.etReportTitle.setHintTextColor(mContext.getResources().getColor(R.color.white));
+            binding.etDescriptionLayout.setBoxBackgroundColor(mContext.getResources().getColor(R.color.darkmode));
+            binding.etDescriptionLayout.setBackgroundColor(mContext.getResources().getColor(R.color.darkmode));
+            binding.etDescription.setTextColor(mContext.getResources().getColor(R.color.white));
+            binding.etDescription.setHintTextColor(mContext.getResources().getColor(R.color.white));
+            binding.etReportTitleLayout.setHintTextColor(ColorStateList.valueOf(mContext.getResources().getColor(R.color.white)));
+            binding.etDescriptionLayout.setHintTextColor(ColorStateList.valueOf(mContext.getResources().getColor(R.color.white)));
         }
     }
 
@@ -180,7 +192,7 @@ public class MapUserActivity extends FragmentActivity implements OnMapReadyCallb
         setContentView(binding.getRoot());
 
         binding.LocationReport.setVisibility(View.VISIBLE);
-        binding.OtherReports.setVisibility(View.GONE);
+        binding.constraintOtherReports.setVisibility(View.GONE);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -203,7 +215,7 @@ public class MapUserActivity extends FragmentActivity implements OnMapReadyCallb
                 //lat long i din ni check if not null eshte mire
                 if (latitude != null && longitude != null) {
                     binding.btnContinue.setVisibility(View.GONE);
-                    binding.OtherReports.setVisibility(View.VISIBLE);
+                    binding.constraintOtherReports.setVisibility(View.VISIBLE);
                 } else {
                     Toast.makeText(MapUserActivity.this, R.string.location_not_set_please_set_new_location, Toast.LENGTH_SHORT).show();
                 }
@@ -226,7 +238,7 @@ public class MapUserActivity extends FragmentActivity implements OnMapReadyCallb
                 progress += 5;
                 updateProgressBar();
                 binding.btReport.setEnabled(false);
-                binding.OtherReports.setVisibility(View.GONE);
+                binding.constraintOtherReports.setVisibility(View.GONE);
                 binding.reportProgressBar.setVisibility(View.VISIBLE);
                 binding.constrainProgress.setVisibility(View.VISIBLE);
                 save(informer_person, personId, wanted_person, longitude, latitude, DateHelper.getDateTime());

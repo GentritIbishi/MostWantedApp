@@ -109,5 +109,6 @@
     <color name="icons_nav_bottom">#000000</color>
     <color name="item_persistent_normal">#ffffff</color>
     <color name="autocomplete_text">#000000</color>
+    <color name="darkmode">#424242</color>
 
 </resources>
