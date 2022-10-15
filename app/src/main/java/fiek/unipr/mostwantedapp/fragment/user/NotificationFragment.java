@@ -166,12 +166,12 @@ public class NotificationFragment extends Fragment implements RecyclerViewInterf
         loadFragment(informationReportFragment);
     }
 
-    private void setSeenNotification(String notificationReportId) {
+    private void setSeenNotification(String notificationId) {
         Map<String, Object> data = new HashMap<>();
         data.put("notificationStatus", SEEN);
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseFirestore.collection(NOTIFICATION_USER)
-                .document(notificationReportId)
+                .document(notificationId)
                 .update(data).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {

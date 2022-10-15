@@ -122,17 +122,17 @@ public class UserSaveNotificationService extends Service {
         Intent notificationIntentUser = new Intent(mContext, UserDashboardActivity.class);
         pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntentUser, 0);
 
-        CollectionReference collRef = firebaseFirestore.collection(NOTIFICATION_USER);
-        String notificationId = collRef.document().getId();
-
         // check if objNotification for that user exist in database
-        check(mContext, notificationId, objNotification, firebaseAuth.getUid(), CHANNEL_ID_USER_MODIFIED, NOTIFICATION_NUMBER_4, 4);
+        check(mContext, objNotification, firebaseAuth.getUid(), CHANNEL_ID_USER_MODIFIED, NOTIFICATION_NUMBER_4, 4);
 
     }
 
-    private void saveAndMakeNotification(
-            Context context, String notificationId,
-            Notifications objNotification, String CHANNEL_ID, String sharedPrefName, int default_number) {
+    private void saveAndMakeNotification(Context context, Notifications objNotification, String CHANNEL_ID, String sharedPrefName, int default_number) {
+
+        CollectionReference collRef = firebaseFirestore.collection(NOTIFICATION_USER);
+        String notificationId = collRef.document().getId();
+        objNotification.setNotificationId(notificationId);
+
         //save and make objNotification for added report
         firebaseFirestore.collection(NOTIFICATION_USER)
                 .document(notificationId)
@@ -184,8 +184,7 @@ public class UserSaveNotificationService extends Service {
     }
 
 
-    private void check(Context context, String notificationId,
-                       Notifications objNotification, String userID, String CHANNEL_ID, String sharedPrefName, int default_number)
+    private void check(Context context, Notifications objNotification, String userID, String CHANNEL_ID, String sharedPrefName, int default_number)
     {
         firebaseFirestore.collection(NOTIFICATION_USER)
                 .whereEqualTo("notificationReportId", objNotification.getNotificationReportId())
@@ -210,7 +209,6 @@ public class UserSaveNotificationService extends Service {
                             createNotificationChannelModified();
                             saveAndMakeNotification(
                                     context,
-                                    notificationId,
                                     objNotification,
                                     CHANNEL_ID,
                                     sharedPrefName,

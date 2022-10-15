@@ -117,13 +117,11 @@ public class AdminSaveNotificationService extends Service {
     }
 
     private void processNotification(Notifications objNotification, Context mContext) {
-        CollectionReference collRef = firebaseFirestore.collection(NOTIFICATION_ADMIN);
-        String notificationId = collRef.document().getId();
 
         Intent notificationIntentAdmin = new Intent(mContext, AdminDashboardActivity.class);
         pendingIntent = PendingIntent.getActivity(mContext, 0, notificationIntentAdmin, 0);
 
-        check(mContext, notificationId, objNotification, firebaseAuth.getUid(), CHANNEL_ID_ADDED, NOTIFICATION_NUMBER_1, 1);
+        check(mContext, objNotification, firebaseAuth.getUid(), CHANNEL_ID_ADDED, NOTIFICATION_NUMBER_1, 1);
     }
 
     private void createNotificationChannelAdded() {
@@ -140,8 +138,7 @@ public class AdminSaveNotificationService extends Service {
         }
     }
 
-    private void check(Context mContext, String notificationId,
-                       Notifications objNotification, String userID, String CHANNEL_ID, String sharedPrefName, int default_number)
+    private void check(Context mContext, Notifications objNotification, String userID, String CHANNEL_ID, String sharedPrefName, int default_number)
     {
         firebaseFirestore.collection(NOTIFICATION_ADMIN)
                 .whereEqualTo("notificationReportId", objNotification.getNotificationReportId())
@@ -165,7 +162,6 @@ public class AdminSaveNotificationService extends Service {
                             createNotificationChannelAdded();
                             saveAndMakeNotification(
                                     mContext,
-                                    notificationId,
                                     objNotification,
                                     CHANNEL_ID,
                                     sharedPrefName,
@@ -180,9 +176,13 @@ public class AdminSaveNotificationService extends Service {
     }
 
     private void saveAndMakeNotification(
-            Context mContext, String notificationId,
-            Notifications objNotification, String CHANNEL_ID, String sharedPrefName, int default_number)
+            Context mContext, Notifications objNotification, String CHANNEL_ID, String sharedPrefName, int default_number)
     {
+        CollectionReference collRef = firebaseFirestore.collection(NOTIFICATION_ADMIN);
+        String notificationId = collRef.document().getId();
+
+        objNotification.setNotificationId(notificationId);
+
         //save and make objNotification for added report
         firebaseFirestore.collection(NOTIFICATION_ADMIN)
                 .document(notificationId)
