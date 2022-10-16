@@ -21,8 +21,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fiek.unipr.mostwantedapp.R;
+import fiek.unipr.mostwantedapp.activity.LoginActivity;
 import fiek.unipr.mostwantedapp.activity.maps.user.MapUserActivity;
 import fiek.unipr.mostwantedapp.adapter.maps.MapsInformerPersonListAdapter;
 import fiek.unipr.mostwantedapp.models.LoginHistory;
@@ -64,6 +67,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
     private ViewSwitcher search_anonymous_list_switcher;
     private MapsInformerPersonListAdapter mapsInformerAnonymousPersonListAdapter;
     private ArrayList<Person> personArrayList;
+    private ImageView backAnonymous;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -124,7 +128,28 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
         onBackPressed();
 
+        backAnonymous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                firebaseAuth.signOut();
+                goToLogin();
+            }
+        });
+
+        backAnonymous.setOnHoverListener(new View.OnHoverListener() {
+            @Override
+            public boolean onHover(View view, MotionEvent motionEvent) {
+                backAnonymous.setBackgroundColor(mContext.getResources().getColor(R.color.gray_analytics));
+                return true;
+            }
+        });
+
         return view;
+    }
+
+    private void goToLogin() {
+        Intent intent = new Intent(mContext, LoginActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @SuppressLint("SetTextI18n")
@@ -165,6 +190,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
         search_anonymous_list_view2 = view.findViewById(R.id.search_anonymous_list_view2);
         search_anonymous_list_switcher = view.findViewById(R.id.search_anonymous_list_switcher);
         anonymous_lvPersons = view.findViewById(R.id.anonymous_lvPersons);
+        backAnonymous = view.findViewById(R.id.backAnonymous);
         personArrayList = new ArrayList<>();
         mapsInformerAnonymousPersonListAdapter = new MapsInformerPersonListAdapter(mContext, personArrayList, this);
         anonymous_lvPersons.setAdapter(mapsInformerAnonymousPersonListAdapter);

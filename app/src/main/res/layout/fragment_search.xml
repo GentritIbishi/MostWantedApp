@@ -27,6 +27,14 @@
             android:orientation="vertical"
             android:theme="@style/Theme.MaterialComponents.DayNight">
 
+            <ImageView
+                android:id="@+id/backAnonymous"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="top"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_baseline_arrow_back_ios_new_24"/>
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_marginTop="16dp"
                 android:layout_width="150dp"
