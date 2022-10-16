@@ -1,6 +1,8 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.PROFILE_PICTURE;
+import static fiek.unipr.mostwantedapp.utils.Constants.SEMI_ADMIN_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 
 import android.app.Activity;
@@ -19,6 +21,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -102,6 +105,8 @@ public class ProfileFragment extends Fragment {
         userID = firebaseAuth.getUid();
 
         initializeFields();
+
+        checkAdmin(userID);
 
         admin_et_gender_autocomplete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,11 +201,11 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.length()>10){
+                if (charSequence.length() > 10) {
                     admin_etNumPersonalLayout.setError(mContext.getText(R.string.no_more_than_ten_digits));
-                }else if(charSequence.length() < 10) {
+                } else if (charSequence.length() < 10) {
                     admin_etNumPersonalLayout.setError(null);
-                }else if(charSequence.length() == 10){
+                } else if (charSequence.length() == 10) {
                     admin_etNumPersonalLayout.setError(null);
                 }
             }
@@ -258,13 +263,13 @@ public class ProfileFragment extends Fragment {
 
     private void setBalanceArray() {
         BALANCE_ARRAY = new Integer[50000];
-        for(int i=0; i<50000; i++) {
+        for (int i = 0; i < 50000; i++) {
             BALANCE_ARRAY[i] = i;
         }
     }
 
     private void deletePhoto() {
-        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+PROFILE_PICTURE);
+        StorageReference fileRef = storageReference.child(USERS + "/" + firebaseAuth.getCurrentUser().getUid() + "/" + PROFILE_PICTURE);
         fileRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void unused) {
@@ -276,7 +281,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onFailure(@NonNull Exception e) {
                 admin_uploadProgressBar.setVisibility(View.GONE);
-                Toast.makeText(mContext, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -284,7 +289,7 @@ public class ProfileFragment extends Fragment {
     private void uploadImageToFirebase(Uri imageUri) {
         admin_uploadProgressBar.setVisibility(View.VISIBLE);
         //upload image to storage in firebase
-        StorageReference fileRef = storageReference.child(USERS+"/"+firebaseAuth.getCurrentUser().getUid()+"/"+PROFILE_PICTURE);
+        StorageReference fileRef = storageReference.child(USERS + "/" + firebaseAuth.getCurrentUser().getUid() + "/" + PROFILE_PICTURE);
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -311,8 +316,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1000){
-            if(resultCode == Activity.RESULT_OK){
+        if (requestCode == 1000) {
+            if (resultCode == Activity.RESULT_OK) {
                 Uri imageUri = data.getData();
                 uploadImageToFirebase(imageUri);
             }
@@ -321,7 +326,7 @@ public class ProfileFragment extends Fragment {
 
     private void loadImage(String uID) {
         admin_uploadProgressBar.setVisibility(View.VISIBLE);
-        StorageReference profileRef = storageReference.child(USERS+"/" + uID + "/"+PROFILE_PICTURE);
+        StorageReference profileRef = storageReference.child(USERS + "/" + uID + "/" + PROFILE_PICTURE);
         profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -337,7 +342,7 @@ public class ProfileFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot!=null) {
+                        if (documentSnapshot != null) {
                             //no need to change
                             userID = documentSnapshot.getString("userID");
                             urlOfProfile = documentSnapshot.getString("urlOfProfile");
@@ -398,7 +403,7 @@ public class ProfileFragment extends Fragment {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(mContext, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -408,7 +413,7 @@ public class ProfileFragment extends Fragment {
         String new_name = admin_et_firstName.getText().toString();
         String new_lastname = admin_et_lastName.getText().toString();
         String new_ParentName = admin_et_parentName.getText().toString();
-        String new_fullName = new_name+" "+"("+new_ParentName+")"+" "+new_lastname;
+        String new_fullName = new_name + " " + "(" + new_ParentName + ")" + " " + new_lastname;
         String new_address = admin_etAddress.getText().toString();
         String new_email = admin_etEmailToUser.getText().toString();
         String new_gender = admin_et_gender_autocomplete.getText().toString();
@@ -419,58 +424,58 @@ public class ProfileFragment extends Fragment {
         String new_password = admin_etPasswordToUser.getText().toString();
         Double new_balance = Double.valueOf(admin_et_balance_autocomplete.getText().toString());
 
-        if(TextUtils.isEmpty(new_name)){
+        if (TextUtils.isEmpty(new_name)) {
             admin_et_firstName.setError(getText(R.string.error_first_name_required));
             admin_et_firstName.requestFocus();
-        }else if(TextUtils.isEmpty(new_lastname)){
+        } else if (TextUtils.isEmpty(new_lastname)) {
             admin_et_lastName.setError(getText(R.string.error_last_name_required));
             admin_et_lastName.requestFocus();
-        }else if(TextUtils.isEmpty(new_fullName)){
+        } else if (TextUtils.isEmpty(new_fullName)) {
             admin_et_fullName.setError(getText(R.string.error_fullname_required));
             admin_et_fullName.requestFocus();
-        }else if(TextUtils.isEmpty(new_ParentName)){
+        } else if (TextUtils.isEmpty(new_ParentName)) {
             admin_et_parentName.setError(getText(R.string.error_parent_name_required));
             admin_et_parentName.requestFocus();
-        }else if(TextUtils.isEmpty(new_role)){
+        } else if (TextUtils.isEmpty(new_role)) {
             admin_et_role_autocomplete.setError(getText(R.string.error_role_required));
             admin_et_role_autocomplete.requestFocus();
-        }else if(TextUtils.isEmpty(new_grade)){
+        } else if (TextUtils.isEmpty(new_grade)) {
             admin_et_grade_autocomplete.setError(getText(R.string.error_grade_required));
             admin_et_grade_autocomplete.requestFocus();
-        }else if(StringHelper.empty(new_balance.toString())){
+        } else if (StringHelper.empty(new_balance.toString())) {
             admin_et_balance_autocomplete.setError(getText(R.string.error_balance_required));
             admin_et_balance_autocomplete.requestFocus();
-        }else if(TextUtils.isEmpty(new_personal_number)){
+        } else if (TextUtils.isEmpty(new_personal_number)) {
             admin_etNumPersonal.setError(getText(R.string.error_number_personal_required));
             admin_etNumPersonal.requestFocus();
-        }else if(new_personal_number.length()>10){
+        } else if (new_personal_number.length() > 10) {
             admin_etNumPersonal.setError(getText(R.string.error_number_personal_is_ten_digit));
             admin_etNumPersonal.requestFocus();
-        }else if(new_personal_number.length()<10){
+        } else if (new_personal_number.length() < 10) {
             admin_etNumPersonal.setError(getText(R.string.error_number_personal_less_than_ten_digits));
             admin_etNumPersonal.requestFocus();
-        }else if(TextUtils.isEmpty(new_phone)){
+        } else if (TextUtils.isEmpty(new_phone)) {
             admin_etPhone.setError(getText(R.string.error_phone_required));
             admin_etPhone.requestFocus();
-        }else if(TextUtils.isEmpty(new_address)){
+        } else if (TextUtils.isEmpty(new_address)) {
             admin_etAddress.setError(getText(R.string.error_address_required));
             admin_etAddress.requestFocus();
-        }else if(TextUtils.isEmpty(new_email)){
+        } else if (TextUtils.isEmpty(new_email)) {
             admin_etEmailToUser.setError(getText(R.string.error_email_required));
             admin_etEmailToUser.requestFocus();
-        }else if(!new_email.matches("^[a-z0-9](\\.?[a-z0-9_-])*@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")){
+        } else if (!new_email.matches("^[a-z0-9](\\.?[a-z0-9_-])*@[a-z0-9-]+\\.([a-z]{1,6}\\.)?[a-z]{2,6}$")) {
             admin_etEmailToUser.setError(getText(R.string.error_validate_email));
             admin_etEmailToUser.requestFocus();
-        }else if(!new_password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")){
+        } else if (!new_password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$")) {
             admin_etPasswordToUser.setError(getText(R.string.error_password_weak));
             admin_etPasswordToUser.requestFocus();
-        } else if(TextUtils.isEmpty(new_password)){
+        } else if (TextUtils.isEmpty(new_password)) {
             admin_etPasswordToUser.setError(getText(R.string.error_password_required));
             admin_etPasswordToUser.requestFocus();
-        }else if (TextUtils.isEmpty(new_gender)) {
+        } else if (TextUtils.isEmpty(new_gender)) {
             admin_et_gender_autocomplete.setError(getText(R.string.error_gender_required));
             admin_et_gender_autocomplete.requestFocus();
-        }else {
+        } else {
             firebaseFirestore.collection(USERS)
                     .document(userID)
                     .get()
@@ -511,7 +516,7 @@ public class ProfileFragment extends Fragment {
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(mContext, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(mContext, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         }
@@ -522,6 +527,29 @@ public class ProfileFragment extends Fragment {
                         }
                     });
         }
+    }
+
+    private void checkAdmin(String userID) {
+        firebaseFirestore.collection(USERS)
+                .document(userID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String role = documentSnapshot.getString("role");
+                        if (role.equals(SEMI_ADMIN_ROLE))
+                        {
+                            admin_et_balance_autocomplete.setEnabled(false);
+                            admin_et_role_autocomplete.setEnabled(false);
+                            admin_et_grade_autocomplete.setEnabled(false);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("ROLE FAILED", e.getMessage());
+                    }
+                });
     }
 
 }

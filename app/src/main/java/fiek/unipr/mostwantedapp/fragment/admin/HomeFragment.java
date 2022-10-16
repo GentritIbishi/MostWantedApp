@@ -7,6 +7,7 @@ import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
 import static fiek.unipr.mostwantedapp.utils.ContextHelper.checkContext;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -52,6 +53,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -496,25 +498,28 @@ public class HomeFragment extends Fragment {
                                     .orderBy("date_time", Query.Direction.DESCENDING)
                                     .get()
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @SuppressLint("SetTextI18n")
                                         @Override
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if(task.isSuccessful()){
                                                 //ki me bo set per 24h sa reporte ne dite jan bo
                                                 int todayReports = task.getResult().size();
-                                                double num = (double) yesterdayReports/todayReports;
-                                                double percentage = (double) num * 100;
+                                                double positive = todayReports+yesterdayReports;
+                                                double doublePositive = Math.pow(positive,2);
+                                                double negative = todayReports-yesterdayReports;
+                                                double percentage = (negative/doublePositive)*100;
 
                                                 if(percentage > 0) {
                                                     imageTrendingToday.setImageResource(R.drawable.ic_baseline_trending_up_24);
-                                                    tv_percentage_today.setText(percentage+"%");
+                                                    tv_percentage_today.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percentage_today.setTextColor(context.getResources().getColor(R.color.neon_green));
                                                 }else if(percentage < 0) {
                                                     imageTrendingToday.setImageResource(R.drawable.ic_baseline_trending_down_24);
-                                                    tv_percentage_today.setText(percentage+"%");
+                                                    tv_percentage_today.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percentage_today.setTextColor(context.getResources().getColor(R.color.neon_red));
                                                 }else if(percentage == 0) {
                                                     imageTrendingToday.setImageResource(R.drawable.ic_baseline_trending_flat_24);
-                                                    tv_percentage_today.setText(percentage+"%");
+                                                    tv_percentage_today.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percentage_today.setTextColor(context.getResources().getColor(R.color.bluelight));
                                                 }
                                             }else {
@@ -547,25 +552,28 @@ public class HomeFragment extends Fragment {
                                     .orderBy("date_time", Query.Direction.DESCENDING)
                                     .get()
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @SuppressLint("SetTextI18n")
                                         @Override
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if(task.isSuccessful()){
                                                 //ki me bo set per 24h sa reporte ne dite jan bo
                                                 int thisWeekReport = task.getResult().size();
-                                                double num = (double) lastWeekReports/thisWeekReport;
-                                                double percentage = (double) num * 100;
+                                                double positive = thisWeekReport+lastWeekReports;
+                                                double doublePositive = Math.pow(positive,2);
+                                                double negative = thisWeekReport-lastWeekReports;
+                                                double percentage = (negative/doublePositive)*100;
 
                                                 if(percentage > 0) {
                                                     imageTrendingWeekly.setImageResource(R.drawable.ic_baseline_trending_up_24);
-                                                    tv_percentage_weekly.setText(percentage+"%");
+                                                    tv_percentage_weekly.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percentage_weekly.setTextColor(context.getResources().getColor(R.color.neon_green));
                                                 }else if(percentage < 0) {
                                                     imageTrendingWeekly.setImageResource(R.drawable.ic_baseline_trending_down_24);
-                                                    tv_percentage_weekly.setText(percentage+"%");
+                                                    tv_percentage_weekly.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percentage_weekly.setTextColor(context.getResources().getColor(R.color.neon_red));
                                                 }else if(percentage == 0) {
                                                     imageTrendingWeekly.setImageResource(R.drawable.ic_baseline_trending_flat_24);
-                                                    tv_percentage_weekly.setText(percentage+"%");
+                                                    tv_percentage_weekly.setText(new DecimalFormat("##.##").format(percentage)+"%");
                                                     tv_percentage_weekly.setTextColor(context.getResources().getColor(R.color.bluelight));
                                                 }
                                             }else {

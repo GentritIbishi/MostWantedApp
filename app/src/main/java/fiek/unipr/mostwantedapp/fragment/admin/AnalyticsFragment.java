@@ -352,6 +352,7 @@ public class AnalyticsFragment extends Fragment {
                                     .orderBy("date_time", Query.Direction.DESCENDING)
                                     .get()
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @SuppressLint("SetTextI18n")
                                         @Override
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if(task.isSuccessful()){
@@ -432,6 +433,7 @@ public class AnalyticsFragment extends Fragment {
                                     .orderBy("date_time", Query.Direction.DESCENDING)
                                     .get()
                                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @SuppressLint("SetTextI18n")
                                         @Override
                                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                             if(task.isSuccessful()){
