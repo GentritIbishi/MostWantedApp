@@ -7,6 +7,8 @@ import static fiek.unipr.mostwantedapp.utils.Constants.LOGIN_HISTORY;
 import static fiek.unipr.mostwantedapp.utils.Constants.PHONE_USER;
 import static fiek.unipr.mostwantedapp.utils.Constants.WANTED_PERSONS;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -53,6 +55,7 @@ import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
+    private Context mContext;
     private View view;
     private TextView tv_anonymous_helper, tv_anonymous_hello;
     private TextInputEditText anonymous_search_filter;
@@ -88,7 +91,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_search, container, false);
-
+        mContext = getContext();
         initializeFields();
         loadDatainListview();
         setInformation();
@@ -96,7 +99,6 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
         anonymous_search_filter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -104,14 +106,14 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                 if(charSequence.length() != 0)
                 {
                     search_anonymous_list_switcher.setVisibility(View.VISIBLE);
-                    tv_anonymous_helper.setText(getContext().getText(R.string.now_tap_on_desired_person));
+                    tv_anonymous_helper.setText(mContext.getText(R.string.now_tap_on_desired_person));
                     tv_anonymous_helper.setMinLines(1);
                     filter(charSequence.toString());
                 }else if(charSequence.length() == 0)
                 {
                     search_anonymous_list_switcher.setVisibility(View.GONE);
                     tv_anonymous_helper.setMinLines(2);
-                    tv_anonymous_helper.setText(getContext().getText(R.string.tap_on_search_and_enter_full_name_of_person_that_you_want_to_report));
+                    tv_anonymous_helper.setText(mContext.getText(R.string.tap_on_search_and_enter_full_name_of_person_that_you_want_to_report));
                 }
             }
 
@@ -125,17 +127,18 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
         return view;
     }
 
+    @SuppressLint("SetTextI18n")
     private void setInformation() {
         if(firebaseUser != null)
         {
             if(firebaseUser.isAnonymous()){
                 LoginHistory loginHistory = new LoginHistory(firebaseAuth.getUid(), ANONYMOUS, ANONYMOUS, ANONYMOUS, DateHelper.getDateTime());
                 setLoginHistoryAnonymous(loginHistory);
-                tv_anonymous_hello.setText(getContext().getText(R.string.hi)+" "+"Anonymous");
+                tv_anonymous_hello.setText(mContext.getText(R.string.hi)+" "+"Anonymous");
             }else if(!StringHelper.empty(firebaseAuth.getCurrentUser().getPhoneNumber())){
                 LoginHistory loginHistory = new LoginHistory(firebaseAuth.getCurrentUser().getUid(), PHONE_USER, PHONE_USER, PHONE_USER, DateHelper.getDateTime());
                 setLoginHistoryPhone(loginHistory);
-                tv_anonymous_hello.setText(getContext().getText(R.string.hi)+" "+firebaseAuth.getCurrentUser().getPhoneNumber());
+                tv_anonymous_hello.setText(mContext.getText(R.string.hi)+" "+firebaseAuth.getCurrentUser().getPhoneNumber());
             }
         }
     }
@@ -163,9 +166,9 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
         search_anonymous_list_switcher = view.findViewById(R.id.search_anonymous_list_switcher);
         anonymous_lvPersons = view.findViewById(R.id.anonymous_lvPersons);
         personArrayList = new ArrayList<>();
-        mapsInformerAnonymousPersonListAdapter = new MapsInformerPersonListAdapter(getContext(), personArrayList, this);
+        mapsInformerAnonymousPersonListAdapter = new MapsInformerPersonListAdapter(mContext, personArrayList, this);
         anonymous_lvPersons.setAdapter(mapsInformerAnonymousPersonListAdapter);
-        anonymous_lvPersons.setLayoutManager(new LinearLayoutManager(getContext()));
+        anonymous_lvPersons.setLayoutManager(new LinearLayoutManager(mContext));
         search_anonymous_list_switcher.setVisibility(GONE);
     }
 
@@ -213,7 +216,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                     public void onFailure(@NonNull Exception e) {
                         // we are displaying a toast message
                         // when we get any error from Firebase.
-                        Toast.makeText(getContext(), getContext().getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, mContext.getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -266,7 +269,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void onItemClick(int position) {
-        Intent intent=new Intent(getContext(), MapUserActivity.class);
+        Intent intent=new Intent(mContext, MapUserActivity.class);
         Bundle viewBundle = new Bundle();
         viewBundle.putString("personId", personArrayList.get(position).getPersonId());
         viewBundle.putString("fullName", personArrayList.get(position).getFullName());
