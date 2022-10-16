@@ -1,7 +1,9 @@
 package fiek.unipr.mostwantedapp.fragment.admin;
 
+import static fiek.unipr.mostwantedapp.utils.Constants.ADMIN_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.FAKE;
 import static fiek.unipr.mostwantedapp.utils.Constants.LOCATION_REPORTS;
+import static fiek.unipr.mostwantedapp.utils.Constants.SEMI_ADMIN_ROLE;
 import static fiek.unipr.mostwantedapp.utils.Constants.UNVERIFIED;
 import static fiek.unipr.mostwantedapp.utils.Constants.USERS;
 import static fiek.unipr.mostwantedapp.utils.Constants.VERIFIED;
@@ -21,6 +23,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.PreferenceManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +44,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.circularreveal.cardview.CircularRevealCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -88,7 +92,7 @@ public class HomeFragment extends Fragment {
     private StorageReference storageReference;
     private FirebaseStorage firebaseStorage;
     private String user_anonymousID = null;
-    private ListenerRegistration registration;
+    private CircularRevealCardView payoutCardView;
 
     private String fullName, urlOfProfile, name, grade;
 
@@ -116,6 +120,7 @@ public class HomeFragment extends Fragment {
 
         loadInfoFromFirebase(firebaseAuth);
         getGrade(firebaseAuth);
+        checkAdminLevel(firebaseAuth.getUid());
 
         final SwipeRefreshLayout pullToRefreshInSearch = admin_dashboard_view.findViewById(R.id.admin_home_pullToRefreshProfileDashboard);
 
@@ -257,6 +262,7 @@ public class HomeFragment extends Fragment {
         tv_percentage_weekly = admin_dashboard_view.findViewById(R.id.tv_percentage_weekly);
         imageTrendingToday = admin_dashboard_view.findViewById(R.id.imageTrendingToday);
         imageTrendingWeekly = admin_dashboard_view.findViewById(R.id.imageTrendingWeekly);
+        payoutCardView = admin_dashboard_view.findViewById(R.id.payoutCardView);
     }
 
     private void loadFragment(Fragment fragment) {
@@ -605,6 +611,30 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void checkAdminLevel(String userId)
+    {
+        firebaseFirestore.collection(USERS)
+                .document(userId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        String role = documentSnapshot.getString("role");
+                        if(role.equals(SEMI_ADMIN_ROLE))
+                        {
+                            payoutCardView.setVisibility(View.GONE);
+                        }else if(role.equals(ADMIN_ROLE)) {
+                            payoutCardView.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", e.getMessage());
                     }
                 });
     }

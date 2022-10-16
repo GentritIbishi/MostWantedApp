@@ -200,6 +200,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                 .whereEqualTo("userId", firebaseAuth.getCurrentUser().getUid())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @SuppressLint("UseCompatLoadingForDrawables")
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if(queryDocumentSnapshots.size() != 0)
@@ -302,7 +303,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
+                        Log.d("TAG", e.getMessage());
                     }
                 });
     }
@@ -330,14 +331,18 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
         if (!StringHelper.empty(payment_method) || !StringHelper.empty(full_name_payment_information) ||
                 !StringHelper.empty(address_payment_information) || !StringHelper.empty(bank_account_payment_information) || !StringHelper.empty(account_number_payment_information)) {
             row1Done.setVisibility(View.VISIBLE);
+            row1Error.setVisibility(GONE);
         } else {
             row1Error.setVisibility(View.VISIBLE);
+            row1Done.setVisibility(GONE);
         }
 
         if (!StringHelper.empty(paypal_email_payment_information)) {
             row1Done.setVisibility(View.VISIBLE);
+            row1Error.setVisibility(GONE);
         } else {
             row1Error.setVisibility(View.VISIBLE);
+            row1Done.setVisibility(GONE);
         }
     }
 
@@ -360,8 +365,10 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                                         try {
                                             if (DateHelper.isDateInCurrentMonth(date)) {
                                                 row2Error.setVisibility(View.VISIBLE);
+                                                row2Done.setVisibility(View.GONE);
                                             } else {
                                                 row2Done.setVisibility(View.VISIBLE);
+                                                row2Error.setVisibility(GONE);
                                             }
                                         } catch (ParseException e) {
                                             e.printStackTrace();
@@ -369,10 +376,12 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                                     }
                                     else {
                                         row2Done.setVisibility(View.VISIBLE);
+                                        row2Error.setVisibility(GONE);
                                     }
                                 }
                             }else{
                                 row2Done.setVisibility(View.VISIBLE);
+                                row2Error.setVisibility(GONE);
                             }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -403,8 +412,10 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                             int yyyy = Integer.parseInt(yyyyMMdd[2]);
                             if (DateHelper.isAccountOlder(30, yyyy, mm, dd)) {
                                 row3Done.setVisibility(View.VISIBLE);
+                                row3Error.setVisibility(GONE);
                             } else {
                                 row3Error.setVisibility(View.VISIBLE);
+                                row3Done.setVisibility(GONE);
                             }
                         }
                     }
@@ -430,8 +441,10 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                                 Date givenDate = new SimpleDateFormat(DATE).parse(last_time_update);
                                 if (DateHelper.checkDayBefore24(givenDate)) {
                                     row4Done.setVisibility(View.VISIBLE);
+                                    row4Error.setVisibility(GONE);
                                 } else {
                                     row4Error.setVisibility(View.VISIBLE);
+                                    row4Done.setVisibility(GONE);
                                 }
                             }
                         } catch (ParseException e) {
@@ -441,7 +454,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
+                        Log.d("TAG", e.getMessage());
                     }
                 });
     }
@@ -458,21 +471,43 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                         {
                             if (balance > 5 && payment_method.equals(PAYPAL)) {
                                 row5Done.setVisibility(View.VISIBLE);
+                                row5Error.setVisibility(View.GONE);
+                            }else {
+                                row5Error.setVisibility(View.VISIBLE);
+                                row5Done.setVisibility(View.GONE);
                             }
 
                             if (balance > 100 && payment_method.equals(BANK_ACCOUNT)) {
                                 row6Done.setVisibility(View.VISIBLE);
+                                row6Error.setVisibility(View.GONE);
+                            }else {
+                                row6Error.setVisibility(View.VISIBLE);
+                                row6Done.setVisibility(View.GONE);
                             }
 
                             if (payment_method.equals("")) {
                                 row5Error.setVisibility(View.VISIBLE);
                                 row6Error.setVisibility(View.VISIBLE);
+                                row5Done.setVisibility(GONE);
+                                row6Done.setVisibility(GONE);
+                            }else {
+                                row5Error.setVisibility(View.GONE);
+                                row6Error.setVisibility(View.GONE);
+                                row5Done.setVisibility(View.VISIBLE);
+                                row6Done.setVisibility(View.VISIBLE);
                             }
 
                             if(balance < 5)
                             {
                                 row5Error.setVisibility(View.VISIBLE);
                                 row6Error.setVisibility(View.VISIBLE);
+                                row5Done.setVisibility(GONE);
+                                row6Done.setVisibility(GONE);
+                            }else {
+                                row5Error.setVisibility(View.GONE);
+                                row6Error.setVisibility(View.GONE);
+                                row5Done.setVisibility(View.VISIBLE);
+                                row6Done.setVisibility(View.VISIBLE);
                             }
                         }
                     }

@@ -746,14 +746,12 @@ public class PayoutsFragment extends Fragment {
 
         Response response = client.newCall(request).execute();
 
-        Log.d("RESPONSE", response.toString());
-
         // Reset the response code
         responseCode = 0;
 
         if ((responseCode = response.code()) == 201)
         {
-            Log.d("TAG", "onSuccess: RESPONSE 201");
+            Log.d("TAG", response.code()+" "+response.message());
 
             growProgressBar(5);
 
@@ -769,13 +767,14 @@ public class PayoutsFragment extends Fragment {
             savePayoutMade(saveInvoices, table);
 
         } else if ((responseCode = response.code()) == 204) {
+            Log.d("TAG", response.code()+" "+response.message());
             growProgressBar(25);
             for (int i = 0; i < arrayTransactionId.length; i++) {
                 updateStatusInvoice(REFUSED, arrayTransactionId[i]);
             }
             dismissProgressBar();
         } else {
-            Log.d("TAG", "onSuccess: PENDING");
+            Log.d("TAG", response.code()+" "+response.message());
             growProgressBar(25);
             for (int i = 0; i < arrayTransactionId.length; i++) {
                 updateStatusInvoice(PENDING, arrayTransactionId[i]);

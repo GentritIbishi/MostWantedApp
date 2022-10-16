@@ -124,12 +124,12 @@ public class AdminSaveNotificationService extends Service {
         check(mContext, objNotification, firebaseAuth.getUid(), CHANNEL_ID_ADDED, NOTIFICATION_NUMBER_1, 1);
     }
 
-    private void createNotificationChannelAdded() {
+    private void createNotificationChannelAdded(String CHANNEL_ID) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "ADMIN NEW REPORT ADDED NOTIFICATION";
             String description = "This channel is for admin, that send notification when new report added in database!";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_ADDED, name, importance);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
@@ -159,7 +159,7 @@ public class AdminSaveNotificationService extends Service {
                         }
 
                         if (count == 0) {
-                            createNotificationChannelAdded();
+                            createNotificationChannelAdded(CHANNEL_ID);
                             saveAndMakeNotification(
                                     mContext,
                                     objNotification,

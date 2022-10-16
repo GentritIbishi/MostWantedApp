@@ -1,11 +1,14 @@
 package fiek.unipr.mostwantedapp.services;
 
+import static fiek.unipr.mostwantedapp.utils.Constants.CHANNEL_ID_ADDED;
+import static fiek.unipr.mostwantedapp.utils.Constants.CHANNEL_ID_MODIFIED;
 import static fiek.unipr.mostwantedapp.utils.Constants.CHANNEL_ID_USER_MODIFIED;
 import static fiek.unipr.mostwantedapp.utils.Constants.IMPORTANCE;
 import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_NUMBER_4;
 import static fiek.unipr.mostwantedapp.utils.Constants.NOTIFICATION_USER;
 import static fiek.unipr.mostwantedapp.utils.StringHelper.empty;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -127,21 +130,22 @@ public class UserSaveNotificationService extends Service {
 
     }
 
-    private void saveAndMakeNotification(Context context, Notifications objNotification, String CHANNEL_ID, String sharedPrefName, int default_number) {
+    private void saveAndMakeNotification(Context context, @NonNull Notifications objNotification, String CHANNEL_ID, String sharedPrefName, int default_number) {
 
         CollectionReference collRef = firebaseFirestore.collection(NOTIFICATION_USER);
         String notificationId = collRef.document().getId();
         objNotification.setNotificationId(notificationId);
 
         //save and make objNotification for added report
-        firebaseFirestore.collection(NOTIFICATION_USER)
+        firebaseFirestore
+                .collection(NOTIFICATION_USER)
                 .document(notificationId)
                 .set(objNotification)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         try {
-                            if (allowNotification) {
+                            if(allowNotification){
                                 Intent notificationIntent = new Intent(context, NotificationFragment.class);
                                 pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);
 
@@ -155,8 +159,6 @@ public class UserSaveNotificationService extends Service {
                                 notificationBuilder.setSound(new_defaultSoundUri);
                                 notificationBuilder.setAutoCancel(true);
 
-                                sharedPreferences = PreferenceManager
-                                        .getDefaultSharedPreferences(getApplicationContext());
                                 int number = sharedPreferences.getInt(sharedPrefName, default_number);
 
                                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -166,19 +168,18 @@ public class UserSaveNotificationService extends Service {
                                 number++;
                                 editor.putInt(sharedPrefName, number);
                                 editor.apply();
+
                             }else {
-                                //after do job stop self
                                 stopSelf();
                             }
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                        }catch (Exception e){
+                            Log.d("Error", e.getMessage());
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.d("ERROR_SAVE", e.getMessage());
+                        Log.d("TAG", e.getMessage());
                     }
                 });
     }
@@ -206,7 +207,7 @@ public class UserSaveNotificationService extends Service {
 
                         if (count == 0)
                         {
-                            createNotificationChannelModified();
+                            createNotificationChannelModified(CHANNEL_ID);
                             saveAndMakeNotification(
                                     context,
                                     objNotification,
@@ -221,10 +222,8 @@ public class UserSaveNotificationService extends Service {
                 });
     }
 
-    private void createNotificationChannelModified()
-    {
+    private void createNotificationChannelModified(String CHANNEL_ID) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            String CHANNEL_ID = "NEW_REPORT_MODIFIED";
             CharSequence name = "USER REPORT MODIFIED NOTIFICATION";
             String description = "This channel is for user, that send notification when one report state modified in database!";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;

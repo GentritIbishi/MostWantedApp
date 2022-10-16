@@ -362,11 +362,14 @@ public class AdminDashboardActivity extends AppCompatActivity {
         if(CheckInternet.isConnected(mContext)){
             documentReference = firebaseFirestore.collection(USERS).document(firebaseAuth.getUid());
             documentReference.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if(task.isSuccessful() && task.getResult() != null)
                     {
                         fullName = task.getResult().getString("fullName");
+                        String name = task.getResult().getString("name");
+                        String lastname = task.getResult().getString("lastname");
                         urlOfProfile = task.getResult().getString("urlOfProfile");
                         //set Image, verified if is email verified, name
                         setVerifiedBadge(firebaseAuth.getCurrentUser());
@@ -379,7 +382,7 @@ public class AdminDashboardActivity extends AppCompatActivity {
                         }
 
                         if(fullName != null){
-                            nav_header_name.setText(fullName);
+                            nav_header_name.setText(name+" "+lastname);
                         }
                     }
                 }

@@ -109,7 +109,6 @@ public class SingleReportFragment extends Fragment {
     private int totalImages;
     private String[] images;
 
-    private TextView tv_singleReportProgressBar;
     private ProgressBar singleReportProgressBarReport;
     private int progress;
 
@@ -185,7 +184,7 @@ public class SingleReportFragment extends Fragment {
         btnSaveReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                showProgressBar();
                 String new_status = auto_complete_report_status.getText().toString();
                 save(mContext, uID, latitude, longitude, new_status, docId, personId);
 
@@ -203,13 +202,15 @@ public class SingleReportFragment extends Fragment {
         return view;
     }
 
-    private void updateProgressBar() {
-        singleReportProgressBarReport.setProgress(progress);
-        tv_singleReportProgressBar.setText(this.progress + "%");
+    private void showProgressBar() {
         singleReportProgressBarReport.setVisibility(View.VISIBLE);
-        tv_singleReportProgressBar.setVisibility(View.VISIBLE);
+        btnSaveReport.setEnabled(false);
     }
 
+    private void dismissProgressBar() {
+        singleReportProgressBarReport.setVisibility(GONE);
+        btnSaveReport.setEnabled(true);
+    }
 
     private void initializeFields() {
         et_report_uid = view.findViewById(R.id.et_report_uid);
@@ -222,7 +223,6 @@ public class SingleReportFragment extends Fragment {
         auto_complete_report_status = view.findViewById(R.id.auto_complete_report_status);
         btnSaveReport = view.findViewById(R.id.btnSaveReport);
         autocomplete_report_status_layout = view.findViewById(R.id.autocomplete_report_status_layout);
-        tv_singleReportProgressBar = view.findViewById(R.id.tv_singleReportProgressBar);
         singleReportProgressBarReport = view.findViewById(R.id.singleReportProgressBarReport);
     }
 
@@ -246,8 +246,6 @@ public class SingleReportFragment extends Fragment {
     }
 
     private void save(Context context, String uID, Double latitude, Double longitude, String status, String docId, String personId) {
-        progress += 25;
-        updateProgressBar();
         process(context, uID, latitude, longitude, status, docId, personId);
     }
 
@@ -259,15 +257,11 @@ public class SingleReportFragment extends Fragment {
                     @Override
                     public void onSuccess(Void unused) {
                         if (status.equals(VERIFIED)) {
-                            progress += 12.5;
-                            updateProgressBar();
                             //check if user with uid is anonymous or phone or regular
                             if (!firebaseAuth.getCurrentUser().isAnonymous() && StringHelper.empty(firebaseAuth.getCurrentUser().getPhoneNumber())) {
                                 updateBalance(context, latitude, longitude, uID, personId);
                             }
                         } else {
-                            progress += 75;
-                            updateProgressBar();
                             dismissProgressBar();
                         }
                     }
@@ -286,8 +280,6 @@ public class SingleReportFragment extends Fragment {
         //duhet me bo check nese ka same reported location with same address nese jo atehere ja shton vlenre full
         //nese po atehere e pjeston qate vlere me numrin e raportimeve
         //duhet me ja shtu balance+=vleren qe eka fitu
-        progress += 12.5;
-        updateProgressBar();
         firebaseFirestore.collection(WANTED_PERSONS)
                 .document(personId)
                 .get()
@@ -295,8 +287,6 @@ public class SingleReportFragment extends Fragment {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         String prize = documentSnapshot.getString("prize");
-                        progress += 12.5;
-                        updateProgressBar();
                         if (!StringHelper.empty(prize)) {
                             if (!prize.equalsIgnoreCase(FREE)) {
                                 getBalanceFromUser(context, latitude, longitude, uID, prize);
@@ -314,12 +304,6 @@ public class SingleReportFragment extends Fragment {
                 });
     }
 
-    private void dismissProgressBar() {
-        tv_singleReportProgressBar.setVisibility(GONE);
-        singleReportProgressBarReport.setVisibility(GONE);
-        progress = 0;
-    }
-
     private void getBalanceFromUser(Context context, Double latitude, Double longitude, String uID, String prize) {
         //duhet me marr balance prej userit
         //duhet me bo check nese ka same reported location with same address
@@ -332,8 +316,6 @@ public class SingleReportFragment extends Fragment {
                         Double balance = documentSnapshot.getDouble("balance");
                         String[] prizeArray = prize.split(" ");
                         Double finalPrize = Double.valueOf(prizeArray[0]);
-                        progress += 12.5;
-                        updateProgressBar();
                         checkIfHaveMoreThanOneReportWithSameLocation(context, personId, latitude, longitude, balance, finalPrize);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -360,8 +342,6 @@ public class SingleReportFragment extends Fragment {
                         int count = 0;
                         for (int i = 0; i < queryDocumentSnapshots.size(); i++) {
                             String addressInDoc = queryDocumentSnapshots.getDocuments().get(i).getString("address");
-                            progress += 12.5;
-                            updateProgressBar();
                             if (address.equals(addressInDoc)) {
                                 count++;
                             }
@@ -396,11 +376,10 @@ public class SingleReportFragment extends Fragment {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        progress += 12.5;
-                        updateProgressBar();
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
+                                Toast.makeText(mContext, mContext.getText(R.string.saved_successfully), Toast.LENGTH_SHORT).show();
                                 dismissProgressBar();
                             }
                         }, 1500);
