@@ -78,7 +78,6 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                         case Configuration.UI_MODE_NIGHT_NO:
                             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
                             break;
-
                     }
                 }else {
                     if(!dark_mode.isChecked() && !light_mode.isChecked())

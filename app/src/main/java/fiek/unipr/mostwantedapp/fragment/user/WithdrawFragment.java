@@ -200,7 +200,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
                 .whereEqualTo("userId", firebaseAuth.getCurrentUser().getUid())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @SuppressLint("UseCompatLoadingForDrawables")
+                    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         if(queryDocumentSnapshots.size() != 0)

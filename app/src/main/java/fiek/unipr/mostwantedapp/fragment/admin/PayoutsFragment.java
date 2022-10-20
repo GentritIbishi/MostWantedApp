@@ -22,6 +22,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -30,6 +32,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -37,6 +40,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +49,8 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ProgressBar;
 import android.widget.Switch;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -127,6 +133,9 @@ public class PayoutsFragment extends Fragment {
             auto_complete_second_payment, auto_complete_millisecond_payment;
     private Button btnSaveReport, btnProcessPayout;
     private ProgressBar invoiceProgressBar;
+    private TextView tv_id, tv_invoice, tv_date_time;
+    private TableLayout payoutTableLayout;
+    private TableRow tableRowTableLabel;
 
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
@@ -221,19 +230,9 @@ public class PayoutsFragment extends Fragment {
         setMinuteAndSecond();
         setMilliseconds();
 
-        switchPayment = view.findViewById(R.id.switchPayment);
-        tvInvoiceReport = view.findViewById(R.id.tvInvoiceReport);
-        constrainProcessPayment = view.findViewById(R.id.constrainProcessPayment);
-        constraintAutomaticPayment = view.findViewById(R.id.constraintAutomaticPayment);
-        auto_complete_hour_payment = view.findViewById(R.id.auto_complete_hour_payment);
-        auto_complete_minute_payment = view.findViewById(R.id.auto_complete_minute_payment);
-        auto_complete_second_payment = view.findViewById(R.id.auto_complete_second_payment);
-        auto_complete_millisecond_payment = view.findViewById(R.id.auto_complete_millisecond_payment);
-        btnSaveReport = view.findViewById(R.id.btnSaveReport);
-        btnProcessPayout = view.findViewById(R.id.btnProcessPayout);
-        invoiceProgressBar = view.findViewById(R.id.invoiceProgressBar);
-        tv_invoiceProgressBar = view.findViewById(R.id.tv_invoiceProgressBar);
-        constrainInvoiceProgress = view.findViewById(R.id.constrainInvoiceProgress);
+        initializeFields();
+
+        addToTable();
 
         final SwipeRefreshLayout payoutsSwipe = view.findViewById(R.id.payoutsSwipe);
         payoutsSwipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -313,6 +312,23 @@ public class PayoutsFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void initializeFields() {
+        switchPayment = view.findViewById(R.id.switchPayment);
+        tvInvoiceReport = view.findViewById(R.id.tvInvoiceReport);
+        constrainProcessPayment = view.findViewById(R.id.constrainProcessPayment);
+        constraintAutomaticPayment = view.findViewById(R.id.constraintAutomaticPayment);
+        auto_complete_hour_payment = view.findViewById(R.id.auto_complete_hour_payment);
+        auto_complete_minute_payment = view.findViewById(R.id.auto_complete_minute_payment);
+        auto_complete_second_payment = view.findViewById(R.id.auto_complete_second_payment);
+        auto_complete_millisecond_payment = view.findViewById(R.id.auto_complete_millisecond_payment);
+        btnSaveReport = view.findViewById(R.id.btnSaveReport);
+        btnProcessPayout = view.findViewById(R.id.btnProcessPayout);
+        invoiceProgressBar = view.findViewById(R.id.invoiceProgressBar);
+        tv_invoiceProgressBar = view.findViewById(R.id.tv_invoiceProgressBar);
+        constrainInvoiceProgress = view.findViewById(R.id.constrainInvoiceProgress);
+        payoutTableLayout = view.findViewById(R.id.payoutTableLayout);
     }
 
     private void getPaymentState() {
@@ -683,7 +699,7 @@ public class PayoutsFragment extends Fragment {
                                             arrayUserId[i] = userId;
                                             arrayAmount[i] = String.valueOf(amount);
 
-                                            saveInvoices.add(i+transactionID+", "+paypalEmail+", "+created_date_time+", "+amount+", "+new_status);
+                                            saveInvoices.add(transactionID+", "+paypalEmail+", "+created_date_time+", "+amount+", "+new_status);
 
                                             table.addCell(new Cell().add(new Paragraph(transactionID)));
                                             table.addCell(new Cell().add(new Paragraph(paypalEmail)));
@@ -1011,6 +1027,110 @@ public class PayoutsFragment extends Fragment {
                         dismissProgressBar();
                     }
                 });
+    }
+
+    private void addToTable() {
+        String date = DateHelper.getDate();
+        String start = date + " " + "00:00:00";
+        String end = date + " " + "23:59:59";
+        firebaseFirestore.collection(INVOICE_PAID)
+                .whereGreaterThan("date_time", start)
+                .whereLessThan("date_time", end)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        if(queryDocumentSnapshots.size() != 0)
+                        {
+                            Typeface typeface = ResourcesCompat.getFont(mContext, R.font.open_sans_bold);
+
+                            tableRowTableLabel = new TableRow(mContext);
+                            tv_id = new TextView(mContext);
+                            tv_id.setText(mContext.getText(R.string.document_id)+" ");
+                            tv_id.setTextColor(Color.WHITE);
+                            tv_id.setTypeface(typeface);
+                            tv_id.setBackground(mContext.getResources().getDrawable(R.drawable.bg_header_table));
+                            tableRowTableLabel.addView(tv_id);
+
+                            tv_invoice = new TextView(mContext);
+                            tv_invoice.setText(mContext.getText(R.string.invoices)+" ");
+                            tv_invoice.setTextColor(Color.WHITE);
+                            tv_invoice.setTypeface(typeface);
+                            tv_invoice.setBackground(mContext.getResources().getDrawable(R.drawable.bg_header_table));
+                            tableRowTableLabel.addView(tv_invoice);
+
+                            tv_date_time = new TextView(mContext);
+                            tv_date_time.setText(mContext.getText(R.string.column_created_date_time)+" ");
+                            tv_date_time.setTextColor(Color.WHITE);
+                            tv_date_time.setTypeface(typeface);
+                            tv_date_time.setBackground(mContext.getResources().getDrawable(R.drawable.bg_header_table));
+                            tableRowTableLabel.addView(tv_date_time);
+
+                            payoutTableLayout.addView(tableRowTableLabel);
+
+                            for(int i = 0; i < queryDocumentSnapshots.size(); i++)
+                            {
+                                cleanTable(payoutTableLayout);
+
+                                String id = queryDocumentSnapshots.getDocuments().get(i).getString("id");
+
+                                //how to get array from database
+                                ArrayList<String> invoices = (ArrayList<String>) queryDocumentSnapshots.getDocuments().get(i).get("invoices");
+                                String date_time = queryDocumentSnapshots.getDocuments().get(i).getString("date_time");
+
+                                TableRow tvRow = new TableRow(mContext);
+
+                                TextView t0v = new TextView(mContext);
+                                t0v.setText(id);
+                                t0v.setBackground(mContext.getResources().getDrawable(R.drawable.bg_row_table));
+                                t0v.setTextColor(Color.GRAY);
+                                t0v.setGravity(Gravity.CENTER);
+                                t0v.setTypeface(typeface);
+                                tvRow.addView(t0v);
+                                TableRow row = new TableRow(mContext);
+                                for(int j=0;j<invoices.size();j++)
+                                {
+                                    row = new TableRow(mContext);
+                                    TextView t1v = new TextView(mContext);
+                                    t1v.setText(invoices.get(j));
+                                    t1v.setTextColor(Color.GRAY);
+                                    t1v.setTypeface(typeface);
+                                    t1v.setBackground(mContext.getResources().getDrawable(R.drawable.bg_row_table));
+                                    t1v.setGravity(Gravity.CENTER);
+                                    row.addView(t1v);
+                                }
+
+                                tvRow.addView(row);
+
+                                TextView t2v = new TextView(mContext);
+                                t2v.setText(date_time);
+                                t2v.setTypeface(typeface);
+                                t2v.setBackground(mContext.getResources().getDrawable(R.drawable.bg_row_table));
+                                t2v.setTextColor(Color.GRAY);
+                                t2v.setGravity(Gravity.CENTER);
+                                tvRow.addView(t2v);
+
+                                payoutTableLayout.addView(tvRow);
+                            }
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d("TAG", e.getMessage());
+                    }
+                });
+    }
+
+    private void cleanTable(TableLayout table) {
+
+        int childCount = table.getChildCount();
+
+        // Remove all rows except the first one
+        if (childCount > 1) {
+            table.removeViews(1, childCount - 1);
+        }
     }
 
 }

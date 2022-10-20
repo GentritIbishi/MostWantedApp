@@ -575,6 +575,9 @@
     <string name="please_select_one_mode">Please select a mode!</string>
     <string name="you_need_to_enable_one_mode_before_you_change">You must activate a mode before changing.</string>
     <string name="version">Version 1.1.0</string>
+    <string name="payouts_history">Payouts History</string>
+    <string name="invoices">Invoices</string>
+    <string name="payout_date_time">Payout Date time</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

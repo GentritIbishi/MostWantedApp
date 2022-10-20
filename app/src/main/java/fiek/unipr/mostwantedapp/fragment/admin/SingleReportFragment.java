@@ -24,6 +24,7 @@ import androidx.preference.PreferenceManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
@@ -155,7 +156,8 @@ public class SingleReportFragment extends Fragment {
     private void checkAndSetModeMap(Context mContext) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         String mode = sharedPreferences.getString(APPEARANCE_MODE_PREFERENCE, SYSTEM_MODE);
-        if (mode.equals(DARK_MODE)) {
+        int nightModeFlags = mContext.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (mode.equals(DARK_MODE) || (nightModeFlags == Configuration.UI_MODE_NIGHT_YES)) {
             mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(mContext, R.raw.map_in_night));
         }
     }

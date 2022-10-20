@@ -83,7 +83,7 @@ public class Constants {
     public static final String PAID = "PAID";
     public static final String PENDING = "PENDING";
     public static final String REFUSED = "REFUSED";
-    public static final String PAYPAL_SANDBOX_KEY_BEARER = "Bearer A21AAK4Nj-XjIR5MMdMSn8L9hqhRv-3npNz4Xma_elEIo41enIvrgy0Dpcf0kfxqQE35VrFf0jv54gCZScd_Pn5gX-PFHucYw";
+    public static final String PAYPAL_SANDBOX_KEY_BEARER = "Bearer A21AAK6I756s6f1DBTFZ1h03N1xOiCOI1yOhcgjGew6c7_0DltI8esjkA6MnCbI7NEIqsF2hGwbCo8fttq4NohD1pqieagXzg";
 
     //permissions
     public static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
