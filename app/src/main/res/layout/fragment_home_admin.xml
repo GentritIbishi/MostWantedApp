@@ -111,6 +111,7 @@
                                 android:layout_marginTop="12dp"
                                 android:textColor="@color/textInCardView"
                                 android:text="@string/profile_label"
+                                android:textAllCaps="true"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -143,6 +144,7 @@
                                 android:layout_marginTop="12dp"
                                 android:textColor="@color/textInCardView"
                                 android:text="@string/register_label"
+                                android:textAllCaps="true"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -172,8 +174,8 @@
                             <TextView
                                 android:layout_marginTop="12dp"
                                 android:textColor="@color/textInCardView"
-                                android:textAllCaps="true"
                                 android:text="@string/assign"
+                                android:textAllCaps="true"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -204,6 +206,7 @@
                                 android:layout_marginTop="12dp"
                                 android:textColor="@color/textInCardView"
                                 android:text="@string/analytics"
+                                android:textAllCaps="true"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -234,6 +237,7 @@
                                 android:layout_marginTop="12dp"
                                 android:textColor="@color/textInCardView"
                                 android:text="@string/manage"
+                                android:textAllCaps="true"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content" />
                         </LinearLayout>
@@ -594,6 +598,7 @@
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="15sp"
+                                android:textAllCaps="true"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="@+id/admin_home_tv_num_report_verified"
                                 app:layout_constraintStart_toStartOf="@+id/admin_home_tv_num_report_verified" />
@@ -645,6 +650,7 @@
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="15sp"
+                                android:textAllCaps="true"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="@+id/admin_home_tv_num_report_unverified"
                                 app:layout_constraintStart_toStartOf="@+id/admin_home_tv_num_report_unverified" />
@@ -696,6 +702,7 @@
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="15sp"
+                                android:textAllCaps="true"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="@+id/admin_home_tv_num_report_fake"
                                 app:layout_constraintStart_toStartOf="@+id/admin_home_tv_num_report_fake" />

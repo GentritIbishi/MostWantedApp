@@ -1,357 +1,336 @@
 <resources>
     <string name="app_name">MostWantedApp</string>
-    <string name="session_cannot_copy_the_role">User is logged in but no role was found!</string>
+    <string name="session_cannot_copy_the_role">Përdoruesi është identifikuar por asnjë rol nuk u gjet!</string>
     <string name="tv_email">Email</string>
-    <string name="tv_password">Password</string>
-    <string name="btn_login">Login</string>
-    <string name="forgot_pass">Forgot Password?</string>
-    <string name="create_new_account">Create new Account?</string>
-    <string name="already_have_account">Already have account?</string>
-    <string name="or">OR</string>
+    <string name="tv_password">Fjalëkalimi</string>
+    <string name="btn_login">Identifikohu</string>
+    <string name="forgot_pass">Keni harruar fjalëkalimin?</string>
+    <string name="create_new_account">Hapni një llogari të re?</string>
+    <string name="already_have_account">Keni tashmë një llogari?</string>
+    <string name="or">OSE</string>
     <string name="email">Email</string>
-    <string name="password">Password</string>
-    <string name="confirm_password">Confirm Password</string>
-    <string name="phone">Phone</string>
-    <string name="address">Address</string>
-    <string name="personal_number">Personal Number</string>
-    <string name="guest">Report as Guest</string>
-    <string name="full_name">Full Name</string>
-    <string name="select_a_age">Select a age</string>
-    <string name="select_a_height">Select a height</string>
-    <string name="select_a_weight">Select a weight</string>
-    <string name="select_a_eye_color">Select a eye color</string>
-    <string name="select_a_hair_color">Select a hair color</string>
-    <string name="select_a_physical_appearance">Select a physical appearance</string>
-    <string name="select_a_type_of_crime">Select a type of crime</string>
-    <string name="register_person">Register Person</string>
-    <string name="update_person">Update Person</string>
-    <string name="person">Person</string>
-    <string name="error_first_investigator_required">First investigator is required!</string>
-    <string name="error_second_investigator_required">Second investigator is required!</string>
-    <string name="error_fullname_required">Full name is required!</string>
-    <string name="error_address_required">Address is required!</string>
-    <string name="error_parent_name_required">Parent Name is required!</string>
-    <string name="error_last_name_required">Last Name is required!</string>
-    <string name="error_first_name_required">First Name is required!</string>
-    <string name="error_age_required">Age is required!</string>
-    <string name="error_height_required">Height is required!</string>
-    <string name="error_weight_required">Weight is required!</string>
-    <string name="error_eyeColor_required">Eye Color is required!</string>
-    <string name="error_hairColor_required">Hair Color is required!</string>
-    <string name="error_email_required">Email is required!</string>
-    <string name="error_validate_email">This email is not true!</string>
-    <string name="error_phy_appearance_required">Physical Appearance is required!</string>
-    <string name="error_acts_required">Acts is required!</string>
-    <string name="error_not_allowed">Not allowed "numbers" in this field!</string>
-    <string name="error_status_required">Status is required!</string>
-    <string name="user_full_name">User Full Name</string>
-    <string name="user_email">Email Address</string>
-    <string name="your_email_address">Your Email Address</string>
-    <string name="user_password">Password</string>
-    <string name="user_confirm_password">Confirm Password</string>
-    <string name="button_register_user">Register User</string>
-    <string name="button_update_user">Update User</string>
-    <string name="error_please_provide_valid_email">Please provide valid email!</string>
-    <string name="error_password_required">Password is required!</string>
-    <string name="error_confirm_password_required">Confirm Password is required!</string>
-    <string name="error_min_password_length">Min password length should be 6 characters!</string>
-    <string name="error_confirm_password_not_same">Confirm Password is not same!</string>
-    <string name="error_password_not_same">Passwords is not same!</string>
-    <string name="error_phone_required">Phone number is required!</string>
-    <string name="error_number_personal_required">Personal number is required!</string>
-    <string name="error_number_personal_is_ten_digit">Error, more than 10 digits!</string>
-    <string name="error_number_personal_less_than_ten_digits">Error, personal number is fixed 10 digits!</string>
-    <string name="error_password_weak">Weak Password: Minimum eight characters, at least one letter and one number.</string>
-    <string name="user_registered_successfully">User has been registered successfully!</string>
-    <string name="user_failed_to_register">Failed to register user! Try again!</string>
-    <string name="role_not_finded">Role not finded!</string>
-    <string name="user_not_finded">User not finded!</string>
-    <string name="user_not_exist">User not exist!</string>
-    <string name="logins_successfully">Logins successfully!</string>
-    <string name="logins_failed">Logins failed!</string>
-    <string name="dashboard">Dashboard</string>
-    <string name="logout">Log out</string>
-    <string name="profile">Profile</string>
-    <string name="profile_label">PROFILE</string>
-    <string name="your_name">Your Name</string>
-    <string name="change_profile_image">Change Profile Image</string>
-    <string name="delete_user">Delete User</string>
-    <string name="image_uploaded">Image Uploaded!</string>
-    <string name="image_failed_to_uplaod">Image failed to upload!</string>
-    <string name="image_not_set">Image not set!</string>
-    <string name="role">Role</string>
-    <string name="Data_success_updated">Data has been updated, to see results u need to re-login again!</string>
-    <string name="edit_data">Edit Data</string>
-    <string name="this_person_with_this">The person with name: </string>
-    <string name="was_registered_successfully"> was registered successfully</string>
-    <string name="person_failed_to_register">Person failed to register!</string>
-    <string name="tap_to_add_profile_picture">Tap to add Profile Picture</string>
-    <string name="successfully">Successfully!</string>
-    <string name="uri_failed_to_set">Uri failed to set!</string>
-    <string name="profile_picture_added">Profile Picture added!</string>
-    <string name="select_a_status">Select a status</string>
-    <string name="see_users">See Users</string>
-    <string name="see_persons">See Persons</string>
-    <string name="location_reports">Location Reports</string>
-    <string name="analytics">ANALYTICS</string>
-    <string name="four_items">4 Items</string>
-    <string name="six_items">6 Items</string>
-    <string name="thank_location">The location was taken thanks for the cooperation</string>
-    <string name="Location">Location: </string>
-    <string name="person_delete_successfully">is deleted successfully!</string>
-    <string name="person_delete_failed"> failed to delete!</string>
-    <string name="let_get_started">Let\'s get started</string>
-    <string name="register">Register</string>
-    <string name="register_label">REGISTER</string>
-    <string name="login">Login</string>
-    <string name="welcome_back">Welcome back  </string>
-    <string name="exist_in_database"> Exists in database!</string>
-    <string name="sign_in_google">Sign In Google</string>
-    <string name="sign_in_phone">Sign In Phone</string>
-    <string name="sign_in_anonymous">Sign In Anonymous</string>
-    <string name="registration">Registration</string>
-    <string name="verification">Verification</string>
-    <string name="verification_code">Verification code</string>
-    <string name="code">Code</string>
-    <string name="verify_otp">Verify OTP</string>
-    <string name="verify_code">Verify code</string>
-    <string name="please_enter_your_country_code_and_phone_number_for_verification">Please enter your country code and phone number for verification</string>
-    <string name="phone_number">Phone number</string>
-    <string name="generate_continue">Continue</string>
-    <string name="text_verification">Verification code was sent to</string>
-    <string name="error_please_fill_in_the_form_to_continue">Please fill in the form to continue.</string>
-    <string name="we_have_send_you_an_code_for">We have send you an OTP code for</string>
-    <string name="for_verification">for verification</string>
-    <string name="there_was_an_error_verifying_otp">There was an error verifying OTP</string>
-    <string name="error_verification_failed_please_try_again">Verification Failed, please try again!</string>
-    <string name="error_failed_to_login_as_anonymous">Failed to login as anonymous, please try again!</string>
-    <string name="didn_t_get_otp_resend">Didn\'t get OTP? <b>Resend</b></string>
-    <string name="please_enter_verification_code">Please enter verification code....</string>
-    <string name="logged_in_as">Logged in as</string>
-    <string name="verification_code_sent">Verification code sent...</string>
-    <string name="parent_name">Parent Name</string>
-    <string name="your_last_name">Your Last Name</string>
-    <string name="verification_email_sent_to">Verification email sent to</string>
-    <string name="failed_to_send_verification_email">Failed to send verification email.</string>
-    <string name="please_verify_email_to_login_check_in_email_we_sent_link_for_verification">Please verify email to login, check in email we sent link for verification!</string>
-    <string name="reset_password">Reset Password</string>
-    <string name="check_your_email_to_reset_password">Check your email to reset password!</string>
-    <string name="error_try_again_something_wrong_happened">Try again! Something wrong happened!</string>
-    <string name="error_no_internet_connection_check_wifi_or_mobile_data">Check wifi or mobile data, Do you want to go to settings menu?"</string>
-    <string name="search">Search</string>
-    <string name="open">Open</string>
-    <string name="close">Close</string>
-    <string name="skip">Skip</string>
-    <string name="set_profile_picture">Set Profile Picture</string>
-    <string name="home">Home</string>
-    <string name="notifications">Notifications</string>
-    <string name="likes">Likes</string>
-    <string name="please_type_name_like_hint">Please type name like hint with cap words!</string>
-    <string name="remember">Remember?</string>
-    <string name="report">Report</string>
-    <string name="tap_on_map_to_set_location_or_just_continue">Tap on the map to set the location or just continue</string>
-    <string name="set_current_location">Set current location</string>
-    <string name="location_set_tap_if_u_want_to_change">Location is set, tap long if you want to change!</string>
-    <string name="add_any_additional_info_optional">Add any additional info (optional)</string>
-    <string name="choose">Choose</string>
-    <string name="upload_any_media_optional">Upload any media (Optional)</string>
-    <string name="you_have_selected">You have selected</string>
-    <string name="images">images</string>
-    <string name="location_not_set_please_set_new_location">Location not set, please set new location!</string>
-    <string name="failed_to_register">Failed to register</string>
-    <string name="position">Position</string>
-    <string name="please_turn_on_location_on_your_phone">Please turn on location on your phone!</string>
-    <string name="image_uploading_please_wait">Image Uploading Please Wait............</string>
-    <string name="image_uploaded_v2">Image Uploaded!</string>
-    <string name="account">Account</string>
-    <string name="my_account">My Account</string>
-    <string name="first_name">First Name*</string>
-    <string name="register_person_first_name">First Name</string>
-    <string name="register_person_last_name">Last Name</string>
-    <string name="profile_picture">Profile Picture</string>
-    <string name="upload">Upload</string>
-    <string name="delete">Delete</string>
-    <string name="last_name">Last Name*</string>
-    <string name="parent_name_account">Parent Name*</string>
-    <string name="personal_number_account">Personal Number*</string>
-    <string name="phone_number_account">Phone number*</string>
-    <string name="email_account">Email*</string>
-    <string name="address_account">Address*</string>
-    <string name="save_changes">Save Changes</string>
-    <string name="user_exist">User exist!</string>
-    <string name="saved_successfully">Saved successfully</string>
-    <string name="empty">Empty</string>
-    <string name="not_exist">Not Exist</string>
-    <string name="total_cases_reported_verified">Total Cases Reported VERIFIED</string>
-    <string name="total_cases_reported_unverified">Total Cases Reported UNVERIFIED</string>
-    <string name="reports_verified">VERIFIED</string>
-    <string name="reports_pending">PENDING</string>
-    <string name="reports_fake">FAKE</string>
-    <string name="real_time_statistics">Real-time Statistics</string>
-    <string name="no_firebase_authentication">No Firebase Authentication</string>
-    <string name="image_deleted_successfully">Image deleted successfully!</string>
-    <string name="images_uploaded_successfully">Images uploaded successfully!</string>
-    <string name="image_uploaded_successfully">Image uploaded successfully!</string>
-    <string name="help">Help</string>
-    <string name="about">About</string>
-    <string name="settings">Settings</string>
-    <string name="privileged_user">Privileged User</string>
-    <string name="wanted_person">Wanted Person</string>
-    <string name="locations">LOCATIONS</string>
-    <string name="total_reported">Total Reported</string>
-    <string name="location_update_successfully">Last Location is updated successfully!</string>
-    <string name="location_update_failed">Last Location failed to update!</string>
-    <string name="latitude_updated_successfully">Latitude updated successfully!</string>
-    <string name="longitude_updated_successfully">Longitude updated successfully!</string>
-    <string name="latitude_failed_to_update">Latitude failed to update!</string>
-    <string name="longitude_failed_to_update">Longitude failed to update!</string>
-    <string name="last_seen">Last Seen:</string>
-    <string name="last_seen_location">Last Seen Location:</string>
-    <string name="login_info">To login next time you need verification email, thank you!</string>
-    <string name="this_person_with_this_name">This person with this name:</string>
-    <string name="exists_in_database_please_add_example">exists in database, please add for example: Filan Fisteku 1</string>
-    <string name="about_header">MostWanted App is an android application, which was created to help find persons wanted by the \"Kosovo Police\" for committing criminal offenses.</string>
-    <string name="about_contain">So the application is simple to use as people almost most of the time are active in the social network \"Facebook\" where the official fanpage of the Kosovo police every day publishes photos of wanted persons and that the citizens of Kosovo can help find those people so with a button \"Send Location\" takes the location where the citizen is stored in the firestore database taking the latitude and longitude of the location reported by the citizen.</string>
-    <string name="allow_notification">Allow Notification</string>
-    <string name="need_some_helps">Need some helps?</string>
-    <string name="contact_us">Contact Us</string>
-    <string name="email_us">Email Us</string>
-    <string name="call_us">Call Us</string>
+    <string name="password">Fjalëkalimi</string>
+    <string name="confirm_password">Konfirmo fjalëkalimin</string>
+    <string name="phone">Telefoni</string>
+    <string name="address">Adresë</string>
+    <string name="personal_number">Numri Personal</string>
+    <string name="guest">Raporto si i ftuar</string>
+    <string name="full_name">Emri i plotë</string>
+    <string name="select_a_age">Zgjidhni një moshë</string>
+    <string name="select_a_height">Zgjidhni një lartësi</string>
+    <string name="select_a_weight">Zgjidhni një peshë</string>
+    <string name="select_a_eye_color">Zgjidhni një ngjyrë të syve</string>
+    <string name="select_a_hair_color">Zgjidhni një ngjyrë flokësh</string>
+    <string name="select_a_physical_appearance">Zgjidhni një pamje fizike</string>
+    <string name="select_a_type_of_crime">Zgjidhni një lloj krimi</string>
+    <string name="register_person">Regjistrohu Personi</string>
+    <string name="update_person">Përditëso Personin</string>
+    <string name="person">Personi</string>
+    <string name="error_first_investigator_required">Kërkohet hetuesi i parë!</string>
+    <string name="error_second_investigator_required">Kërkohet hetuesi i dytë!</string>
+    <string name="error_fullname_required">Kërkohet emri i plotë!</string>
+    <string name="error_address_required">Kërkohet adresa!</string>
+    <string name="error_parent_name_required">Kërkohet emri i prindit!</string>
+    <string name="error_last_name_required">Mbiemri kërkohet!</string>
+    <string name="error_first_name_required">Kërkohet emri!</string>
+    <string name="error_age_required">Mosha kërkohet!</string>
+    <string name="error_height_required">Lartësia është e nevojshme!</string>
+    <string name="error_weight_required">Pesha është e nevojshme!</string>
+    <string name="error_eyeColor_required">Kërkohet ngjyra e syve!</string>
+    <string name="error_hairColor_required">Kërkohet ngjyra e flokëve!</string>
+    <string name="error_email_required">Kërkohet email!</string>
+    <string name="error_validate_email">Ky email nuk është i vërtetë!</string>
+    <string name="error_phy_appearance_required">Kërkohet pamja fizike!</string>
+    <string name="error_acts_required">Aktet janë të nevojshme!</string>
+    <string name="error_not_allowed">Nuk lejohen "numrat" në këtë fushë!</string>
+    <string name="error_status_required">Kërkohet status!</string>
+    <string name="user_full_name">Emri i plotë i përdoruesit</string>
+    <string name="user_email">Adresa e emailit</string>
+    <string name="your_email_address">Adresa juaj e emailit</string>
+    <string name="user_password">Fjalëkalimi</string>
+    <string name="user_confirm_password">Konfirmo fjalëkalimin</string>
+    <string name="button_register_user">Regjistrohu i përdoruesit</string>
+    <string name="button_update_user">Përditëso përdoruesin</string>
+    <string name="error_please_provide_valid_email">Ju lutemi jepni email të vlefshëm!</string>
+    <string name="error_password_required">Kërkohet fjalëkalimi!</string>
+    <string name="error_confirm_password_required">Kërkohet konfirmimi i fjalëkalimit!</string>
+    <string name="error_min_password_length">Gjatësia minimale e fjalëkalimit duhet të jetë 6 karaktere!</string>
+    <string name="error_confirm_password_not_same">Konfirmo që fjalëkalimi nuk është i njëjtë!</string>
+    <string name="error_password_not_same">Fjalëkalimet nuk janë të njëjta!</string>
+    <string name="error_phone_required">Kërkohet numri i telefonit!</string>
+    <string name="error_number_personal_required">Kërkohet numri personal!</string>
+    <string name="error_number_personal_is_ten_digit">Gabim, më shumë se 10 shifra!</string>
+    <string name="error_number_personal_less_than_ten_digits">Gabim, numri personal është fiksuar 10 shifra!</string>
+    <string name="error_password_weak">Fjalëkalimi i dobët: Të paktën tetë karaktere, të paktën një shkronjë dhe një numër.</string>
+    <string name="user_registered_successfully">Përdoruesi është regjistruar me sukses!</string>
+    <string name="user_failed_to_register">Regjistrimi i përdoruesit dështoi!  Provo përsëri!</string>
+    <string name="role_not_finded">Roli nuk u gjet!</string>
+    <string name="user_not_finded">Përdoruesi nuk u gjet!</string>
+    <string name="user_not_exist">Përdoruesi nuk ekziston!</string>
+    <string name="logins_successfully">Identifikohet me sukses!</string>
+    <string name="logins_failed">Identifikimi dështoi!</string>
+    <string name="dashboard">Paneli</string>
+    <string name="logout">Shkyç</string>
+    <string name="profile">Profili</string>
+    <string name="profile_label">PROFILI</string>
+    <string name="your_name">Emri juaj</string>
+    <string name="change_profile_image">Ndrysho imazhin e profilit</string>
+    <string name="delete_user">Fshi përdoruesin</string>
+    <string name="image_uploaded">Imazhi u ngarkua!</string>
+    <string name="image_failed_to_uplaod">Imazhi nuk u ngarkua!</string>
+    <string name="image_not_set">Imazhi nuk është vendosur!</string>
+    <string name="role">Roli</string>
+    <string name="Data_success_updated">Të dhënat janë përditësuar, për të parë rezultatet duhet të identifikoheni sërish!</string>
+    <string name="edit_data">Redakto</string>
+    <string name="this_person_with_this">Personi me emër:</string>
+    <string name="was_registered_successfully">u regjistrua me sukses</string>
+    <string name="person_failed_to_register">Personi nuk arriti të regjistrohej!</string>
+    <string name="tap_to_add_profile_picture">Shtyp për të shtuar foton e profilit</string>
+    <string name="successfully">Me sukses!</string>
+    <string name="uri_failed_to_set">Uri nuk arriti të vendosej!</string>
+    <string name="profile_picture_added">Fotografia e profilit u shtua!</string>
+    <string name="select_a_status">Zgjidhni një status</string>
+    <string name="see_users">Shihni Përdoruesit</string>
+    <string name="see_persons">Shih Personat</string>
+    <string name="location_reports">Raportet e vendndodhjes</string>
+    <string name="analytics">ANALITIKA</string>
+    <string name="four_items">4 Artikuj</string>
+    <string name="six_items">6 Artikuj</string>
+    <string name="thank_location">Vendndodhja është zënë faleminderit për bashkëpunimin</string>
+    <string name="Location">Vendndodhja:</string>
+    <string name="person_delete_successfully">është fshirë me sukses!</string>
+    <string name="person_delete_failed">dështoi në fshirje!</string>
+    <string name="let_get_started">Le të fillojmë</string>
+    <string name="register">Regjistro</string>
+    <string name="register_label">Regjistro</string>
+    <string name="login">Identifikohu</string>
+    <string name="welcome_back">Mirëse u ktheve</string>
+    <string name="exist_in_database">Ekziston në bazën e të dhënave!</string>
+    <string name="sign_in_google">Hyni në Google</string>
+    <string name="sign_in_phone">Identifikohu me telefon</string>
+    <string name="sign_in_anonymous">Identifikohu si Anonim</string>
+    <string name="registration">Regjistrimi</string>
+    <string name="verification">Verifikimi</string>
+    <string name="verification_code">Kodi i Verifikimit</string>
+    <string name="code">Kodi</string>
+    <string name="verify_otp">Verifiko OTP</string>
+    <string name="verify_code">Verifiko kodin</string>
+    <string name="please_enter_your_country_code_and_phone_number_for_verification">Ju lutemi shkruani kodin e shtetit dhe numrin e telefonit për verifikim</string>
+    <string name="phone_number">Numri i telefonit</string>
+    <string name="generate_continue">Vazhdoni</string>
+    <string name="text_verification">Kodi i verifikimit u dërgua te</string>
+    <string name="error_please_fill_in_the_form_to_continue">Ju lutemi plotësoni formularin për të vazhduar.</string>
+    <string name="we_have_send_you_an_code_for">Ne ju kemi dërguar një kod OTP për</string>
+    <string name="for_verification">për verifikim</string>
+    <string name="there_was_an_error_verifying_otp">Pati një gabim gjatë verifikimit të OTP</string>
+    <string name="error_verification_failed_please_try_again">Verifikimi dështoi, ju lutemi provoni përsëri!</string>
+    <string name="error_failed_to_login_as_anonymous">Identifikimi si anonim dështoi, ju lutemi provoni përsëri!</string>
+    <string name="didn_t_get_otp_resend">Nuk keni marrë OTP?  <b>Ridërgo</b></string>
+    <string name="please_enter_verification_code">Ju lutemi shkruani kodin e verifikimit....</string>
+    <string name="logged_in_as">I identifikuar si</string>
+    <string name="verification_code_sent">Kodi i verifikimit u dërgua…</string>
+    <string name="parent_name">Emri i prindit</string>
+    <string name="your_last_name">Mbiemri juaj</string>
+    <string name="verification_email_sent_to">Email verifikimi u dërgua te</string>
+    <string name="failed_to_send_verification_email">Dërgimi i email-it të verifikimit dështoi.</string>
+    <string name="please_verify_email_to_login_check_in_email_we_sent_link_for_verification">Ju lutemi verifikoni emailin për t\'u identifikuar, kontrolloni në email ne dërguam lidhjen për verifikim!</string>
+    <string name="reset_password">Rivendosni fjalëkalimin</string>
+    <string name="check_your_email_to_reset_password">Kontrolloni emailin tuaj për të rivendosur fjalëkalimin!</string>
+    <string name="error_try_again_something_wrong_happened">Provo përsëri!  Diçka nuk ndodhi!</string>
+    <string name="error_no_internet_connection_check_wifi_or_mobile_data">Kontrollo të dhënat Wi-Fi ose celulare, Dëshiron të shkosh te menyja e cilësimeve?"</string>
+    <string name="search">Kërko</string>
+    <string name="open">Hapur</string>
+    <string name="close">Mbylle</string>
+    <string name="skip">Kaloni</string>
+    <string name="set_profile_picture">Cakto fotografinë e profilit</string>
+    <string name="home">Faqja kryesore</string>
+    <string name="notifications">Njoftimet</string>
+    <string name="likes">Pëlqimet</string>
+    <string name="please_type_name_like_hint">Ju lutemi shkruani emrin si aluzion me fjalët kapak!</string>
+    <string name="remember">E mbani mend?</string>
+    <string name="report">Raportoni</string>
+    <string name="tap_on_map_to_set_location_or_just_continue">Prekni në hartë për të vendosur vendndodhjen ose thjesht vazhdoni</string>
+    <string name="set_current_location">Vendos vendndodhjen aktuale</string>
+    <string name="location_set_tap_if_u_want_to_change">Vendndodhja është caktuar, prekni gjatë nëse dëshironi të ndryshoni!</string>
+    <string name="add_any_additional_info_optional">Shto çdo informacion shtesë (opsionale)</string>
+    <string name="choose">Zgjidhni</string>
+    <string name="upload_any_media_optional">Ngarko çdo media (opsionale)</string>
+    <string name="you_have_selected">Ju keni zgjedhur</string>
+    <string name="images">imazhe</string>
+    <string name="location_not_set_please_set_new_location">Vendndodhja nuk është caktuar, ju lutemi vendosni vendndodhje të re!</string>
+    <string name="failed_to_register">Regjistrimi dështoi</string>
+    <string name="position">Pozicioni</string>
+    <string name="please_turn_on_location_on_your_phone">Ju lutemi aktivizoni vendndodhjen në telefonin tuaj!</string>
+    <string name="image_uploading_please_wait">Ngarkimi i imazhit Ju lutemi prisni.............</string>
+    <string name="image_uploaded_v2">Imazhi u ngarkua!</string>
+    <string name="account">Llogaria</string>
+    <string name="my_account">Llogaria ime</string>
+    <string name="first_name">Emri*</string>
+    <string name="register_person_first_name">Emri</string>
+    <string name="register_person_last_name">Mbiemri</string>
+    <string name="profile_picture">Foto Profili</string>
+    <string name="upload">Ngarkoni</string>
+    <string name="delete">Fshije</string>
+    <string name="last_name">Mbiemri*</string>
+    <string name="parent_name_account">Emri i prindit*</string>
+    <string name="personal_number_account">Numri personal*</string>
+    <string name="phone_number_account">Numri i telefonit*</string>
+    <string name="email_account">email*</string>
+    <string name="address_account">Adresë*</string>
+    <string name="save_changes">Ruaj ndryshimet</string>
+    <string name="user_exist">Perdoruesi ekziston!</string>
+    <string name="saved_successfully">U ruajt me sukses</string>
+    <string name="empty">Bosh</string>
+    <string name="not_exist">Nuk ekziston</string>
+    <string name="total_cases_reported_verified">Totali i rasteve të raportuara VERIFIKUAR</string>
+    <string name="total_cases_reported_unverified">Totali i rasteve të raportuara të PAVERIFIKUARA</string>
+    <string name="reports_verified">Të verifikuara</string>
+    <string name="reports_pending">Në pritje</string>
+    <string name="reports_fake">Të pavërteta</string>
+    <string name="real_time_statistics">Statistikat në kohë reale</string>
+    <string name="no_firebase_authentication">Nuk ka vërtetim Firebase</string>
+    <string name="image_deleted_successfully">Imazhi u fshi me sukses!</string>
+    <string name="images_uploaded_successfully">Imazhet u ngarkuan me sukses!</string>
+    <string name="image_uploaded_successfully">Imazhi u ngarkua me sukses!</string>
+    <string name="help">Ndihmë</string>
+    <string name="about">Rreth</string>
+    <string name="settings">Cilësimet</string>
+    <string name="privileged_user">Përdorues</string>
+    <string name="wanted_person">Person të kerkuar</string>
+    <string name="locations">LOKACIONET</string>
+    <string name="total_reported">Totali i raportuar</string>
+    <string name="location_update_successfully">Vendndodhja e fundit është përditësuar me sukses!</string>
+    <string name="location_update_failed">Vendndodhja e fundit nuk u përditësua!</string>
+    <string name="latitude_updated_successfully">Latitude u përditësua me sukses!</string>
+    <string name="longitude_updated_successfully">Gjatësia gjeografike u përditësua me sukses!</string>
+    <string name="latitude_failed_to_update">Latitude nuk u përditësua!</string>
+    <string name="longitude_failed_to_update">Përditësimi i gjatësisë gjeografike dështoi!</string>
+    <string name="last_seen">Parë për herë të fundit:</string>
+    <string name="last_seen_location">Vendndodhja e parë e fundit:</string>
+    <string name="login_info">Për t\'u identifikuar herën tjetër që keni nevojë për email verifikimi, faleminderit!</string>
+    <string name="this_person_with_this_name">Ky person me këtë emër:</string>
+    <string name="exists_in_database_please_add_example">ekziston në bazën e të dhënave, ju lutemi shtoni për shembull: Filan Fisteku 1</string>
+    <string name="about_header">MostWanted App është një aplikacion android, i cili është krijuar për të ndihmuar në gjetjen e personave të kërkuar nga "Policia e Kosovës" për kryerjen e veprave penale.</string>
+    <string name="about_contain">Pra aplikacioni është i thjeshtë për t\'u përdorur pasi njerëzit pothuajse shumicën e kohës janë aktivë në rrjetin social "Facebook" ku fanpageja zyrtare e policisë së Kosovës çdo ditë publikon fotografi të personave të kërkuar dhe që qytetarët e Kosovës mund të ndihmojnë në gjetjen e tyre.  njerëzit kështu që me një buton "Dërgo vendndodhjen" merr vendndodhjen ku qytetari është i ruajtur në bazën e të dhënave të firestore duke marrë gjerësinë dhe gjatësinë e vendndodhjes së raportuar nga qytetari.</string>
+    <string name="allow_notification">Lejo njoftimin</string>
+    <string name="need_some_helps">Keni nevojë për ndihmë?</string>
+    <string name="contact_us">Na kontaktoni</string>
+    <string name="email_us">Na dërgoni me email</string>
+    <string name="call_us">Na telefononi</string>
     <string name="support_email">gentritibishi@gmail.com</string>
-    <string name="choose_an_email_client">Choose an Email client :</string>
-    <string name="grade_name">Grade</string>
-    <string name="assign_police_investigators">Assign police investigators</string>
-    <string name="select_first_investigator">Select First Investigator</string>
-    <string name="select_second_investigator">Select Second Investigator</string>
-    <string name="generate_the_report">Generate the report</string>
-    <string name="report_assigned_successfully">Report assigned successfully!</string>
-    <string name="report_failed_to_assign">Report failed to assign!</string>
-    <string name="kosovo_police">Kosovo Police</string>
-    <string name="last_seen_address">Last Seen Address:</string>
-    <string name="no_location_report">NO LOCATION REPORT</string>
-    <string name="first_location">First Location:</string>
-    <string name="second_location">Second Location:</string>
-    <string name="third_location">Third Location:</string>
-    <string name="forth_location">Forth Location:</string>
-    <string name="first_investigator">First Investigator</string>
-    <string name="second_investigator">Second Investigator</string>
-    <string name="signature">Signature</string>
-    <string name="assigned_report_for">Assigned report for</string>
-    <string name="confidential_report">CONFIDENTIAL REPORT</string>
-    <string name="pdf_file_generated_successfully">PDF file generated successfully.</string>
-    <string name="location_reports_of">Location reports of</string>
-    <string name="pdf_url_is_saved_in_user_collection_successfully">Pdf url is saved in user collection!</string>
-    <string name="pdf_url_is_saved_in_assigned_collection_successfully">Pdf url is saved in assigned collection!</string>
-    <string name="share">Share</string>
-    <string name="share_pdf_generated_link">Share pdf generated link.</string>
-    <string name="hi">Hi,</string>
-    <string name="select_one_or_more_picture">Select One or More Picture</string>
-
-    <string name="location_cell">Location</string>
-    <string name="address_cell">Address</string>
-    <string name="latitude_cell">Latitude</string>
-    <string name="longitude_cell">Longitude</string>
+    <string name="choose_an_email_client">Zgjidhni një klient Email:</string>
+    <string name="grade_name">Grada</string>
+    <string name="assign_police_investigators">Cakto hetuesit</string>
+    <string name="select_first_investigator">Zgjidhni Hetuesin e Parë</string>
+    <string name="select_second_investigator">Zgjidhni Hetuesin e Dytë</string>
+    <string name="generate_the_report">Gjeneroni raportin</string>
+    <string name="report_assigned_successfully">Raporti u caktua me sukses!</string>
+    <string name="report_failed_to_assign">Raporti nuk u caktua!</string>
+    <string name="kosovo_police">Policia e Kosovës</string>
+    <string name="last_seen_address">Adresa e parë e fundit:</string>
+    <string name="no_location_report">NUK KA RAPORT VENDNDODHJE</string>
+    <string name="first_location">Vendndodhja e parë:</string>
+    <string name="second_location">Vendndodhja e dytë:</string>
+    <string name="third_location">Vendndodhja e tretë:</string>
+    <string name="forth_location">Vendndodhja e katërt:</string>
+    <string name="first_investigator">Hetuesi i parë</string>
+    <string name="second_investigator">Hetuesi i dytë</string>
+    <string name="signature">Nënshkrimi</string>
+    <string name="assigned_report_for">Raporti i caktuar për</string>
+    <string name="confidential_report">RAPORT KONFIDENCIAL</string>
+    <string name="pdf_file_generated_successfully">PDF është krijuar me sukses.</string>
+    <string name="location_reports_of">Raportet e vendndodhjes së</string>
+    <string name="pdf_url_is_saved_in_user_collection_successfully">URL-ja PDF ruhet në koleksionin e përdoruesve!</string>
+    <string name="pdf_url_is_saved_in_assigned_collection_successfully">URL-ja PDF ruhet në koleksionin e caktuar!</string>
+    <string name="share">Shpërndaje</string>
+    <string name="share_pdf_generated_link">Ndani lidhjen e krijuar në pdf.</string>
+    <string name="hi">Përshëndetje,</string>
+    <string name="select_one_or_more_picture">Zgjidhni një ose më shumë foto</string>
+    <string name="location_cell">Vendndodhja</string>
+    <string name="address_cell">Adresë</string>
+    <string name="latitude_cell">Gjerësia gjeografike</string>
+    <string name="longitude_cell">Gjatësia gjeografike</string>
     <string name="investigator">Inv.</string>
-
     <string name="republika_e_kosoves" translatable="false">Republika e Kosovës</string>
     <string name="republika_kosovo_republic_of_kosovo" translatable="false">Republika Kosovo - Republic of Kosovo</string>
     <string name="mpb_three_language" translatable="false">MINISTRIA E PUNËVE TË BRENDSHME - MINISTARSTVO UNUTRAŠNJIH POSLOVA - MINISTRY OF INTERNAL AFFAIRS</string>
     <string name="kp_three_language" translatable="false">POLICIA E KOSOVËS - КОСОВСКА ПОЛИЦИЈА - KOSOVO POLICE</string>
     <string name="rk_three_language" translatable="false">RAPORT KONFIDENCIAL - ПОВЕРЉИВ ИЗВЕШТАЈ - CONFIDENTIAL REPORT</string>
-
     <string name="POLICE_STATION_RR_REXHEP_LUCI_TITLE">POLICE STATION - Rr. Rexhep Luci, Prishtine 10000</string>
     <string name="POLICE_STATION_RR_REXHEP_LUCI_LATITUDE">42.6626792</string>
     <string name="POLICE_STATION_RR_REXHEP_LUCI_LONGITUDE">21.1572832</string>
-
     <string name="POLICE_STATION_NR2_TITLE">POLICE STATION Nr.2 - Hamez Jashari, Prishtine 10000</string>
     <string name="POLICE_STATION_NR2_LATITUDE">42.659114</string>
     <string name="POLICE_STATION_NR2_LONGITUDE">21.167420</string>
-
     <string name="POLICE_STATION_SHESHI_I_LIRISE_TITLE">POLICE STATION - Sheshi i Lirise, Fushe Kosove 12000</string>
     <string name="POLICE_STATION_SHESHI_I_LIRISE_LATITUDE">42.6347623</string>
     <string name="POLICE_STATION_SHESHI_I_LIRISE_LONGITUDE">21.0848419</string>
-
     <string name="POLICE_STATION_E80_TITLE">POLICE STATION - E80, Prishtine 10000</string>
     <string name="POLICE_STATION_E80_LATITUDE">42.681564</string>
     <string name="POLICE_STATION_E80_LONGITUDE">21.159672</string>
-
     <string name="POLICE_STATION_BISLIM_BAJGORA_TITLE">POLICE STATION - Bislim Bajgora, Mitrovice 40000</string>
     <string name="POLICE_STATION_BISLIM_BAJGORA_LATITUDE">42.890092</string>
     <string name="POLICE_STATION_BISLIM_BAJGORA_LONGITUDE">20.874400</string>
-
     <string name="POLICE_STATION_KRALJA_MILUTINA_TITLE">POLICE STATION - Kralja Milutina, Graçanice 10500</string>
     <string name="POLICE_STATION_KRALJA_MILUTINA_LATITUDE">42.601494</string>
     <string name="POLICE_STATION_KRALJA_MILUTINA_LONGITUDE">21.192242</string>
-
     <string name="POLICE_STATION_RR_MULLA_IDRIZI_TITLE">POLICE STATION - Rr. Mulla Idrizi, Gjilan 60000</string>
     <string name="POLICE_STATION_RR_MULLA_IDRIZI_LATITUDE">42.4631162</string>
     <string name="POLICE_STATION_RR_MULLA_IDRIZI_LONGITUDE">21.4696013</string>
-
     <string name="POLICE_STATION_RR_JONI_TITLE">POLICE STATION - Rr. JONI, Prizren 20000</string>
     <string name="POLICE_STATION_RR_JONI_LATITUDE">42.214859</string>
     <string name="POLICE_STATION_RR_JONI_LONGITUDE">20.732425</string>
-
     <string name="POLICE_STATION_RR_WILLIAM_WALKER_TITLE">POLICE STATION ALPHA - Rr. William Walker, Prizren 20000</string>
     <string name="POLICE_STATION_RR_WILLIAM_WALKER_LATITUDE">42.210322</string>
     <string name="POLICE_STATION_RR_WILLIAM_WALKER_LONGITUDE">20.730256</string>
-
     <string name="POLICE_STATION_GJAKOVE_TITLE">POLICE STATION - Gjakove 20000</string>
     <string name="POLICE_STATION_GJAKOVE_LATITUDE">42.375681</string>
     <string name="POLICE_STATION_GJAKOVE_LONGITUDE">20.442102</string>
-
     <string name="POLICE_STATION_PERLINE_TITLE">POLICE STATION - Perline 32000</string>
     <string name="POLICE_STATION_PERLINE_LATITUDE">42.609493</string>
     <string name="POLICE_STATION_PERLINE_LONGITUDE">20.575675</string>
-
-
     <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police</string>
     <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous</string>
     <string-array name="roles">
         <item>Admin</item>
+        <item>Semi-Admin</item>
         <item>User</item>
-        <item>Informer</item>
     </string-array>
-
     <string-array name="eye_color">
-        <item>Amber</item>
-        <item>Blue</item>
-        <item>Brown</item>
-        <item>Gray</item>
-        <item>Green</item>
+        <item>Qelibar</item>
+        <item>Blu</item>
+        <item>Kafe</item>
+        <item>Gri</item>
+        <item>E gjelbër</item>
         <item>Hazel</item>
-        <item>Red</item>
+        <item>E kuqe</item>
     </string-array>
-
     <string-array name="hair_color">
-        <item>Black</item>
-        <item>Brown</item>
-        <item>Blond</item>
-        <item>White/Gray</item>
-        <item>Red</item>
+        <item>E zezë</item>
+        <item>Kafe</item>
+        <item>Bionde</item>
+        <item>Bardhë/Gri</item>
+        <item>E kuqe</item>
     </string-array>
-
     <string-array name="physical_appearance">
-        <item>Very Good</item>
-        <item>Good</item>
-        <item>Weak</item>
+        <item>Shume mire</item>
+        <item>Mirë</item>
+        <item>I dobët</item>
     </string-array>
-
     <string-array name="gender_array">
         <item>MALE</item>
         <item>FEMALE</item>
     </string-array>
-
     <string-array name="acts">
-        <item>Serious theft</item>
-        <item>Easy theft</item>
-        <item>Robbery</item>
-        <item>Abduction</item>
-        <item>Narcotics trafficking</item>
-        <item>Trafficking in human beings</item>
-        <item>Attempted murder</item>
-        <item>Murder</item>
+        <item>Vjedhje e rëndë</item>
+        <item>Vjedhje e lehtë</item>
+        <item>Grabitje</item>
+        <item>Rrëmbimi</item>
+        <item>Trafiku i lëndëve narkotike</item>
+        <item>Trafikimi i qenieve njerëzore</item>
+        <item>Vrasje në tentativë</item>
+        <item>Vrasje</item>
     </string-array>
-
     <string-array name="grade">
         <item>A</item>
         <item>B</item>
@@ -359,236 +338,229 @@
         <item>D</item>
         <item>E</item>
     </string-array>
-
     <string-array name="status_of_person">
-        <item>WANTED PERSON</item>
-        <item>FOUND PERSON</item>
+        <item>PERSON I KERKUAR</item>
+        <item>PERSON I GJETUR</item>
     </string-array>
-
     <string name="title_activity_maps">MapsActivity</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps_informer">MapsInformerActivity</string>
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
+    <string name="messages_header">Mesazhet</string>
+    <string name="sync_header">Sinkronizimi</string>
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
+    <string name="signature_title">Nenshkrimi juaj</string>
+    <string name="reply_title">Veprimi i parazgjedhur i përgjigjes</string>
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="sync_title">Sinkronizoni emailin në mënyrë periodike</string>
+    <string name="attachment_title">Shkarkoni bashkëngjitjet në hyrje</string>
+    <string name="attachment_summary_on">Shkarkoni automatikisht
+bashkëngjitjet për emailet hyrëse</string>
+    <string name="attachment_summary_off">Shkarkoni bashkëngjitjet vetëm kur kërkohet manualisht</string>
     <string name="title_activity_single_report" translatable="false">SingleReportActivity</string>
-    <string name="error_failed_to_get_image_from_database">Failed to get image from database</string>
-    <string name="informer_report">Informer Report</string>
-    <string name="status">Status</string>
-    <string name="date_and_time">Date and Time</string>
+    <string name="error_failed_to_get_image_from_database">Marrja e imazhit nga baza e të dhënave dështoi</string>
+    <string name="informer_report">Raport Informator</string>
+    <string name="status">Statusi</string>
+    <string name="date_and_time">Data dhe ora</string>
     <string name="uid">uid</string>
-    <string name="informer_person_name">Informer Person Name</string>
-    <string name="report_description">REPORT DESCRIPTION</string>
-    <string name="report_status">STATUS</string>
+    <string name="informer_person_name">Emri i personit informues</string>
+    <string name="report_description">PERSHKRIMI I RAPORTIT</string>
+    <string name="report_status">STATUSI</string>
     <string name="report_uid">UID</string>
-    <string name="report_informer">INFORMER</string>
-    <string name="report_date_time">DATETIME</string>
-    <string name="report_added">Report added:</string>
-    <string name="report_modified">Report modified:</string>
-    <string name="report_removed">Report removed:</string>
-    <string name="report_title">REPORT TITLE</string>
-    <string name="failed_to_save">Failed to save!</string>
-    <string name="ok">ok</string>
-    <string name="text_location_permission">If u want you can share your location right now, or not!</string>
-    <string name="title_location_permission">Location Permission</string>
-    <string name="no_location_found_tap_on_map_for_manual_location">No location found, tap on map for manual location!</string>
-    <string name="failed_to_save_report">Failed to save report</string>
-    <string name="failed_to_find_document_for_save_images">Failed to find document for save images</string>
-    <string name="thank_you_for_collaboration">Thank you for collaboration.</string>
-    <string name="report_is_saving">Report is saving...</string>
-    <string name="if_loading_takes_too_long_please_press_the_button_again">If loading takes too long please press \"Report\" again!</string>
-    <string name="update_status_of_report_with">Update status of report with</string>
-    <string name="has_been_changed_to">has been changed to</string>
-    <string name="your_report_in_datetime">Your report in datetime:</string>
-    <string name="and_with_title">and with title: </string>
-    <string name="has_new_status_right_now">has new status right now!</string>
-    <string name="hello_dear">Hello, dear</string>
-    <string name="status_of_report_has_changed_to">Status of report has changed to</string>
-    <string name="please_be_real_in_giving_information_next_time">please be real in giving information next time.</string>
-    <string name="you_earn">you earn</string>
-    <string name="thank_you">thank you</string>
-    <string name="age">AGE</string>
+    <string name="report_informer">INFORMATOR</string>
+    <string name="report_date_time">DATA KOHA</string>
+    <string name="report_added">Raporti u shtua:</string>
+    <string name="report_modified">Raporti u modifikua:</string>
+    <string name="report_removed">Raporti u hoq:</string>
+    <string name="report_title">TITULLI I RAPORTIT</string>
+    <string name="failed_to_save">Ruajtja dështoi!</string>
+    <string name="ok">Ne rregull</string>
+    <string name="text_location_permission">Nëse dëshironi, mund të ndani vendndodhjen tuaj tani, ose jo!</string>
+    <string name="title_location_permission">Leja e vendndodhjes</string>
+    <string name="no_location_found_tap_on_map_for_manual_location">Nuk u gjet asnjë vend, trokit në hartë për vendndodhjen manuale!</string>
+    <string name="failed_to_save_report">Ruajtja e raportit dështoi</string>
+    <string name="failed_to_find_document_for_save_images">Gjetja e dokumentit për ruajtjen e imazheve dështoi</string>
+    <string name="thank_you_for_collaboration">Faleminderit për bashkëpunimin.</string>
+    <string name="report_is_saving">Raporti po ruhet…</string>
+    <string name="if_loading_takes_too_long_please_press_the_button_again">Nëse ngarkimi zgjat shumë, ju lutemi shtypni përsëri "Raporto"!</string>
+    <string name="the_new_status_of_this_report_is">Statusi i ri i këtij raporti është</string>
+    <string name="changed_to">ndryshuar në</string>
+    <string name="report_with_id">Raporti me ID</string>
+    <string name="and_with_id">dhe me id:</string>
+    <string name="has_new_status_right_now">ka status të ri tani.</string>
+    <string name="status_of_report_has_changed_to">Statusi i raportit ka ndryshuar në</string>
+    <string name="please_be_real_in_giving_information_next_time">ju lutemi tregohuni real në dhënien e informacionit herën tjetër.</string>
+    <string name="you_earn">ju fitoni</string>
+    <string name="thank_you">faleminderit</string>
+    <string name="age">Mosha</string>
     <string name="phone_number_kosovo">+38344XXXXXX</string>
-    <string name="no_more_than_ten_digits">No more than 10 digits!</string>
-    <string name="info_number_personal_is_ten_digit">Information: Personal Number is ten digits!</string>
-    <string name="balance">BALANCE</string>
-    <string name="take_order">take_order</string>
-    <string name="amount">amount</string>
-    <string name="coins">Coins</string>
-    <string name="select_a_prize">Select a prize</string>
-    <string name="error_prize_required">Error prize is required!</string>
-    <string name="latest">Latest</string>
-    <string name="top_four_latest_person_wanted">TOP 4 LATEST PERSON WANTED</string>
-    <string name="your_account_statistics">Your account statistics</string>
-    <string name="you_have_earn">You have earn</string>
-    <string name="still_under_review">Still under review</string>
-    <string name="register_investigator">Register Investigator</string>
-    <string name="this_investigator_with_name">This investigator with name:</string>
-    <string name="investigator_failed_to_register">Investigator failed to register!</string>
-    <string name="investigator_person">Investigator</string>
-    <string name="select_the_gender">Select the gender</string>
-    <string name="error_gender_required">Gender is required!</string>
-    <string name="male">Male</string>
-    <string name="female">Female</string>
-    <string name="gender_for_wanted_person_statistic">Gender of the wanted persons</string>
-    <string name="manage_location_reports">Manage Reports</string>
-    <string name="users">USERS</string>
-    <string name="num_total_users">USERS</string>
+    <string name="no_more_than_ten_digits">Jo më shumë se 10 shifra!</string>
+    <string name="info_number_personal_is_ten_digit">Informacion: Numri Personal është dhjetëshifror!</string>
+    <string name="balance">BILANCI</string>
+    <string name="take_order">marrë_porosi</string>
+    <string name="amount">shuma</string>
+    <string name="coins">Monedha</string>
+    <string name="select_a_prize">Zgjidhni një çmim</string>
+    <string name="error_prize_required">Kërkohet çmimi i gabimit!</string>
+    <string name="latest">Të fundit</string>
+    <string name="top_four_latest_person_wanted">KËRKohen TOP 4 PERSONAT E FUNDIT</string>
+    <string name="your_account_statistics">Statistikat e llogarisë suaj</string>
+    <string name="you_have_earn">Ju keni fituar</string>
+    <string name="still_under_review">Ende në shqyrtim</string>
+    <string name="register_investigator">Regjistrohu hetues</string>
+    <string name="this_investigator_with_name">Ky hetues me emrin:</string>
+    <string name="investigator_failed_to_register">Hetuesi nuk arriti të regjistrohej!</string>
+    <string name="investigator_person">Hetues</string>
+    <string name="select_the_gender">Zgjidhni gjininë</string>
+    <string name="error_gender_required">Gjinia është e nevojshme!</string>
+    <string name="male">Mashkull</string>
+    <string name="female">Femër</string>
+    <string name="gender_for_wanted_person_statistic">Gjinia e personave të kërkuar</string>
+    <string name="manage_location_reports">Menaxho Raportet</string>
+    <string name="users">PËRDORËSIT</string>
+    <string name="num_total_users">PËRDORËSIT</string>
     <string name="num_total_person">PERSON</string>
-    <string name="num_total_investigators">INVESTIGATORS</string>
-    <string name="total_reports">TOTAL REPORTS</string>
-    <string name="today">Today</string>
-    <string name="weekly">Weekly</string>
-    <string name="vs_yesterday">vs. yesterday</string>
-    <string name="vs_weekly">vs. last week</string>
-    <string name="summary_report">Summary Report</string>
-    <string name="update">UPDATE</string>
-    <string name="manage">MANAGE</string>
-    <string name="gender_for_investigator_statistics">Gender of investigators</string>
-    <string name="gender_for_user_statistics">Gender for users</string>
-    <string name="chart_analysis">Chart Analysis</string>
-    <string name="balance_field">Balance</string>
-    <string name="error_balance_required">Balance is required!</string>
-    <string name="error_coins_required">Coins is required!</string>
-    <string name="error_grade_required">Grade is required!</string>
-    <string name="error_role_required">Role is required!</string>
-    <string name="date_time_registration">Date Time Registration</string>
-    <string name="select_the_acts">Select the acts</string>
-    <string name="birthday">Birthday</string>
-    <string name="error_birthday_required">Birthday required!</string>
-    <string name="assign">Assign</string>
-    <string name="assign_report">Assign Report</string>
-    <string name="error_you_need_to_add_photo_for_investigator">You must add photos for this registered investigator!</string>
-    <string name="error_you_need_to_add_photo_for_person">You must add photo for this registered person!</string>
-    <string name="this_user_with_this">This user with this</string>
-    <string name="successfully_login_to_new_user">Success, redirecting to dashboard...</string>
-    <string name="user_is_deleted_successfully">User deleted successfully!</string>
-    <string name="error_user_failed_to_delete">Failed to delete this user!</string>
-    <string name="person_is_deleted_successfully">Person deleted successfully!</string>
-    <string name="error_person_failed_to_delete">Failed to delete this person!</string>
-    <string name="investigator_is_deleted_successfully">Investigator deleted successfully!</string>
-    <string name="error_investigator_failed_to_delete">Failed to delete investigator!</string>
-    <string name="this_report_is_deleted_successfully">This report deleted successfully!</string>
-    <string name="error_report_failed_to_delete">Report failed to delete!</string>
-    <string name="no_data">No Data</string>
-    <string name="loading">Loading</string>
-    <string name="success_redirect_to_login">Success redirect to login page.</string>
-    <string name="failed_to_load_data">Failed to load data!</string>
-    <string name="gender">Gender</string>
-    <string name="eye_color">Eye Color</string>
-    <string name="hair_color">Hair Color</string>
-    <string name="height">Height</string>
-    <string name="weight">Weight</string>
-    <string name="phy_appearance">Physical Appearance</string>
-    <string name="collection_created">Collection created..</string>
-    <string name="uploaded_successfully">Uploaded successfully</string>
-    <string name="collection_saved_successfully">Collection saved successfully!</string>
-    <string name="error_not_allowed_same_investigator">Error not allowed same investigator!</string>
-    <string name="uploading">Uploading...</string>
-    <string name="you_need_permissions">You need location permission if u want your location!</string>
-    <string name="default_location">Default Location</string>
-    <string name="appearance">Appearance</string>
-    <string name="dark_mode">Dark mode</string>
-    <string name="system_mode">System mode</string>
-    <string name="light_mode">Light mode</string>
-    <string name="logo_app">Logo of application!</string>
-    <string name="image">image</string>
-    <string name="error_no_internet_connection">No internet connection!</string>
-    <string name="cancel">Cancel</string>
-    <string name="tap_on_search_and_enter_full_name_of_person_that_you_want_to_report">Tap search and enter the full name of the person you want to report</string>
-    <string name="now_tap_on_desired_person">Now, tap on the desired person</string>
-    <string name="payment_information">Payment Information</string>
-    <string name="your_paypal_email">Paypal Email</string>
-    <string name="payment_method">Payment Method</string>
-    <string name="full_name_payment_information">Full Name</string>
-    <string name="last_name_payment_information">Last Name</string>
-    <string name="account_number_payment_information">Account Number</string>
-    <string name="address_payment_information">Address</string>
-    <string name="bank_name_payment_information">Bank Name</string>
-    <string name="payment_processor">Payment Processor</string>
-    <string name="paypal_email">Paypal Email</string>
-    <string name="next_payment">Next Payment</string>
-    <string name="total_paid_out">Total Paid Out: $16.44</string>
-    <string name="withdraw">Withdraw</string>
-    <string name="all_available_earnings">All available earnings</string>
-    <string name="map_is_null">Map is null!</string>
-    <string name="document_id">Document ID</string>
+    <string name="num_total_investigators">HETUESIT</string>
+    <string name="total_reports">RAPORTET TOTALI</string>
+    <string name="today">Sot</string>
+    <string name="weekly">Javore</string>
+    <string name="vs_yesterday">vs dje</string>
+    <string name="vs_weekly">vs javës së kaluar</string>
+    <string name="summary_report">Raporti Analitik</string>
+    <string name="update">PËRDITËSOJE</string>
+    <string name="manage">Menaxho</string>
+    <string name="gender_for_investigator_statistics">Gjinia e hetuesve</string>
+    <string name="gender_for_user_statistics">Gjinia për përdoruesit</string>
+    <string name="chart_analysis">Analiza e grafikut</string>
+    <string name="balance_field">Bilanci</string>
+    <string name="error_balance_required">Kërkohet bilanci!</string>
+    <string name="error_coins_required">Kërkohen monedha!</string>
+    <string name="error_grade_required">Nota është e nevojshme!</string>
+    <string name="error_role_required">Kërkohet rol!</string>
+    <string name="date_time_registration">Data Koha e Regjistrimit</string>
+    <string name="select_the_acts">Zgjidhni aktet</string>
+    <string name="birthday">Ditëlindja</string>
+    <string name="error_birthday_required">Kërkohet ditëlindja!</string>
+    <string name="assign">Cakto</string>
+    <string name="assign_report">Cakto Raport</string>
+    <string name="error_you_need_to_add_photo_for_investigator">Ju duhet të shtoni foto për këtë hetues të regjistruar!</string>
+    <string name="error_you_need_to_add_photo_for_person">Ju duhet të shtoni foto për këtë person të regjistruar!</string>
+    <string name="this_user_with_this">Ky përdorues me këtë</string>
+    <string name="successfully_login_to_new_user">Me sukses, ridrejtimi te paneli i kontrollit…</string>
+    <string name="user_is_deleted_successfully">Përdoruesi u fshi me sukses!</string>
+    <string name="error_user_failed_to_delete">Fshirja e këtij përdoruesi dështoi!</string>
+    <string name="person_is_deleted_successfully">Personi u fshi me sukses!</string>
+    <string name="error_person_failed_to_delete">Fshirja e këtij personi dështoi!</string>
+    <string name="investigator_is_deleted_successfully">Hetuesi u fshi me sukses!</string>
+    <string name="error_investigator_failed_to_delete">Fshirja e hetuesit dështoi!</string>
+    <string name="this_report_is_deleted_successfully">Ky raport u fshi me sukses!</string>
+    <string name="error_report_failed_to_delete">Raporti nuk u fshi!</string>
+    <string name="no_data">Nuk ka të dhëna</string>
+    <string name="loading">Po ngarkohet</string>
+    <string name="success_redirect_to_login">Ridrejtimi me sukses në faqen e identifikimit.</string>
+    <string name="failed_to_load_data">Ngarkimi i të dhënave dështoi!</string>
+    <string name="gender">Gjinia</string>
+    <string name="eye_color">Ngjyra e syve</string>
+    <string name="hair_color">Ngjyra e flokëve</string>
+    <string name="height">Lartësia</string>
+    <string name="weight">Pesha</string>
+    <string name="phy_appearance">Pamja fizike</string>
+    <string name="collection_created">Koleksioni u krijua..</string>
+    <string name="uploaded_successfully">Ngarkuar me sukses</string>
+    <string name="collection_saved_successfully">Koleksioni u ruajt me sukses!</string>
+    <string name="error_not_allowed_same_investigator">Gabimi nuk lejohet i njëjti hetues!</string>
+    <string name="uploading">Po ngarkohet…</string>
+    <string name="you_need_permissions">Ju duhet leja e vendndodhjes nëse dëshironi vendndodhjen tuaj!</string>
+    <string name="default_location">Vendndodhja e parazgjedhur</string>
+    <string name="appearance">Pamja e jashtme</string>
+    <string name="dark_mode">Modaliteti i errët</string>
+    <string name="system_mode">Modaliteti i sistemit</string>
+    <string name="light_mode">Modaliteti i dritës</string>
+    <string name="logo_app">Logoja e aplikacionit!</string>
+    <string name="image">imazh</string>
+    <string name="error_no_internet_connection">Nuk ka lidhje interneti!</string>
+    <string name="cancel">Anulo</string>
+    <string name="tap_on_search_and_enter_full_name_of_person_that_you_want_to_report">Shkruani emrin e plotë të personit që dëshironi të raportoni</string>
+    <string name="now_tap_on_desired_person">Tani, trokitni lehtë mbi personin e dëshiruar</string>
+    <string name="payment_information">Informacioni i pageses</string>
+    <string name="your_paypal_email">Email-i në Paypal</string>
+    <string name="payment_method">Metoda e pagesës</string>
+    <string name="full_name_payment_information">Emri i plotë</string>
+    <string name="last_name_payment_information">Mbiemri</string>
+    <string name="account_number_payment_information">Numri i llogarisë</string>
+    <string name="address_payment_information">Adresë</string>
+    <string name="bank_name_payment_information">Emri i bankes</string>
+    <string name="payment_processor">Procesori i pagesave</string>
+    <string name="paypal_email">Email Paypal</string>
+    <string name="next_payment">Pagesa e radhës</string>
+    <string name="total_paid_out">Totali i paguar: 16,44 dollarë</string>
+    <string name="withdraw">Tërheqë</string>
+    <string name="all_available_earnings">Të gjitha të ardhurat në dispozicion</string>
+    <string name="map_is_null">Harta është e pavlefshme!</string>
+    <string name="document_id">ID e dokumentit</string>
     <string name="num">Num.</string>
-    <string name="location">Location</string>
-    <string name="daily_payment_requirements">Daily Payments Requirements</string>
-    <string name="require_withdrawal_account_set">Withdrawal account set</string>
-    <string name="paid_once_in_monthly_payment">Paid once in monthly payment</string>
-    <string name="account_longer_than_one_month">Account longer than one month</string>
-    <string name="account_details_not_changed_in_last_hours">Account details not changed in last 24 hours</string>
-    <string name="cashout_limit_reached_for_paypal_is_five_euros">Cashout limit reached for PAYPAL: $5</string>
-    <string name="cashout_limit_reached_for_bank_account_is_one_hundred_euros">Cashout limit reached for Bank Account: $100</string>
-    <string name="account_need_to_set">Account need to set first before create invoice!</string>
-    <string name="require_account_need_to_be_older_than_days">Error account need to be older than 30 days to make request for payment for invoice!</string>
-    <string name="it_has_not_been_fulfilled_as_a_condition">It has not been fulfilled as a condition.</string>
-    <string name="is_met_as_condition">Is met as a condition.</string>
-    <string name="error_cash_out_limit_not_reached">Error cash out limit not reached!</string>
-    <string name="error_this_account_is_changed_in_24_hours_wait_for_couple_hours_to_make_request_for_payment">Error account is changed within 24 hours, so wait a few hours to be available for a new payment request!</string>
-    <string name="error_is_no_longer_than_24_hours">Error account is no longer than 24 hours</string>
-    <string name="error_this_account_made_a_payment_this_month">Error account has made a payment this month!</string>
-    <string name="error_withdrawal_account_nots_set">Error withdrawal account not set</string>
-    <string name="you_have_successfully_made_the_request_wait_for_response">You have successfully made the request, wait for a response.</string>
-    <string name="checking">Checking...</string>
-    <string name="column_created_date_time">Created DateTime</string>
-    <string name="column_transaction_id">Transaction ID</string>
-    <string name="column_name_account">Account</string>
-    <string name="column_name_amount">Amount</string>
-    <string name="column_name_status">Status</string>
-    <string name="withdrawal_history">Withdrawal History</string>
-    <string name="your_money_in_balance">Income</string>
-    <string name="maximum">Maximum</string>
-    <string name="invoice">Invoice</string>
-    <string name="update_date_time">Update DateTime</string>
-    <string name="user_id">User Id</string>
-    <string name="process_payment">Process payment</string>
-    <string name="paid">Paid</string>
-    <string name="pending">Pending</string>
-    <string name="refused">Refused</string>
-    <string name="credit_card">Credit Card</string>
+    <string name="location">Vendndodhja</string>
+    <string name="daily_payment_requirements">Kërkesat e pagesave ditore</string>
+    <string name="require_withdrawal_account_set">Llogaria e tërheqjes është vendosur</string>
+    <string name="paid_once_in_monthly_payment">Paguhet një herë në muaj</string>
+    <string name="account_longer_than_one_month">Llogaria më e gjatë se një muaj</string>
+    <string name="account_details_not_changed_in_last_hours">Detajet e llogarisë nuk kanë ndryshuar në 24 orët e fundit</string>
+    <string name="cashout_limit_reached_for_paypal_is_five_euros">Kufiri i arkëtimit i arritur për paypal është pesë euro</string>
+    <string name="cashout_limit_reached_for_bank_account_is_one_hundred_euros">Kufiri i arkëtimit i arritur për bank account është njëqind euro</string>
+    <string name="account_need_to_set">Llogaria duhet të caktohet së pari përpara se të krijohet faturë!</string>
+    <string name="require_account_need_to_be_older_than_days">Llogaria e gabimit duhet të jetë më e vjetër se 30 ditë për të bërë kërkesë për pagesë për faturë!</string>
+    <string name="it_has_not_been_fulfilled_as_a_condition">Nuk është përmbushur si kusht.</string>
+    <string name="is_met_as_condition">Plotësohet si kusht.</string>
+    <string name="error_cash_out_limit_not_reached">Gabim kufiri i parave të gatshme nuk u arrit!</string>
+    <string name="error_this_account_is_changed_in_24_hours_wait_for_couple_hours_to_make_request_for_payment">Llogaria e gabimit ndryshohet brenda 24 orëve, prandaj prisni disa orë që të jeni në dispozicion për një kërkesë të re pagese!</string>
+    <string name="error_is_no_longer_than_24_hours">Llogaria e gabimit nuk është më e gjatë se 24 orë</string>
+    <string name="error_this_account_made_a_payment_this_month">Llogaria e gabimit ka bërë një pagesë këtë muaj!</string>
+    <string name="error_withdrawal_account_nots_set">Gabim llogaria e tërheqjes nuk është caktuar</string>
+    <string name="you_have_successfully_made_the_request_wait_for_response">Ju e keni bërë me sukses kërkesën, prisni një përgjigje.</string>
+    <string name="checking">Po kontrollon…</string>
+    <string name="column_created_date_time">Krijuar DataTime</string>
+    <string name="column_transaction_id">ID e transaksionit</string>
+    <string name="column_name_account">Llogaria</string>
+    <string name="column_name_amount">Shuma</string>
+    <string name="column_name_status">Statusi</string>
+    <string name="withdrawal_history">Historia e Tërheqjes</string>
+    <string name="your_money_in_balance">Të ardhura</string>
+    <string name="maximum">Maksimumi</string>
+    <string name="invoice">Fatura</string>
+    <string name="update_date_time">Përditëso DataTime</string>
+    <string name="user_id">ID-ja e përdoruesit</string>
+    <string name="process_payment">Procesi i pagesës</string>
+    <string name="paid">Të paguara</string>
+    <string name="pending">Në pritje</string>
+    <string name="refused">Të refuzuara</string>
+    <string name="credit_card">Kartë Krediti</string>
     <string name="paypal">Paypal</string>
-    <string name="request_daily_payment">Request for daily payment</string>
-    <string name="payouts">Payouts</string>
-    <string name="hour">Hour</string>
-    <string name="minute">Minute</string>
-    <string name="second">Second</string>
-    <string name="millisecond">Millisecond</string>
-    <string name="automatic_payment">Automatic Payment</string>
-    <string name="are_created">are created</string>
-    <string name="no_invoice">No invoice!</string>
-    <string name="you_must_have_at_least_one_invoice">You must have at least one invoice!</string>
-    <string name="please_select_one_mode">Please select a mode!</string>
-    <string name="you_need_to_enable_one_mode_before_you_change">You must activate a mode before changing.</string>
-    <string name="version">Version 1.1.0</string>
-    <string name="payouts_history">Payouts History</string>
-    <string name="invoices">Invoices</string>
-    <string name="payout_date_time">Payout Date time</string>
-
+    <string name="request_daily_payment">Kërkesë për pagesë ditore</string>
+    <string name="payouts">Pagesat</string>
+    <string name="hour">Ora</string>
+    <string name="minute">Minuta</string>
+    <string name="second">Së dyti</string>
+    <string name="millisecond">Milisekonda</string>
+    <string name="automatic_payment">Pagesa automatike</string>
+    <string name="are_created">janë krijuar</string>
+    <string name="no_invoice">Asnjë faturë!</string>
+    <string name="you_must_have_at_least_one_invoice">Duhet të keni të paktën një faturë!</string>
+    <string name="please_select_one_mode">Ju lutemi zgjidhni një modalitet!</string>
+    <string name="you_need_to_enable_one_mode_before_you_change">Duhet të aktivizoni një modalitet përpara se të ndryshoni.</string>
+    <string name="version">Versioni 1.1.0</string>
+    <string name="payouts_history">Historia e pagesave</string>
+    <string name="invoices">Faturat</string>
+    <string name="payout_date_time">Data e pagesës Ora</string>
+    <string name="with_date">në datën</string>
     <string-array name="status_state">
         <item>VERIFIED</item>
         <item>UNVERIFIED</item>
         <item>FAKE</item>
     </string-array>
-
     <string-array name="invoice_state">
         <item>PAID</item>
         <item>PENDING</item>
         <item>REFUSED</item>
     </string-array>
-
 </resources>

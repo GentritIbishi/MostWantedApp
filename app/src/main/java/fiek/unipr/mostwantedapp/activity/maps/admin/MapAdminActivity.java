@@ -674,11 +674,11 @@ public class MapAdminActivity extends FragmentActivity implements OnMapReadyCall
         ImageData image_data_profile = ImageDataFactory.create(bitmap_data_profile);
         Image image_profile = new Image(image_data_profile);
 
-//        // Initial point of the line in begin
-//        canvas.moveTo(0, pdfDocument.getDefaultPageSize().getHeight() / 1.225);
-//
-//        // Drawing the line in begin
-//        canvas.lineTo(pdfDocument.getDefaultPageSize().getWidth(), pdfDocument.getDefaultPageSize().getHeight() / 1.225);
+        // Initial point of the line in begin
+        canvas.moveTo(0, pdfDocument.getDefaultPageSize().getHeight() / 1.225);
+
+        // Drawing the line in begin
+        canvas.lineTo(pdfDocument.getDefaultPageSize().getWidth(), pdfDocument.getDefaultPageSize().getHeight() / 1.225);
 
         //image ic_kp as background of pdf
         canvas.addImage(image_data_ic_kp, 0, 0, pdfDocument.getDefaultPageSize().getWidth(), false);
@@ -725,14 +725,6 @@ public class MapAdminActivity extends FragmentActivity implements OnMapReadyCall
 
         _first_investigator.setFixedPosition(60, 60, _first_investigator.getWidth());
         _second_investigator.setFixedPosition(430, 60, _second_investigator.getWidth());
-
-
-        canvas.moveTo(55, pdfDocument.getDefaultPageSize().getHeight() - 800);
-        canvas.lineTo(160, pdfDocument.getDefaultPageSize().getHeight() - 800);
-
-        canvas.moveTo(425, pdfDocument.getDefaultPageSize().getHeight() - 800);
-        canvas.lineTo(530, pdfDocument.getDefaultPageSize().getHeight() - 800);
-
 
         republika_e_kosoves.setMultipliedLeading(0.5f);
         republika_kosovo_republic_of_kosovo.setMultipliedLeading(0.5f);

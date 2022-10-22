@@ -128,7 +128,7 @@
     <string name="didn_t_get_otp_resend">Didn\'t get OTP? <b>Resend</b></string>
     <string name="please_enter_verification_code">Please enter verification code....</string>
     <string name="logged_in_as">Logged in as</string>
-    <string name="verification_code_sent">Verification code sent...</string>
+    <string name="verification_code_sent">Verification code sent…</string>
     <string name="parent_name">Parent Name</string>
     <string name="your_last_name">Your Last Name</string>
     <string name="verification_email_sent_to">Verification email sent to</string>
@@ -400,21 +400,20 @@
     <string name="report_removed">Report removed:</string>
     <string name="report_title">REPORT TITLE</string>
     <string name="failed_to_save">Failed to save!</string>
-    <string name="ok">ok</string>
+    <string name="ok">OK</string>
     <string name="text_location_permission">If u want you can share your location right now, or not!</string>
     <string name="title_location_permission">Location Permission</string>
     <string name="no_location_found_tap_on_map_for_manual_location">No location found, tap on map for manual location!</string>
     <string name="failed_to_save_report">Failed to save report</string>
     <string name="failed_to_find_document_for_save_images">Failed to find document for save images</string>
     <string name="thank_you_for_collaboration">Thank you for collaboration.</string>
-    <string name="report_is_saving">Report is saving...</string>
+    <string name="report_is_saving">Report is saving…</string>
     <string name="if_loading_takes_too_long_please_press_the_button_again">If loading takes too long please press \"Report\" again!</string>
-    <string name="update_status_of_report_with">Update status of report with</string>
-    <string name="has_been_changed_to">has been changed to</string>
-    <string name="your_report_in_datetime">Your report in datetime:</string>
-    <string name="and_with_title">and with title: </string>
-    <string name="has_new_status_right_now">has new status right now!</string>
-    <string name="hello_dear">Hello, dear</string>
+    <string name="the_new_status_of_this_report_is">The new status of this report is</string>
+    <string name="changed_to">changed to</string>
+    <string name="report_with_id">Report with ID</string>
+    <string name="and_with_id">and with id: </string>
+    <string name="has_new_status_right_now">has new status right now.</string>
     <string name="status_of_report_has_changed_to">Status of report has changed to</string>
     <string name="please_be_real_in_giving_information_next_time">please be real in giving information next time.</string>
     <string name="you_earn">you earn</string>
@@ -473,7 +472,7 @@
     <string name="error_you_need_to_add_photo_for_investigator">You must add photos for this registered investigator!</string>
     <string name="error_you_need_to_add_photo_for_person">You must add photo for this registered person!</string>
     <string name="this_user_with_this">This user with this</string>
-    <string name="successfully_login_to_new_user">Success, redirecting to dashboard...</string>
+    <string name="successfully_login_to_new_user">Success, redirecting to dashboard…</string>
     <string name="user_is_deleted_successfully">User deleted successfully!</string>
     <string name="error_user_failed_to_delete">Failed to delete this user!</string>
     <string name="person_is_deleted_successfully">Person deleted successfully!</string>
@@ -496,7 +495,7 @@
     <string name="uploaded_successfully">Uploaded successfully</string>
     <string name="collection_saved_successfully">Collection saved successfully!</string>
     <string name="error_not_allowed_same_investigator">Error not allowed same investigator!</string>
-    <string name="uploading">Uploading...</string>
+    <string name="uploading">Uploading…</string>
     <string name="you_need_permissions">You need location permission if u want your location!</string>
     <string name="default_location">Default Location</string>
     <string name="appearance">Appearance</string>
@@ -532,8 +531,8 @@
     <string name="paid_once_in_monthly_payment">Paid once in monthly payment</string>
     <string name="account_longer_than_one_month">Account longer than one month</string>
     <string name="account_details_not_changed_in_last_hours">Account details not changed in last 24 hours</string>
-    <string name="cashout_limit_reached_for_paypal_is_five_euros">Cashout limit reached for PAYPAL: $5</string>
-    <string name="cashout_limit_reached_for_bank_account_is_one_hundred_euros">Cashout limit reached for Bank Account: $100</string>
+    <string name="cashout_limit_reached_for_paypal_is_five_euros">The cash out limit reached for paypal is five euros</string>
+    <string name="cashout_limit_reached_for_bank_account_is_one_hundred_euros">The cash out limit reached for the bank account is one hundred euros</string>
     <string name="account_need_to_set">Account need to set first before create invoice!</string>
     <string name="require_account_need_to_be_older_than_days">Error account need to be older than 30 days to make request for payment for invoice!</string>
     <string name="it_has_not_been_fulfilled_as_a_condition">It has not been fulfilled as a condition.</string>
@@ -544,7 +543,7 @@
     <string name="error_this_account_made_a_payment_this_month">Error account has made a payment this month!</string>
     <string name="error_withdrawal_account_nots_set">Error withdrawal account not set</string>
     <string name="you_have_successfully_made_the_request_wait_for_response">You have successfully made the request, wait for a response.</string>
-    <string name="checking">Checking...</string>
+    <string name="checking">Checking…</string>
     <string name="column_created_date_time">Created DateTime</string>
     <string name="column_transaction_id">Transaction ID</string>
     <string name="column_name_account">Account</string>
@@ -578,6 +577,7 @@
     <string name="payouts_history">Payouts History</string>
     <string name="invoices">Invoices</string>
     <string name="payout_date_time">Payout Date time</string>
+    <string name="with_date">në datën</string>
 
     <string-array name="status_state">
         <item>VERIFIED</item>

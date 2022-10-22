@@ -61,23 +61,29 @@ dependencies {
     implementation "androidx.core:core:$core_version"
     //libraria per fit screens
     implementation 'com.intuit.sdp:sdp-android:1.0.6'
-    implementation 'com.google.firebase:firebase-database:20.0.0'
-    implementation 'com.google.firebase:firebase-firestore:23.0.1'
-    implementation 'com.google.firebase:firebase-auth:21.0.3'
+
+    // Implementimi i firebase
+    implementation 'com.google.firebase:firebase-database:20.1.0'
+    implementation 'com.google.firebase:firebase-firestore:24.4.0'
+    implementation 'com.google.firebase:firebase-auth:21.1.0'
+    implementation 'com.google.firebase:firebase-storage:20.1.0'
+    implementation 'com.google.firebase:firebase-inappmessaging:20.2.0'
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
+    implementation 'com.firebaseui:firebase-ui-firestore:7.2.0'
+    implementation platform('com.google.firebase:firebase-bom:30.0.1')
+    implementation 'com.google.firebase:firebase-dynamic-links'
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging'
+
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.google.firebase:firebase-storage:20.0.0'
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'com.google.firebase:firebase-inappmessaging:20.1.2'
-    implementation 'com.google.firebase:firebase-messaging:20.1.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.squareup.picasso:picasso:2.71828'
-    // FirebaseUI for Cloud Firestore
-    implementation 'com.firebaseui:firebase-ui-firestore:7.2.0'
     implementation "io.grpc:grpc-okhttp:1.32.2"
 
     //for JavaTime not require latest api
@@ -86,7 +92,6 @@ dependencies {
     // location play services
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-auth:20.2.0'
-    implementation platform('com.google.firebase:firebase-bom:30.0.1')
     implementation 'org.tensorflow:tensorflow-lite:+'
     implementation 'com.google.android.material:material:1.6.0'
 
@@ -109,11 +114,6 @@ dependencies {
     //volley
     implementation 'com.android.volley:volley:1.2.1'
 
-    // Declare the dependencies for the Dynamic Links and Analytics libraries
-    // When using the BoM, you don't specify versions in Firebase library dependencies
-    implementation 'com.google.firebase:firebase-dynamic-links'
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-messaging'
     implementation 'commons-codec:commons-codec:1.4'
     // https://mvnrepository.com/artifact/com.lambdaworks/scrypt
     implementation group: 'com.lambdaworks', name: 'scrypt', version: '1.4.0'

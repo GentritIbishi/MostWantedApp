@@ -23,10 +23,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.Objects;
-
 import fiek.unipr.mostwantedapp.R;
-import fiek.unipr.mostwantedapp.utils.StringHelper;
 
 public class InformationReportFragment extends Fragment {
 
@@ -78,9 +75,11 @@ public class InformationReportFragment extends Fragment {
 
         setReportTitleFromFirebase(firebaseAuth.getUid());
 
-        report_info_description.setText(mContext.getText(R.string.your_report_in_datetime)+" "+
-                notificationReportDateTime+ " "+ mContext.getText(R.string.and_with_title)+" "+notificationReportTitle+" "+mContext.getText(R.string.has_new_status_right_now)+" "
-                + mContext.getText(R.string.update_status_of_report_with)+" "+notificationReportDateTime+" "+mContext.getText(R.string.has_been_changed_to)+" "+notificationReportNewStatus);
+        report_info_description.setText(mContext.getText(R.string.report_with_id)+" \""+notificationReportId+"\" "+mContext.getText(R.string.with_date)+" "+notificationReportDateTime+" "
+                + mContext.getText(R.string.has_new_status_right_now)+" "+mContext.getText(R.string.the_new_status_of_this_report_is)+" "+mContext.getText(R.string.changed_to)+" "+notificationReportNewStatus+".");
+
+
+        //Raporti juaj me "id" ne daten ka status te ri, statusi i ri eshte ....
 
         return view;
     }
@@ -93,8 +92,8 @@ public class InformationReportFragment extends Fragment {
                     @SuppressLint("SetTextI18n")
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        String fullName = documentSnapshot.getString("fullName");
-                        report_info_title.setText(mContext.getText(R.string.hello_dear)+" "+fullName);
+                        String name = documentSnapshot.getString("name");
+                        report_info_title.setText(mContext.getText(R.string.hi)+" "+name);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override

@@ -47,7 +47,7 @@ public class ModifiedReportNotificationAdapter extends RecyclerView.Adapter<Modi
     @Override
     public void onBindViewHolder(@NonNull ModifiedReportNotificationListViewHolder holder, int position) {
         try {
-            holder.user_report_modified_name.setText(context.getText(R.string.your_report_in_datetime)+" "+modifiedReportList.get(position).getNotificationReportDateTime()+" "+context.getText(R.string.has_new_status_right_now));
+            holder.user_report_modified_name.setText(context.getText(R.string.report_with_id)+" "+modifiedReportList.get(position).getNotificationReportId()+" "+context.getText(R.string.has_new_status_right_now));
 
             String verified = context.getText(R.string.status_of_report_has_changed_to)+" "+
                     modifiedReportList.get(position).getNotificationReportNewStatus()+ " \n"+ context.getText(R.string.you_earn)+20+" "+ "coins\n"+context.getText(R.string.thank_you_for_collaboration);

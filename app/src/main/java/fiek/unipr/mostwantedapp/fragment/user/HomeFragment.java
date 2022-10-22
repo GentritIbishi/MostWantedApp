@@ -106,7 +106,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
         firebaseUser = firebaseAuth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
         userID = firebaseAuth.getUid();
-        YOUR_REPORT_IN_DATETIME_TRANSLATABLE = String.valueOf(mContext.getText(R.string.your_report_in_datetime));
+        YOUR_REPORT_IN_DATETIME_TRANSLATABLE = String.valueOf(mContext.getText(R.string.report_with_id));
         HAS_NEW_STATUS_RIGHT_NOW = String.valueOf(mContext.getText(R.string.has_new_status_right_now));
         STATUS_OF_REPORT_HAS_CHANGED_TO = String.valueOf(mContext.getText(R.string.status_of_report_has_changed_to));
     }

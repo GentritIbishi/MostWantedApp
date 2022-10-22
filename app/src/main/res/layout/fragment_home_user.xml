@@ -254,6 +254,7 @@
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="15sp"
+                                android:textAllCaps="true"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="@+id/user_home_tv_num_report_verified"
                                 app:layout_constraintStart_toStartOf="@+id/user_home_tv_num_report_verified" />
@@ -305,6 +306,7 @@
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="15sp"
+                                android:textAllCaps="true"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="@+id/user_home_tv_num_report_unverified"
                                 app:layout_constraintStart_toStartOf="@+id/user_home_tv_num_report_unverified" />
@@ -356,6 +358,7 @@
                                 android:textAlignment="center"
                                 android:textColor="@color/white"
                                 android:textSize="15sp"
+                                android:textAllCaps="true"
                                 app:layout_constraintBottom_toBottomOf="parent"
                                 app:layout_constraintEnd_toEndOf="@+id/user_home_tv_num_report_fake"
                                 app:layout_constraintStart_toStartOf="@+id/user_home_tv_num_report_fake" />

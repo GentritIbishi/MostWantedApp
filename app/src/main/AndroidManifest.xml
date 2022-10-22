@@ -136,10 +136,14 @@ See README(https://goo.gl/l4GJaQ) for more.
         <activity android:name="com.paypal.android.sdk.payments.FuturePaymentInfoActivity" />
 
         <service android:name=".services.UserNotificationService" />
-        <service android:name=".services.UserSaveNotificationService" android:exported="false"/>
+        <service
+            android:name=".services.UserSaveNotificationService"
+            android:exported="false" />
 
         <service android:name=".services.AdminNotificationService" />
-        <service android:name=".services.AdminSaveNotificationService" android:exported="false"/>
+        <service
+            android:name=".services.AdminSaveNotificationService"
+            android:exported="false" />
 
         <service
             android:name="com.paypal.android.sdk.payments.PayPalService"
@@ -147,13 +151,13 @@ See README(https://goo.gl/l4GJaQ) for more.
 
         <receiver android:name=".services.AdminNotificationServiceReceiver">
             <intent-filter>
-                <action android:name="receiver_admin"/>
+                <action android:name="receiver_admin" />
             </intent-filter>
         </receiver>
 
         <receiver android:name=".services.UserNotificationServiceReceiver">
             <intent-filter>
-                <action android:name="receiver_user"/>
+                <action android:name="receiver_user" />
             </intent-filter>
         </receiver>
 
