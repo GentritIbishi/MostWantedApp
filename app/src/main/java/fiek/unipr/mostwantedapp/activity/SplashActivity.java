@@ -100,17 +100,17 @@ public class SplashActivity extends AppCompatActivity {
                                 if (task.isSuccessful() && task.getResult() != null) {
                                     String role = task.getResult().getString(ROLE);
                                     if (role != null && role.matches(ADMIN_ROLE)) {
-                                        // start AdminDashboardActivity
+                                        // AdminDashboardActivity
                                         ServiceManager.startServiceAdmin(mContext);
                                         Intent intent = new Intent(SplashActivity.this, AdminDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
                                     } else if (role != null && role.matches(SEMI_ADMIN_ROLE)) {
-                                        // start Semi-AdminDashboardActivity with limitation
+                                        // Semi-AdminDashboardActivity with limitation
                                         ServiceManager.startServiceAdmin(mContext);
                                         Intent intent = new Intent(SplashActivity.this, AdminDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
                                     } else if (role != null && role.matches(USER_ROLE)) {
-                                        // start UserDashboardActivity
+                                        // UserDashboardActivity
                                         ServiceManager.startServiceUser(mContext);
                                         Intent intent = new Intent(SplashActivity.this, UserDashboardActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                         startActivity(intent);
