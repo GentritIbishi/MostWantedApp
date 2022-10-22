@@ -628,7 +628,6 @@ public class MapAdminActivity extends FragmentActivity implements OnMapReadyCall
     private Uri generatePDF(String first_investigator, String second_investigator, Table table) throws IOException {
 
         String pdfPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString();
-        // File directory = getFilesDir();
         File file = new File(pdfPath, "GFG.pdf");
         OutputStream outputStream = new FileOutputStream(file);
         PdfWriter writer = new PdfWriter(file);
