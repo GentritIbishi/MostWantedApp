@@ -84,8 +84,9 @@ public class ReportNotificationAdapter extends RecyclerView.Adapter<ReportNotifi
                         .preload();
             }
 
-
-            holder.user_report_description.setText(reportList.get(position).getDescription());
+            String description = reportList.get(position).getDescription();
+            String split_description = description.substring(0, 75)+"...";
+            holder.user_report_description.setText(split_description);
 
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_TIME);
 

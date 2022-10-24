@@ -254,46 +254,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void registerUser(String userID,
-                              String name,
-                              String lastname, 
-                              String fullName, 
-                              String address, 
-                              String email, 
-                              String parentName, 
-                              String gender, 
-                              String role, 
-                              String phone, 
-                              String personal_number, 
-                              String register_date_time, 
-                              String grade, 
-                              String password, 
-                              String urlOfProfile,
-                              Double balance,
-                              Double totalPaid,
-                              Boolean isEmailVerified) {
+    private void registerUser(String userID, String name, String lastname, String fullName, String address, String email, String parentName, String gender, String role, String phone, String personal_number, String register_date_time, String grade, String password, String urlOfProfile, Double balance, Double totalPaid, Boolean isEmailVerified) {
         if(CheckInternet.isConnected(getApplicationContext())){
             documentReference = firebaseFirestore.collection(USERS).document(userID);
-            User user = new User(
-                    userID,
-                    name,
-                    lastname,
-                    fullName,
-                    address,
-                    email,
-                    parentName,
-                    gender,
-                    role,
-                    phone,
-                    personal_number,
-                    register_date_time,
-                    grade,
-                    password,
-                    urlOfProfile,
-                    balance,
-                    totalPaid,
-                    isEmailVerified
-            );
+            User user = new User(userID, name, lastname, fullName, address, email, parentName, gender, role, phone, personal_number, register_date_time, grade, password, urlOfProfile, balance, totalPaid, isEmailVerified);
             documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {

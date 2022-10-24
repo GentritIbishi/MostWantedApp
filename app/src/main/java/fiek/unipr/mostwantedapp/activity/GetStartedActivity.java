@@ -3,6 +3,7 @@ package fiek.unipr.mostwantedapp.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +27,7 @@ public class GetStartedActivity extends AppCompatActivity {
     private RelativeLayout view_getStarted;
     private ProgressBar progressBarGetStarted;
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

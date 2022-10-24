@@ -289,8 +289,8 @@
     <string name="POLICE_STATION_PERLINE_TITLE">POLICE STATION - Perline 32000</string>
     <string name="POLICE_STATION_PERLINE_LATITUDE">42.609493</string>
     <string name="POLICE_STATION_PERLINE_LONGITUDE">20.575675</string>
-    <string name="get_started_description">Feel free to assist the Kosovo Police by reporting accurate information to persons wanted by the Kosovo Police</string>
-    <string name="get_started_description2">Kosovo Police guarantees the preservation of the identity of the informant, who will be anonymous</string>
+    <string name="get_started_description">Ndjehuni të lirë të ndihmoni Policinë e Kosovës duke raportuar informacione të sakta për personat e kërkuar.</string>
+    <string name="get_started_description2">Policia e Kosovës garanton me ligj ruajtjen e identitetit të informatorit.</string>
     <string-array name="roles">
         <item>Admin</item>
         <item>Semi-Admin</item>

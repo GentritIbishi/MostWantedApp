@@ -52,6 +52,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -383,8 +384,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
                         name = task.getResult().getString("name");
                         urlOfProfile = task.getResult().getString("urlOfProfile");
                         balance = task.getResult().getDouble("balance");
+
                         if(balance != null){
-                                user_tv_balance.setText(String.valueOf(balance));
+                            user_tv_balance.setText(new DecimalFormat("##.##").format(balance));
                         }else {
                             user_tv_balance.setText(NA);
                         }

@@ -57,6 +57,7 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -615,9 +616,7 @@ public class WithdrawFragment extends Fragment implements SharedPreferences.OnSh
     private void loadPieChartData(Double balance) {
 
         ArrayList<PieEntry> entries = new ArrayList<>();
-
-        tv_balance_value.setText(mContext.getText(R.string.balance) + ": " + balance+" "+EURO);
-
+        tv_balance_value.setText(mContext.getText(R.string.balance) + ": " +new DecimalFormat("##.##").format(balance)+" "+EURO);
         try {
             entries.add(new PieEntry(Float.parseFloat(String.valueOf(balance)), String.valueOf(mContext.getText(R.string.your_money_in_balance))));
             entries.add(new PieEntry(Float.parseFloat(String.valueOf(50000)), String.valueOf(mContext.getText(R.string.maximum))));

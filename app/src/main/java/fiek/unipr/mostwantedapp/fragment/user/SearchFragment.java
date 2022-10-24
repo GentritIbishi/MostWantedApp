@@ -50,7 +50,7 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
     private FirebaseFirestore firebaseFirestore;
     private TextInputEditText search_filter;
     private String fullName;
-    
+
     public SearchFragment() {}
 
     @Override
@@ -149,13 +149,13 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // we are displaying a toast message
-                // when we get any error from Firebase.
-                Toast.makeText(getContext(), getContext().getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // we are displaying a toast message
+                        // when we get any error from Firebase.
+                        Toast.makeText(getContext(), getContext().getText(R.string.failed_to_load_data), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
 
@@ -198,13 +198,13 @@ public class SearchFragment extends Fragment implements RecyclerViewInterface {
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // we are displaying a toast message
-                // when we get any error from Firebase.
-                Toast.makeText(getContext(), R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // we are displaying a toast message
+                        // when we get any error from Firebase.
+                        Toast.makeText(getContext(), R.string.error_no_internet_connection_check_wifi_or_mobile_data, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
 
