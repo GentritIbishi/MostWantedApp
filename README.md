@@ -14,9 +14,9 @@
 
 # E ndërtuar me / Built With
 
-#### OOP(Java), Models, Material Design 3, RecyclerView, PageAdapter, CardView, Animations, Firebase, SharedPreference.....
+#### Android Studio - JAVA
 
-# Librarite e perdorura
+# LIBRARY
 
 #### Firebase -> Firestore Database, Authentication, Storage
 
